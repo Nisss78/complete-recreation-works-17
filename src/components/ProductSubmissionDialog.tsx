@@ -46,6 +46,8 @@ export const ProductSubmissionDialog = ({
           tagline,
           description,
           icon_url: iconUrl,
+          "Explanatory image": descriptionImages[0] || null,
+          URL: links[0]?.url || null,
         })
         .select()
         .single();
@@ -64,21 +66,6 @@ export const ProductSubmissionDialog = ({
           );
 
         if (tagsError) throw tagsError;
-      }
-
-      // Insert links
-      if (links.length > 0) {
-        const { error: linksError } = await supabase
-          .from('product_links')
-          .insert(
-            links.map(link => ({
-              product_id: product.id,
-              description: link.description,
-              url: link.url,
-            }))
-          );
-
-        if (linksError) throw linksError;
       }
 
       toast({

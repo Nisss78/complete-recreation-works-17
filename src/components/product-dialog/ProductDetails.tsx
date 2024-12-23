@@ -8,8 +8,6 @@ import {
   BarChart2, 
   ExternalLink 
 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { useEffect, useState } from "react";
 
 interface ProductDetailsProps {
   product: {
@@ -21,31 +19,14 @@ interface ProductDetailsProps {
     tags: string[];
     upvotes: number;
     comments: number;
+    URL?: string | null;
   };
 }
 
 export const ProductDetails = ({ product }: ProductDetailsProps) => {
-  const [productLinks, setProductLinks] = useState<{ url: string }[]>([]);
-
-  useEffect(() => {
-    const fetchProductLinks = async () => {
-      const { data: links } = await supabase
-        .from('product_links')
-        .select('url')
-        .eq('product_id', product.id)
-        .limit(1);
-      
-      if (links) {
-        setProductLinks(links);
-      }
-    };
-
-    fetchProductLinks();
-  }, [product.id]);
-
   const handleVisit = () => {
-    if (productLinks.length > 0) {
-      window.open(productLinks[0].url, '_blank');
+    if (product.URL) {
+      window.open(product.URL, '_blank');
     }
   };
 
@@ -69,7 +50,7 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
           variant="outline" 
           className="gap-2"
           onClick={handleVisit}
-          disabled={productLinks.length === 0}
+          disabled={!product.URL}
         >
           <ExternalLink className="w-4 h-4" />
           Visit
