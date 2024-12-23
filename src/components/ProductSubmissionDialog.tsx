@@ -7,6 +7,8 @@ import { useState } from "react";
 import { ProductLinks } from "./product-submission/ProductLinks";
 import { ProductTags } from "./product-submission/ProductTags";
 import { ImageUpload } from "./product-submission/ImageUpload";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface ProductSubmissionDialogProps {
   open: boolean;
@@ -20,6 +22,92 @@ export const ProductSubmissionDialog = ({
   const [links, setLinks] = useState<{ description: string; url: string }[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
+  const [name, setName] = useState("");
+  const [tagline, setTagline] = useState("");
+  const [description, setDescription] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+
+  const handleSubmit = async () => {
+    if (!name || !tagline || !description) {
+      toast({
+        title: "入力エラー",
+        description: "必須項目を入力してください",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Insert product
+      const { data: product, error: productError } = await supabase
+        .from('products')
+        .insert({
+          name,
+          tagline,
+          description,
+          icon_url: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=64&h=64&fit=crop", // TODO: Replace with actual uploaded image
+        })
+        .select()
+        .single();
+
+      if (productError) throw productError;
+
+      // Insert tags
+      if (tags.length > 0) {
+        const { error: tagsError } = await supabase
+          .from('product_tags')
+          .insert(
+            tags.map(tag => ({
+              product_id: product.id,
+              tag,
+            }))
+          );
+
+        if (tagsError) throw tagsError;
+      }
+
+      // Insert links
+      if (links.length > 0) {
+        const { error: linksError } = await supabase
+          .from('product_links')
+          .insert(
+            links.map(link => ({
+              product_id: product.id,
+              description: link.description,
+              url: link.url,
+            }))
+          );
+
+        if (linksError) throw linksError;
+      }
+
+      toast({
+        title: "投稿完了",
+        description: "プロダクトが投稿されました！",
+      });
+
+      // Reset form
+      setName("");
+      setTagline("");
+      setDescription("");
+      setTags([]);
+      setLinks([]);
+      onOpenChange(false);
+
+    } catch (error) {
+      console.error('Error submitting product:', error);
+      toast({
+        title: "エラー",
+        description: "投稿に失敗しました。もう一度お試しください。",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -45,8 +133,11 @@ export const ProductSubmissionDialog = ({
                 <Input 
                   placeholder="例: TaskFlow" 
                   className="bg-[#221F26] border-[#333333] text-white"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  maxLength={50}
                 />
-                <p className="text-xs text-gray-400 mt-1">残り50文字</p>
+                <p className="text-xs text-gray-400 mt-1">残り{50 - name.length}文字</p>
               </div>
 
               <div>
@@ -56,8 +147,11 @@ export const ProductSubmissionDialog = ({
                 <Input 
                   placeholder="例: 人工知能の力で、あなたの成功物語を" 
                   className="bg-[#221F26] border-[#333333] text-white"
+                  value={tagline}
+                  onChange={(e) => setTagline(e.target.value)}
+                  maxLength={100}
                 />
-                <p className="text-xs text-gray-400 mt-1">残り100文字</p>
+                <p className="text-xs text-gray-400 mt-1">残り{100 - tagline.length}文字</p>
               </div>
 
               <div>
@@ -67,18 +161,9 @@ export const ProductSubmissionDialog = ({
                 <Textarea 
                   placeholder="プロダクトの概要を説明してください（50文字以上）" 
                   className="bg-[#221F26] border-[#333333] text-white min-h-[120px]"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
                 />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">YouTube動画</label>
-                <Input 
-                  placeholder="YouTubeのURL（例：https://www.youtube.com/watch?v=...）" 
-                  className="bg-[#221F26] border-[#333333] text-white"
-                />
-                <p className="text-xs text-gray-400 mt-1">
-                  プロダクトのデモ動画やプレゼン動画などを追加できます
-                </p>
               </div>
 
               <ProductLinks links={links} setLinks={setLinks} />
@@ -109,11 +194,16 @@ export const ProductSubmissionDialog = ({
             variant="ghost"
             onClick={() => onOpenChange(false)}
             className="text-white hover:bg-[#333333]"
+            disabled={isSubmitting}
           >
             キャンセル
           </Button>
-          <Button className="bg-[#9b87f5] hover:bg-[#7E69AB] text-white">
-            投稿する
+          <Button 
+            className="bg-[#9b87f5] hover:bg-[#7E69AB] text-white"
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "投稿中..." : "投稿する"}
           </Button>
         </div>
       </DialogContent>

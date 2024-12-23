@@ -9,7 +9,97 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      product_links: {
+        Row: {
+          created_at: string
+          description: string
+          id: number
+          product_id: number | null
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: number
+          product_id?: number | null
+          url: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: number
+          product_id?: number | null
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_links_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_tags: {
+        Row: {
+          created_at: string
+          id: number
+          product_id: number | null
+          tag: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          product_id?: number | null
+          tag: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          product_id?: number | null
+          tag?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_tags_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          created_at: string
+          description: string
+          icon_url: string
+          id: number
+          name: string
+          tagline: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          icon_url: string
+          id?: number
+          name: string
+          tagline: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          icon_url?: string
+          id?: number
+          name?: string
+          tagline?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
