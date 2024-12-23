@@ -2,7 +2,18 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowUp, MessageCircle, Share2, Bookmark, BarChart2, ExternalLink } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
+import { 
+  ArrowUp, 
+  MessageCircle, 
+  Share2, 
+  Bookmark, 
+  BarChart2, 
+  ExternalLink,
+  Flag,
+  Reply
+} from "lucide-react";
 import { memo, useState, useRef, useEffect } from "react";
 
 interface ProductDialogProps {
@@ -28,27 +39,36 @@ const images = [
 const comments = [
   {
     id: 1,
-    author: "Sarah Johnson",
+    author: "Fardin Shek",
+    username: "@mocdtceo",
     avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=40&h=40&fit=crop",
-    content: "This is exactly what I've been looking for! The UI is so intuitive.",
-    timestamp: "2 hours ago",
-    upvotes: 12
+    content: "WebSparks makes building apps so effortless—it's like having a personal developer on call 24/7. Can't wait to see what everyone creates with this!",
+    timestamp: "Dec 21",
+    upvotes: 6,
+    isMaker: true,
+    isVerified: false
   },
   {
     id: 2,
-    author: "Michael Chen",
+    author: "André J",
+    username: "@sentry_co",
     avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=40&h=40&fit=crop",
-    content: "Great product! I especially love the integration capabilities.",
-    timestamp: "4 hours ago",
-    upvotes: 8
+    content: "☕ Proof is in the pudding as they say 😼. If I may ask, whats the top 3 products that has been made with this platform?",
+    timestamp: "Dec 22",
+    upvotes: 7,
+    isMaker: false,
+    isVerified: true
   },
   {
     id: 3,
-    author: "Emily Davis",
+    author: "MD ALLMAMUN Ridoy",
+    username: "@md_allmamun_ridoy",
     avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop",
-    content: "The performance is impressive. Would love to see more features in future updates.",
-    timestamp: "6 hours ago",
-    upvotes: 5
+    content: "WebSparks is an AI Software Engineer that seamlessly manages your entire software development lifecycle, just like a human engineer. It simplifies application development.",
+    timestamp: "Dec 22",
+    upvotes: 5,
+    isMaker: true,
+    isVerified: false
   }
 ];
 
@@ -56,6 +76,8 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showComments, setShowComments] = useState(false);
+  const [newComment, setNewComment] = useState("");
+  const [sortBy, setSortBy] = useState<"best" | "newest">("best");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -80,6 +102,13 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
       }
     };
   }, [showComments]);
+
+  const handleCommentSubmit = () => {
+    if (newComment.trim()) {
+      console.log("New comment:", newComment);
+      setNewComment("");
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -154,25 +183,88 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
 
           <div className={`border-t transition-opacity duration-300 ${showComments ? 'opacity-100' : 'opacity-0'}`}>
             <div className="p-6">
-              <h3 className="text-lg font-semibold mb-4">Discussion ({comments.length})</h3>
+              <div className="flex items-center gap-4 mb-6">
+                <Avatar className="w-10 h-10">
+                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
+                  <Input
+                    placeholder="What do you think?"
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    className="w-full"
+                  />
+                </div>
+                <Button 
+                  onClick={handleCommentSubmit}
+                  disabled={!newComment.trim()}
+                >
+                  Comment
+                </Button>
+              </div>
+
+              <div className="flex items-center gap-2 mb-4 text-sm text-gray-600">
+                <span>Sort by:</span>
+                <button
+                  className={`font-medium ${sortBy === "best" ? "text-gray-900" : ""}`}
+                  onClick={() => setSortBy("best")}
+                >
+                  Best
+                </button>
+                <span>•</span>
+                <button
+                  className={`font-medium ${sortBy === "newest" ? "text-gray-900" : ""}`}
+                  onClick={() => setSortBy("newest")}
+                >
+                  Newest
+                </button>
+              </div>
+
               <div className="space-y-6">
                 {comments.map((comment) => (
-                  <div key={comment.id} className="flex gap-4 animate-fade-in">
-                    <img
-                      src={comment.avatar}
-                      alt={comment.author}
-                      className="w-10 h-10 rounded-full object-cover flex-shrink-0"
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-semibold">{comment.author}</span>
-                        <span className="text-sm text-gray-500">{comment.timestamp}</span>
+                  <div key={comment.id} className="animate-fade-in">
+                    <div className="flex gap-4">
+                      <Avatar className="w-10 h-10">
+                        <AvatarImage src={comment.avatar} alt={comment.author} />
+                        <AvatarFallback>{comment.author[0]}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-semibold">{comment.author}</span>
+                          <span className="text-gray-500">{comment.username}</span>
+                          {comment.isMaker && (
+                            <Badge variant="secondary" className="text-xs">
+                              Maker
+                            </Badge>
+                          )}
+                          {comment.isVerified && (
+                            <Badge variant="secondary" className="text-xs bg-green-100 text-green-800">
+                              Verified
+                            </Badge>
+                          )}
+                        </div>
+                        <p className="text-gray-700 mb-2">{comment.content}</p>
+                        <div className="flex items-center gap-4 text-sm text-gray-500">
+                          <button className="flex items-center gap-1 hover:text-gray-900">
+                            <ArrowUp className="w-4 h-4" />
+                            Upvote ({comment.upvotes})
+                          </button>
+                          <button className="flex items-center gap-1 hover:text-gray-900">
+                            <Reply className="w-4 h-4" />
+                            Reply
+                          </button>
+                          <button className="flex items-center gap-1 hover:text-gray-900">
+                            <Share2 className="w-4 h-4" />
+                            Share
+                          </button>
+                          <button className="flex items-center gap-1 hover:text-gray-900">
+                            <Flag className="w-4 h-4" />
+                            Report as spam
+                          </button>
+                          <span className="text-gray-400">{comment.timestamp}</span>
+                        </div>
                       </div>
-                      <p className="text-gray-700 mb-2">{comment.content}</p>
-                      <button className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 transition-colors">
-                        <ArrowUp className="w-4 h-4" />
-                        {comment.upvotes}
-                      </button>
                     </div>
                   </div>
                 ))}
