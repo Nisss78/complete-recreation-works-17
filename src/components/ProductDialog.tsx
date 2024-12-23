@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowUp, MessageCircle, Share2, Bookmark, BarChart2, ExternalLink } from "lucide-react";
 import { memo, useState, useRef, useEffect } from "react";
+import { Textarea } from "@/components/ui/textarea";
 
 interface ProductDialogProps {
   open: boolean;
@@ -56,6 +57,7 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showComments, setShowComments] = useState(false);
+  const [newComment, setNewComment] = useState("");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -80,6 +82,13 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
       }
     };
   }, [showComments]);
+
+  const handleCommentSubmit = () => {
+    if (newComment.trim()) {
+      console.log("New comment:", newComment);
+      setNewComment("");
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -155,6 +164,23 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
           <div className={`border-t transition-opacity duration-300 ${showComments ? 'opacity-100' : 'opacity-0'}`}>
             <div className="p-6">
               <h3 className="text-lg font-semibold mb-4">Discussion ({comments.length})</h3>
+              
+              <div className="mb-6">
+                <Textarea
+                  placeholder="Add a comment..."
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  className="mb-2"
+                />
+                <Button 
+                  onClick={handleCommentSubmit}
+                  disabled={!newComment.trim()}
+                  className="w-full sm:w-auto"
+                >
+                  Post Comment
+                </Button>
+              </div>
+
               <div className="space-y-6">
                 {comments.map((comment) => (
                   <div key={comment.id} className="flex gap-4 animate-fade-in">
