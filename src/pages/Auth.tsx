@@ -22,22 +22,22 @@ const AuthPage = () => {
 
     // Listen for auth state changes and errors
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth state changed:", event);
       if (event === 'SIGNED_IN') {
         navigate("/");
       }
       if (event === 'SIGNED_OUT') {
-        toast({
-          title: "エラー",
-          description: "認証に失敗しました。しばらく待ってから再度お試しください。",
-          variant: "destructive",
-        });
+        console.log("Sign out event received");
+      }
+      if (event === 'USER_UPDATED') {
+        console.log("User updated:", session);
       }
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [navigate, toast]);
+  }, [navigate]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -67,12 +67,18 @@ const AuthPage = () => {
                   password_label: 'パスワード',
                   button_label: 'ログイン',
                   social_provider_text: "{{provider}}でログイン",
+                  loading_button_label: "ログイン中...",
+                  email_input_placeholder: "メールアドレスを入力",
+                  password_input_placeholder: "パスワードを入力",
                 },
                 sign_up: {
                   email_label: 'メールアドレス',
                   password_label: 'パスワード',
                   button_label: '新規登録',
                   social_provider_text: "{{provider}}で登録",
+                  loading_button_label: "登録中...",
+                  email_input_placeholder: "メールアドレスを入力",
+                  password_input_placeholder: "パスワードを入力",
                 },
               },
             }}
