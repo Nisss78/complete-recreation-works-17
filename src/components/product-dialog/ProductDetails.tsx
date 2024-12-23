@@ -79,6 +79,7 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
     }
   };
 
+  // 説明画像の配列を作成
   const images = product["explanatory-image"] ? [product["explanatory-image"]] : [];
   console.log("Product images:", images);
 
@@ -136,10 +137,13 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
         </div>
       </div>
 
-      <ProductImageCarousel 
-        productName={product.name}
-        images={images}
-      />
+      {/* 説明画像のカルーセルを表示 */}
+      {images.length > 0 && (
+        <ProductImageCarousel 
+          productName={product.name}
+          images={images}
+        />
+      )}
     </div>
   );
 };
