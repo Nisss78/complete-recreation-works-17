@@ -58,7 +58,7 @@ export const Header = () => {
       <header className="border-b">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link to="/" className="font-bold text-xl">
-            Solomaker
+            Producto
           </Link>
           
           <div className="flex items-center gap-4">

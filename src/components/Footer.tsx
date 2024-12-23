@@ -9,7 +9,7 @@ export const Footer = () => {
           <div>
             <h3 className="font-bold mb-4">Solomakerについて</h3>
             <p className="text-sm text-gray-600">
-              個人開発者のためのプロダクトローンチプラットフォーム
+              個人開発者のためのプロダクトプラットフォーム
             </p>
           </div>
           
@@ -43,7 +43,7 @@ export const Footer = () => {
           
           <div>
             <Link to="/" className="font-bold text-xl block mb-4">
-              Solomaker
+              Producto
             </Link>
           </div>
         </div>
