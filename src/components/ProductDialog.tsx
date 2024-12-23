@@ -101,6 +101,8 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
     setComments([newComment, ...comments]);
   };
 
+  console.log("Explanatory image URL:", product["Explanatory image"]); // デバッグ用
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl h-[90vh] p-0 overflow-hidden bg-white dark:bg-gray-900">
@@ -110,15 +112,15 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
         
         <div className="flex flex-col h-full">
           <ScrollArea className="flex-1" ref={scrollRef}>
-            <div className="p-8">
+            <div className="p-6">
               <ProductDetails product={product} />
 
               {product["Explanatory image"] && (
-                <div className="relative mb-8">
+                <div className="mt-6 mb-8 w-full aspect-[16/9] relative bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
                   <img
                     src={product["Explanatory image"]}
                     alt={`${product.name} の説明画像`}
-                    className="w-full h-auto max-h-[400px] object-contain rounded-lg shadow-lg"
+                    className="w-full h-full object-contain"
                     onError={(e) => {
                       console.error("Image load error:", e);
                       const img = e.target as HTMLImageElement;
