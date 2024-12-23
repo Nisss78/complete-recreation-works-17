@@ -39,6 +39,7 @@ interface Comment {
   upvotes: number;
   isMaker: boolean;
   isVerified: boolean;
+  reply_count?: number;
 }
 
 const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps) => {
@@ -52,9 +53,11 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
         .select(`
           id,
           content,
-          created_at
+          created_at,
+          reply_count
         `)
         .eq('product_id', product.id)
+        .is('parent_id', null)  // Only fetch top-level comments
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -68,7 +71,8 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
         timestamp: format(new Date(comment.created_at), 'yyyy/MM/dd HH:mm'),
         upvotes: 0,
         isMaker: false,
-        isVerified: false
+        isVerified: false,
+        reply_count: comment.reply_count
       }));
 
       setComments(formattedComments);
@@ -83,7 +87,6 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
     }
   }, [open, product.id]);
 
-  // 説明画像の配列を作成（将来的に複数画像対応のため）
   const images = product["Explanatory image"] ? [product["Explanatory image"]] : [];
 
   return (
