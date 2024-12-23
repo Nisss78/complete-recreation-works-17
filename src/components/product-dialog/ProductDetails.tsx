@@ -166,16 +166,17 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
       </div>
 
       {images.length > 0 && (
-        <div className="mt-6">
-          <Carousel className="w-full">
+        <div className="mt-8 mb-8">
+          <Carousel className="w-full max-w-4xl mx-auto">
             <CarouselContent>
               {images.map((image, index) => (
                 <CarouselItem key={index}>
-                  <div className="w-full aspect-[16/9] bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
+                  <div className="w-full aspect-[16/9] bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden flex items-center justify-center">
                     <img
                       src={image}
                       alt={`${product.name} の説明画像 ${index + 1}`}
-                      className="w-full h-full object-contain"
+                      className="max-w-full max-h-full object-contain"
+                      style={{ maxHeight: '500px' }}
                     />
                   </div>
                 </CarouselItem>
@@ -183,10 +184,10 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
             </CarouselContent>
             {images.length > 1 && (
               <>
-                <CarouselPrevious>
+                <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2">
                   <ChevronLeft className="w-4 h-4" />
                 </CarouselPrevious>
-                <CarouselNext>
+                <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2">
                   <ChevronRight className="w-4 h-4" />
                 </CarouselNext>
               </>
