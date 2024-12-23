@@ -87,20 +87,18 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
           {product.name}の詳細
         </DialogTitle>
         
-        <div className="flex flex-col h-full">
-          <ScrollArea className="flex-1" ref={scrollRef}>
-            <div className="p-6">
-              <ProductDetails product={product} />
-              <div className="mt-8">
-                <CommentSection 
-                  productId={product.id}
-                  comments={comments}
-                  onCommentAdded={fetchComments}
-                />
-              </div>
+        <ScrollArea className="h-full">
+          <div className="p-6">
+            <ProductDetails product={product} />
+            <div className="mt-8">
+              <CommentSection 
+                productId={product.id}
+                comments={comments}
+                onCommentAdded={fetchComments}
+              />
             </div>
-          </ScrollArea>
-        </div>
+          </div>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );
