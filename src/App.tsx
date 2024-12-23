@@ -51,19 +51,17 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
 const AppRoutes = () => {
   return (
-    <BrowserRouter basename="/">
-      <Routes>
-        <Route path="/auth" element={<AuthPage />} />
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Index />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route path="/auth" element={<AuthPage />} />
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <Index />
+          </ProtectedRoute>
+        }
+      />
+    </Routes>
   );
 };
 
@@ -71,9 +69,11 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <AppRoutes />
+        <BrowserRouter basename="/">
+          <Toaster />
+          <Sonner />
+          <AppRoutes />
+        </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
   );
