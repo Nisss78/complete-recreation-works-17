@@ -8,6 +8,10 @@ import {
   BarChart2, 
   ExternalLink 
 } from "lucide-react";
+import { useProductLikes } from "@/hooks/useProductLikes";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface ProductDetailsProps {
   product: {
@@ -24,6 +28,64 @@ interface ProductDetailsProps {
 }
 
 export const ProductDetails = ({ product }: ProductDetailsProps) => {
+  const [commentCount, setCommentCount] = useState(product.comments);
+  const { totalLikes, hasLiked, toggleLike } = useProductLikes(product.id);
+  const { toast } = useToast();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsAuthenticated(!!session);
+    };
+
+    checkAuth();
+
+    // リアルタイムでコメント数を監視
+    const channel = supabase
+      .channel('product-details-updates')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'product_comments',
+          filter: `product_id=eq.${product.id}`
+        },
+        async () => {
+          // コメント数を再取得
+          const { count } = await supabase
+            .from('product_comments')
+            .select('id', { count: 'exact' })
+            .eq('product_id', product.id);
+          
+          setCommentCount(count || 0);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [product.id]);
+
+  const handleLike = async () => {
+    if (!isAuthenticated) {
+      toast({
+        title: "ログインが必要です",
+        description: "いいねをするにはログインしてください",
+      });
+      return;
+    }
+    const success = await toggleLike();
+    if (success) {
+      toast({
+        title: hasLiked ? "いいねを取り消しました" : "いいね！",
+        description: hasLiked ? `${product.name}のいいねを取り消しました` : `${product.name}にいいねしました`,
+      });
+    }
+  };
+
   const handleVisit = () => {
     if (product.URL) {
       window.open(product.URL, '_blank');
@@ -55,13 +117,17 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
           <ExternalLink className="w-4 h-4" />
           Visit
         </Button>
-        <Button variant="outline" className="gap-2">
-          <ArrowUp className="w-4 h-4" />
-          {product.upvotes}
+        <Button 
+          variant="outline" 
+          className="gap-2"
+          onClick={handleLike}
+        >
+          <ArrowUp className={`w-4 h-4 ${hasLiked ? 'text-upvote' : ''}`} />
+          {totalLikes}
         </Button>
         <Button variant="outline" className="gap-2">
           <MessageCircle className="w-4 h-4" />
-          {product.comments}
+          {commentCount}
         </Button>
         <Button variant="outline" size="icon">
           <Bookmark className="w-4 h-4" />

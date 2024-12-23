@@ -34,19 +34,32 @@ export function ProductCard({
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setIsAuthenticated(!!session);
-
-      if (session) {
-        // Get total comments count
-        const { count: commentsCount } = await supabase
-          .from('product_comments')
-          .select('id', { count: 'exact' })
-          .eq('product_id', id);
-        
-        setComments(commentsCount || 0);
-      }
     };
 
     checkAuth();
+
+    // リアルタイムでコメント数を監視
+    const channel = supabase
+      .channel('product-updates')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'product_comments',
+          filter: `product_id=eq.${id}`
+        },
+        async () => {
+          // コメント数を再取得
+          const { count } = await supabase
+            .from('product_comments')
+            .select('id', { count: 'exact' })
+            .eq('product_id', id);
+          
+          setComments(count || 0);
+        }
+      )
+      .subscribe();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setIsAuthenticated(!!session);
@@ -54,6 +67,7 @@ export function ProductCard({
 
     return () => {
       subscription.unsubscribe();
+      supabase.removeChannel(channel);
     };
   }, [id]);
 

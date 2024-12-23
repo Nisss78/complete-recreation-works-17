@@ -41,7 +41,7 @@ export const useProductLikes = (productId: number) => {
 
     fetchLikesData();
 
-    // Subscribe to realtime updates for likes
+    // リアルタイムでいいねの更新を監視
     const channel = supabase
       .channel('product-likes')
       .on(
