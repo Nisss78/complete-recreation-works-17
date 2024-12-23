@@ -9,6 +9,35 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      comment_likes: {
+        Row: {
+          comment_id: number | null
+          created_at: string
+          id: number
+          user_id: string
+        }
+        Insert: {
+          comment_id?: number | null
+          created_at?: string
+          id?: number
+          user_id: string
+        }
+        Update: {
+          comment_id?: number | null
+          created_at?: string
+          id?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comment_likes_comment_id_fkey"
+            columns: ["comment_id"]
+            isOneToOne: false
+            referencedRelation: "product_comments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_comments: {
         Row: {
           content: string
