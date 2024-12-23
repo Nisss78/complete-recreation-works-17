@@ -19,44 +19,38 @@ interface ProductDialogProps {
   };
 }
 
-const images = [
-  "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=800&h=400&fit=crop",
-  "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=400&fit=crop",
-  "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=400&fit=crop"
-];
-
 const initialComments = [
   {
     id: 1,
-    author: "Fardin Shek",
-    username: "@mocdtceo",
+    author: "田中 太郎",
+    username: "@taro_tanaka",
     avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=40&h=40&fit=crop",
-    content: "WebSparks makes building apps so effortless—it's like having a personal developer on call 24/7. Can't wait to see what everyone creates with this!",
-    timestamp: "Dec 21",
+    content: "このプロダクトは素晴らしいですね。使いやすさが特に印象的です。",
+    timestamp: "2時間前",
     upvotes: 6,
     isMaker: true,
     isVerified: false
   },
   {
     id: 2,
-    author: "André J",
-    username: "@sentry_co",
+    author: "佐藤 花子",
+    username: "@hanako_sato",
     avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=40&h=40&fit=crop",
-    content: "☕ Proof is in the pudding as they say 😼. If I may ask, whats the top 3 products that has been made with this platform?",
-    timestamp: "Dec 22",
+    content: "機能がとても充実していますね。今後の発展が楽しみです。",
+    timestamp: "3時間前",
     upvotes: 7,
     isMaker: false,
     isVerified: true
   },
   {
     id: 3,
-    author: "MD ALLMAMUN Ridoy",
-    username: "@md_allmamun_ridoy",
+    author: "鈴木 一郎",
+    username: "@ichiro_suzuki",
     avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop",
-    content: "WebSparks is an AI Software Engineer that seamlessly manages your entire software development lifecycle, just like a human engineer. It simplifies application development.",
-    timestamp: "Dec 22",
+    content: "デザインも使いやすさも素晴らしいです。これからも期待しています！",
+    timestamp: "5時間前",
     upvotes: 5,
-    isMaker: true,
+    isMaker: false,
     isVerified: false
   }
 ];
@@ -94,11 +88,11 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
   const handleAddComment = (content: string) => {
     const newComment = {
       id: comments.length + 1,
-      author: "Current User",
-      username: "@current_user",
+      author: "ゲストユーザー",
+      username: "@guest_user",
       avatar: "https://github.com/shadcn.png",
       content,
-      timestamp: "Just now",
+      timestamp: "たった今",
       upvotes: 0,
       isMaker: false,
       isVerified: false
@@ -108,14 +102,14 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl p-0 overflow-hidden">
+      <DialogContent className="max-w-4xl p-0 overflow-hidden">
         <ScrollArea className="h-[90vh]" ref={scrollRef}>
-          <div className="p-6">
+          <div className="p-8">
             <ProductDetails product={product} />
 
-            <div className="relative mb-6">
+            <div className="relative mb-8">
               <ScrollArea className="w-full overflow-x-auto scrollbar-hide">
-                <div className="flex gap-4 pb-4">
+                <div className="flex gap-6 pb-4">
                   {images.map((image, index) => (
                     <img
                       key={index}
@@ -142,7 +136,7 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
           </div>
 
           <div className={`border-t transition-opacity duration-300 ${showComments ? 'opacity-100' : 'opacity-0'}`}>
-            <div className="p-6">
+            <div className="p-8">
               <CommentSection 
                 comments={comments}
                 onAddComment={handleAddComment}
