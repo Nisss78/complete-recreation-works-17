@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useCommentLikes } from "@/hooks/useCommentLikes";
 import { supabase } from "@/integrations/supabase/client";
 import { ReplyForm } from "./ReplyForm";
+import { CommentReplies } from "./CommentReplies";
 
 interface CommentItemProps {
   comment: {
@@ -67,12 +68,7 @@ export const CommentItem = ({ comment, onCommentAdded, level = 0 }: CommentItemP
         .eq('parent_id', comment.id)
         .order('created_at', { ascending: true });
 
-      if (error) {
-        console.error('Error loading replies:', error);
-        throw error;
-      }
-
-      console.log('Replies data:', repliesData);
+      if (error) throw error;
 
       const formattedReplies = repliesData.map(reply => ({
         id: reply.id,
@@ -98,7 +94,7 @@ export const CommentItem = ({ comment, onCommentAdded, level = 0 }: CommentItemP
   };
 
   const handleToggleReplies = async () => {
-    if (!showReplies) {
+    if (!showReplies && comment.reply_count > 0) {
       await loadReplies();
     }
     setShowReplies(!showReplies);
@@ -186,17 +182,12 @@ export const CommentItem = ({ comment, onCommentAdded, level = 0 }: CommentItemP
         </div>
       )}
 
-      {showReplies && replies.length > 0 && (
-        <div className="space-y-4">
-          {replies.map((reply) => (
-            <CommentItem 
-              key={reply.id} 
-              comment={reply}
-              onCommentAdded={onCommentAdded}
-              level={level + 1}
-            />
-          ))}
-        </div>
+      {showReplies && (
+        <CommentReplies 
+          replies={replies}
+          onCommentAdded={onCommentAdded}
+          level={level + 1}
+        />
       )}
     </div>
   );
