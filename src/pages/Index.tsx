@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
 const fetchProducts = async () => {
+  // まず、プロダクトの基本情報とタグを取得
   const { data: products, error } = await supabase
     .from('products')
     .select(`
@@ -19,19 +20,32 @@ const fetchProducts = async () => {
     .order('created_at', { ascending: false });
 
   if (error) throw error;
-  
-  return products.map(product => ({
-    id: product.id,
-    name: product.name,
-    tagline: product.tagline,
-    description: product.description,
-    icon: product.icon_url,
-    URL: product.URL,
-    tags: product.product_tags?.map(t => t.tag) || [],
-    upvotes: 0,
-    comments: 0,
-    launchDate: new Date(product.created_at),
-  }));
+
+  // 各プロダクトのいいね数を取得
+  const productsWithLikes = await Promise.all(
+    products.map(async (product) => {
+      const { count } = await supabase
+        .from('product_likes')
+        .select('*', { count: 'exact' })
+        .eq('product_id', product.id);
+
+      return {
+        id: product.id,
+        name: product.name,
+        tagline: product.tagline,
+        description: product.description,
+        icon: product.icon_url,
+        URL: product.URL,
+        tags: product.product_tags?.map(t => t.tag) || [],
+        upvotes: count || 0,
+        comments: 0,
+        launchDate: new Date(product.created_at),
+      };
+    })
+  );
+
+  // いいね数でソート（降順）
+  return productsWithLikes.sort((a, b) => b.upvotes - a.upvotes);
 };
 
 const Index = () => {
