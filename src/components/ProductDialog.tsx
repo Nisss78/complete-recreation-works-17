@@ -18,7 +18,7 @@ interface ProductDialogProps {
     tags: string[];
     upvotes: number;
     comments: number;
-    "Explanatory image": string | null;
+    "explanatory-image": string | null;
   };
 }
 
@@ -50,7 +50,7 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
           reply_count
         `)
         .eq('product_id', product.id)
-        .is('parent_id', null)  // Only fetch top-level comments
+        .is('parent_id', null)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -91,7 +91,6 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
           <ScrollArea className="flex-1" ref={scrollRef}>
             <div className="p-6">
               <ProductDetails product={product} />
-
               <div className="mt-8">
                 <CommentSection 
                   productId={product.id}

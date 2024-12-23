@@ -31,7 +31,7 @@ interface ProductDetailsProps {
     upvotes: number;
     comments: number;
     URL?: string | null;
-    "Explanatory image"?: string | null;
+    "explanatory-image"?: string | null;
   };
 }
 
@@ -59,7 +59,6 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
     checkAuth();
     fetchCommentCount();
 
-    // リアルタイムでコメント数を監視
     const channel = supabase
       .channel('product-details-updates')
       .on(
@@ -105,7 +104,7 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
     }
   };
 
-  const images = product["Explanatory image"] ? [product["Explanatory image"]] : [];
+  const images = product["explanatory-image"] ? [product["explanatory-image"]] : [];
 
   return (
     <div className="space-y-6">
