@@ -115,17 +115,19 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
               <ProductDetails product={product} />
 
               {product["Explanatory image"] && (
-                <div className="mt-6 mb-8 w-full aspect-[16/9] relative bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
-                  <img
-                    src={product["Explanatory image"]}
-                    alt={`${product.name} の説明画像`}
-                    className="w-full h-full object-contain"
-                    onError={(e) => {
-                      console.error("Image load error:", e);
-                      const img = e.target as HTMLImageElement;
-                      console.log("Failed image URL:", img.src);
-                    }}
-                  />
+                <div className="mt-6 mb-8">
+                  <div className="w-full aspect-video bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
+                    <img
+                      src={product["Explanatory image"]}
+                      alt={`${product.name} の説明画像`}
+                      className="w-full h-full object-contain"
+                      onError={(e) => {
+                        console.error("Image load error:", e);
+                        const img = e.target as HTMLImageElement;
+                        console.log("Failed image URL:", img.src);
+                      }}
+                    />
+                  </div>
                 </div>
               )}
 
