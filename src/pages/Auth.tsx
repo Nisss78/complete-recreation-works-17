@@ -3,9 +3,11 @@ import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 const AuthPage = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   useEffect(() => {
     // Check if user is already logged in
@@ -18,11 +20,19 @@ const AuthPage = () => {
 
     checkUser();
 
-    // Listen for auth state changes
+    // Listen for auth state changes and errors
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
         if (event === "SIGNED_IN") {
           navigate("/");
+        }
+        // Handle auth errors
+        if (event === "USER_DELETED" || event === "SIGNED_OUT") {
+          toast({
+            title: "エラー",
+            description: "認証に失敗しました。しばらく待ってから再度お試しください。",
+            variant: "destructive",
+          });
         }
       }
     );
@@ -30,7 +40,7 @@ const AuthPage = () => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [navigate]);
+  }, [navigate, toast]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -66,6 +76,20 @@ const AuthPage = () => {
                   button_label: '新規登録',
                 },
               },
+            }}
+            onError={(error) => {
+              console.error('Auth error:', error);
+              let message = "認証エラーが発生しました。";
+              
+              if (error.message.includes("over_email_send_rate_limit")) {
+                message = "セキュリティのため、24秒以上待ってから再度お試しください。";
+              }
+              
+              toast({
+                title: "エラー",
+                description: message,
+                variant: "destructive",
+              });
             }}
           />
         </div>
