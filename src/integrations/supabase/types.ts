@@ -83,6 +83,35 @@ export type Database = {
           },
         ]
       }
+      product_images: {
+        Row: {
+          created_at: string
+          id: number
+          image_url: string
+          product_id: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          image_url: string
+          product_id?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          image_url?: string
+          product_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_images_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_likes: {
         Row: {
           created_at: string
@@ -145,7 +174,6 @@ export type Database = {
         Row: {
           created_at: string
           description: string
-          "explanatory-image": string | null
           icon_url: string
           id: number
           name: string
@@ -156,7 +184,6 @@ export type Database = {
         Insert: {
           created_at?: string
           description: string
-          "explanatory-image"?: string | null
           icon_url: string
           id?: number
           name: string
@@ -167,7 +194,6 @@ export type Database = {
         Update: {
           created_at?: string
           description?: string
-          "explanatory-image"?: string | null
           icon_url?: string
           id?: number
           name?: string

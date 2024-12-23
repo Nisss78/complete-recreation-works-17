@@ -18,7 +18,6 @@ interface ProductDialogProps {
     tags: string[];
     upvotes: number;
     comments: number;
-    "explanatory-image": string | null;
   };
 }
 
@@ -37,6 +36,7 @@ interface Comment {
 
 const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps) => {
   const [comments, setComments] = useState<Comment[]>([]);
+  const [productImages, setProductImages] = useState<string[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const fetchComments = async () => {
@@ -74,9 +74,28 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
     }
   };
 
+  const fetchProductImages = async () => {
+    try {
+      const { data: imagesData, error } = await supabase
+        .from('product_images')
+        .select('image_url')
+        .eq('product_id', product.id)
+        .order('created_at', { ascending: true });
+
+      if (error) throw error;
+
+      const images = imagesData.map(img => img.image_url);
+      console.log('Fetched product images:', images);
+      setProductImages(images);
+    } catch (error) {
+      console.error('Error fetching product images:', error);
+    }
+  };
+
   useEffect(() => {
     if (open) {
       fetchComments();
+      fetchProductImages();
     }
   }, [open, product.id]);
 
@@ -89,7 +108,12 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
         
         <ScrollArea className="h-full">
           <div className="p-6">
-            <ProductDetails product={product} />
+            <ProductDetails 
+              product={{
+                ...product,
+                images: productImages
+              }}
+            />
             <div className="mt-8">
               <CommentSection 
                 productId={product.id}

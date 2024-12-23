@@ -25,7 +25,7 @@ interface ProductDetailsProps {
     upvotes: number;
     comments: number;
     URL?: string | null;
-    "explanatory-image": string | null;
+    images: string[];
   };
 }
 
@@ -79,9 +79,7 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
     }
   };
 
-  // 説明画像の配列を作成
-  const images = product["explanatory-image"] ? [product["explanatory-image"]] : [];
-  console.log("Product images:", images);
+  console.log("Product images in ProductDetails:", product.images);
 
   return (
     <div className="space-y-6">
@@ -137,11 +135,10 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
         </div>
       </div>
 
-      {/* 説明画像のカルーセルを表示 */}
-      {images.length > 0 && (
+      {product.images && product.images.length > 0 && (
         <ProductImageCarousel 
           productName={product.name}
-          images={images}
+          images={product.images}
         />
       )}
     </div>

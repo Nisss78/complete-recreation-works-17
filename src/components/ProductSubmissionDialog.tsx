@@ -38,7 +38,7 @@ export const ProductSubmissionDialog = ({
     setIsSubmitting(true);
 
     try {
-      console.log('Submitting product with URL:', links[0]?.url);
+      console.log('Submitting product with images:', descriptionImages);
       
       // Insert product
       const { data: product, error: productError } = await supabase
@@ -48,13 +48,26 @@ export const ProductSubmissionDialog = ({
           tagline,
           description,
           icon_url: iconUrl,
-          "Explanatory image": descriptionImages[0] || null,
           URL: links[0]?.url || null,
         })
         .select()
         .single();
 
       if (productError) throw productError;
+
+      // Insert product images
+      if (descriptionImages.length > 0) {
+        const { error: imagesError } = await supabase
+          .from('product_images')
+          .insert(
+            descriptionImages.map(imageUrl => ({
+              product_id: product.id,
+              image_url: imageUrl,
+            }))
+          );
+
+        if (imagesError) throw imagesError;
+      }
 
       // Insert tags
       if (tags.length > 0) {
