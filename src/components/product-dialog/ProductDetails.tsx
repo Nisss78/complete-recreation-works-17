@@ -21,7 +21,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ProductDetailsProps {
   product: {
@@ -113,9 +112,13 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
   console.log("Product images:", images);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       <div className="flex items-start gap-4">
-        <img src={product.icon} alt={product.name} className="w-16 h-16 rounded-lg object-cover" />
+        <img 
+          src={product.icon} 
+          alt={product.name} 
+          className="w-16 h-16 rounded-lg object-cover"
+        />
         <div className="flex-1">
           <h2 className="text-2xl font-bold mb-2">{product.name}</h2>
           <p className="text-gray-600 dark:text-gray-300 mb-2">{product.tagline}</p>
@@ -172,7 +175,7 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
                     <img
                       src={image}
                       alt={`${product.name} の説明画像 ${index + 1}`}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain"
                     />
                   </div>
                 </CarouselItem>
