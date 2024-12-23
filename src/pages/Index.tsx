@@ -28,8 +28,8 @@ const fetchProducts = async () => {
     icon: product.icon_url,
     URL: product.URL,
     tags: product.product_tags?.map(t => t.tag) || [],
-    upvotes: 0, // TODO: Implement upvotes system
-    comments: 0, // TODO: Implement comments system
+    upvotes: 0,
+    comments: 0,
     launchDate: new Date(product.created_at),
   }));
 };
