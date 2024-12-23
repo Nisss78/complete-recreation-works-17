@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { UploadButton } from "@/components/ui/upload-button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
@@ -59,14 +58,14 @@ export function ProductDetails({ product }: ProductDetailsProps) {
 
       toast("画像がアップロードされました", {
         duration: 3000,
-        className: "text-sm p-2", // トーストのサイズを小さく
+        className: "text-sm p-2",
       });
 
     } catch (error) {
       console.error('Error uploading image:', error);
       toast.error("画像のアップロードに失敗しました", {
         duration: 3000,
-        className: "text-sm p-2", // エラートーストも小さく
+        className: "text-sm p-2",
       });
     } finally {
       setIsUploading(false);
