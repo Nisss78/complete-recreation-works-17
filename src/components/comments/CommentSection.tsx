@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowUp, Reply, Share2, Flag } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface Comment {
   id: number;
@@ -27,7 +28,6 @@ interface CommentSectionProps {
 
 export const CommentSection = ({ productId, comments, onCommentAdded }: CommentSectionProps) => {
   const [newComment, setNewComment] = useState("");
-  const [sortBy, setSortBy] = useState<"best" | "newest">("best");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
@@ -43,6 +43,7 @@ export const CommentSection = ({ productId, comments, onCommentAdded }: CommentS
         description: "コメントを投稿するにはログインしてください",
         variant: "destructive",
       });
+      setIsSubmitting(false);
       return;
     }
 
@@ -61,7 +62,7 @@ export const CommentSection = ({ productId, comments, onCommentAdded }: CommentS
       onCommentAdded();
       toast({
         title: "コメントを投稿しました",
-        description: "あなたのコメントが追加されました",
+        description: "コメントが追加されました",
       });
     } catch (error) {
       console.error('Error posting comment:', error);
@@ -76,8 +77,8 @@ export const CommentSection = ({ productId, comments, onCommentAdded }: CommentS
   };
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center gap-4 mb-8">
+    <div className="space-y-6">
+      <div className="flex items-center gap-4">
         <Avatar className="w-10 h-10">
           <AvatarImage src="https://github.com/shadcn.png" />
           <AvatarFallback>CN</AvatarFallback>
@@ -98,71 +99,64 @@ export const CommentSection = ({ productId, comments, onCommentAdded }: CommentS
         </Button>
       </div>
 
-      <div className="flex items-center gap-4 mb-6 text-sm text-gray-600">
-        <span>並び替え:</span>
-        <button
-          className={`font-medium ${sortBy === "best" ? "text-gray-900" : ""}`}
-          onClick={() => setSortBy("best")}
-        >
-          人気
-        </button>
-        <span>•</span>
-        <button
-          className={`font-medium ${sortBy === "newest" ? "text-gray-900" : ""}`}
-          onClick={() => setSortBy("newest")}
-        >
-          新着
-        </button>
-      </div>
-
-      <div className="space-y-8">
-        {comments.map((comment) => (
-          <div key={comment.id} className="animate-fade-in bg-gray-50 p-6 rounded-lg">
-            <div className="flex gap-4">
-              <Avatar className="w-10 h-10">
-                <AvatarImage src={comment.avatar} alt={comment.author} />
-                <AvatarFallback>{comment.author[0]}</AvatarFallback>
-              </Avatar>
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="font-semibold">{comment.author}</span>
-                  <span className="text-gray-500">{comment.username}</span>
-                  {comment.isMaker && (
-                    <Badge variant="secondary" className="text-xs">
-                      作成者
-                    </Badge>
-                  )}
-                  {comment.isVerified && (
-                    <Badge variant="secondary" className="text-xs bg-green-100 text-green-800">
-                      認証済み
-                    </Badge>
-                  )}
-                </div>
-                <p className="text-gray-700 mb-4">{comment.content}</p>
-                <div className="flex items-center gap-6 text-sm text-gray-500">
-                  <button className="flex items-center gap-1 hover:text-gray-900 transition-colors">
-                    <ArrowUp className="w-4 h-4" />
-                    いいね ({comment.upvotes})
-                  </button>
-                  <button className="flex items-center gap-1 hover:text-gray-900 transition-colors">
-                    <Reply className="w-4 h-4" />
-                    返信
-                  </button>
-                  <button className="flex items-center gap-1 hover:text-gray-900 transition-colors">
-                    <Share2 className="w-4 h-4" />
-                    共有
-                  </button>
-                  <button className="flex items-center gap-1 hover:text-gray-900 transition-colors">
-                    <Flag className="w-4 h-4" />
-                    報告
-                  </button>
-                  <span className="text-gray-400">{comment.timestamp}</span>
+      <ScrollArea className="h-[400px] pr-4">
+        <div className="space-y-6">
+          {comments.map((comment) => (
+            <div key={comment.id} className="bg-gray-50 p-4 rounded-lg">
+              <div className="flex gap-4">
+                <Avatar className="w-10 h-10">
+                  <AvatarImage src={comment.avatar} alt={comment.author} />
+                  <AvatarFallback>{comment.author[0]}</AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="font-semibold">{comment.author}</span>
+                    <span className="text-gray-500">{comment.username}</span>
+                    {comment.isMaker && (
+                      <Badge variant="secondary" className="text-xs">
+                        作成者
+                      </Badge>
+                    )}
+                    {comment.isVerified && (
+                      <Badge variant="secondary" className="text-xs bg-green-100 text-green-800">
+                        認証済み
+                      </Badge>
+                    )}
+                    <span className="text-gray-400 ml-auto text-sm">
+                      {comment.timestamp}
+                    </span>
+                  </div>
+                  <p className="text-gray-700 mb-4">{comment.content}</p>
+                  <div className="flex items-center gap-4 text-sm text-gray-500">
+                    <button className="flex items-center gap-1 hover:text-gray-900 transition-colors">
+                      <ArrowUp className="w-4 h-4" />
+                      <span>{comment.upvotes}</span>
+                    </button>
+                    <button className="flex items-center gap-1 hover:text-gray-900 transition-colors">
+                      <Reply className="w-4 h-4" />
+                      返信
+                    </button>
+                    <button className="flex items-center gap-1 hover:text-gray-900 transition-colors">
+                      <Share2 className="w-4 h-4" />
+                      共有
+                    </button>
+                    <button className="flex items-center gap-1 hover:text-gray-900 transition-colors">
+                      <Flag className="w-4 h-4" />
+                      報告
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+          
+          {comments.length === 0 && (
+            <div className="text-center text-gray-500 py-8">
+              まだコメントはありません。最初のコメントを投稿してみましょう！
+            </div>
+          )}
+        </div>
+      </ScrollArea>
     </div>
   );
 };
