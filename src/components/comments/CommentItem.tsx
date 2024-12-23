@@ -55,17 +55,24 @@ export const CommentItem = ({ comment, onCommentAdded, level = 0 }: CommentItemP
 
   const loadReplies = async () => {
     try {
+      console.log('Loading replies for comment:', comment.id);
       const { data: repliesData, error } = await supabase
         .from('product_comments')
         .select(`
           id,
           content,
-          created_at
+          created_at,
+          user_id
         `)
         .eq('parent_id', comment.id)
         .order('created_at', { ascending: true });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error loading replies:', error);
+        throw error;
+      }
+
+      console.log('Replies data:', repliesData);
 
       const formattedReplies = repliesData.map(reply => ({
         id: reply.id,

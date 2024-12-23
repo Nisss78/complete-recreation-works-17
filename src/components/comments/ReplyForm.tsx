@@ -32,6 +32,12 @@ export const ReplyForm = ({ parentId, onReplyAdded }: ReplyFormProps) => {
     }
 
     try {
+      console.log('Submitting reply:', {
+        parent_id: parentId,
+        user_id: session.user.id,
+        content: replyContent
+      });
+
       const { error } = await supabase
         .from('product_comments')
         .insert({
