@@ -21,21 +21,18 @@ const AuthPage = () => {
     checkUser();
 
     // Listen for auth state changes and errors
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (event === "SIGNED_IN") {
-          navigate("/");
-        }
-        // Handle auth errors
-        if (event === "USER_DELETED" || event === "SIGNED_OUT") {
-          toast({
-            title: "エラー",
-            description: "認証に失敗しました。しばらく待ってから再度お試しください。",
-            variant: "destructive",
-          });
-        }
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN') {
+        navigate("/");
       }
-    );
+      if (event === 'SIGNED_OUT') {
+        toast({
+          title: "エラー",
+          description: "認証に失敗しました。しばらく待ってから再度お試しください。",
+          variant: "destructive",
+        });
+      }
+    });
 
     return () => {
       subscription.unsubscribe();
@@ -62,35 +59,24 @@ const AuthPage = () => {
                 },
               },
             }}
-            providers={[]}
+            providers={["google"]}
             localization={{
               variables: {
                 sign_in: {
                   email_label: 'メールアドレス',
                   password_label: 'パスワード',
                   button_label: 'ログイン',
+                  social_provider_text: "{{provider}}でログイン",
                 },
                 sign_up: {
                   email_label: 'メールアドレス',
                   password_label: 'パスワード',
                   button_label: '新規登録',
+                  social_provider_text: "{{provider}}で登録",
                 },
               },
             }}
-            onError={(error) => {
-              console.error('Auth error:', error);
-              let message = "認証エラーが発生しました。";
-              
-              if (error.message.includes("over_email_send_rate_limit")) {
-                message = "セキュリティのため、24秒以上待ってから再度お試しください。";
-              }
-              
-              toast({
-                title: "エラー",
-                description: message,
-                variant: "destructive",
-              });
-            }}
+            theme="default"
           />
         </div>
       </div>
