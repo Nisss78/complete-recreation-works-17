@@ -16,6 +16,7 @@ interface ProductDialogProps {
     tags: string[];
     upvotes: number;
     comments: number;
+    "Explanatory image": string | null;
   };
 }
 
@@ -53,13 +54,6 @@ const initialComments = [
     isMaker: false,
     isVerified: false
   }
-];
-
-// Add product images array
-const productImages = [
-  "https://images.unsplash.com/photo-1593720213428-28a5b9e94613?w=800&h=400&fit=crop",
-  "https://images.unsplash.com/photo-1555099962-4199c345e5dd?w=800&h=400&fit=crop",
-  "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&h=400&fit=crop"
 ];
 
 const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps) => {
@@ -107,6 +101,8 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
     setComments([newComment, ...comments]);
   };
 
+  const hasImage = product["Explanatory image"] !== null;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl p-0 overflow-hidden">
@@ -114,32 +110,19 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
           <div className="p-8">
             <ProductDetails product={product} />
 
-            <div className="relative mb-8">
-              <ScrollArea className="w-full overflow-x-auto scrollbar-hide">
-                <div className="flex gap-6 pb-4">
-                  {productImages.map((image, index) => (
+            {hasImage && (
+              <div className="relative mb-8">
+                <ScrollArea className="w-full overflow-x-auto scrollbar-hide">
+                  <div className="flex gap-6 pb-4">
                     <img
-                      key={index}
-                      src={image}
-                      alt={`Product screenshot ${index + 1}`}
+                      src={product["Explanatory image"]!}
+                      alt={`${product.name} の説明画像`}
                       className="w-full h-[400px] object-cover rounded-lg flex-shrink-0 transition-transform duration-300 hover:scale-[1.02]"
-                      onClick={() => setCurrentImageIndex(index)}
                     />
-                  ))}
-                </div>
-              </ScrollArea>
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
-                {productImages.map((_, index) => (
-                  <button
-                    key={index}
-                    className={`w-2 h-2 rounded-full transition-colors ${
-                      currentImageIndex === index ? "bg-white" : "bg-white/50"
-                    }`}
-                    onClick={() => setCurrentImageIndex(index)}
-                  />
-                ))}
+                  </div>
+                </ScrollArea>
               </div>
-            </div>
+            )}
           </div>
 
           <div className={`border-t transition-opacity duration-300 ${showComments ? 'opacity-100' : 'opacity-0'}`}>
