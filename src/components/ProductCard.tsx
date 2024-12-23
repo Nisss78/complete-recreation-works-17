@@ -46,7 +46,7 @@ export function ProductCard({
           .select('id')
           .eq('product_id', id)
           .eq('user_id', session.user.id)
-          .single();
+          .maybeSingle(); // Changed from .single() to .maybeSingle()
         
         setHasUpvoted(!!likes);
 
