@@ -5,6 +5,13 @@ import { ProductDetails } from "./product-dialog/ProductDetails";
 import { CommentSection } from "./comments/CommentSection";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 interface ProductDialogProps {
   open: boolean;
@@ -102,6 +109,9 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
     };
   }, [showComments]);
 
+  // 説明画像の配列を作成（将来的に複数画像対応のため）
+  const images = product["Explanatory image"] ? [product["Explanatory image"]] : [];
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl h-[90vh] p-0 overflow-hidden bg-white dark:bg-gray-900">
@@ -114,20 +124,34 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
             <div className="p-6">
               <ProductDetails product={product} />
 
-              {product["Explanatory image"] && (
+              {images.length > 0 && (
                 <div className="mt-6 mb-8">
-                  <div className="w-full aspect-video bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
-                    <img
-                      src={product["Explanatory image"]}
-                      alt={`${product.name} の説明画像`}
-                      className="w-full h-full object-contain"
-                      onError={(e) => {
-                        console.error("Image load error:", e);
-                        const img = e.target as HTMLImageElement;
-                        console.log("Failed image URL:", img.src);
-                      }}
-                    />
-                  </div>
+                  <Carousel className="w-full">
+                    <CarouselContent>
+                      {images.map((image, index) => (
+                        <CarouselItem key={index}>
+                          <div className="w-full aspect-[16/9] bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
+                            <img
+                              src={image}
+                              alt={`${product.name} の説明画像 ${index + 1}`}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                console.error("Image load error:", e);
+                                const img = e.target as HTMLImageElement;
+                                console.log("Failed image URL:", img.src);
+                              }}
+                            />
+                          </div>
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
+                    {images.length > 1 && (
+                      <>
+                        <CarouselPrevious className="left-2" />
+                        <CarouselNext className="right-2" />
+                      </>
+                    )}
+                  </Carousel>
                 </div>
               )}
 
