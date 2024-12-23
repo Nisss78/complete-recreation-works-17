@@ -1,6 +1,7 @@
 import { Upload } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ImageUploadProps {
   title: string;
@@ -22,12 +23,20 @@ export const ImageUpload = ({ title, description, type, onUpload }: ImageUploadP
 
     setIsUploading(true);
     try {
+      // Get the current session
+      const { data: { session } } = await supabase.auth.getSession();
+      
       const response = await fetch('https://viaxlwsbhrzwheekrycv.functions.supabase.co/upload-image', {
         method: 'POST',
+        headers: {
+          // Include the Supabase anon key for authorization
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZpYXhsd3NiaHJ6d2hlZWtyeWN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ4ODI4OTcsImV4cCI6MjA1MDQ1ODg5N30.xBk_tmzB8qUjrr60GJTuIq1G0Wks2t1Pkzo0gEmzjIw'}`
+        },
         body: formData,
       });
 
       if (!response.ok) {
+        console.error('Upload response:', await response.text());
         throw new Error('Upload failed');
       }
 
