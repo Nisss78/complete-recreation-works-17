@@ -44,25 +44,32 @@ const fetchProducts = async () => {
     })
   );
 
-  // いいね数でソート（降順）
-  return productsWithLikes.sort((a, b) => b.upvotes - a.upvotes);
+  // デフォルトは投稿日時順
+  return productsWithLikes;
 };
 
 const Index = () => {
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
+  const [sortByLikes, setSortByLikes] = useState(false);
   
   const { data: allProducts = [], isLoading, error } = useQuery({
     queryKey: ['products'],
     queryFn: fetchProducts,
   });
 
-  // Group products by date
+  // Group products by date and sort within each group
   const groupedProducts = allProducts.reduce((groups: any, product) => {
     const date = format(product.launchDate, 'yyyy-MM-dd');
     if (!groups[date]) {
       groups[date] = [];
     }
     groups[date].push(product);
+    
+    // 各日付グループ内でいいね数でソート（オプション）
+    if (sortByLikes) {
+      groups[date].sort((a: any, b: any) => b.upvotes - a.upvotes);
+    }
+    
     return groups;
   }, {});
 
@@ -98,7 +105,15 @@ const Index = () => {
       
       <main className="flex-1">
         <div className="max-w-4xl mx-auto py-8 px-4">
-          <h1 className="text-3xl font-bold mb-8">Products Launching Today</h1>
+          <div className="flex justify-between items-center mb-8">
+            <h1 className="text-3xl font-bold">Products Launching Today</h1>
+            <button
+              onClick={() => setSortByLikes(!sortByLikes)}
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+            >
+              {sortByLikes ? "投稿順に並び替え" : "いいね順に並び替え"}
+            </button>
+          </div>
           
           {Object.entries(groupedProducts).map(([date, products]: [string, any]) => (
             <div key={date} className="mb-8">
