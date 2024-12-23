@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { MessageCircle, ArrowUp, Share2, Bookmark, BarChart2, X } from "lucide-react";
+import { MessageCircle, ArrowUp, Share2, Bookmark, BarChart2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
@@ -24,10 +24,11 @@ export function ProductCard({
   icon, 
   tags, 
   upvotes: initialUpvotes, 
-  comments, 
+  comments: initialComments, 
   onClick 
 }: ProductCardProps) {
   const [upvotes, setUpvotes] = useState(initialUpvotes);
+  const [comments, setComments] = useState(initialComments);
   const [hasUpvoted, setHasUpvoted] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { toast } = useToast();
@@ -37,6 +38,34 @@ export function ProductCard({
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setIsAuthenticated(!!session);
+
+      if (session) {
+        // Check if user has already liked this product
+        const { data: likes } = await supabase
+          .from('product_likes')
+          .select('id')
+          .eq('product_id', id)
+          .eq('user_id', session.user.id)
+          .single();
+        
+        setHasUpvoted(!!likes);
+
+        // Get total likes count
+        const { count: likesCount } = await supabase
+          .from('product_likes')
+          .select('id', { count: 'exact' })
+          .eq('product_id', id);
+        
+        setUpvotes(likesCount || 0);
+
+        // Get total comments count
+        const { count: commentsCount } = await supabase
+          .from('product_comments')
+          .select('id', { count: 'exact' })
+          .eq('product_id', id);
+        
+        setComments(commentsCount || 0);
+      }
     };
 
     checkAuth();
@@ -48,7 +77,7 @@ export function ProductCard({
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [id]);
 
   const handleAuthRequired = () => {
     toast({
@@ -58,7 +87,7 @@ export function ProductCard({
     navigate("/auth");
   };
 
-  const handleUpvote = (e: React.MouseEvent) => {
+  const handleUpvote = async (e: React.MouseEvent) => {
     e.stopPropagation();
     
     if (!isAuthenticated) {
@@ -66,19 +95,48 @@ export function ProductCard({
       return;
     }
 
-    if (!hasUpvoted) {
-      setUpvotes(prev => prev + 1);
-      setHasUpvoted(true);
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+
+    try {
+      if (!hasUpvoted) {
+        const { error } = await supabase
+          .from('product_likes')
+          .insert({
+            product_id: id,
+            user_id: session.user.id
+          });
+
+        if (error) throw error;
+
+        setUpvotes(prev => prev + 1);
+        setHasUpvoted(true);
+        toast({
+          title: "いいね！",
+          description: `${name}にいいねしました`,
+        });
+      } else {
+        const { error } = await supabase
+          .from('product_likes')
+          .delete()
+          .eq('product_id', id)
+          .eq('user_id', session.user.id);
+
+        if (error) throw error;
+
+        setUpvotes(prev => prev - 1);
+        setHasUpvoted(false);
+        toast({
+          title: "いいねを取り消しました",
+          description: `${name}のいいねを取り消しました`,
+        });
+      }
+    } catch (error) {
+      console.error('Error handling like:', error);
       toast({
-        title: "いいね！",
-        description: `${name}にいいねしました`,
-      });
-    } else {
-      setUpvotes(prev => prev - 1);
-      setHasUpvoted(false);
-      toast({
-        title: "いいねを取り消しました",
-        description: `${name}のいいねを取り消しました`,
+        title: "エラー",
+        description: "操作に失敗しました",
+        variant: "destructive",
       });
     }
   };

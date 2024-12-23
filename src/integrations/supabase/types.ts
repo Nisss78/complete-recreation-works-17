@@ -9,6 +9,67 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      product_comments: {
+        Row: {
+          content: string
+          created_at: string
+          id: number
+          product_id: number | null
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: number
+          product_id?: number | null
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: number
+          product_id?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_comments_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_likes: {
+        Row: {
+          created_at: string
+          id: number
+          product_id: number | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          product_id?: number | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          product_id?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_likes_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_tags: {
         Row: {
           created_at: string

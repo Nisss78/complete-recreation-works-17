@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ArrowUp, Reply, Share2, Flag } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Comment {
   id: number;
@@ -19,31 +20,59 @@ interface Comment {
 }
 
 interface CommentSectionProps {
+  productId: number;
   comments: Comment[];
-  onAddComment: (content: string) => void;
+  onCommentAdded: () => void;
 }
 
-export const CommentSection = ({ comments, onAddComment }: CommentSectionProps) => {
+export const CommentSection = ({ productId, comments, onCommentAdded }: CommentSectionProps) => {
   const [newComment, setNewComment] = useState("");
   const [sortBy, setSortBy] = useState<"best" | "newest">("best");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
-  const handleCommentSubmit = () => {
-    if (newComment.trim()) {
-      onAddComment(newComment);
+  const handleCommentSubmit = async () => {
+    if (!newComment.trim()) return;
+
+    setIsSubmitting(true);
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session) {
+      toast({
+        title: "ログインが必要です",
+        description: "コメントを投稿するにはログインしてください",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('product_comments')
+        .insert({
+          product_id: productId,
+          user_id: session.user.id,
+          content: newComment
+        });
+
+      if (error) throw error;
+
       setNewComment("");
+      onCommentAdded();
       toast({
         title: "コメントを投稿しました",
         description: "あなたのコメントが追加されました",
       });
+    } catch (error) {
+      console.error('Error posting comment:', error);
+      toast({
+        title: "エラー",
+        description: "コメントの投稿に失敗しました",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
-  };
-
-  const handleUpvote = (commentId: number) => {
-    toast({
-      title: "いいね！",
-      description: "コメントにいいねしました",
-    });
   };
 
   return (
@@ -63,9 +92,9 @@ export const CommentSection = ({ comments, onAddComment }: CommentSectionProps) 
         </div>
         <Button 
           onClick={handleCommentSubmit}
-          disabled={!newComment.trim()}
+          disabled={!newComment.trim() || isSubmitting}
         >
-          投稿
+          {isSubmitting ? "投稿中..." : "投稿"}
         </Button>
       </div>
 
@@ -111,10 +140,7 @@ export const CommentSection = ({ comments, onAddComment }: CommentSectionProps) 
                 </div>
                 <p className="text-gray-700 mb-4">{comment.content}</p>
                 <div className="flex items-center gap-6 text-sm text-gray-500">
-                  <button 
-                    className="flex items-center gap-1 hover:text-gray-900 transition-colors"
-                    onClick={() => handleUpvote(comment.id)}
-                  >
+                  <button className="flex items-center gap-1 hover:text-gray-900 transition-colors">
                     <ArrowUp className="w-4 h-4" />
                     いいね ({comment.upvotes})
                   </button>

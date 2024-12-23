@@ -3,6 +3,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { memo, useState, useRef, useEffect } from "react";
 import { ProductDetails } from "./product-dialog/ProductDetails";
 import { CommentSection } from "./comments/CommentSection";
+import { supabase } from "@/integrations/supabase/client";
+import { format } from "date-fns";
 
 interface ProductDialogProps {
   open: boolean;
@@ -20,47 +22,61 @@ interface ProductDialogProps {
   };
 }
 
-const initialComments = [
-  {
-    id: 1,
-    author: "田中 太郎",
-    username: "@taro_tanaka",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=40&h=40&fit=crop",
-    content: "このプロダクトは素晴らしいですね。使いやすさが特に印象的です。",
-    timestamp: "2時間前",
-    upvotes: 6,
-    isMaker: true,
-    isVerified: false
-  },
-  {
-    id: 2,
-    author: "佐藤 花子",
-    username: "@hanako_sato",
-    avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=40&h=40&fit=crop",
-    content: "機能がとても充実していますね。今後の発展が楽しみです。",
-    timestamp: "3時間前",
-    upvotes: 7,
-    isMaker: false,
-    isVerified: true
-  },
-  {
-    id: 3,
-    author: "鈴木 一郎",
-    username: "@ichiro_suzuki",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop",
-    content: "デザインも使いやすさも素晴らしいです。これからも期待しています！",
-    timestamp: "5時間前",
-    upvotes: 5,
-    isMaker: false,
-    isVerified: false
-  }
-];
+interface Comment {
+  id: number;
+  author: string;
+  username: string;
+  avatar: string;
+  content: string;
+  timestamp: string;
+  upvotes: number;
+  isMaker: boolean;
+  isVerified: boolean;
+}
 
 const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showComments, setShowComments] = useState(false);
-  const [comments, setComments] = useState(initialComments);
+  const [comments, setComments] = useState<Comment[]>([]);
+
+  const fetchComments = async () => {
+    try {
+      const { data: commentsData, error } = await supabase
+        .from('product_comments')
+        .select(`
+          id,
+          content,
+          created_at
+        `)
+        .eq('product_id', product.id)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      const formattedComments = commentsData.map(comment => ({
+        id: comment.id,
+        author: "ユーザー",
+        username: "@user",
+        avatar: "https://github.com/shadcn.png",
+        content: comment.content,
+        timestamp: format(new Date(comment.created_at), 'yyyy/MM/dd HH:mm'),
+        upvotes: 0,
+        isMaker: false,
+        isVerified: false
+      }));
+
+      setComments(formattedComments);
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (open) {
+      fetchComments();
+    }
+  }, [open, product.id]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -85,23 +101,6 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
       }
     };
   }, [showComments]);
-
-  const handleAddComment = (content: string) => {
-    const newComment = {
-      id: comments.length + 1,
-      author: "ゲストユーザー",
-      username: "@guest_user",
-      avatar: "https://github.com/shadcn.png",
-      content,
-      timestamp: "たった今",
-      upvotes: 0,
-      isMaker: false,
-      isVerified: false
-    };
-    setComments([newComment, ...comments]);
-  };
-
-  console.log("Explanatory image URL:", product["Explanatory image"]); // デバッグ用
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -132,8 +131,9 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
 
               <div className={`transition-opacity duration-300 ${showComments ? 'opacity-100' : 'opacity-0'}`}>
                 <CommentSection 
+                  productId={product.id}
                   comments={comments}
-                  onAddComment={handleAddComment}
+                  onCommentAdded={fetchComments}
                 />
               </div>
             </div>
