@@ -42,10 +42,8 @@ interface Comment {
 }
 
 const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps) => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState<Comment[]>([]);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const fetchComments = async () => {
     try {
@@ -85,30 +83,6 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
     }
   }, [open, product.id]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (scrollRef.current) {
-        const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
-        const scrollProgress = (scrollTop / (scrollHeight - clientHeight)) * 100;
-        
-        if (scrollProgress > 30 && !showComments) {
-          setShowComments(true);
-        }
-      }
-    };
-
-    const currentRef = scrollRef.current;
-    if (currentRef) {
-      currentRef.addEventListener('scroll', handleScroll);
-    }
-
-    return () => {
-      if (currentRef) {
-        currentRef.removeEventListener('scroll', handleScroll);
-      }
-    };
-  }, [showComments]);
-
   // 説明画像の配列を作成（将来的に複数画像対応のため）
   const images = product["Explanatory image"] ? [product["Explanatory image"]] : [];
 
@@ -135,11 +109,6 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
                               src={image}
                               alt={`${product.name} の説明画像 ${index + 1}`}
                               className="w-full h-full object-cover"
-                              onError={(e) => {
-                                console.error("Image load error:", e);
-                                const img = e.target as HTMLImageElement;
-                                console.log("Failed image URL:", img.src);
-                              }}
                             />
                           </div>
                         </CarouselItem>
@@ -155,7 +124,7 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
                 </div>
               )}
 
-              <div className={`transition-opacity duration-300 ${showComments ? 'opacity-100' : 'opacity-0'}`}>
+              <div className="mt-8">
                 <CommentSection 
                   productId={product.id}
                   comments={comments}
