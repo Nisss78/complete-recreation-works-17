@@ -6,7 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useCommentLikes } from "@/hooks/useCommentLikes";
 import { supabase } from "@/integrations/supabase/client";
 import { ReplyForm } from "./ReplyForm";
-import { CommentReplies } from "./CommentReplies";
+import { ReplyList } from "./comment-replies/ReplyList";
 
 interface CommentItemProps {
   comment: {
@@ -113,7 +113,7 @@ export const CommentItem = ({ comment, onCommentAdded, level = 0 }: CommentItemP
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
       <div className={`bg-gray-50 dark:bg-gray-800/50 p-6 rounded-lg ${level > 0 ? 'ml-8' : ''}`}>
         <div className="flex gap-4">
           <Avatar className="w-10 h-10">
@@ -189,19 +189,10 @@ export const CommentItem = ({ comment, onCommentAdded, level = 0 }: CommentItemP
         </div>
       )}
 
-      {isLoadingReplies && (
-        <div className="ml-8 text-gray-500">
-          返信を読み込み中...
-        </div>
-      )}
-
-      {showReplies && (
-        <CommentReplies 
-          replies={replies}
-          onCommentAdded={onCommentAdded}
-          level={level + 1}
-        />
-      )}
+      <ReplyList 
+        replies={replies}
+        isLoading={isLoadingReplies}
+      />
     </div>
   );
 };
