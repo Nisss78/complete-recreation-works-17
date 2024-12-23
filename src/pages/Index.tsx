@@ -1,6 +1,16 @@
 import { useState } from "react";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductDialog } from "@/components/ProductDialog";
+import { format, subDays } from "date-fns";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+// 過去7日分のデータを生成
+const generateDates = () => {
+  return Array.from({ length: 7 }, (_, i) => {
+    const date = subDays(new Date(), i);
+    return format(date, 'yyyy-MM-dd');
+  });
+};
 
 const products = [
   {
@@ -11,6 +21,7 @@ const products = [
     tags: ["Developer Tools", "Artificial Intelligence"],
     upvotes: 294,
     comments: 23,
+    launchDate: "2024-04-10",
   },
   {
     id: 2,
@@ -20,6 +31,7 @@ const products = [
     tags: ["Education", "Development", "Web Design"],
     upvotes: 201,
     comments: 7,
+    launchDate: "2024-04-09",
   },
   {
     id: 3,
@@ -29,6 +41,7 @@ const products = [
     tags: ["Chrome Extensions", "Hiring", "Social Networking"],
     upvotes: 172,
     comments: 5,
+    launchDate: "2024-04-08",
   },
   {
     id: 4,
@@ -38,6 +51,7 @@ const products = [
     tags: ["Health & Fitness", "Lifestyle"],
     upvotes: 164,
     comments: 7,
+    launchDate: "2024-04-07",
   },
   {
     id: 5,
@@ -47,25 +61,60 @@ const products = [
     tags: ["Home Automation"],
     upvotes: 154,
     comments: 3,
+    launchDate: "2024-04-06",
   },
 ];
 
 const Index = () => {
   const [selectedProduct, setSelectedProduct] = useState<typeof products[0] | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
+  
+  const dates = generateDates();
+  const filteredProducts = products.filter(product => product.launchDate === selectedDate);
+
+  const formatDisplayDate = (date: string) => {
+    const today = format(new Date(), 'yyyy-MM-dd');
+    const yesterday = format(subDays(new Date(), 1), 'yyyy-MM-dd');
+    
+    if (date === today) return "Today";
+    if (date === yesterday) return "Yesterday";
+    return format(new Date(date), 'MMM d');
+  };
 
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-4xl mx-auto py-8 px-4">
-        <h1 className="text-3xl font-bold mb-8">Top Products Launching Today</h1>
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-3xl font-bold">Products Launching {selectedDate === format(new Date(), 'yyyy-MM-dd') ? 'Today' : formatDisplayDate(selectedDate)}</h1>
+          
+          <Select value={selectedDate} onValueChange={setSelectedDate}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select date" />
+            </SelectTrigger>
+            <SelectContent>
+              {dates.map((date) => (
+                <SelectItem key={date} value={date}>
+                  {formatDisplayDate(date)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
         
         <div className="space-y-4">
-          {products.map((product) => (
-            <ProductCard 
-              key={product.id} 
-              {...product} 
-              onClick={() => setSelectedProduct(product)}
-            />
-          ))}
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => (
+              <ProductCard 
+                key={product.id} 
+                {...product} 
+                onClick={() => setSelectedProduct(product)}
+              />
+            ))
+          ) : (
+            <div className="text-center py-8 text-gray-500">
+              No products launched on this date
+            </div>
+          )}
         </div>
       </div>
 
