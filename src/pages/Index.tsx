@@ -14,10 +14,6 @@ const fetchProducts = async () => {
       *,
       product_tags (
         tag
-      ),
-      product_links (
-        description,
-        url
       )
     `)
     .order('created_at', { ascending: false });
@@ -30,6 +26,7 @@ const fetchProducts = async () => {
     tagline: product.tagline,
     description: product.description,
     icon: product.icon_url,
+    URL: product.URL,
     tags: product.product_tags?.map(t => t.tag) || [],
     upvotes: 0, // TODO: Implement upvotes system
     comments: 0, // TODO: Implement comments system
