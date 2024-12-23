@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductDialog } from "@/components/ProductDialog";
 import { format, subDays } from "date-fns";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 
-// Demo products with launch dates
 const generateDemoProducts = (date: Date) => [
   {
     id: 1,
@@ -106,33 +107,39 @@ const Index = () => {
   }, {});
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-4xl mx-auto py-8 px-4">
-        <h1 className="text-3xl font-bold mb-8">Products Launching Today</h1>
-        
-        {Object.entries(groupedProducts).map(([date, products]: [string, any]) => (
-          <div key={date} className="mb-8">
-            <h2 className="text-xl font-semibold mb-4">
-              {format(new Date(date), 'MMMM d, yyyy')}
-            </h2>
-            <div className="space-y-4">
-              {products.map((product: any) => (
-                <ProductCard 
-                  key={`${product.id}-${date}`}
-                  {...product}
-                  onClick={() => setSelectedProduct(product)}
-                />
-              ))}
+    <div className="min-h-screen bg-white flex flex-col">
+      <Header />
+      
+      <main className="flex-1">
+        <div className="max-w-4xl mx-auto py-8 px-4">
+          <h1 className="text-3xl font-bold mb-8">Products Launching Today</h1>
+          
+          {Object.entries(groupedProducts).map(([date, products]: [string, any]) => (
+            <div key={date} className="mb-8">
+              <h2 className="text-xl font-semibold mb-4">
+                {format(new Date(date), 'MMMM d, yyyy')}
+              </h2>
+              <div className="space-y-4">
+                {products.map((product: any) => (
+                  <ProductCard 
+                    key={`${product.id}-${date}`}
+                    {...product}
+                    onClick={() => setSelectedProduct(product)}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
 
-        {visibleDays < 14 && (
-          <div className="text-center text-gray-500 mt-4">
-            Scroll for more products...
-          </div>
-        )}
-      </div>
+          {visibleDays < 14 && (
+            <div className="text-center text-gray-500 mt-4">
+              Scroll for more products...
+            </div>
+          )}
+        </div>
+      </main>
+
+      <Footer />
 
       {selectedProduct && (
         <ProductDialog
