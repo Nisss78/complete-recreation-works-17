@@ -16,6 +16,12 @@ export const ProductLinks = ({ links, setLinks }: ProductLinksProps) => {
     setLinks(links.filter((_, i) => i !== index));
   };
 
+  const handleLinkChange = (index: number, field: 'description' | 'url', value: string) => {
+    const newLinks = [...links];
+    newLinks[index] = { ...newLinks[index], [field]: value };
+    setLinks(newLinks);
+  };
+
   return (
     <div>
       <div className="flex items-center justify-between mb-1">
@@ -36,10 +42,14 @@ export const ProductLinks = ({ links, setLinks }: ProductLinksProps) => {
             <Input
               placeholder="リンクの説明（例：公式サイト、ドキュメント、YouTube動画）"
               className="bg-[#221F26] border-[#333333] text-white"
+              value={link.description}
+              onChange={(e) => handleLinkChange(index, 'description', e.target.value)}
             />
             <Input
               placeholder="URL（例：https://example.com）"
               className="bg-[#221F26] border-[#333333] text-white"
+              value={link.url}
+              onChange={(e) => handleLinkChange(index, 'url', e.target.value)}
             />
             <Button
               variant="ghost"

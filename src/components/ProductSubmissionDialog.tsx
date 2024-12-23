@@ -38,6 +38,8 @@ export const ProductSubmissionDialog = ({
     setIsSubmitting(true);
 
     try {
+      console.log('Submitting product with URL:', links[0]?.url);
+      
       // Insert product
       const { data: product, error: productError } = await supabase
         .from('products')
