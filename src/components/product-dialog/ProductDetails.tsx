@@ -60,27 +60,6 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
 
     checkAuth();
     fetchCommentCount();
-
-    const channel = supabase
-      .channel('product-details-updates')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'product_comments',
-          filter: `product_id=eq.${product.id}`
-        },
-        () => {
-          console.log('Comment update detected in details for product:', product.id);
-          fetchCommentCount();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
   }, [product.id]);
 
   const handleLike = async () => {
@@ -167,16 +146,15 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
 
       {images.length > 0 && (
         <div className="mt-8 mb-8">
-          <Carousel className="w-full max-w-4xl mx-auto">
+          <Carousel className="w-full max-w-3xl mx-auto">
             <CarouselContent>
               {images.map((image, index) => (
                 <CarouselItem key={index}>
-                  <div className="w-full aspect-[16/9] bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden flex items-center justify-center">
+                  <div className="flex items-center justify-center p-4">
                     <img
                       src={image}
                       alt={`${product.name} の説明画像 ${index + 1}`}
-                      className="max-w-full max-h-full object-contain"
-                      style={{ maxHeight: '500px' }}
+                      className="max-w-full max-h-[500px] object-contain rounded-lg"
                     />
                   </div>
                 </CarouselItem>
