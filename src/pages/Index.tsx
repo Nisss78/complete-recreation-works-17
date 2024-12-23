@@ -9,7 +9,8 @@ const generateDemoProducts = (date: Date) => [
   {
     id: 1,
     name: "Websparks",
-    description: "The AI software engineer that brings your ideas to life",
+    tagline: "The AI software engineer that brings your ideas to life",
+    description: "WebSparks is an AI Software Engineer that seamlessly manages your entire software development lifecycle, just like a human engineer. It simplifies application development by handling everything from planning to deployment, making software creation accessible to everyone.",
     icon: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=64&h=64&fit=crop",
     tags: ["Developer Tools", "Artificial Intelligence"],
     upvotes: 294,
@@ -19,7 +20,8 @@ const generateDemoProducts = (date: Date) => [
   {
     id: 2,
     name: "Shortcutter",
-    description: "A new hot key, every day",
+    tagline: "A new hot key, every day",
+    description: "Shortcutter is your personal productivity companion that introduces you to a new keyboard shortcut every day. Learn to navigate your favorite applications like a pro, saving precious time and becoming more efficient in your daily workflow.",
     icon: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=64&h=64&fit=crop",
     tags: ["Education", "Development", "Web Design"],
     upvotes: 201,
@@ -60,10 +62,9 @@ const generateDemoProducts = (date: Date) => [
 
 const Index = () => {
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
-  const [visibleDays, setVisibleDays] = useState(3); // Start with 3 days
+  const [visibleDays, setVisibleDays] = useState(3);
   const [allProducts, setAllProducts] = useState<any[]>([]);
 
-  // Generate dates for the past 14 days
   const generateDates = (numDays: number) => {
     return Array.from({ length: numDays }, (_, i) => {
       const date = subDays(new Date(), i);

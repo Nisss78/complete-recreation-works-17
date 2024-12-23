@@ -4,6 +4,7 @@ import { MessageCircle, ArrowUp } from "lucide-react";
 interface ProductCardProps {
   id: number;
   name: string;
+  tagline: string;
   description: string;
   icon: string;
   tags: string[];
@@ -12,7 +13,16 @@ interface ProductCardProps {
   onClick: () => void;
 }
 
-export function ProductCard({ id, name, description, icon, tags, upvotes, comments, onClick }: ProductCardProps) {
+export function ProductCard({ 
+  id, 
+  name, 
+  tagline, 
+  icon, 
+  tags, 
+  upvotes, 
+  comments, 
+  onClick 
+}: ProductCardProps) {
   return (
     <div 
       className="flex items-start gap-4 p-4 hover:bg-gray-50 transition-colors rounded-lg animate-fade-in cursor-pointer" 
@@ -22,7 +32,7 @@ export function ProductCard({ id, name, description, icon, tags, upvotes, commen
       
       <div className="flex-1">
         <h3 className="text-lg font-semibold">{name}</h3>
-        <p className="text-gray-600 mb-2">{description}</p>
+        <p className="text-gray-600 mb-2">{tagline}</p>
         
         <div className="flex flex-wrap gap-2">
           {tags.map((tag) => (
