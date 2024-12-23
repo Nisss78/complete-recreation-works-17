@@ -17,7 +17,7 @@ interface ProductFormProps {
   tags: string[];
   setTags: React.Dispatch<React.SetStateAction<string[]>>;
   setIconUrl: (url: string) => void;
-  setDescriptionImages: (urls: string[]) => void;
+  setDescriptionImages: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 export const ProductForm = ({
