@@ -135,12 +135,10 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
         </div>
       </div>
 
-      {product.images && product.images.length > 0 && (
-        <ProductImageCarousel 
-          productName={product.name}
-          images={product.images}
-        />
-      )}
+      <ProductImageCarousel 
+        productName={product.name}
+        images={product.images}
+      />
     </div>
   );
 };

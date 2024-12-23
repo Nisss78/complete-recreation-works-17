@@ -5,7 +5,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ImageOff } from "lucide-react";
 
 interface ProductImageCarouselProps {
   productName: string;
@@ -13,7 +13,18 @@ interface ProductImageCarouselProps {
 }
 
 export const ProductImageCarousel = ({ productName, images }: ProductImageCarouselProps) => {
-  if (images.length === 0) return null;
+  console.log("ProductImageCarousel received images:", images);
+
+  if (!images || images.length === 0) {
+    return (
+      <div className="mt-8 mb-8 flex flex-col items-center justify-center p-8 bg-gray-100 dark:bg-gray-800 rounded-lg">
+        <ImageOff className="w-12 h-12 text-gray-400 mb-2" />
+        <p className="text-gray-500 dark:text-gray-400">
+          説明画像はありません
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-8 mb-8">
