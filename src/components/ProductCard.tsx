@@ -1,5 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { MessageCircle, ArrowUp, Share2, Bookmark, BarChart2, X } from "lucide-react";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 interface ProductCardProps {
   id: number;
@@ -19,10 +21,34 @@ export function ProductCard({
   tagline, 
   icon, 
   tags, 
-  upvotes, 
+  upvotes: initialUpvotes, 
   comments, 
   onClick 
 }: ProductCardProps) {
+  const [upvotes, setUpvotes] = useState(initialUpvotes);
+  const [hasUpvoted, setHasUpvoted] = useState(false);
+  const { toast } = useToast();
+
+  const handleUpvote = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    if (!hasUpvoted) {
+      setUpvotes(prev => prev + 1);
+      setHasUpvoted(true);
+      toast({
+        title: "Upvoted!",
+        description: `You upvoted ${name}`,
+      });
+    } else {
+      setUpvotes(prev => prev - 1);
+      setHasUpvoted(false);
+      toast({
+        title: "Removed upvote",
+        description: `You removed your upvote from ${name}`,
+      });
+    }
+  };
+
   return (
     <div 
       className="flex items-start gap-6 p-6 hover:bg-gray-50 transition-colors rounded-lg animate-fade-in cursor-pointer relative" 
@@ -56,11 +82,12 @@ export function ProductCard({
       
       <div className="flex items-center gap-3">
         <button 
-          className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-upvote rounded-full border border-gray-200 hover:border-upvote transition-colors"
-          onClick={(e) => {
-            e.stopPropagation();
-            // Handle upvote
-          }}
+          className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-colors ${
+            hasUpvoted 
+              ? "text-upvote border-upvote" 
+              : "text-gray-700 hover:text-upvote border-gray-200 hover:border-upvote"
+          }`}
+          onClick={handleUpvote}
         >
           <ArrowUp className="w-4 h-4" />
           <span className="font-medium">{upvotes}</span>
