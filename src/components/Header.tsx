@@ -1,11 +1,33 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { FileText, User, Plus } from "lucide-react";
+import { FileText, User, Plus, LogOut } from "lucide-react";
 import { useState } from "react";
 import { ProductSubmissionDialog } from "./ProductSubmissionDialog";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 export const Header = () => {
   const [showSubmissionDialog, setShowSubmissionDialog] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      toast({
+        title: "ログアウト完了",
+        description: "ログアウトしました",
+      });
+      navigate("/auth");
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast({
+        title: "エラー",
+        description: "ログアウトに失敗しました",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <>
@@ -28,9 +50,13 @@ export const Header = () => {
               <FileText className="w-4 h-4" />
               記事
             </Button>
-            <Button variant="ghost" className="flex items-center gap-2">
-              <User className="w-4 h-4" />
-              ログイン
+            <Button 
+              variant="ghost" 
+              className="flex items-center gap-2"
+              onClick={handleLogout}
+            >
+              <LogOut className="w-4 h-4" />
+              ログアウト
             </Button>
           </div>
         </div>
