@@ -23,6 +23,14 @@ export const ImageUpload = ({
   const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
 
+  const sanitizeFileName = (fileName: string) => {
+    // Remove Japanese characters and special characters, replace spaces with underscores
+    return fileName
+      .replace(/[^\x00-\x7F]/g, '')
+      .replace(/[^a-zA-Z0-9.-]/g, '_')
+      .toLowerCase();
+  };
+
   const handleUpload = async (file: File) => {
     if (!file) return;
 
@@ -37,17 +45,25 @@ export const ImageUpload = ({
 
     setIsUploading(true);
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('type', type);
+      const fileExt = file.name.split('.').pop();
+      const sanitizedFileName = `${crypto.randomUUID()}.${fileExt}`;
+      const filePath = `${type}s/${sanitizedFileName}`;
 
-      const { data: { publicUrl }, error } = await supabase.storage
+      const { data, error } = await supabase.storage
         .from('product-images')
-        .upload(`${type}s/${crypto.randomUUID()}-${file.name}`, file);
+        .upload(filePath, file, {
+          contentType: file.type,
+          upsert: false
+        });
 
       if (error) {
         throw error;
       }
+
+      // Get the public URL after successful upload
+      const { data: { publicUrl } } = supabase.storage
+        .from('product-images')
+        .getPublicUrl(filePath);
 
       onUpload(publicUrl);
       
