@@ -29,6 +29,7 @@ export const CommentItem = ({ comment, onCommentAdded, level = 0 }: CommentItemP
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [replies, setReplies] = useState<any[]>([]);
   const [showReplies, setShowReplies] = useState(false);
+  const [isLoadingReplies, setIsLoadingReplies] = useState(false);
   const { totalLikes, hasLiked, toggleLike } = useCommentLikes(comment.id);
   const { toast } = useToast();
 
@@ -56,6 +57,7 @@ export const CommentItem = ({ comment, onCommentAdded, level = 0 }: CommentItemP
 
   const loadReplies = async () => {
     try {
+      setIsLoadingReplies(true);
       console.log('Loading replies for comment:', comment.id);
       const { data: repliesData, error } = await supabase
         .from('product_comments')
@@ -70,6 +72,8 @@ export const CommentItem = ({ comment, onCommentAdded, level = 0 }: CommentItemP
 
       if (error) throw error;
 
+      console.log('Fetched replies:', repliesData);
+
       const formattedReplies = repliesData.map(reply => ({
         id: reply.id,
         author: "ユーザー",
@@ -82,6 +86,7 @@ export const CommentItem = ({ comment, onCommentAdded, level = 0 }: CommentItemP
         isVerified: false
       }));
 
+      console.log('Formatted replies:', formattedReplies);
       setReplies(formattedReplies);
     } catch (error) {
       console.error('Error loading replies:', error);
@@ -90,11 +95,13 @@ export const CommentItem = ({ comment, onCommentAdded, level = 0 }: CommentItemP
         description: "返信の読み込みに失敗しました",
         variant: "destructive",
       });
+    } finally {
+      setIsLoadingReplies(false);
     }
   };
 
   const handleToggleReplies = async () => {
-    if (!showReplies && comment.reply_count > 0) {
+    if (!showReplies && comment.reply_count && comment.reply_count > 0) {
       await loadReplies();
     }
     setShowReplies(!showReplies);
@@ -179,6 +186,12 @@ export const CommentItem = ({ comment, onCommentAdded, level = 0 }: CommentItemP
               setShowReplyForm(false);
             }}
           />
+        </div>
+      )}
+
+      {isLoadingReplies && (
+        <div className="ml-8 text-gray-500">
+          返信を読み込み中...
         </div>
       )}
 
