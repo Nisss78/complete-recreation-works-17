@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductDialog } from "@/components/ProductDialog";
 import { format } from "date-fns";
@@ -6,9 +6,9 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useParams, useNavigate } from "react-router-dom";
 
 const fetchProducts = async () => {
-  // まず、プロダクトの基本情報とタグを取得
   const { data: products, error } = await supabase
     .from('products')
     .select(`
@@ -21,7 +21,6 @@ const fetchProducts = async () => {
 
   if (error) throw error;
 
-  // 各プロダクトのいいね数を取得
   const productsWithLikes = await Promise.all(
     products.map(async (product) => {
       const { count } = await supabase
@@ -44,20 +43,30 @@ const fetchProducts = async () => {
     })
   );
 
-  // デフォルトは投稿日時順
   return productsWithLikes;
 };
 
 const Index = () => {
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
   const [sortByLikes, setSortByLikes] = useState(false);
+  const { productId } = useParams();
+  const navigate = useNavigate();
   
   const { data: allProducts = [], isLoading, error } = useQuery({
     queryKey: ['products'],
     queryFn: fetchProducts,
   });
 
-  // Group products by date and sort within each group
+  // URLパラメータからプロダクトを選択
+  useEffect(() => {
+    if (productId && allProducts.length > 0) {
+      const product = allProducts.find((p) => p.name.toLowerCase().replace(/\s+/g, '-') === productId);
+      if (product) {
+        setSelectedProduct(product);
+      }
+    }
+  }, [productId, allProducts]);
+
   const groupedProducts = allProducts.reduce((groups: any, product) => {
     const date = format(product.launchDate, 'yyyy-MM-dd');
     if (!groups[date]) {
@@ -65,13 +74,23 @@ const Index = () => {
     }
     groups[date].push(product);
     
-    // 各日付グループ内でいいね数でソート（オプション）
     if (sortByLikes) {
       groups[date].sort((a: any, b: any) => b.upvotes - a.upvotes);
     }
     
     return groups;
   }, {});
+
+  const handleProductClick = (product: any) => {
+    setSelectedProduct(product);
+    const productSlug = product.name.toLowerCase().replace(/\s+/g, '-');
+    navigate(`/posts/${productSlug}`);
+  };
+
+  const handleDialogClose = () => {
+    setSelectedProduct(null);
+    navigate('/');
+  };
 
   if (isLoading) {
     return (
@@ -125,7 +144,7 @@ const Index = () => {
                   <ProductCard 
                     key={`${product.id}-${date}`}
                     {...product}
-                    onClick={() => setSelectedProduct(product)}
+                    onClick={() => handleProductClick(product)}
                   />
                 ))}
               </div>
@@ -147,7 +166,7 @@ const Index = () => {
       {selectedProduct && (
         <ProductDialog
           open={!!selectedProduct}
-          onOpenChange={(open) => !open && setSelectedProduct(null)}
+          onOpenChange={handleDialogClose}
           product={selectedProduct}
         />
       )}
