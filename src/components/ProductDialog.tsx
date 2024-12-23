@@ -101,47 +101,42 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
     setComments([newComment, ...comments]);
   };
 
-  console.log("Product Explanatory image:", product["Explanatory image"]); // デバッグ用
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl p-0 overflow-hidden">
+      <DialogContent className="max-w-4xl h-[90vh] p-0 overflow-hidden bg-white dark:bg-gray-900">
         <DialogTitle className="sr-only">
           {product.name}の詳細
         </DialogTitle>
-        <ScrollArea className="h-[90vh]" ref={scrollRef}>
-          <div className="p-8">
-            <ProductDetails product={product} />
-
-            {product["Explanatory image"] && (
-              <div className="relative mb-8">
-                <ScrollArea className="w-full overflow-x-auto scrollbar-hide">
-                  <div className="flex gap-6 pb-4">
-                    <img
-                      src={product["Explanatory image"]}
-                      alt={`${product.name} の説明画像`}
-                      className="w-full h-[400px] object-cover rounded-lg flex-shrink-0 transition-transform duration-300 hover:scale-[1.02]"
-                      onError={(e) => {
-                        console.error("Image load error:", e);
-                        const img = e.target as HTMLImageElement;
-                        console.log("Failed image URL:", img.src);
-                      }}
-                    />
-                  </div>
-                </ScrollArea>
-              </div>
-            )}
-          </div>
-
-          <div className={`border-t transition-opacity duration-300 ${showComments ? 'opacity-100' : 'opacity-0'}`}>
+        
+        <div className="flex flex-col h-full">
+          <ScrollArea className="flex-1" ref={scrollRef}>
             <div className="p-8">
-              <CommentSection 
-                comments={comments}
-                onAddComment={handleAddComment}
-              />
+              <ProductDetails product={product} />
+
+              {product["Explanatory image"] && (
+                <div className="relative mb-8">
+                  <img
+                    src={product["Explanatory image"]}
+                    alt={`${product.name} の説明画像`}
+                    className="w-full h-auto max-h-[400px] object-contain rounded-lg shadow-lg"
+                    onError={(e) => {
+                      console.error("Image load error:", e);
+                      const img = e.target as HTMLImageElement;
+                      console.log("Failed image URL:", img.src);
+                    }}
+                  />
+                </div>
+              )}
+
+              <div className={`transition-opacity duration-300 ${showComments ? 'opacity-100' : 'opacity-0'}`}>
+                <CommentSection 
+                  comments={comments}
+                  onAddComment={handleAddComment}
+                />
+              </div>
             </div>
-          </div>
-        </ScrollArea>
+          </ScrollArea>
+        </div>
       </DialogContent>
     </Dialog>
   );
