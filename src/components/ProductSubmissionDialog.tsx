@@ -1,12 +1,8 @@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useState } from "react";
-import { ProductLinks } from "./product-submission/ProductLinks";
-import { ProductTags } from "./product-submission/ProductTags";
-import { ImageUpload } from "./product-submission/ImageUpload";
+import { ProductForm } from "./product-submission/ProductForm";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -21,15 +17,16 @@ export const ProductSubmissionDialog = ({
 }: ProductSubmissionDialogProps) => {
   const [links, setLinks] = useState<{ description: string; url: string }[]>([]);
   const [tags, setTags] = useState<string[]>([]);
-  const [newTag, setNewTag] = useState("");
   const [name, setName] = useState("");
   const [tagline, setTagline] = useState("");
   const [description, setDescription] = useState("");
+  const [iconUrl, setIconUrl] = useState("");
+  const [descriptionImages, setDescriptionImages] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
   const handleSubmit = async () => {
-    if (!name || !tagline || !description) {
+    if (!name || !tagline || !description || !iconUrl) {
       toast({
         title: "入力エラー",
         description: "必須項目を入力してください",
@@ -48,7 +45,7 @@ export const ProductSubmissionDialog = ({
           name,
           tagline,
           description,
-          icon_url: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=64&h=64&fit=crop", // TODO: Replace with actual uploaded image
+          icon_url: iconUrl,
         })
         .select()
         .single();
@@ -95,6 +92,8 @@ export const ProductSubmissionDialog = ({
       setDescription("");
       setTags([]);
       setLinks([]);
+      setIconUrl("");
+      setDescriptionImages([]);
       onOpenChange(false);
 
     } catch (error) {
@@ -113,80 +112,20 @@ export const ProductSubmissionDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] bg-[#1A1F2C] text-white border-[#333333] p-0">
         <ScrollArea className="h-full max-h-[calc(90vh-4rem)]">
-          <div className="space-y-6 p-6">
-            <div>
-              <h2 className="text-xl font-bold mb-1">プロダクトを投稿 🎉</h2>
-              <p className="text-sm text-gray-400">
-                投稿したプロダクトは何度でも編集できます！
-                <br />
-                とりあえず投稿してみましょう！
-                <br />
-                タイムライン機能を使って進捗をアピールするのもアリです！
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  プロダクト名 <span className="text-red-500">*</span>
-                </label>
-                <Input 
-                  placeholder="例: TaskFlow" 
-                  className="bg-[#221F26] border-[#333333] text-white"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  maxLength={50}
-                />
-                <p className="text-xs text-gray-400 mt-1">残り{50 - name.length}文字</p>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  タグライン <span className="text-red-500">*</span>
-                </label>
-                <Input 
-                  placeholder="例: 人工知能の力で、あなたの成功物語を" 
-                  className="bg-[#221F26] border-[#333333] text-white"
-                  value={tagline}
-                  onChange={(e) => setTagline(e.target.value)}
-                  maxLength={100}
-                />
-                <p className="text-xs text-gray-400 mt-1">残り{100 - tagline.length}文字</p>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  説明 <span className="text-red-500">*</span>
-                </label>
-                <Textarea 
-                  placeholder="プロダクトの概要を説明してください（50文字以上）" 
-                  className="bg-[#221F26] border-[#333333] text-white min-h-[120px]"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-              </div>
-
-              <ProductLinks links={links} setLinks={setLinks} />
-              <ProductTags tags={tags} setTags={setTags} newTag={newTag} setNewTag={setNewTag} />
-
-              <ImageUpload 
-                title="アイコン画像"
-                description={[
-                  "512×512ピクセル以上",
-                  "2MB以下（PNG/JPG/PNG形式）"
-                ]}
-              />
-
-              <ImageUpload 
-                title="説明画像（最大5枚）"
-                description={[
-                  "クリックまたはドラッグ&ドロップで画像をアップロード",
-                  "5MB以下（PNG/JPG/PNG形式）",
-                  "16:9推奨"
-                ]}
-              />
-            </div>
-          </div>
+          <ProductForm
+            name={name}
+            setName={setName}
+            tagline={tagline}
+            setTagline={setTagline}
+            description={description}
+            setDescription={setDescription}
+            links={links}
+            setLinks={setLinks}
+            tags={tags}
+            setTags={setTags}
+            setIconUrl={setIconUrl}
+            setDescriptionImages={setDescriptionImages}
+          />
         </ScrollArea>
 
         <div className="flex justify-end gap-3 p-4 border-t border-[#333333]">

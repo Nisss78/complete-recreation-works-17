@@ -8,9 +8,12 @@ import {
   BarChart2, 
   ExternalLink 
 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useState } from "react";
 
 interface ProductDetailsProps {
   product: {
+    id: number;
     name: string;
     tagline: string;
     description: string;
@@ -22,6 +25,30 @@ interface ProductDetailsProps {
 }
 
 export const ProductDetails = ({ product }: ProductDetailsProps) => {
+  const [productLinks, setProductLinks] = useState<{ url: string }[]>([]);
+
+  useEffect(() => {
+    const fetchProductLinks = async () => {
+      const { data: links } = await supabase
+        .from('product_links')
+        .select('url')
+        .eq('product_id', product.id)
+        .limit(1);
+      
+      if (links) {
+        setProductLinks(links);
+      }
+    };
+
+    fetchProductLinks();
+  }, [product.id]);
+
+  const handleVisit = () => {
+    if (productLinks.length > 0) {
+      window.open(productLinks[0].url, '_blank');
+    }
+  };
+
   return (
     <div className="flex items-start gap-4 mb-6">
       <img src={product.icon} alt={product.name} className="w-16 h-16 rounded-lg object-cover" />
@@ -38,7 +65,12 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
         </div>
       </div>
       <div className="flex gap-2">
-        <Button variant="outline" className="gap-2">
+        <Button 
+          variant="outline" 
+          className="gap-2"
+          onClick={handleVisit}
+          disabled={productLinks.length === 0}
+        >
           <ExternalLink className="w-4 h-4" />
           Visit
         </Button>
