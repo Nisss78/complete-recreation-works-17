@@ -35,6 +35,13 @@ export const ProductForm = ({
   setDescriptionImages,
 }: ProductFormProps) => {
   const [newTag, setNewTag] = useState("");
+  const [descriptionImageUrls, setDescriptionImageUrls] = useState<string[]>([]);
+
+  const handleDescriptionImageUpload = (url: string) => {
+    const newUrls = [...descriptionImageUrls, url];
+    setDescriptionImageUrls(newUrls);
+    setDescriptionImages(newUrls);
+  };
 
   return (
     <div className="space-y-6 p-6">
@@ -111,8 +118,24 @@ export const ProductForm = ({
             "16:9推奨"
           ]}
           type="description"
-          onUpload={(url) => setDescriptionImages(prev => [...prev, url])}
+          onUpload={handleDescriptionImageUpload}
+          maxFiles={5}
+          currentFiles={descriptionImageUrls.length}
         />
+
+        {descriptionImageUrls.length > 0 && (
+          <div className="grid grid-cols-2 gap-4">
+            {descriptionImageUrls.map((url, index) => (
+              <div key={index} className="relative">
+                <img 
+                  src={url} 
+                  alt={`説明画像 ${index + 1}`} 
+                  className="w-full h-40 object-cover rounded-lg"
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

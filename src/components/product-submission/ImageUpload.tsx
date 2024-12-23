@@ -8,40 +8,48 @@ interface ImageUploadProps {
   description: string[];
   type: 'icon' | 'description';
   onUpload: (url: string) => void;
+  maxFiles?: number;
+  currentFiles?: number;
 }
 
-export const ImageUpload = ({ title, description, type, onUpload }: ImageUploadProps) => {
+export const ImageUpload = ({ 
+  title, 
+  description, 
+  type, 
+  onUpload,
+  maxFiles = 1,
+  currentFiles = 0
+}: ImageUploadProps) => {
   const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
 
   const handleUpload = async (file: File) => {
     if (!file) return;
 
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('type', type);
+    if (type === 'description' && currentFiles >= maxFiles) {
+      toast({
+        title: "エラー",
+        description: `最大${maxFiles}枚までしかアップロードできません`,
+        variant: "destructive",
+      });
+      return;
+    }
 
     setIsUploading(true);
     try {
-      // Get the current session
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      const response = await fetch('https://viaxlwsbhrzwheekrycv.functions.supabase.co/upload-image', {
-        method: 'POST',
-        headers: {
-          // Include the Supabase anon key for authorization
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZpYXhsd3NiaHJ6d2hlZWtyeWN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ4ODI4OTcsImV4cCI6MjA1MDQ1ODg5N30.xBk_tmzB8qUjrr60GJTuIq1G0Wks2t1Pkzo0gEmzjIw'}`
-        },
-        body: formData,
-      });
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('type', type);
 
-      if (!response.ok) {
-        console.error('Upload response:', await response.text());
-        throw new Error('Upload failed');
+      const { data: { publicUrl }, error } = await supabase.storage
+        .from('product-images')
+        .upload(`${type}s/${crypto.randomUUID()}-${file.name}`, file);
+
+      if (error) {
+        throw error;
       }
 
-      const { url } = await response.json();
-      onUpload(url);
+      onUpload(publicUrl);
       
       toast({
         title: "アップロード完了",
@@ -85,18 +93,25 @@ export const ImageUpload = ({ title, description, type, onUpload }: ImageUploadP
             if (file) handleUpload(file);
           }}
           accept="image/*"
-          disabled={isUploading}
+          disabled={isUploading || (type === 'description' && currentFiles >= maxFiles)}
         />
         <div className="flex flex-col items-center">
           <Upload className="w-8 h-8 text-gray-400 mb-2" />
           <p className="text-sm text-gray-400">
             {isUploading ? "アップロード中..." : (
-              description.map((line, index) => (
-                <span key={index}>
-                  {line}
-                  <br />
-                </span>
-              ))
+              <>
+                {description.map((line, index) => (
+                  <span key={index}>
+                    {line}
+                    <br />
+                  </span>
+                ))}
+                {type === 'description' && (
+                  <span className="mt-2 block">
+                    {currentFiles}/{maxFiles}枚
+                  </span>
+                )}
+              </>
             )}
           </p>
         </div>
