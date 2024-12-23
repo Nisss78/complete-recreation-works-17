@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowUp, MessageCircle, Share2, Bookmark, BarChart2, ExternalLink } from "lucide-react";
 import { memo, useState, useRef, useEffect } from "react";
-import { Textarea } from "@/components/ui/textarea";
+import { CommentSection } from "./comments/CommentSection";
+import { ProductGallery } from "./ProductGallery";
 
 interface ProductDialogProps {
   open: boolean;
@@ -20,12 +21,6 @@ interface ProductDialogProps {
   };
 }
 
-const images = [
-  "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=800&h=400&fit=crop",
-  "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=400&fit=crop",
-  "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=400&fit=crop"
-];
-
 const comments = [
   {
     id: 1,
@@ -33,7 +28,8 @@ const comments = [
     avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=40&h=40&fit=crop",
     content: "This is exactly what I've been looking for! The UI is so intuitive.",
     timestamp: "2 hours ago",
-    upvotes: 12
+    upvotes: 12,
+    rating: 5
   },
   {
     id: 2,
@@ -41,7 +37,8 @@ const comments = [
     avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=40&h=40&fit=crop",
     content: "Great product! I especially love the integration capabilities.",
     timestamp: "4 hours ago",
-    upvotes: 8
+    upvotes: 8,
+    rating: 4
   },
   {
     id: 3,
@@ -49,15 +46,14 @@ const comments = [
     avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop",
     content: "The performance is impressive. Would love to see more features in future updates.",
     timestamp: "6 hours ago",
-    upvotes: 5
+    upvotes: 5,
+    rating: 4
   }
 ];
 
 const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps) => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showComments, setShowComments] = useState(false);
-  const [newComment, setNewComment] = useState("");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -82,13 +78,6 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
       }
     };
   }, [showComments]);
-
-  const handleCommentSubmit = () => {
-    if (newComment.trim()) {
-      console.log("New comment:", newComment);
-      setNewComment("");
-    }
-  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -133,78 +122,10 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
               </div>
             </div>
 
-            <div className="relative mb-6">
-              <ScrollArea className="w-full overflow-x-auto scrollbar-hide">
-                <div className="flex gap-4 pb-4">
-                  {images.map((image, index) => (
-                    <img
-                      key={index}
-                      src={image}
-                      alt={`Product screenshot ${index + 1}`}
-                      className="w-full h-[400px] object-cover rounded-lg flex-shrink-0 transition-transform duration-300 hover:scale-[1.02]"
-                      onClick={() => setCurrentImageIndex(index)}
-                    />
-                  ))}
-                </div>
-              </ScrollArea>
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
-                {images.map((_, index) => (
-                  <button
-                    key={index}
-                    className={`w-2 h-2 rounded-full transition-colors ${
-                      currentImageIndex === index ? "bg-white" : "bg-white/50"
-                    }`}
-                    onClick={() => setCurrentImageIndex(index)}
-                  />
-                ))}
-              </div>
-            </div>
+            <ProductGallery />
           </div>
 
-          <div className={`border-t transition-opacity duration-300 ${showComments ? 'opacity-100' : 'opacity-0'}`}>
-            <div className="p-6">
-              <h3 className="text-lg font-semibold mb-4">Discussion ({comments.length})</h3>
-              
-              <div className="mb-6">
-                <Textarea
-                  placeholder="Add a comment..."
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  className="mb-2"
-                />
-                <Button 
-                  onClick={handleCommentSubmit}
-                  disabled={!newComment.trim()}
-                  className="w-full sm:w-auto"
-                >
-                  Post Comment
-                </Button>
-              </div>
-
-              <div className="space-y-6">
-                {comments.map((comment) => (
-                  <div key={comment.id} className="flex gap-4 animate-fade-in">
-                    <img
-                      src={comment.avatar}
-                      alt={comment.author}
-                      className="w-10 h-10 rounded-full object-cover flex-shrink-0"
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-semibold">{comment.author}</span>
-                        <span className="text-sm text-gray-500">{comment.timestamp}</span>
-                      </div>
-                      <p className="text-gray-700 mb-2">{comment.content}</p>
-                      <button className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 transition-colors">
-                        <ArrowUp className="w-4 h-4" />
-                        {comment.upvotes}
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          <CommentSection comments={comments} showComments={showComments} />
         </ScrollArea>
       </DialogContent>
     </Dialog>
