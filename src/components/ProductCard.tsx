@@ -31,12 +31,22 @@ export function ProductCard({
   const { totalLikes, hasLiked, toggleLike } = useProductLikes(id);
 
   useEffect(() => {
+    const fetchCommentCount = async () => {
+      const { count } = await supabase
+        .from('product_comments')
+        .select('id', { count: 'exact' })
+        .eq('product_id', id);
+      
+      setComments(count || 0);
+    };
+
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setIsAuthenticated(!!session);
     };
 
     checkAuth();
+    fetchCommentCount();
 
     // リアルタイムでコメント数を監視
     const channel = supabase
@@ -49,14 +59,9 @@ export function ProductCard({
           table: 'product_comments',
           filter: `product_id=eq.${id}`
         },
-        async () => {
-          // コメント数を再取得
-          const { count } = await supabase
-            .from('product_comments')
-            .select('id', { count: 'exact' })
-            .eq('product_id', id);
-          
-          setComments(count || 0);
+        () => {
+          console.log('Comment update detected for product:', id);
+          fetchCommentCount();
         }
       )
       .subscribe();
