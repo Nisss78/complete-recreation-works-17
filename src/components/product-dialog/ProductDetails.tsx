@@ -31,7 +31,7 @@ interface ProductDetailsProps {
     upvotes: number;
     comments: number;
     URL?: string | null;
-    "explanatory-image"?: string | null;
+    "explanatory-image": string | null;
   };
 }
 
@@ -105,6 +105,7 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
   };
 
   const images = product["explanatory-image"] ? [product["explanatory-image"]] : [];
+  console.log("Product images:", images);
 
   return (
     <div className="space-y-6">
