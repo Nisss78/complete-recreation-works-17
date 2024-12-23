@@ -1,4 +1,4 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { memo, useState, useRef, useEffect } from "react";
 import { ProductDetails } from "./product-dialog/ProductDetails";
@@ -106,6 +106,9 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl p-0 overflow-hidden">
+        <DialogTitle className="sr-only">
+          {product.name}の詳細
+        </DialogTitle>
         <ScrollArea className="h-[90vh]" ref={scrollRef}>
           <div className="p-8">
             <ProductDetails product={product} />
