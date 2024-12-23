@@ -7,7 +7,7 @@ export const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div>
-            <h3 className="font-bold mb-4">Productoについて</h3>
+            <h3 className="font-bold mb-4">Protoductについて</h3>
             <p className="text-sm text-gray-600">
               私たちが開発するものをプロトタイプのアプリをアップロードするプラットフォーム
             </p>
@@ -43,7 +43,7 @@ export const Footer = () => {
           
           <div>
             <Link to="/" className="font-bold text-xl block mb-4">
-              Producto
+              Protoduct
             </Link>
           </div>
         </div>
