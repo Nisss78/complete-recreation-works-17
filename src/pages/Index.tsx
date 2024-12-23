@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductDialog } from "@/components/ProductDialog";
+import { format, subDays } from "date-fns";
 
-const products = [
+// Demo products with launch dates
+const generateDemoProducts = (date: Date) => [
   {
     id: 1,
     name: "Websparks",
@@ -11,6 +13,7 @@ const products = [
     tags: ["Developer Tools", "Artificial Intelligence"],
     upvotes: 294,
     comments: 23,
+    launchDate: date,
   },
   {
     id: 2,
@@ -20,6 +23,7 @@ const products = [
     tags: ["Education", "Development", "Web Design"],
     upvotes: 201,
     comments: 7,
+    launchDate: date,
   },
   {
     id: 3,
@@ -29,6 +33,7 @@ const products = [
     tags: ["Chrome Extensions", "Hiring", "Social Networking"],
     upvotes: 172,
     comments: 5,
+    launchDate: date,
   },
   {
     id: 4,
@@ -38,6 +43,7 @@ const products = [
     tags: ["Health & Fitness", "Lifestyle"],
     upvotes: 164,
     comments: 7,
+    launchDate: date,
   },
   {
     id: 5,
@@ -47,26 +53,85 @@ const products = [
     tags: ["Home Automation"],
     upvotes: 154,
     comments: 3,
+    launchDate: date,
   },
 ];
 
 const Index = () => {
-  const [selectedProduct, setSelectedProduct] = useState<typeof products[0] | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
+  const [visibleDays, setVisibleDays] = useState(3); // Start with 3 days
+  const [allProducts, setAllProducts] = useState<any[]>([]);
+
+  // Generate dates for the past 14 days
+  const generateDates = (numDays: number) => {
+    return Array.from({ length: numDays }, (_, i) => {
+      const date = subDays(new Date(), i);
+      return {
+        date,
+        products: generateDemoProducts(date),
+      };
+    });
+  };
+
+  useEffect(() => {
+    const products = generateDates(visibleDays).flatMap(day => day.products);
+    setAllProducts(products);
+  }, [visibleDays]);
+
+  // Handle scroll event
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop
+        === document.documentElement.offsetHeight
+      ) {
+        if (visibleDays < 14) {
+          setVisibleDays(prev => Math.min(prev + 3, 14));
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [visibleDays]);
+
+  // Group products by date
+  const groupedProducts = allProducts.reduce((groups: any, product) => {
+    const date = format(product.launchDate, 'yyyy-MM-dd');
+    if (!groups[date]) {
+      groups[date] = [];
+    }
+    groups[date].push(product);
+    return groups;
+  }, {});
 
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-4xl mx-auto py-8 px-4">
-        <h1 className="text-3xl font-bold mb-8">Top Products Launching Today</h1>
+        <h1 className="text-3xl font-bold mb-8">Products Launching Today</h1>
         
-        <div className="space-y-4">
-          {products.map((product) => (
-            <ProductCard 
-              key={product.id} 
-              {...product} 
-              onClick={() => setSelectedProduct(product)}
-            />
-          ))}
-        </div>
+        {Object.entries(groupedProducts).map(([date, products]: [string, any]) => (
+          <div key={date} className="mb-8">
+            <h2 className="text-xl font-semibold mb-4">
+              {format(new Date(date), 'MMMM d, yyyy')}
+            </h2>
+            <div className="space-y-4">
+              {products.map((product: any) => (
+                <ProductCard 
+                  key={`${product.id}-${date}`}
+                  {...product}
+                  onClick={() => setSelectedProduct(product)}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
+
+        {visibleDays < 14 && (
+          <div className="text-center text-gray-500 mt-4">
+            Scroll for more products...
+          </div>
+        )}
       </div>
 
       {selectedProduct && (
