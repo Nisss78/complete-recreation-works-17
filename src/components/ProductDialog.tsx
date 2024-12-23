@@ -55,6 +55,13 @@ const initialComments = [
   }
 ];
 
+// Add product images array
+const productImages = [
+  "https://images.unsplash.com/photo-1593720213428-28a5b9e94613?w=800&h=400&fit=crop",
+  "https://images.unsplash.com/photo-1555099962-4199c345e5dd?w=800&h=400&fit=crop",
+  "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&h=400&fit=crop"
+];
+
 const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -110,7 +117,7 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
             <div className="relative mb-8">
               <ScrollArea className="w-full overflow-x-auto scrollbar-hide">
                 <div className="flex gap-6 pb-4">
-                  {images.map((image, index) => (
+                  {productImages.map((image, index) => (
                     <img
                       key={index}
                       src={image}
@@ -122,7 +129,7 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
                 </div>
               </ScrollArea>
               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
-                {images.map((_, index) => (
+                {productImages.map((_, index) => (
                   <button
                     key={index}
                     className={`w-2 h-2 rounded-full transition-colors ${
