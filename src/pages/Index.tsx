@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { ProductCard } from "@/components/ProductCard";
+import { ProductDialog } from "@/components/ProductDialog";
 
 const products = [
   {
@@ -49,6 +51,8 @@ const products = [
 ];
 
 const Index = () => {
+  const [selectedProduct, setSelectedProduct] = useState<typeof products[0] | null>(null);
+
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-4xl mx-auto py-8 px-4">
@@ -56,10 +60,22 @@ const Index = () => {
         
         <div className="space-y-4">
           {products.map((product) => (
-            <ProductCard key={product.id} {...product} />
+            <ProductCard 
+              key={product.id} 
+              {...product} 
+              onClick={() => setSelectedProduct(product)}
+            />
           ))}
         </div>
       </div>
+
+      {selectedProduct && (
+        <ProductDialog
+          open={!!selectedProduct}
+          onOpenChange={(open) => !open && setSelectedProduct(null)}
+          product={selectedProduct}
+        />
+      )}
     </div>
   );
 };
