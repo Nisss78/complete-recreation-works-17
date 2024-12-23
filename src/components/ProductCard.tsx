@@ -1,9 +1,9 @@
 import { Badge } from "@/components/ui/badge";
-import { MessageCircle, ArrowUp, Share2, Bookmark, BarChart2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { ProductActions } from "./product-card/ProductActions";
+import { useProductLikes } from "@/hooks/useProductLikes";
 
 interface ProductCardProps {
   id: number;
@@ -12,7 +12,6 @@ interface ProductCardProps {
   description: string;
   icon: string;
   tags: string[];
-  upvotes: number;
   comments: number;
   onClick: () => void;
 }
@@ -23,16 +22,13 @@ export function ProductCard({
   tagline, 
   icon, 
   tags, 
-  upvotes: initialUpvotes, 
-  comments: initialComments, 
+  comments: initialComments,
   onClick 
 }: ProductCardProps) {
-  const [upvotes, setUpvotes] = useState(initialUpvotes);
   const [comments, setComments] = useState(initialComments);
-  const [hasUpvoted, setHasUpvoted] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { toast } = useToast();
-  const navigate = useNavigate();
+  const { totalLikes, hasLiked, toggleLike } = useProductLikes(id);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -40,24 +36,6 @@ export function ProductCard({
       setIsAuthenticated(!!session);
 
       if (session) {
-        // Check if user has already liked this product
-        const { data: likes } = await supabase
-          .from('product_likes')
-          .select('id')
-          .eq('product_id', id)
-          .eq('user_id', session.user.id)
-          .maybeSingle(); // Changed from .single() to .maybeSingle()
-        
-        setHasUpvoted(!!likes);
-
-        // Get total likes count
-        const { count: likesCount } = await supabase
-          .from('product_likes')
-          .select('id', { count: 'exact' })
-          .eq('product_id', id);
-        
-        setUpvotes(likesCount || 0);
-
         // Get total comments count
         const { count: commentsCount } = await supabase
           .from('product_comments')
@@ -79,72 +57,19 @@ export function ProductCard({
     };
   }, [id]);
 
-  const handleAuthRequired = () => {
-    toast({
-      title: "ログインが必要です",
-      description: "この機能を使用するにはログインしてください",
-    });
-    navigate("/auth");
-  };
-
-  const handleUpvote = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    
-    if (!isAuthenticated) {
-      handleAuthRequired();
-      return;
-    }
-
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) return;
-
-    try {
-      if (!hasUpvoted) {
-        const { error } = await supabase
-          .from('product_likes')
-          .insert({
-            product_id: id,
-            user_id: session.user.id
-          });
-
-        if (error) throw error;
-
-        setUpvotes(prev => prev + 1);
-        setHasUpvoted(true);
-        toast({
-          title: "いいね！",
-          description: `${name}にいいねしました`,
-        });
-      } else {
-        const { error } = await supabase
-          .from('product_likes')
-          .delete()
-          .eq('product_id', id)
-          .eq('user_id', session.user.id);
-
-        if (error) throw error;
-
-        setUpvotes(prev => prev - 1);
-        setHasUpvoted(false);
-        toast({
-          title: "いいねを取り消しました",
-          description: `${name}のいいねを取り消しました`,
-        });
-      }
-    } catch (error) {
-      console.error('Error handling like:', error);
+  const handleLike = async () => {
+    const success = await toggleLike();
+    if (success) {
+      toast({
+        title: hasLiked ? "いいねを取り消しました" : "いいね！",
+        description: hasLiked ? `${name}のいいねを取り消しました` : `${name}にいいねしました`,
+      });
+    } else {
       toast({
         title: "エラー",
         description: "操作に失敗しました",
         variant: "destructive",
       });
-    }
-  };
-
-  const handleInteraction = (e: React.MouseEvent, action: string) => {
-    e.stopPropagation();
-    if (!isAuthenticated) {
-      handleAuthRequired();
     }
   };
 
@@ -176,48 +101,15 @@ export function ProductCard({
         </div>
       </div>
       
-      <div className="flex items-center gap-3">
-        <button 
-          className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-colors ${
-            hasUpvoted 
-              ? "text-upvote border-upvote" 
-              : "text-gray-700 hover:text-upvote border-gray-200 hover:border-upvote"
-          }`}
-          onClick={handleUpvote}
-        >
-          <ArrowUp className="w-4 h-4" />
-          <span className="font-medium">{upvotes}</span>
-        </button>
-        
-        <button 
-          className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-gray-900 rounded-full border border-gray-200 hover:border-gray-400 transition-colors"
-          onClick={(e) => handleInteraction(e, 'comment')}
-        >
-          <MessageCircle className="w-4 h-4" />
-          <span className="font-medium">{comments}</span>
-        </button>
-
-        <button 
-          className="p-2 text-gray-700 hover:text-gray-900 rounded-full border border-gray-200 hover:border-gray-400 transition-colors"
-          onClick={(e) => handleInteraction(e, 'bookmark')}
-        >
-          <Bookmark className="w-4 h-4" />
-        </button>
-
-        <button 
-          className="p-2 text-gray-700 hover:text-gray-900 rounded-full border border-gray-200 hover:border-gray-400 transition-colors"
-          onClick={(e) => handleInteraction(e, 'share')}
-        >
-          <Share2 className="w-4 h-4" />
-        </button>
-
-        <button 
-          className="p-2 text-gray-700 hover:text-gray-900 rounded-full border border-gray-200 hover:border-gray-400 transition-colors"
-          onClick={(e) => handleInteraction(e, 'stats')}
-        >
-          <BarChart2 className="w-4 h-4" />
-        </button>
-      </div>
+      <ProductActions
+        productId={id}
+        productName={name}
+        likes={totalLikes}
+        comments={comments}
+        hasLiked={hasLiked}
+        isAuthenticated={isAuthenticated}
+        onLike={handleLike}
+      />
     </div>
   );
 }
