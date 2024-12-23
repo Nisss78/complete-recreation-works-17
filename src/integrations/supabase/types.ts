@@ -145,7 +145,7 @@ export type Database = {
         Row: {
           created_at: string
           description: string
-          "Explanatory image": string | null
+          "explanatory-image": string | null
           icon_url: string
           id: number
           name: string
@@ -156,7 +156,7 @@ export type Database = {
         Insert: {
           created_at?: string
           description: string
-          "Explanatory image"?: string | null
+          "explanatory-image"?: string | null
           icon_url: string
           id?: number
           name: string
@@ -167,7 +167,7 @@ export type Database = {
         Update: {
           created_at?: string
           description?: string
-          "Explanatory image"?: string | null
+          "explanatory-image"?: string | null
           icon_url?: string
           id?: number
           name?: string
