@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useBookmarks } from "@/hooks/useBookmarks";
+import { useLanguage } from "@/contexts/LanguageContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +19,7 @@ export const UserMenu = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { bookmarks } = useBookmarks();
+  const { t } = useLanguage();
 
   const handleLogout = async () => {
     console.log("Starting logout process...");
@@ -44,8 +46,8 @@ export const UserMenu = () => {
       }
 
       toast({
-        title: "ログアウト完了",
-        description: "ログアウトしました",
+        title: t('success.loggedOut'),
+        description: t('success.logoutCompleted'),
       });
       navigate("/auth");
       
@@ -53,8 +55,8 @@ export const UserMenu = () => {
       console.error("Logout process error:", error);
       
       toast({
-        title: "注意",
-        description: "セッションをクリアしました",
+        title: t('error.occurred'),
+        description: t('error.sessionCleared'),
         variant: "destructive",
       });
       
@@ -70,26 +72,26 @@ export const UserMenu = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuLabel>アカウント</DropdownMenuLabel>
+        <DropdownMenuLabel>{t('nav.account')}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => navigate("/profile")}>
           <User className="w-4 h-4 mr-2" />
-          プロフィール
+          {t('nav.profile')}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => navigate("/settings")}>
           <Settings className="w-4 h-4 mr-2" />
-          設定
+          {t('nav.settings')}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => navigate("/bookmarks")}>
           <Bookmark className="w-4 h-4 mr-2" />
-          ブックマーク一覧を見る
+          {t('nav.viewBookmarks')}
         </DropdownMenuItem>
-        <DropdownMenuLabel>最近のブックマーク</DropdownMenuLabel>
+        <DropdownMenuLabel>{t('nav.recentBookmarks')}</DropdownMenuLabel>
         <DropdownMenuGroup className="max-h-[200px] overflow-y-auto">
           {bookmarks.length === 0 ? (
             <DropdownMenuItem disabled>
-              ブックマークはありません
+              {t('nav.noBookmarks')}
             </DropdownMenuItem>
           ) : (
             bookmarks.slice(0, 5).map((bookmark) => (
@@ -124,7 +126,7 @@ export const UserMenu = () => {
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout}>
           <LogOut className="w-4 h-4 mr-2" />
-          ログアウト
+          {t('nav.logout')}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

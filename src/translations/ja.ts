@@ -8,6 +8,10 @@ export const jaTranslations = {
   'nav.settings': '設定',
   'nav.profile': 'プロフィール',
   'nav.logout': 'ログアウト',
+  'nav.account': 'アカウント',
+  'nav.viewBookmarks': 'ブックマーク一覧を見る',
+  'nav.recentBookmarks': '最近のブックマーク',
+  'nav.noBookmarks': 'ブックマークはありません',
   
   // Settings page
   'settings.title': 'アカウント設定',
@@ -24,39 +28,13 @@ export const jaTranslations = {
   'profile.usernamePlaceholder': 'あなたの名前',
   'profile.bioPlaceholder': 'あなたについて教えてください（160文字まで）',
   
-  // Articles
-  'articles.title': '記事一覧',
-  'articles.all': '全ての記事',
-  'articles.following': 'フォロー中',
-  'articles.noArticles': '記事がありません',
-  'articles.noFollowingArticles': 'フォローしているユーザーの記事がありません',
-  
-  // Product submission
-  'product.submit.title': 'プロダクトを投稿',
-  'product.submit.description': '投稿したプロダクトは何度でも編集できます。\nまずは気軽に投稿してみましょう！',
-  'product.submit.name': 'プロダクト名',
-  'product.submit.namePlaceholder': '例: TaskFlow',
-  'product.submit.tagline': 'タグライン',
-  'product.submit.taglinePlaceholder': '例: 人工知能の力で、あなたの成功物語を',
-  'product.submit.description': '説明',
-  'product.submit.descriptionPlaceholder': 'プロダクトの概要を説明してください（50文字以上）',
-  'product.submit.link': 'リンク',
-  'product.submit.linkDescription': 'リンクの説明',
-  'product.submit.tags': 'タグ',
-  'product.submit.tagsPlaceholder': '新しいタグを入力してEnterで追加',
-  'product.submit.icon': 'アイコン画像',
-  'product.submit.iconRequirements': '512×512ピクセル以上の画像をアップロード\n2MB以下、PNG/JPG形式',
-  'product.submit.images': '説明画像（最大5枚）',
-  'product.submit.imageRequirements': 'クリックまたはドラッグ&ドロップで画像をアップロード\n5MB以下、PNG/JPG形式、16:9推奨',
-  'product.submit.cancel': 'キャンセル',
-  'product.submit.post': '投稿',
-  'product.submit.posting': '投稿中...',
-  
   // Success messages
   'success.profileUpdated': 'プロフィールを更新しました',
   'success.languageUpdated': '言語設定を更新しました',
   'success.productPosted': 'プロダクトが投稿されました！',
   'success.imageUploaded': '画像をアップロードしました',
+  'success.loggedOut': 'ログアウト完了',
+  'success.logoutCompleted': 'ログアウトしました',
   
   // Error messages
   'error.occurred': 'エラーが発生しました',
@@ -68,5 +46,6 @@ export const jaTranslations = {
   'error.upload': '画像のアップロードに失敗しました',
   'error.post': '投稿に失敗しました。もう一度お試しください。',
   'error.maxFiles': '最大ファイル数に達しました',
-  'error.login': '続行するにはログインしてください'
+  'error.login': '続行するにはログインしてください',
+  'error.sessionCleared': 'セッションをクリアしました'
 } as const;

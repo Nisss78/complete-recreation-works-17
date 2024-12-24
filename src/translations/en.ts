@@ -8,6 +8,10 @@ export const enTranslations = {
   'nav.settings': 'Settings',
   'nav.profile': 'Profile',
   'nav.logout': 'Logout',
+  'nav.account': 'Account',
+  'nav.viewBookmarks': 'View All Bookmarks',
+  'nav.recentBookmarks': 'Recent Bookmarks',
+  'nav.noBookmarks': 'No bookmarks yet',
   
   // Settings page
   'settings.title': 'Account Settings',
@@ -24,39 +28,13 @@ export const enTranslations = {
   'profile.usernamePlaceholder': 'Your name',
   'profile.bioPlaceholder': 'Tell us about yourself (up to 160 characters)',
   
-  // Articles
-  'articles.title': 'Articles',
-  'articles.all': 'All Articles',
-  'articles.following': 'Following',
-  'articles.noArticles': 'No articles yet',
-  'articles.noFollowingArticles': 'No articles from followed users',
-  
-  // Product submission
-  'product.submit.title': 'Post a Product',
-  'product.submit.description': 'You can edit your product anytime after posting.\nLet\'s start by sharing it!',
-  'product.submit.name': 'Product Name',
-  'product.submit.namePlaceholder': 'e.g. TaskFlow',
-  'product.submit.tagline': 'Tagline',
-  'product.submit.taglinePlaceholder': 'e.g. AI-powered success stories',
-  'product.submit.description': 'Description',
-  'product.submit.descriptionPlaceholder': 'Explain your product (minimum 50 characters)',
-  'product.submit.link': 'Link',
-  'product.submit.linkDescription': 'Link Description',
-  'product.submit.tags': 'Tags',
-  'product.submit.tagsPlaceholder': 'Enter new tag and press Enter',
-  'product.submit.icon': 'Icon Image',
-  'product.submit.iconRequirements': 'Upload a 512×512 pixels or larger image\nUnder 2MB, PNG/JPG format',
-  'product.submit.images': 'Description Images (max 5)',
-  'product.submit.imageRequirements': 'Click or drag & drop to upload images\nUnder 5MB, PNG/JPG format, 16:9 aspect ratio recommended',
-  'product.submit.cancel': 'Cancel',
-  'product.submit.post': 'Post',
-  'product.submit.posting': 'Posting...',
-  
   // Success messages
   'success.profileUpdated': 'Profile updated',
   'success.languageUpdated': 'Language preference updated',
   'success.productPosted': 'Product has been posted!',
   'success.imageUploaded': 'Image uploaded',
+  'success.loggedOut': 'Logged out',
+  'success.logoutCompleted': 'You have been logged out successfully',
   
   // Error messages
   'error.occurred': 'An error occurred',
@@ -68,5 +46,6 @@ export const enTranslations = {
   'error.upload': 'Failed to upload image',
   'error.post': 'Failed to post. Please try again.',
   'error.maxFiles': 'Maximum number of files reached',
-  'error.login': 'Please login to continue'
+  'error.login': 'Please login to continue',
+  'error.sessionCleared': 'Session has been cleared'
 } as const;
