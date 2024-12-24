@@ -3,13 +3,13 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { ArticleHeader } from "@/components/articles/ArticleHeader";
-import ReactMarkdown from "react-markdown";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Share2, Heart } from "lucide-react";
+import { Share2, Heart, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useArticleLikes } from "@/hooks/useArticleLikes";
 import { MetaTags } from "@/components/MetaTags";
+import { Button } from "@/components/ui/button";
+import ReactMarkdown from "react-markdown";
 
 export default function ArticleDetail() {
   const { id } = useParams();
@@ -69,6 +69,10 @@ export default function ArticleDetail() {
     navigate(`/profile/${article?.author.id}`);
   };
 
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
@@ -126,6 +130,16 @@ export default function ArticleDetail() {
       )}
       <Header />
       <main className="container max-w-4xl mx-auto py-4 sm:py-8 px-4">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleBack}
+          className="mb-4 text-gray-600 hover:text-gray-900"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          戻る
+        </Button>
+
         <article className="bg-white rounded-lg shadow-sm p-4 sm:p-8">
           {article.thumbnail_url && (
             <div className="mb-4 sm:mb-6">
