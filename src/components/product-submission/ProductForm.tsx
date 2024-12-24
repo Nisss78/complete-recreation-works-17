@@ -12,8 +12,8 @@ interface ProductFormProps {
   setTagline: (tagline: string) => void;
   description: string;
   setDescription: (description: string) => void;
-  links: { description: string; url: string }[];
-  setLinks: React.Dispatch<React.SetStateAction<{ description: string; url: string }[]>>;
+  link: { description: string; url: string };
+  setLink: React.Dispatch<React.SetStateAction<{ description: string; url: string }>>;
   tags: string[];
   setTags: React.Dispatch<React.SetStateAction<string[]>>;
   setIconUrl: (url: string) => void;
@@ -27,8 +27,8 @@ export const ProductForm = ({
   setTagline,
   description,
   setDescription,
-  links,
-  setLinks,
+  link,
+  setLink,
   tags,
   setTags,
   setIconUrl,
@@ -95,7 +95,7 @@ export const ProductForm = ({
           />
         </div>
 
-        <ProductLinks links={links} setLinks={setLinks} />
+        <ProductLinks link={link} setLink={setLink} />
         <ProductTags tags={tags} setTags={setTags} newTag={newTag} setNewTag={setNewTag} />
 
         <ImageUpload 

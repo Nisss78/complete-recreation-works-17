@@ -15,7 +15,7 @@ export const ProductSubmissionDialog = ({
   open,
   onOpenChange,
 }: ProductSubmissionDialogProps) => {
-  const [links, setLinks] = useState<{ description: string; url: string }[]>([]);
+  const [link, setLink] = useState<{ description: string; url: string }>({ description: "", url: "" });
   const [tags, setTags] = useState<string[]>([]);
   const [name, setName] = useState("");
   const [tagline, setTagline] = useState("");
@@ -48,7 +48,7 @@ export const ProductSubmissionDialog = ({
           tagline,
           description,
           icon_url: iconUrl,
-          URL: links[0]?.url || null,
+          URL: link.url || null,
         })
         .select()
         .single();
@@ -93,7 +93,7 @@ export const ProductSubmissionDialog = ({
       setTagline("");
       setDescription("");
       setTags([]);
-      setLinks([]);
+      setLink({ description: "", url: "" });
       setIconUrl("");
       setDescriptionImages([]);
       onOpenChange(false);
@@ -121,8 +121,8 @@ export const ProductSubmissionDialog = ({
             setTagline={setTagline}
             description={description}
             setDescription={setDescription}
-            links={links}
-            setLinks={setLinks}
+            link={link}
+            setLink={setLink}
             tags={tags}
             setTags={setTags}
             setIconUrl={setIconUrl}
