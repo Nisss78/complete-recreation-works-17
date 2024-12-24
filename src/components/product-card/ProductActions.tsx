@@ -1,6 +1,7 @@
 import { MessageCircle, ArrowUp, Share2, Bookmark, BarChart2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { useBookmarks } from "@/hooks/useBookmarks";
 
 interface ProductActionsProps {
   productId: number;
@@ -23,6 +24,7 @@ export function ProductActions({
 }: ProductActionsProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { isBookmarked, toggleBookmark } = useBookmarks(productId);
 
   const handleAuthRequired = () => {
     toast({
@@ -46,6 +48,23 @@ export function ProductActions({
       return;
     }
     await onLike();
+  };
+
+  const handleBookmark = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!isAuthenticated) {
+      handleAuthRequired();
+      return;
+    }
+    const success = await toggleBookmark();
+    if (success) {
+      toast({
+        title: isBookmarked ? "ブックマークを解除しました" : "ブックマークに追加しました",
+        description: isBookmarked 
+          ? `${productName}のブックマークを解除しました` 
+          : `${productName}をブックマークに追加しました`,
+      });
+    }
   };
 
   const handleShare = async (e: React.MouseEvent) => {
@@ -92,8 +111,12 @@ export function ProductActions({
       </button>
 
       <button 
-        className="p-2 text-gray-700 hover:text-gray-900 rounded-full border border-gray-200 hover:border-gray-400 transition-colors"
-        onClick={(e) => handleInteraction(e, 'bookmark')}
+        className={`p-2 rounded-full border transition-colors ${
+          isBookmarked
+            ? "text-blue-500 border-blue-500"
+            : "text-gray-700 hover:text-gray-900 border-gray-200 hover:border-gray-400"
+        }`}
+        onClick={handleBookmark}
       >
         <Bookmark className="w-4 h-4" />
       </button>
