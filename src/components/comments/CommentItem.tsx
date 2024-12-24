@@ -1,13 +1,11 @@
 import { useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Reply, Share2, Flag, ThumbsUp, User } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 import { useCommentLikes } from "@/hooks/useCommentLikes";
 import { supabase } from "@/integrations/supabase/client";
 import { ReplyForm } from "./ReplyForm";
 import { ReplyList } from "./comment-replies/ReplyList";
 import { useQuery } from "@tanstack/react-query";
+import { CommentHeader } from "./comment-parts/CommentHeader";
+import { LikeButton } from "./comment-parts/LikeButton";
 
 interface CommentItemProps {
   comment: {
@@ -33,7 +31,6 @@ export const CommentItem = ({ comment, onCommentAdded, level = 0 }: CommentItemP
   const [showReplies, setShowReplies] = useState(false);
   const [isLoadingReplies, setIsLoadingReplies] = useState(false);
   const { totalLikes, hasLiked, toggleLike } = useCommentLikes(comment.id);
-  const { toast } = useToast();
 
   // Fetch user profile for avatar
   const { data: userProfile } = useQuery({
@@ -59,32 +56,9 @@ export const CommentItem = ({ comment, onCommentAdded, level = 0 }: CommentItemP
     enabled: !!comment.user_id
   });
 
-  const handleLike = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const { data: { session } } = await supabase.auth.getSession();
-    
-    if (!session) {
-      toast({
-        title: "ログインが必要です",
-        description: "いいねをするにはログインしてください",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const success = await toggleLike();
-    if (success) {
-      toast({
-        title: hasLiked ? "いいねを取り消しました" : "いいね！",
-        description: hasLiked ? "コメントのいいねを取り消しました" : "コメントにいいねしました",
-      });
-    }
-  };
-
   const loadReplies = async () => {
     try {
       setIsLoadingReplies(true);
-      console.log('Loading replies for comment:', comment.id);
       const { data: repliesData, error } = await supabase
         .from('product_comments')
         .select(`
@@ -97,8 +71,6 @@ export const CommentItem = ({ comment, onCommentAdded, level = 0 }: CommentItemP
         .order('created_at', { ascending: true });
 
       if (error) throw error;
-
-      console.log('Fetched replies:', repliesData);
 
       const formattedReplies = repliesData.map(reply => ({
         id: reply.id,
@@ -113,15 +85,9 @@ export const CommentItem = ({ comment, onCommentAdded, level = 0 }: CommentItemP
         user_id: reply.user_id
       }));
 
-      console.log('Formatted replies:', formattedReplies);
       setReplies(formattedReplies);
     } catch (error) {
       console.error('Error loading replies:', error);
-      toast({
-        title: "エラー",
-        description: "返信の読み込みに失敗しました",
-        variant: "destructive",
-      });
     } finally {
       setIsLoadingReplies(false);
     }
@@ -142,65 +108,37 @@ export const CommentItem = ({ comment, onCommentAdded, level = 0 }: CommentItemP
   return (
     <div className="space-y-2">
       <div className={`bg-gray-50 dark:bg-gray-800/50 p-6 rounded-lg ${level > 0 ? 'ml-8' : ''}`}>
-        <div className="flex gap-4">
-          <Avatar className="w-10 h-10">
-            <AvatarImage src={userProfile?.avatar_url || undefined} />
-            <AvatarFallback>
-              <User className="w-5 h-5" />
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="font-semibold">{userProfile?.username || "ユーザー"}</span>
-              {comment.isMaker && (
-                <Badge variant="secondary" className="text-xs">
-                  作成者
-                </Badge>
-              )}
-              {comment.isVerified && (
-                <Badge variant="secondary" className="text-xs bg-green-100 text-green-800">
-                  認証済み
-                </Badge>
-              )}
-            </div>
-            <p className="text-gray-700 dark:text-gray-300 mb-4">{comment.content}</p>
-            <div className="flex items-center gap-6 text-sm text-gray-500">
-              <button 
-                className={`flex items-center gap-1 transition-colors ${
-                  hasLiked 
-                    ? 'text-blue-500 hover:text-blue-600' 
-                    : 'hover:text-gray-900 dark:hover:text-gray-100'
-                }`}
-                onClick={handleLike}
+        <div className="flex flex-col gap-4">
+          <CommentHeader 
+            username={userProfile?.username || "ユーザー"}
+            avatarUrl={userProfile?.avatar_url}
+            isMaker={comment.isMaker}
+            isVerified={comment.isVerified}
+          />
+          
+          <p className="text-gray-700 dark:text-gray-300">{comment.content}</p>
+          
+          <div className="flex items-center gap-6 text-sm">
+            <LikeButton 
+              totalLikes={totalLikes}
+              hasLiked={hasLiked}
+              onLike={toggleLike}
+            />
+            <button 
+              className="text-gray-500 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+              onClick={() => setShowReplyForm(!showReplyForm)}
+            >
+              返信
+            </button>
+            {comment.reply_count > 0 && (
+              <button
+                className="text-gray-500 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+                onClick={handleToggleReplies}
               >
-                <ThumbsUp className="w-4 h-4" />
-                いいね ({totalLikes})
+                {showReplies ? "返信を隠す" : `返信を表示 (${comment.reply_count})`}
               </button>
-              <button 
-                className="flex items-center gap-1 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
-                onClick={() => setShowReplyForm(!showReplyForm)}
-              >
-                <Reply className="w-4 h-4" />
-                返信
-              </button>
-              {comment.reply_count > 0 && (
-                <button
-                  className="flex items-center gap-1 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
-                  onClick={handleToggleReplies}
-                >
-                  {showReplies ? "返信を隠す" : `返信を表示 (${comment.reply_count})`}
-                </button>
-              )}
-              <button className="flex items-center gap-1 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
-                <Share2 className="w-4 h-4" />
-                共有
-              </button>
-              <button className="flex items-center gap-1 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
-                <Flag className="w-4 h-4" />
-                報告
-              </button>
-              <span className="text-gray-400">{comment.timestamp}</span>
-            </div>
+            )}
+            <span className="text-gray-400">{comment.timestamp}</span>
           </div>
         </div>
       </div>
