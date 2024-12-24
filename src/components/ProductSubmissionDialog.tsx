@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ProductForm } from "./product-submission/ProductForm";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ProductSubmissionDialogProps {
   open: boolean;
@@ -24,12 +25,13 @@ export const ProductSubmissionDialog = ({
   const [descriptionImages, setDescriptionImages] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handleSubmit = async () => {
     if (!name || !tagline || !description || !iconUrl) {
       toast({
-        title: "入力エラー",
-        description: "必須項目を入力してください",
+        title: t('error.occurred'),
+        description: t('error.required'),
         variant: "destructive",
       });
       return;
@@ -84,8 +86,8 @@ export const ProductSubmissionDialog = ({
       }
 
       toast({
-        title: "投稿完了",
-        description: "プロダクトが投稿されました！",
+        title: t('success.productPosted'),
+        description: t('success.productPosted'),
       });
 
       // Reset form
@@ -101,8 +103,8 @@ export const ProductSubmissionDialog = ({
     } catch (error) {
       console.error('Error submitting product:', error);
       toast({
-        title: "エラー",
-        description: "投稿に失敗しました。もう一度お試しください。",
+        title: t('error.occurred'),
+        description: t('error.post'),
         variant: "destructive",
       });
     } finally {
@@ -137,7 +139,7 @@ export const ProductSubmissionDialog = ({
             className="min-w-[100px] h-10 text-gray-600 hover:bg-gray-50 hover:text-gray-900"
             disabled={isSubmitting}
           >
-            キャンセル
+            {t('product.submit.cancel')}
           </Button>
           <Button 
             variant="outline"
@@ -145,7 +147,7 @@ export const ProductSubmissionDialog = ({
             disabled={isSubmitting}
             className="min-w-[100px] h-10 bg-white hover:bg-gray-50 text-gray-900 font-medium border border-gray-200"
           >
-            {isSubmitting ? "投稿中..." : "投稿"}
+            {isSubmitting ? t('product.submit.posting') : t('product.submit.post')}
           </Button>
         </div>
       </DialogContent>

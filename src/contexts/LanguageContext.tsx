@@ -34,9 +34,39 @@ const translations = {
     'profile.usernamePlaceholder': 'Your name',
     'profile.bioPlaceholder': 'Tell us about yourself (up to 160 characters)',
     
+    // Product submission
+    'product.submit.title': 'Post a Product',
+    'product.submit.description': 'You can edit your product anytime after posting.\nLet\'s start by sharing it!',
+    'product.submit.name': 'Product Name',
+    'product.submit.namePlaceholder': 'e.g. TaskFlow',
+    'product.submit.tagline': 'Tagline',
+    'product.submit.taglinePlaceholder': 'e.g. AI-powered success stories',
+    'product.submit.description': 'Description',
+    'product.submit.descriptionPlaceholder': 'Explain your product (minimum 50 characters)',
+    'product.submit.link': 'Link',
+    'product.submit.linkDescription': 'Link Description',
+    'product.submit.tags': 'Tags',
+    'product.submit.tagsPlaceholder': 'Enter new tag and press Enter',
+    'product.submit.icon': 'Icon Image',
+    'product.submit.iconRequirements': [
+      '512×512 pixels or larger',
+      'Under 2MB (PNG/JPG format)'
+    ],
+    'product.submit.images': 'Description Images (max 5)',
+    'product.submit.imageRequirements': [
+      'Click or drag & drop to upload images',
+      'Under 5MB (PNG/JPG format)',
+      '16:9 aspect ratio recommended'
+    ],
+    'product.submit.cancel': 'Cancel',
+    'product.submit.post': 'Post',
+    'product.submit.posting': 'Posting...',
+    
     // Success messages
     'success.profileUpdated': 'Profile updated',
     'success.languageUpdated': 'Language preference updated',
+    'success.productPosted': 'Product has been posted!',
+    'success.imageUploaded': 'Image uploaded',
     
     // Error messages
     'error.occurred': 'An error occurred',
@@ -44,6 +74,11 @@ const translations = {
     'error.fetchProfile': 'Failed to fetch profile',
     'error.updateProfile': 'Failed to update profile',
     'error.updateLanguage': 'Failed to update language preference',
+    'error.required': 'Please fill in all required fields',
+    'error.upload': 'Failed to upload image',
+    'error.post': 'Failed to post. Please try again.',
+    'error.maxFiles': 'Maximum number of files reached',
+    'error.login': 'Please login to continue'
   },
   ja: {
     // Header
@@ -71,9 +106,39 @@ const translations = {
     'profile.usernamePlaceholder': 'あなたの名前',
     'profile.bioPlaceholder': 'あなたについて教えてください（160文字まで）',
     
+    // Product submission
+    'product.submit.title': 'プロダクトを投稿',
+    'product.submit.description': '投稿したプロダクトは何度でも編集できます。\nまずは気軽に投稿してみましょう！',
+    'product.submit.name': 'プロダクト名',
+    'product.submit.namePlaceholder': '例: TaskFlow',
+    'product.submit.tagline': 'タグライン',
+    'product.submit.taglinePlaceholder': '例: 人工知能の力で、あなたの成功物語を',
+    'product.submit.description': '説明',
+    'product.submit.descriptionPlaceholder': 'プロダクトの概要を説明してください（50文字以上）',
+    'product.submit.link': 'リンク',
+    'product.submit.linkDescription': 'リンクの説明',
+    'product.submit.tags': 'タグ',
+    'product.submit.tagsPlaceholder': '新しいタグを入力してEnterで追加',
+    'product.submit.icon': 'アイコン画像',
+    'product.submit.iconRequirements': [
+      '512×512ピクセル以上',
+      '2MB以下（PNG/JPG形式）'
+    ],
+    'product.submit.images': '説明画像（最大5枚）',
+    'product.submit.imageRequirements': [
+      'クリックまたはドラッグ&ドロップで画像をアップロード',
+      '5MB以下（PNG/JPG形式）',
+      '16:9推奨'
+    ],
+    'product.submit.cancel': 'キャンセル',
+    'product.submit.post': '投稿',
+    'product.submit.posting': '投稿中...',
+    
     // Success messages
     'success.profileUpdated': 'プロフィールを更新しました',
     'success.languageUpdated': '言語設定を更新しました',
+    'success.productPosted': 'プロダクトが投稿されました！',
+    'success.imageUploaded': '画像をアップロードしました',
     
     // Error messages
     'error.occurred': 'エラーが発生しました',
@@ -81,6 +146,11 @@ const translations = {
     'error.fetchProfile': 'プロフィールの取得に失敗しました',
     'error.updateProfile': 'プロフィールの更新に失敗しました',
     'error.updateLanguage': '言語設定の更新に失敗しました',
+    'error.required': '必須項目を入力してください',
+    'error.upload': '画像のアップロードに失敗しました',
+    'error.post': '投稿に失敗しました。もう一度お試しください。',
+    'error.maxFiles': '最大ファイル数に達しました',
+    'error.login': '続行するにはログインしてください'
   }
 };
 
