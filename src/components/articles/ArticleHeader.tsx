@@ -2,6 +2,7 @@ import { Heart, Share2, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 interface ArticleHeaderProps {
   title: string;
@@ -25,6 +26,27 @@ export const ArticleHeader = ({
   onLike,
   thumbnailUrl 
 }: ArticleHeaderProps) => {
+  const { toast } = useToast();
+
+  const handleShare = async () => {
+    try {
+      const currentUrl = window.location.href;
+      await navigator.clipboard.writeText(currentUrl);
+      
+      toast({
+        title: "リンクをコピーしました",
+        description: "クリップボードにURLをコピーしました",
+      });
+    } catch (err) {
+      console.error('Failed to copy URL:', err);
+      toast({
+        title: "コピーに失敗しました",
+        description: "URLのコピーに失敗しました",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="mb-8 space-y-6">
       {thumbnailUrl && (
@@ -76,6 +98,7 @@ export const ArticleHeader = ({
         <Button 
           variant="ghost" 
           size="sm"
+          onClick={handleShare}
           className={cn(
             "gap-2 text-gray-500 hover:text-gray-900",
             "hover:bg-gray-50"
