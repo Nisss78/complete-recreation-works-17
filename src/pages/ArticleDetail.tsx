@@ -1,26 +1,30 @@
-import { Heart, MessageCircle, Share2 } from "lucide-react";
+import { Heart, MessageCircle, Share2, User } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { cn } from "@/lib/utils";
 
 const ArticleDetail = () => {
   const article = {
     title: "MCPツールをClaudeデスクトップアプリで活用し日常タスクを自動化する方法",
     author: {
-      name: "まるまるPG",
+      name: "生成AI活用研究部",
       avatar: "/lovable-uploads/d52af139-0d12-4cd2-aec0-d6d4e07ffd34.png"
     },
-    postedAt: "2024年2月10日",
+    postedAt: "2024年12月18日 21:13",
     content: `
-      本記事は、MCPツールをClaudeデスクトップアプリで活用し、日常タスクを自動化する方法について解説します。
+      本記事については生成AIを活用して生成された記事となります。解説内容の正確性については読者ご自身でご確認いただきますようお願いいいたします。
 
-      本日は「How to Use MCP Tools on Claude Desktop App and Automate Your Daily Tasks」について解説していきます。
+      本記事はHow to Use MCP Tools on Claude Desktop App and Automate Your Daily Tasksの解説記事となります。
 
-      MCPツール（Message Protocol API）は、Claudeデスクトップアプリケーションを使用してタスクを自動化し、効率を向上させる強力なツールです。このガイドでは、MCPツールの基本概念、Claudeデスクトップアプリでの活用方法からアップデートまで、詳細な手順について説明を行っていきます。
+      Model Context Protocol (MCP)は、Claudeのようなアシスタントとさまざまなシステムを安全に接続する新しい標準です。この記事では、MCPの基本から始め、Claudeデスクトップアプリでの具体的なセットアップ方法と、日常業務を簡略化する実例を解説します。
 
       ## MCPツールの基礎
 
-      ### MCPの基本機能
+      ### MCPの基本構造
 
       MCPは、メッセージプロトコルスタンダードのクライアント実装です。主な機能は以下のサービスメッセージとプロトコールシーケンスに関係します。
 
@@ -32,102 +36,101 @@ const ArticleDetail = () => {
 
       - ローカルリソース / コンピューターのハードウェアリソースを活用
       - リモートリソース / APIやクラウドリソースサービス
-
-      ## Claudeデスクトップアプリでのツールの設定方法
-
-      ### 手順1: Claudeデスクトップアプリのインストール
-
-      Claudeのオフィシャルサイトからアプリケーションをダウンロード、インストールしていきます。
-
-      ### 手順2: 設定ファイルの作成
-
-      ターゲットとなるプロトコルを実行して設定ファイルを作成します。
-
-      ### 手順3: Brave Search MCPツールの導入
-
-      「Save MCP」をインストールします。
-
-      ### 手順4: Claudeアプリの再起動
-
-      アプリを起動して「MCPツール」ツールを起動し、設定されたかどうかを確認します。
-
-      ## MCPツールの活用事例
-
-      ### 例1: リアルタイム情報の取得
-
-      Claudeで、Webスクレイピングを実行して、リアルタイムなBrave Searchの結果を手軽に取得してみましょう。以下の機能を確認します。
-
-      ### 例2: スポーツの試合結果の要約
-
-      「ツイッターメッセージ」「スポーツニュース記事」などの情報を集めて、要約を作成します。Claudeの処理の結果を待つだけで、必要な情報が要約されます。
-
-      ## MCPツールがもたらすメリット
-
-      ### 日常業務の効率化
-
-      アプリケーションのAPIコールやタスクの自動化が可能となり、業務効率が上がります。
-
-      ### カスタマイズ可能なMCPサーバー
-
-      Pythonは独自のMCPサーバーを実装でき、さらなる自動化が可能な環境を作ることができます。
-
-      ## まとめ
-
-      MCPツールとClaudeデスクトップアプリを組み合わせれば、日常業務の自動化を実現することができます。本記事を参考に、ぜひ効率的なタスク自動化を実践してみてください。
     `,
-    likes: 42,
-    comments: 15,
+    likes: 16,
+    comments: 0,
   };
 
   return (
     <div className="min-h-screen w-full flex flex-col bg-white">
       <Header />
       <main className="flex-1">
-        <article className="max-w-4xl mx-auto py-8 px-4">
+        <article className="max-w-3xl mx-auto py-8 px-4">
           {/* Article Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">
+          <div className="mb-8 space-y-6">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">
               {article.title}
             </h1>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <img
-                  src={article.author.avatar}
-                  alt=""
-                  className="w-10 h-10 rounded-full"
-                />
-                <div>
-                  <div className="font-medium text-gray-900">
-                    {article.author.name}
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    {article.postedAt}
-                  </div>
+
+            <div className="flex items-center gap-4">
+              <Avatar className="h-12 w-12">
+                <AvatarImage src={article.author.avatar} />
+                <AvatarFallback>
+                  <User className="w-6 h-6" />
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <div className="font-medium text-gray-900">
+                  {article.author.name}
+                </div>
+                <div className="text-sm text-gray-500">
+                  {article.postedAt}
                 </div>
               </div>
-              <div className="flex items-center gap-4">
-                <button className="flex items-center gap-1.5 text-gray-500 hover:text-gray-700">
-                  <Heart className="w-5 h-5" />
-                  <span>{article.likes}</span>
-                </button>
-                <button className="flex items-center gap-1.5 text-gray-500 hover:text-gray-700">
-                  <MessageCircle className="w-5 h-5" />
-                  <span>{article.comments}</span>
-                </button>
-                <button className="flex items-center gap-1.5 text-gray-500 hover:text-gray-700">
-                  <Share2 className="w-5 h-5" />
-                </button>
-              </div>
+            </div>
+
+            <div className="flex items-center gap-4 border-y border-gray-100 py-4">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className={cn(
+                  "gap-2 text-gray-500 hover:text-gray-900",
+                  "hover:bg-gray-50"
+                )}
+              >
+                <Heart className="w-5 h-5" />
+                <span>{article.likes}</span>
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className={cn(
+                  "gap-2 text-gray-500 hover:text-gray-900",
+                  "hover:bg-gray-50"
+                )}
+              >
+                <MessageCircle className="w-5 h-5" />
+                <span>{article.comments}</span>
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className={cn(
+                  "gap-2 text-gray-500 hover:text-gray-900",
+                  "hover:bg-gray-50"
+                )}
+              >
+                <Share2 className="w-5 h-5" />
+                <span>シェア</span>
+              </Button>
             </div>
           </div>
 
+          {/* AI Generated Content Notice */}
+          <Alert className="mb-8 bg-blue-50 border-blue-200">
+            <AlertDescription className="text-sm text-blue-800">
+              本記事については生成AIを活用して生成された記事となります。解説内容の正確性については読者ご自身でご確認いただきますようお願いいいたします。
+            </AlertDescription>
+          </Alert>
+
           {/* Article Content */}
-          <ScrollArea className="h-[calc(100vh-300px)] pr-6">
+          <ScrollArea className="h-[calc(100vh-400px)]">
             <div className="prose prose-gray max-w-none">
               {article.content.split('\n').map((paragraph, index) => (
-                <p key={index} className="whitespace-pre-wrap">
-                  {paragraph}
-                </p>
+                paragraph.trim() && (
+                  <p 
+                    key={index} 
+                    className={cn(
+                      "mb-4 leading-relaxed",
+                      paragraph.startsWith('#') && "font-bold text-xl mt-8",
+                      paragraph.startsWith('##') && "font-bold text-lg mt-6",
+                      paragraph.startsWith('###') && "font-bold text-base mt-4",
+                      paragraph.startsWith('-') && "pl-4"
+                    )}
+                  >
+                    {paragraph.replace(/^#{1,3}\s/, '')}
+                  </p>
+                )
               ))}
             </div>
           </ScrollArea>
