@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Plus, BookOpen } from "lucide-react";
+import { Plus, BookOpen, FilePlus } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ProductSubmissionDialog } from "./ProductSubmissionDialog";
 import { supabase } from "@/integrations/supabase/client";
@@ -48,6 +48,15 @@ export const Header = () => {
               >
                 <BookOpen className="w-4 h-4 mr-2" />
                 {!isMobile && "記事"}
+              </Button>
+              <Button 
+                variant="ghost"
+                size="sm"
+                className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 h-9"
+                onClick={() => navigate("/articles/new")}
+              >
+                <FilePlus className="w-4 h-4 mr-2" />
+                {!isMobile && "記事を書く"}
               </Button>
               <Button 
                 variant="outline"
