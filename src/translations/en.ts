@@ -67,6 +67,14 @@ export const enTranslations = {
   'articles.following': 'Following',
   'articles.noArticles': 'No articles found',
   'articles.noFollowingArticles': 'No articles from followed users',
+  'articles.new.title': 'Write New Article',
+  'articles.new.titlePlaceholder': 'Enter title',
+  'articles.new.thumbnailTitle': 'Thumbnail Image',
+  'articles.new.thumbnailDescription': 'Click or drag & drop to upload image',
+  'articles.new.thumbnailSize': 'Recommended size: 1200×630px',
+  'articles.new.cancel': 'Cancel',
+  'articles.new.post': 'Post',
+  'articles.new.posting': 'Posting...',
 
   // Product submission
   'product.submit.title': 'Submit Product',

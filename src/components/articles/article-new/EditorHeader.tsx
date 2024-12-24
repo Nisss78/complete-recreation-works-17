@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface EditorHeaderProps {
   title: string;
@@ -12,6 +13,7 @@ interface EditorHeaderProps {
 
 export const EditorHeader = ({ title, setTitle, onSubmit, isSubmitting }: EditorHeaderProps) => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   return (
     <div className="fixed top-0 left-0 right-0 bg-white border-b z-10 px-4 py-3">
@@ -28,7 +30,7 @@ export const EditorHeader = ({ title, setTitle, onSubmit, isSubmitting }: Editor
           <Input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="タイトルを入力"
+            placeholder={t('articles.new.titlePlaceholder')}
             className="w-[300px] border-none text-lg placeholder:text-gray-400 focus-visible:ring-0"
           />
         </div>
@@ -38,13 +40,13 @@ export const EditorHeader = ({ title, setTitle, onSubmit, isSubmitting }: Editor
             onClick={() => navigate(-1)}
             disabled={isSubmitting}
           >
-            キャンセル
+            {t('articles.new.cancel')}
           </Button>
           <Button 
             onClick={onSubmit}
             disabled={isSubmitting}
           >
-            {isSubmitting ? "投稿中..." : "投稿する"}
+            {isSubmitting ? t('articles.new.posting') : t('articles.new.post')}
           </Button>
         </div>
       </div>
