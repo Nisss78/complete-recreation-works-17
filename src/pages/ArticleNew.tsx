@@ -48,10 +48,7 @@ export default function ArticleNew() {
     }
   };
 
-  const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  const handleThumbnailUpload = async (file: File) => {
     try {
       const fileExt = file.name.split('.').pop();
       const fileName = `thumbnails/${crypto.randomUUID()}.${fileExt}`;
@@ -136,37 +133,42 @@ export default function ArticleNew() {
             >
               <Play className="w-4 h-4" />
             </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full bg-white shadow-sm hover:bg-gray-50"
-              onClick={() => {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = 'image/*';
-                input.onchange = (e) => {
-                  const file = (e.target as HTMLInputElement).files?.[0];
+            <div className="relative">
+              <input
+                type="file"
+                accept="image/*"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
                   if (file) handleImageUpload(file);
-                };
-                input.click();
-              }}
-            >
-              <Image className="w-4 h-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full bg-white shadow-sm hover:bg-gray-50"
-              onClick={() => {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = 'image/*';
-                input.onchange = handleThumbnailUpload;
-                input.click();
-              }}
-            >
-              <Plus className="w-4 h-4" />
-            </Button>
+                }}
+              />
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-full bg-white shadow-sm hover:bg-gray-50"
+              >
+                <Image className="w-4 h-4" />
+              </Button>
+            </div>
+            <div className="relative">
+              <input
+                type="file"
+                accept="image/*"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) handleThumbnailUpload(file);
+                }}
+              />
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-full bg-white shadow-sm hover:bg-gray-50"
+              >
+                <Plus className="w-4 h-4" />
+              </Button>
+            </div>
             <Button
               variant="outline"
               size="icon"
