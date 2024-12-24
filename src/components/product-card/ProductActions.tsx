@@ -48,6 +48,27 @@ export function ProductActions({
     await onLike();
   };
 
+  const handleShare = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const productSlug = productName.toLowerCase().replace(/\s+/g, '-');
+    const shareUrl = `${window.location.origin}/posts/${productSlug}`;
+    
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      toast({
+        title: "リンクをコピーしました",
+        description: "クリップボードにURLをコピーしました",
+      });
+    } catch (err) {
+      console.error('Failed to copy URL:', err);
+      toast({
+        title: "コピーに失敗しました",
+        description: "URLのコピーに失敗しました",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="flex items-center gap-3">
       <button 
@@ -79,7 +100,7 @@ export function ProductActions({
 
       <button 
         className="p-2 text-gray-700 hover:text-gray-900 rounded-full border border-gray-200 hover:border-gray-400 transition-colors"
-        onClick={(e) => handleInteraction(e, 'share')}
+        onClick={handleShare}
       >
         <Share2 className="w-4 h-4" />
       </button>
