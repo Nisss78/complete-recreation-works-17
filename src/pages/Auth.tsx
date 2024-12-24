@@ -10,6 +10,7 @@ const AuthPage = () => {
   const { toast } = useToast();
 
   useEffect(() => {
+    // Check if user is already logged in
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
@@ -19,6 +20,7 @@ const AuthPage = () => {
 
     checkUser();
 
+    // Listen for auth state changes and errors
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       console.log("Auth state changed:", event);
       if (event === 'SIGNED_IN') {
@@ -38,12 +40,12 @@ const AuthPage = () => {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 to-indigo-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h1 className="text-center text-3xl font-bold tracking-tight text-gray-900 mb-8">
           Solomaker
         </h1>
-        <div className="bg-white py-8 px-4 shadow-xl rounded-xl sm:px-10 border border-gray-100">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <Auth
             supabaseClient={supabase}
             appearance={{
@@ -55,11 +57,6 @@ const AuthPage = () => {
                     brandAccent: '#7E69AB',
                   },
                 },
-              },
-              className: {
-                container: 'auth-container',
-                button: 'auth-button',
-                input: 'auth-input',
               },
             }}
             providers={["google"]}

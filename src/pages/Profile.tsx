@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 import { ProfileForm } from "@/components/profile/ProfileForm";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
-import { AppLayout } from "@/components/layouts/AppLayout";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -94,22 +95,30 @@ const ProfilePage = () => {
 
   if (isLoading) {
     return (
-      <AppLayout>
-        <div className="animate-pulse space-y-4">
-          <div className="h-32 bg-muted rounded-lg" />
-          <div className="h-64 bg-muted rounded-lg" />
-        </div>
-      </AppLayout>
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="container max-w-4xl mx-auto py-8 px-4">
+          <div className="animate-pulse space-y-4">
+            <div className="h-32 bg-muted rounded-lg" />
+            <div className="h-64 bg-muted rounded-lg" />
+          </div>
+        </main>
+        <Footer />
+      </div>
     );
   }
 
   return (
-    <AppLayout>
-      <div className="space-y-8">
-        <ProfileHeader profile={profile} />
-        <ProfileForm profile={profile} onSuccess={() => refetch()} />
-      </div>
-    </AppLayout>
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main className="container max-w-4xl mx-auto py-8 px-4">
+        <div className="space-y-8">
+          <ProfileHeader profile={profile} />
+          <ProfileForm profile={profile} onSuccess={() => refetch()} />
+        </div>
+      </main>
+      <Footer />
+    </div>
   );
 };
 
