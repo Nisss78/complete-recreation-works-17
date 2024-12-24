@@ -1,122 +1,123 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User, Flame, Twitter, Instagram, Github, Link } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
 import { FollowButton } from "@/components/articles/FollowButton";
+import { Link } from "react-router-dom";
+import { Github, Twitter, Instagram, Globe } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ProfileHeaderProps {
   profile: {
     id: string;
-    username: string;
+    username: string | null;
     avatar_url: string | null;
     bio: string | null;
-    streak_count: number;
-    twitter_url: string | null;
-    instagram_url: string | null;
-    github_url: string | null;
-    other_url: string | null;
-  } | null;
-  showFollowButton?: boolean;
+    twitter_url?: string | null;
+    instagram_url?: string | null;
+    github_url?: string | null;
+    other_url?: string | null;
+  };
+  isOwnProfile?: boolean;
+  onAvatarUpdate?: (url: string) => void;
 }
 
-export const ProfileHeader = ({ profile, showFollowButton = false }: ProfileHeaderProps) => {
-  const { data: session } = useQuery({
-    queryKey: ["session"],
-    queryFn: async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      return session;
-    },
-  });
+export const ProfileHeader = ({ profile, isOwnProfile, onAvatarUpdate }: ProfileHeaderProps) => {
+  const { toast } = useToast();
+  const shouldShowFollowButton = !isOwnProfile;
 
-  const { data: followStats } = useQuery({
-    queryKey: ["followStats", profile?.id],
-    queryFn: async () => {
-      if (!profile?.id) return { following: 0, followers: 0 };
+  const handleAvatarClick = async () => {
+    if (!isOwnProfile) return;
 
-      const [{ count: following }, { count: followers }] = await Promise.all([
-        supabase
-          .from('follows')
-          .select('*', { count: 'exact', head: true })
-          .eq('follower_id', profile.id),
-        supabase
-          .from('follows')
-          .select('*', { count: 'exact', head: true })
-          .eq('following_id', profile.id)
-      ]);
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
 
-      return {
-        following: following || 0,
-        followers: followers || 0
-      };
-    },
-    enabled: !!profile?.id
-  });
+      try {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Math.random()}.${fileExt}`;
+        const filePath = `${fileName}`;
 
-  const shouldShowFollowButton = showFollowButton && profile?.id !== session?.user.id;
+        const { error: uploadError } = await supabase.storage
+          .from('profile-images')
+          .upload(filePath, file);
 
-  const SocialLink = ({ url, icon: Icon, label }: { url: string | null, icon: any, label: string }) => {
-    if (!url) return null;
-    return (
-      <a
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-muted-foreground hover:text-foreground transition-colors"
-        title={label}
-      >
-        <Icon className="w-5 h-5" />
-      </a>
-    );
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('profile-images')
+          .getPublicUrl(filePath);
+
+        onAvatarUpdate?.(publicUrl);
+
+        toast({
+          title: "アバター画像を更新しました",
+          description: "プロフィール画像が正常に更新されました",
+        });
+      } catch (error) {
+        console.error('Error uploading avatar:', error);
+        toast({
+          title: "エラーが発生しました",
+          description: "画像のアップロードに失敗しました。もう一度お試しください。",
+          variant: "destructive",
+        });
+      }
+    };
+    input.click();
   };
 
-  if (!profile) {
-    return (
-      <div className="flex flex-col items-center space-y-4 p-6 bg-card rounded-lg shadow-sm">
-        <Avatar className="w-24 h-24">
-          <AvatarFallback>
-            <User className="w-12 h-12 text-muted-foreground" />
-          </AvatarFallback>
-        </Avatar>
-        <div className="text-center space-y-2">
-          <p className="text-muted-foreground">プロフィールを設定してください</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="flex flex-col items-center space-y-4 p-6 bg-card rounded-lg shadow-sm">
-      <Avatar className="w-24 h-24">
-        <AvatarImage src={profile.avatar_url || undefined} />
+    <div className="flex flex-col items-center space-y-4 p-6">
+      <Avatar 
+        className="w-24 h-24 cursor-pointer"
+        onClick={handleAvatarClick}
+      >
+        <AvatarImage src={profile.avatar_url || ''} />
         <AvatarFallback>
-          <User className="w-12 h-12 text-muted-foreground" />
+          {profile.username?.[0]?.toUpperCase() || '?'}
         </AvatarFallback>
       </Avatar>
       <div className="text-center space-y-2">
         <div className="flex items-center justify-center gap-2">
           <h1 className="text-2xl font-bold">{profile.username || "名前未設定"}</h1>
           {shouldShowFollowButton && (
-            <FollowButton profileId={profile.id} className="ml-2" />
+            <FollowButton profileId={profile.id} />
           )}
         </div>
         {profile.bio && (
-          <p className="text-muted-foreground max-w-md">{profile.bio}</p>
+          <p className="text-gray-600 max-w-md">{profile.bio}</p>
         )}
-        <div className="flex items-center justify-center gap-4 text-sm">
-          <div className="flex items-center gap-2">
-            <Flame className="w-4 h-4 text-orange-500" />
-            <span className="text-muted-foreground">{profile.streak_count || 0} days streak</span>
-          </div>
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <span>{followStats?.following || 0} フォロー中</span>
-            <span>{followStats?.followers || 0} フォロワー</span>
-          </div>
-        </div>
-        <div className="flex justify-center gap-4 mt-4">
-          <SocialLink url={profile.twitter_url} icon={Twitter} label="X (Twitter)" />
-          <SocialLink url={profile.instagram_url} icon={Instagram} label="Instagram" />
-          <SocialLink url={profile.github_url} icon={Github} label="GitHub" />
-          <SocialLink url={profile.other_url} icon={Link} label="Website" />
+        <div className="flex justify-center gap-2 mt-4">
+          {profile.twitter_url && (
+            <Button variant="ghost" size="icon" asChild>
+              <Link to={profile.twitter_url} target="_blank">
+                <Twitter className="h-5 w-5" />
+              </Link>
+            </Button>
+          )}
+          {profile.instagram_url && (
+            <Button variant="ghost" size="icon" asChild>
+              <Link to={profile.instagram_url} target="_blank">
+                <Instagram className="h-5 w-5" />
+              </Link>
+            </Button>
+          )}
+          {profile.github_url && (
+            <Button variant="ghost" size="icon" asChild>
+              <Link to={profile.github_url} target="_blank">
+                <Github className="h-5 w-5" />
+              </Link>
+            </Button>
+          )}
+          {profile.other_url && (
+            <Button variant="ghost" size="icon" asChild>
+              <Link to={profile.other_url} target="_blank">
+                <Globe className="h-5 w-5" />
+              </Link>
+            </Button>
+          )}
         </div>
       </div>
     </div>
