@@ -153,22 +153,12 @@ const ArticleDetail = () => {
       <main className="flex-1">
         <article className="max-w-3xl mx-auto py-8 px-4">
           <ArticleHeader 
-            title={article.title}
             author={{
+              id: article.profile.id,
               name: article.profile.username || "Unknown User",
               avatar: article.profile.avatar_url || "/placeholder.svg"
             }}
-            postedAt={new Date(article.created_at).toLocaleString('ja-JP', {
-              year: 'numeric',
-              month: '2-digit',
-              day: '2-digit',
-              hour: '2-digit',
-              minute: '2-digit'
-            })}
-            likes={likesCount}
-            hasLiked={hasLiked}
-            onLike={handleLike}
-            thumbnailUrl={article.thumbnail_url}
+            postedAt={article.created_at}
           />
 
           <div className="prose prose-gray max-w-none">
