@@ -13,6 +13,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { ProductImageCarousel } from "./ProductImageCarousel";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface ProductDetailsProps {
   product: {
@@ -27,9 +28,10 @@ interface ProductDetailsProps {
     URL?: string | null;
     images: string[];
   };
+  isLoadingImages: boolean;
 }
 
-export const ProductDetails = ({ product }: ProductDetailsProps) => {
+export const ProductDetails = ({ product, isLoadingImages }: ProductDetailsProps) => {
   const [commentCount, setCommentCount] = useState(product.comments);
   const { totalLikes, hasLiked, toggleLike } = useProductLikes(product.id);
   const { toast } = useToast();
@@ -99,8 +101,6 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
     }
   };
 
-  console.log("Product images in ProductDetails:", product.images);
-
   return (
     <div className="space-y-6">
       <div className="flex items-start gap-4">
@@ -155,10 +155,16 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
         </div>
       </div>
 
-      <ProductImageCarousel 
-        productName={product.name}
-        images={product.images}
-      />
+      {isLoadingImages ? (
+        <div className="space-y-4">
+          <Skeleton className="w-full h-[500px] rounded-lg" />
+        </div>
+      ) : (
+        <ProductImageCarousel 
+          productName={product.name}
+          images={product.images}
+        />
+      )}
     </div>
   );
 };

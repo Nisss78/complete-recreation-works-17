@@ -5,6 +5,7 @@ import { ProductDetails } from "./product-dialog/ProductDetails";
 import { CommentSection } from "./comments/CommentSection";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
 
 interface ProductDialogProps {
   open: boolean;
@@ -36,8 +37,23 @@ interface Comment {
 
 const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps) => {
   const [comments, setComments] = useState<Comment[]>([]);
-  const [productImages, setProductImages] = useState<string[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const { data: productImages = [], isLoading: isLoadingImages } = useQuery({
+    queryKey: ['product-images', product.id],
+    queryFn: async () => {
+      const { data: imagesData, error } = await supabase
+        .from('product_images')
+        .select('image_url')
+        .eq('product_id', product.id)
+        .order('created_at', { ascending: true });
+
+      if (error) throw error;
+      console.log('Fetched product images:', imagesData?.map(img => img.image_url));
+      return imagesData?.map(img => img.image_url) || [];
+    },
+    enabled: open,
+  });
 
   const fetchComments = async () => {
     try {
@@ -74,28 +90,9 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
     }
   };
 
-  const fetchProductImages = async () => {
-    try {
-      const { data: imagesData, error } = await supabase
-        .from('product_images')
-        .select('image_url')
-        .eq('product_id', product.id)
-        .order('created_at', { ascending: true });
-
-      if (error) throw error;
-
-      const images = imagesData.map(img => img.image_url);
-      console.log('Fetched product images:', images);
-      setProductImages(images);
-    } catch (error) {
-      console.error('Error fetching product images:', error);
-    }
-  };
-
   useEffect(() => {
     if (open) {
       fetchComments();
-      fetchProductImages();
     }
   }, [open, product.id]);
 
@@ -113,6 +110,7 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
                 ...product,
                 images: productImages
               }}
+              isLoadingImages={isLoadingImages}
             />
             <div className="mt-8">
               <CommentSection 
