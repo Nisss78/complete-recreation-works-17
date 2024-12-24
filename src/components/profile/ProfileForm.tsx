@@ -14,7 +14,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { useQueryClient } from "@tanstack/react-query";
 import { User } from "lucide-react";
 import { AvatarUpload } from "./AvatarUpload";
 
@@ -39,11 +38,11 @@ interface ProfileFormProps {
     bio: string | null;
     avatar_url: string | null;
   } | null;
+  onSuccess?: () => void;
 }
 
-export const ProfileForm = ({ profile }: ProfileFormProps) => {
+export const ProfileForm = ({ profile, onSuccess }: ProfileFormProps) => {
   const { toast } = useToast();
-  const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -96,7 +95,7 @@ export const ProfileForm = ({ profile }: ProfileFormProps) => {
         description: "プロフィールを更新しました",
       });
 
-      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      onSuccess?.();
     } catch (error) {
       console.error("Unexpected error:", error);
       toast({

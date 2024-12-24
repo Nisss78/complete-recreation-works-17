@@ -20,13 +20,27 @@ const ProfilePage = () => {
         navigate("/auth");
         return;
       }
+      console.log("Current user ID:", session.user.id);
       setUserId(session.user.id);
     };
 
     checkAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT') {
+        navigate("/auth");
+      } else if (session) {
+        console.log("Auth state changed - User ID:", session.user.id);
+        setUserId(session.user.id);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, [navigate]);
 
-  const { data: profile, isLoading } = useQuery({
+  const { data: profile, isLoading, refetch } = useQuery({
     queryKey: ["profile", userId],
     queryFn: async () => {
       if (!userId) return null;
@@ -36,7 +50,7 @@ const ProfilePage = () => {
         .from("profiles")
         .select("*")
         .eq("id", userId)
-        .maybeSingle();
+        .single();
 
       if (error) {
         console.error("Error fetching profile:", error);
@@ -75,7 +89,7 @@ const ProfilePage = () => {
       <main className="container max-w-4xl mx-auto py-8 px-4">
         <div className="space-y-8">
           <ProfileHeader profile={profile} />
-          <ProfileForm profile={profile} />
+          <ProfileForm profile={profile} onSuccess={() => refetch()} />
         </div>
       </main>
       <Footer />
