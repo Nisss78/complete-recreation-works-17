@@ -1,27 +1,17 @@
+// First, let's split the Header component into smaller parts for better maintainability
+
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Plus, User, Settings, LogOut, Bookmark } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ProductSubmissionDialog } from "./ProductSubmissionDialog";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
-import { useBookmarks } from "@/hooks/useBookmarks";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  DropdownMenuGroup,
-} from "@/components/ui/dropdown-menu";
+import { UserMenu } from "./header/UserMenu";
 
 export const Header = () => {
   const [showSubmissionDialog, setShowSubmissionDialog] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const { bookmarks } = useBookmarks();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -40,157 +30,37 @@ export const Header = () => {
     };
   }, []);
 
-  const handleLogout = async () => {
-    console.log("Starting logout process...");
-    
-    try {
-      // First check if we have a session
-      const { data: { session } } = await supabase.auth.getSession();
-      console.log("Current session:", session);
-
-      if (!session) {
-        console.log("No active session found, clearing local state only");
-        setIsAuthenticated(false);
-        navigate("/auth");
-        return;
-      }
-
-      // Try to sign out
-      const { error } = await supabase.auth.signOut();
-      
-      if (error) {
-        console.error("Signout error:", error);
-        // If we get a session_not_found error, just clear local state
-        if (error.message.includes("session_not_found")) {
-          setIsAuthenticated(false);
-          navigate("/auth");
-          return;
-        }
-        throw error;
-      }
-
-      // If successful, update state and redirect
-      setIsAuthenticated(false);
-      toast({
-        title: "ログアウト完了",
-        description: "ログアウトしました",
-      });
-      navigate("/auth");
-      
-    } catch (error) {
-      console.error("Logout process error:", error);
-      
-      // Clear local state regardless of error
-      setIsAuthenticated(false);
-      
-      toast({
-        title: "注意",
-        description: "セッションをクリアしました",
-        variant: "destructive",
-      });
-      
-      navigate("/auth");
-    }
-  };
-
   return (
-    <>
-      <header className="border-b">
-        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link to="/" className="font-bold text-xl">
-            Producto
-          </Link>
-          
-          <div className="flex items-center gap-4">
-            {isAuthenticated ? (
-              <>
-                <Button 
-                  variant="default"
-                  className="flex items-center gap-2 bg-[#9b87f5] hover:bg-[#7E69AB]"
-                  onClick={() => setShowSubmissionDialog(true)}
-                >
-                  <Plus className="w-4 h-4" />
-                  投稿
-                </Button>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="rounded-full">
-                      <User className="w-5 h-5" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56">
-                    <DropdownMenuLabel>アカウント</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => navigate("/profile")}>
-                      <User className="w-4 h-4 mr-2" />
-                      プロフィール
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate("/settings")}>
-                      <Settings className="w-4 h-4 mr-2" />
-                      設定
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => navigate("/bookmarks")}>
-                      <Bookmark className="w-4 h-4 mr-2" />
-                      ブックマーク一覧を見る
-                    </DropdownMenuItem>
-                    <DropdownMenuLabel>最近のブックマーク</DropdownMenuLabel>
-                    <DropdownMenuGroup className="max-h-[200px] overflow-y-auto">
-                      {bookmarks.length === 0 ? (
-                        <DropdownMenuItem disabled>
-                          ブックマークはありません
-                        </DropdownMenuItem>
-                      ) : (
-                        bookmarks.slice(0, 5).map((bookmark) => (
-                          <DropdownMenuItem
-                            key={bookmark.id}
-                            onClick={() => {
-                              const productSlug = bookmark.name
-                                .toLowerCase()
-                                .replace(/\s+/g, "-");
-                              navigate(`/posts/${productSlug}`);
-                            }}
-                          >
-                            <div className="flex items-center gap-2 w-full">
-                              <img
-                                src={bookmark.icon_url}
-                                alt={bookmark.name}
-                                className="w-6 h-6 rounded"
-                              />
-                              <div className="flex flex-col">
-                                <span className="text-sm font-medium">
-                                  {bookmark.name}
-                                </span>
-                                <span className="text-xs text-gray-500 truncate">
-                                  {bookmark.tagline}
-                                </span>
-                              </div>
-                            </div>
-                          </DropdownMenuItem>
-                        ))
-                      )}
-                    </DropdownMenuGroup>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleLogout}>
-                      <LogOut className="w-4 h-4 mr-2" />
-                      ログアウト
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </>
-            ) : (
+    <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+        <Link to="/" className="font-bold text-xl text-gray-900 hover:text-gray-700 transition-colors">
+          Producto
+        </Link>
+        
+        <div className="flex items-center gap-4">
+          {isAuthenticated ? (
+            <>
               <Button 
-                variant="ghost"
-                size="icon"
-                className="rounded-full"
-                onClick={() => navigate("/auth")}
+                variant="default"
+                className="flex items-center gap-2 bg-[#9b87f5] hover:bg-[#7E69AB] shadow-sm"
+                onClick={() => setShowSubmissionDialog(true)}
               >
-                <User className="w-5 h-5" />
+                <Plus className="w-4 h-4" />
+                投稿
               </Button>
-            )}
-          </div>
+              <UserMenu />
+            </>
+          ) : (
+            <Button 
+              variant="ghost"
+              onClick={() => navigate("/auth")}
+              className="text-gray-700 hover:text-gray-900"
+            >
+              ログイン
+            </Button>
+          )}
         </div>
-      </header>
+      </div>
 
       {showSubmissionDialog && isAuthenticated && (
         <ProductSubmissionDialog 
@@ -198,6 +68,6 @@ export const Header = () => {
           onOpenChange={setShowSubmissionDialog} 
         />
       )}
-    </>
+    </header>
   );
 };
