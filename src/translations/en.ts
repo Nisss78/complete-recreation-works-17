@@ -39,11 +39,11 @@ export const enTranslations = {
   'profile.avatarSize': 'Max 2MB (PNG/JPG format)',
   'profile.noAvatarSelected': 'No image selected',
   'profile.avatarPreview': 'Avatar Preview',
-  
-  // Sort options
-  'sort.byLikes': 'Sort by Likes',
-  'sort.byDate': 'Sort by Date',
-  
+  'profile.twitterPlaceholder': 'https://twitter.com/yourusername',
+  'profile.instagramPlaceholder': 'https://instagram.com/yourusername',
+  'profile.githubPlaceholder': 'https://github.com/yourusername',
+  'profile.websitePlaceholder': 'https://yourwebsite.com',
+
   // Success messages
   'success.profileUpdated': 'Profile updated',
   'success.languageUpdated': 'Language preference updated',

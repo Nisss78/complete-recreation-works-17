@@ -39,11 +39,11 @@ export const jaTranslations = {
   'profile.avatarSize': '2MB以下（PNG/JPG形式）',
   'profile.noAvatarSelected': '選択されていません',
   'profile.avatarPreview': 'アバタープレビュー',
-  
-  // Sort options
-  'sort.byLikes': 'いいね順',
-  'sort.byDate': '投稿順',
-  
+  'profile.twitterPlaceholder': 'https://twitter.com/yourusername',
+  'profile.instagramPlaceholder': 'https://instagram.com/yourusername',
+  'profile.githubPlaceholder': 'https://github.com/yourusername',
+  'profile.websitePlaceholder': 'https://yourwebsite.com',
+
   // Success messages
   'success.profileUpdated': 'プロフィールを更新しました',
   'success.languageUpdated': '言語設定を更新しました',
