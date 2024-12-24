@@ -4,6 +4,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ArticleCard } from "@/components/articles/ArticleCard";
 import { supabase } from "@/integrations/supabase/client";
+import type { Article } from "@/types/database";
 
 const Articles = () => {
   const { data: articles, isLoading } = useQuery({
@@ -13,7 +14,7 @@ const Articles = () => {
         .from('articles')
         .select(`
           *,
-          profiles:user_id (
+          profiles!articles_user_id_fkey (
             username,
             avatar_url
           )
@@ -21,7 +22,7 @@ const Articles = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return articles;
+      return articles as Article[];
     }
   });
 
