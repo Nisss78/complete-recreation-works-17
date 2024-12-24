@@ -1,10 +1,9 @@
-import { Heart, MessageCircle, Share2, User } from "lucide-react";
+import { Heart, Share2, User } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
 
 const ArticleDetail = () => {
@@ -16,10 +15,6 @@ const ArticleDetail = () => {
     },
     postedAt: "2024年12月18日 21:13",
     content: `
-      本記事については生成AIを活用して生成された記事となります。解説内容の正確性については読者ご自身でご確認いただきますようお願いいいたします。
-
-      本記事はHow to Use MCP Tools on Claude Desktop App and Automate Your Daily Tasksの解説記事となります。
-
       Model Context Protocol (MCP)は、Claudeのようなアシスタントとさまざまなシステムを安全に接続する新しい標準です。この記事では、MCPの基本から始め、Claudeデスクトップアプリでの具体的なセットアップ方法と、日常業務を簡略化する実例を解説します。
 
       ## MCPツールの基礎
@@ -38,7 +33,6 @@ const ArticleDetail = () => {
       - リモートリソース / APIやクラウドリソースサービス
     `,
     likes: 16,
-    comments: 0,
   };
 
   return (
@@ -89,29 +83,11 @@ const ArticleDetail = () => {
                   "hover:bg-gray-50"
                 )}
               >
-                <MessageCircle className="w-5 h-5" />
-                <span>{article.comments}</span>
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="sm"
-                className={cn(
-                  "gap-2 text-gray-500 hover:text-gray-900",
-                  "hover:bg-gray-50"
-                )}
-              >
                 <Share2 className="w-5 h-5" />
                 <span>シェア</span>
               </Button>
             </div>
           </div>
-
-          {/* AI Generated Content Notice */}
-          <Alert className="mb-8 bg-blue-50 border-blue-200">
-            <AlertDescription className="text-sm text-blue-800">
-              本記事については生成AIを活用して生成された記事となります。解説内容の正確性については読者ご自身でご確認いただきますようお願いいいたします。
-            </AlertDescription>
-          </Alert>
 
           {/* Article Content */}
           <ScrollArea className="h-[calc(100vh-400px)]">
