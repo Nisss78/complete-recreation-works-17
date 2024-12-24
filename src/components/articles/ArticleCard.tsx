@@ -60,6 +60,8 @@ export const ArticleCard = ({
 
   const handleLike = async (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
+    
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
       toast({
@@ -113,6 +115,7 @@ export const ArticleCard = ({
 
   const handleDelete = async (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     
     if (!window.confirm('この記事を削除してもよろしいですか？')) {
       return;
@@ -144,6 +147,7 @@ export const ArticleCard = ({
 
   const handleAuthorClick = (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     navigate(`/profile/${author.id}`);
   };
 
