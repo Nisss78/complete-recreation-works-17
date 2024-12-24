@@ -42,19 +42,34 @@ export const Header = () => {
 
   const handleLogout = async () => {
     try {
-      await supabase.auth.signOut();
+      // まずローカルの認証状態をクリア
+      setIsAuthenticated(false);
+
+      // ローカルサインアウトを試みる
+      await supabase.auth.signOut({ scope: 'local' });
+      
+      // グローバルサインアウトを試みる（エラーは無視）
+      try {
+        await supabase.auth.signOut({ scope: 'global' });
+      } catch (globalError) {
+        console.log('Global sign out failed, but local sign out succeeded');
+      }
+
       toast({
         title: "ログアウト完了",
         description: "ログアウトしました",
       });
-      setIsAuthenticated(false);
+      
+      navigate("/auth");
     } catch (error) {
       console.error("Logout error:", error);
+      setIsAuthenticated(false); // エラーが発生しても認証状態をクリア
       toast({
         title: "エラー",
-        description: "ログアウトに失敗しました",
+        description: "ログアウトに問題が発生しましたが、セッションはクリアされました",
         variant: "destructive",
       });
+      navigate("/auth");
     }
   };
 
