@@ -1,10 +1,11 @@
-import { Heart } from "lucide-react";
+import { Heart, Trash2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 interface Author {
   name: string;
@@ -19,9 +20,20 @@ interface ArticleCardProps {
   author: Author;
   likes: number;
   postedAt: string;
+  showDeleteButton?: boolean;
+  onDelete?: () => void;
 }
 
-export const ArticleCard = ({ id, date, title, author, likes: initialLikes, postedAt }: ArticleCardProps) => {
+export const ArticleCard = ({ 
+  id, 
+  date, 
+  title, 
+  author, 
+  likes: initialLikes, 
+  postedAt,
+  showDeleteButton,
+  onDelete 
+}: ArticleCardProps) => {
   const [hasLiked, setHasLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(initialLikes);
   const { toast } = useToast();
@@ -58,7 +70,6 @@ export const ArticleCard = ({ id, date, title, author, likes: initialLikes, post
 
     try {
       if (hasLiked) {
-        // いいねを削除
         await supabase
           .from('article_likes')
           .delete()
@@ -73,7 +84,6 @@ export const ArticleCard = ({ id, date, title, author, likes: initialLikes, post
           description: "記事のいいねを取り消しました",
         });
       } else {
-        // いいねを追加
         await supabase
           .from('article_likes')
           .insert({
@@ -90,7 +100,6 @@ export const ArticleCard = ({ id, date, title, author, likes: initialLikes, post
         });
       }
 
-      // 記事のいいね数を更新
       await supabase
         .from('articles')
         .update({ likes_count: likesCount })
@@ -101,6 +110,37 @@ export const ArticleCard = ({ id, date, title, author, likes: initialLikes, post
       toast({
         title: "エラーが発生しました",
         description: "操作に失敗しました。もう一度お試しください。",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent navigation
+    
+    if (!window.confirm('この記事を削除してもよろしいですか？')) {
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('articles')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      toast({
+        title: "記事を削除しました",
+        description: "記事の削除が完了しました",
+      });
+
+      onDelete?.();
+    } catch (error) {
+      console.error('Error deleting article:', error);
+      toast({
+        title: "エラーが発生しました",
+        description: "記事の削除に失敗しました。もう一度お試しください。",
         variant: "destructive",
       });
     }
@@ -162,6 +202,16 @@ export const ArticleCard = ({ id, date, title, author, likes: initialLikes, post
                 <Heart className={cn("w-4 h-4", hasLiked && "fill-current")} />
                 <span>{likesCount}</span>
               </button>
+              {showDeleteButton && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleDelete}
+                  className="text-red-500 hover:text-red-600 hover:bg-red-50"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              )}
             </div>
           </div>
         </div>

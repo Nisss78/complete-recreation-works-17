@@ -6,12 +6,13 @@ import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { ArticleCard } from "@/components/articles/ArticleCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [userId, setUserId] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -121,6 +122,11 @@ const ProfilePage = () => {
     enabled: !!userId,
   });
 
+  const handleArticleDelete = () => {
+    // 記事リストを再取得
+    queryClient.invalidateQueries({ queryKey: ["userArticles"] });
+  };
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return `${date.getMonth() + 1}/${date.getDate()}`;
@@ -174,6 +180,8 @@ const ProfilePage = () => {
                   }}
                   likes={article.likes_count || 0}
                   postedAt={formatTimeAgo(article.created_at)}
+                  showDeleteButton={true}
+                  onDelete={handleArticleDelete}
                 />
               ))
             ) : (
