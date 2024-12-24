@@ -40,7 +40,7 @@ const ProfilePage = () => {
     };
   }, [navigate]);
 
-  const { data: profile, isLoading, refetch } = useQuery({
+  const { data: profile, isLoading, error, refetch } = useQuery({
     queryKey: ["profile", userId],
     queryFn: async () => {
       if (!userId) return null;
@@ -50,7 +50,7 @@ const ProfilePage = () => {
         .from("profiles")
         .select("*")
         .eq("id", userId)
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error("Error fetching profile:", error);
@@ -59,7 +59,28 @@ const ProfilePage = () => {
           description: "プロフィールの取得に失敗しました",
           variant: "destructive",
         });
-        return null;
+        throw error;
+      }
+
+      if (!data) {
+        console.log("No profile found, creating new profile");
+        const { data: newProfile, error: createError } = await supabase
+          .from("profiles")
+          .insert([{ id: userId }])
+          .select()
+          .single();
+
+        if (createError) {
+          console.error("Error creating profile:", createError);
+          toast({
+            title: "エラー",
+            description: "プロフィールの作成に失敗しました",
+            variant: "destructive",
+          });
+          throw createError;
+        }
+
+        return newProfile;
       }
 
       console.log("Profile data:", data);
@@ -67,6 +88,10 @@ const ProfilePage = () => {
     },
     enabled: !!userId,
   });
+
+  if (error) {
+    console.error("Query error:", error);
+  }
 
   if (isLoading) {
     return (
