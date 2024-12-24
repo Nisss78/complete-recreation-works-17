@@ -37,22 +37,22 @@ export const Header = () => {
           Producto
         </Link>
         
-        <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex items-center gap-3 sm:gap-4">
           {isAuthenticated ? (
             <>
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+                className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 h-9"
                 onClick={() => navigate("/articles")}
               >
                 <BookOpen className="w-4 h-4 mr-2" />
                 {!isMobile && "記事"}
               </Button>
               <Button 
-                variant="default"
+                variant="outline"
                 size="sm"
-                className="bg-primary hover:bg-primary/90"
+                className="bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 h-9"
                 onClick={() => setShowSubmissionDialog(true)}
               >
                 <Plus className="w-4 h-4 mr-2" />
@@ -62,9 +62,9 @@ export const Header = () => {
             </>
           ) : (
             <Button 
-              variant="ghost"
+              variant="outline"
               onClick={() => navigate("/auth")}
-              className="text-gray-700 hover:text-gray-900"
+              className="bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 h-9"
             >
               ログイン
             </Button>
