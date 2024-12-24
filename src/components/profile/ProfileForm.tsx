@@ -99,7 +99,7 @@ export const ProfileForm = ({ profile, onSuccess }: ProfileFormProps) => {
           title: "変更なし",
           description: "プロフィールに変更はありませんでした",
         });
-        navigate("/");
+        navigate("/profile");
         return;
       }
 
@@ -131,7 +131,7 @@ export const ProfileForm = ({ profile, onSuccess }: ProfileFormProps) => {
       });
 
       onSuccess?.();
-      navigate("/");
+      navigate("/profile");
     } catch (error) {
       console.error("Unexpected error:", error);
       toast({

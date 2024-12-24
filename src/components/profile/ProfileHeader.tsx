@@ -1,8 +1,8 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { FollowButton } from "@/components/articles/FollowButton";
-import { Link } from "react-router-dom";
-import { Github, Twitter, Instagram, Globe } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Github, Twitter, Instagram, Globe, Pencil } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -24,6 +24,7 @@ interface ProfileHeaderProps {
 
 export const ProfileHeader = ({ profile, isOwnProfile, onAvatarUpdate, showFollowButton }: ProfileHeaderProps) => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const shouldShowFollowButton = showFollowButton && !isOwnProfile && profile;
 
   const handleAvatarClick = async () => {
@@ -101,6 +102,16 @@ export const ProfileHeader = ({ profile, isOwnProfile, onAvatarUpdate, showFollo
           <h1 className="text-2xl font-bold">{profile.username || "名前未設定"}</h1>
           {shouldShowFollowButton && (
             <FollowButton profileId={profile.id} />
+          )}
+          {isOwnProfile && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate("/settings")}
+              className="ml-2"
+            >
+              <Pencil className="h-4 w-4" />
+            </Button>
           )}
         </div>
         {profile.bio && (
