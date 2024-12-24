@@ -79,4 +79,21 @@ export const jaTranslations = {
   'articles.new.cancel': 'キャンセル',
   'articles.new.post': '投稿する',
   'articles.new.posting': '投稿中...',
+
+  // Product submission
+  'product.submit.title': 'プロダクトを投稿',
+  'product.submit.description': 'あなたのプロダクトをコミュニティにシェアしましょう',
+  'product.submit.name': 'プロダクト名',
+  'product.submit.namePlaceholder': 'プロダクト名を入力',
+  'product.submit.tagline': 'タグライン',
+  'product.submit.taglinePlaceholder': 'プロダクトの簡単な説明',
+  'product.submit.descriptionLabel': '説明',
+  'product.submit.descriptionPlaceholder': 'プロダクトの詳細な説明',
+  'product.submit.icon': 'プロダクトアイコン',
+  'product.submit.iconRequirements': '正方形の画像をアップロード\n推奨サイズ: 512x512px\n最大サイズ: 2MB',
+  'product.submit.images': 'プロダクト画像',
+  'product.submit.imageRequirements': '最大5枚までアップロード可能\n1枚あたり最大2MB',
+  'product.submit.cancel': 'キャンセル',
+  'product.submit.post': '投稿する',
+  'product.submit.posting': '投稿中...'
 } as const;

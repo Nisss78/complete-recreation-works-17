@@ -79,4 +79,21 @@ export const enTranslations = {
   'articles.new.cancel': 'Cancel',
   'articles.new.post': 'Post',
   'articles.new.posting': 'Posting...',
+
+  // Product submission
+  'product.submit.title': 'Submit Product',
+  'product.submit.description': 'Share your product with the community',
+  'product.submit.name': 'Product Name',
+  'product.submit.namePlaceholder': 'Enter product name',
+  'product.submit.tagline': 'Tagline',
+  'product.submit.taglinePlaceholder': 'Brief description of your product',
+  'product.submit.descriptionLabel': 'Description',
+  'product.submit.descriptionPlaceholder': 'Detailed description of your product',
+  'product.submit.icon': 'Product Icon',
+  'product.submit.iconRequirements': 'Upload a square image\nRecommended size: 512x512px\nMax size: 2MB',
+  'product.submit.images': 'Product Images',
+  'product.submit.imageRequirements': 'Upload up to 5 images\nMax size per image: 2MB',
+  'product.submit.cancel': 'Cancel',
+  'product.submit.post': 'Post',
+  'product.submit.posting': 'Posting...'
 } as const;
