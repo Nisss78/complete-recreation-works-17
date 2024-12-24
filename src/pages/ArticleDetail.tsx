@@ -6,9 +6,14 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import ReactMarkdown from "react-markdown";
 import type { Article } from "@/types/database";
+import { useToast } from "@/hooks/use-toast";
+import { useState, useEffect } from "react";
 
 const ArticleDetail = () => {
   const { id } = useParams();
+  const { toast } = useToast();
+  const [hasLiked, setHasLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(0);
   
   const { data: article, isLoading } = useQuery({
     queryKey: ['article', id],
@@ -35,6 +40,88 @@ const ArticleDetail = () => {
     },
     enabled: !!id
   });
+
+  useEffect(() => {
+    if (article) {
+      setLikesCount(article.likes_count || 0);
+      checkIfLiked();
+    }
+  }, [article]);
+
+  const checkIfLiked = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+
+    const { data: like } = await supabase
+      .from('article_likes')
+      .select('id')
+      .eq('article_id', id)
+      .eq('user_id', session.user.id)
+      .maybeSingle();
+
+    setHasLiked(!!like);
+  };
+
+  const handleLike = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      toast({
+        title: "ログインが必要です",
+        description: "いいねをするにはログインしてください",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      if (hasLiked) {
+        // いいねを削除
+        await supabase
+          .from('article_likes')
+          .delete()
+          .eq('article_id', id)
+          .eq('user_id', session.user.id);
+
+        setLikesCount(prev => Math.max(0, prev - 1));
+        setHasLiked(false);
+
+        toast({
+          title: "いいねを取り消しました",
+          description: "記事のいいねを取り消しました",
+        });
+      } else {
+        // いいねを追加
+        await supabase
+          .from('article_likes')
+          .insert({
+            article_id: id,
+            user_id: session.user.id
+          });
+
+        setLikesCount(prev => prev + 1);
+        setHasLiked(true);
+
+        toast({
+          title: "いいね！",
+          description: "記事にいいねしました",
+        });
+      }
+
+      // 記事のいいね数を更新
+      await supabase
+        .from('articles')
+        .update({ likes_count: likesCount })
+        .eq('id', id);
+
+    } catch (error) {
+      console.error('Error toggling like:', error);
+      toast({
+        title: "エラーが発生しました",
+        description: "操作に失敗しました。もう一度お試しください。",
+        variant: "destructive",
+      });
+    }
+  };
 
   if (isLoading) {
     return (
@@ -78,7 +165,9 @@ const ArticleDetail = () => {
               hour: '2-digit',
               minute: '2-digit'
             })}
-            likes={article.likes_count || 0}
+            likes={likesCount}
+            hasLiked={hasLiked}
+            onLike={handleLike}
             thumbnailUrl={article.thumbnail_url}
           />
 
