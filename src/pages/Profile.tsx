@@ -175,6 +175,7 @@ const ProfilePage = () => {
                   date={formatDate(article.created_at)}
                   title={article.title}
                   author={{
+                    id: article.profiles.id,
                     name: article.profiles.username,
                     avatar: article.profiles.avatar_url
                   }}
