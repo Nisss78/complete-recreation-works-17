@@ -4,7 +4,7 @@ import { enTranslations } from '@/translations/en';
 import { jaTranslations } from '@/translations/ja';
 
 export type Language = 'en' | 'ja';
-type TranslationKey = keyof typeof enTranslations;
+type TranslationKey = keyof typeof enTranslations & keyof typeof jaTranslations;
 
 type LanguageContextType = {
   language: Language;

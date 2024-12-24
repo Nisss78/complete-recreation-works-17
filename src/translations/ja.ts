@@ -1,7 +1,12 @@
 import { commentTranslations } from './sections/comments';
+import { productTranslations } from './sections/products';
+import { followTranslations } from './sections/follows';
 
 export const jaTranslations = {
   ...commentTranslations.ja,
+  ...productTranslations.ja,
+  ...followTranslations.ja,
+  
   // Header
   'nav.home': 'ホーム',
   'nav.articles': '記事',
@@ -148,4 +153,3 @@ export const jaTranslations = {
   'profile.noChanges': '変更なし',
   'profile.noChanges.description': 'プロフィールに変更はありませんでした',
 } as const;
-
