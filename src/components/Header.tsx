@@ -42,27 +42,29 @@ export const Header = () => {
 
   const handleLogout = async () => {
     try {
-      // セッションを取得
-      const { data: { session } } = await supabase.auth.getSession();
+      setIsAuthenticated(false); // Immediately update UI state
+      const { error } = await supabase.auth.signOut();
       
-      // セッションが存在する場合のみログアウトを実行
-      if (session) {
-        const { error } = await supabase.auth.signOut();
-        if (error) throw error;
-        
-        toast({
-          title: "ログアウト完了",
-          description: "ログアウトしました",
-        });
-        setIsAuthenticated(false);
-        navigate('/');
-      } else {
-        // セッションが存在しない場合は、状態をリセット
-        setIsAuthenticated(false);
-        navigate('/auth');
+      if (error) {
+        // If there's an error but it's just that the session wasn't found, we can ignore it
+        if (error.message.includes('session_not_found')) {
+          navigate('/auth');
+          return;
+        }
+        throw error;
       }
+
+      toast({
+        title: "ログアウト完了",
+        description: "ログアウトしました",
+      });
+      
+      navigate('/auth');
     } catch (error) {
       console.error("Logout error:", error);
+      // Even if there's an error, we want to make sure the user is redirected to auth
+      navigate('/auth');
+      
       toast({
         title: "エラー",
         description: "ログアウトに失敗しました",
