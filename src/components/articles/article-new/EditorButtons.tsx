@@ -9,7 +9,7 @@ interface EditorButtonsProps {
 
 export const EditorButtons = ({ isPreview, setIsPreview, onImageUpload }: EditorButtonsProps) => {
   return (
-    <div className="absolute right-[-60px] flex flex-col gap-3">
+    <div className="absolute right-[-60px] top-0 flex flex-col gap-3">
       <Button
         variant="outline"
         size="icon"
