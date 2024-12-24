@@ -42,34 +42,17 @@ export const Header = () => {
 
   const handleLogout = async () => {
     try {
-      // First clear local state
-      setIsAuthenticated(false);
-      
-      // Attempt local signout first
-      await supabase.auth.signOut({ scope: 'local' });
-      
-      // Then try global signout, but ignore any errors
-      try {
-        await supabase.auth.signOut({ scope: 'global' });
-      } catch (globalError) {
-        console.log('Global signout failed, but local signout succeeded');
-      }
-
+      await supabase.auth.signOut();
       toast({
         title: "ログアウト完了",
         description: "ログアウトしました",
       });
-      
-      navigate("/auth");
+      setIsAuthenticated(false);
     } catch (error) {
       console.error("Logout error:", error);
-      // Even if there's an error, we want to clear the local state and redirect
-      setIsAuthenticated(false);
-      navigate("/auth");
-      
       toast({
         title: "エラー",
-        description: "ログアウトに問題が発生しましたが、セッションをクリアしました",
+        description: "ログアウトに失敗しました",
         variant: "destructive",
       });
     }
