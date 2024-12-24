@@ -1,7 +1,8 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { ArticleHeader } from "@/components/articles/ArticleHeader";
+import { cn } from "@/lib/utils";
+import ReactMarkdown from "react-markdown";
 
 const ArticleDetail = () => {
   const article = {
@@ -13,22 +14,22 @@ const ArticleDetail = () => {
     postedAt: "2024年12月18日 21:13",
     thumbnailUrl: "/lovable-uploads/6bbd01fe-acf0-40d4-81c6-3adc8f714a4a.png",
     content: `
-      Model Context Protocol (MCP)は、Claudeのようなアシスタントとさまざまなシステムを安全に接続する新しい標準です。この記事では、MCPの基本から始め、Claudeデスクトップアプリでの具体的なセットアップ方法と、日常業務を簡略化する実例を解説します。
+# MCPツールの基礎
 
-      ## MCPツールの基礎
+MCPは、Claudeのようなアシスタントとさまざまなシステムを安全に接続する新しい標準です。この記事では、MCPの基本から始め、Claudeデスクトップアプリでの具体的なセットアップ方法と、日常業務を簡略化する実例を解説します。
 
-      ### MCPの基本構造
+## MCPの基本構造
 
-      MCPは、メッセージプロトコルスタンダードのクライアント実装です。主な機能は以下のサービスメッセージとプロトコールシーケンスに関係します。
+MCPは、メッセージプロトコルスタンダードのクライアント実装です。主な機能は以下のサービスメッセージとプロトコールシーケンスに関係します。
 
-      - MCPプロトコル / Claudeデスクトップアプリケーションソリューション
-      - MCPクライアント / 独自のクライアント機能を実装するためのコアポーネント
-      - MCPサーバー / 独自の機能を付加可能なプロトコル
+- MCPプロトコル / Claudeデスクトップアプリケーションソリューション
+- MCPクライアント / 独自のクライアント機能を実装するためのコアポーネント
+- MCPサーバー / 独自の機能を付加可能なプロトコル
 
-      ## MCPがサポートするリソース
+## MCPがサポートするリソース
 
-      - ローカルリソース / コンピューターのハードウェアリソースを活用
-      - リモートリソース / APIやクラウドリソースサービス
+- ローカルリソース / コンピューターのハードウェアリソースを活用
+- リモートリソース / APIやクラウドリソースサービス
     `,
     likes: 16,
   };
@@ -46,26 +47,9 @@ const ArticleDetail = () => {
             thumbnailUrl={article.thumbnailUrl}
           />
 
-          <ScrollArea className="h-[calc(100vh-400px)]">
-            <div className="prose prose-gray max-w-none">
-              {article.content.split('\n').map((paragraph, index) => (
-                paragraph.trim() && (
-                  <p 
-                    key={index} 
-                    className={cn(
-                      "mb-4 leading-relaxed",
-                      paragraph.startsWith('#') && "font-bold text-xl mt-8",
-                      paragraph.startsWith('##') && "font-bold text-lg mt-6",
-                      paragraph.startsWith('###') && "font-bold text-base mt-4",
-                      paragraph.startsWith('-') && "pl-4"
-                    )}
-                  >
-                    {paragraph.replace(/^#{1,3}\s/, '')}
-                  </p>
-                )
-              ))}
-            </div>
-          </ScrollArea>
+          <div className="prose prose-gray max-w-none">
+            <ReactMarkdown>{article.content}</ReactMarkdown>
+          </div>
         </article>
       </main>
       <Footer />
