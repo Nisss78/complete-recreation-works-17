@@ -112,4 +112,14 @@ export const enTranslations = {
   // Product listing
   'products.sortByLikes': 'Sort by Likes',
   'products.sortByDate': 'Sort by Date',
+
+  // Index page
+  'index.title': 'Products Launching Today | Product List',
+  'index.description': 'Check out new products launching today. Discover the latest innovations and creative ideas.',
+  'index.productsTitle': 'Products Launching Today',
+  'index.recentArticles': 'Recent Articles',
+  'index.viewMore': 'View More',
+  'index.unknownUser': 'Unknown User',
+  'index.noProducts': 'No products have been posted yet. Would you like to be the first to post?',
+  'index.noArticles': 'No articles yet',
 } as const;

@@ -155,8 +155,8 @@ const Index = () => {
   return (
     <div className="min-h-screen w-full flex flex-col bg-gray-50/50">
       <MetaTags 
-        title="Products Launching Today | プロダクト一覧"
-        description="今日立ち上がった新しいプロダクトをチェックしましょう。最新のイノベーションとクリエイティブなアイデアを発見できます。"
+        title={t('index.title')}
+        description={t('index.description')}
         image="og-image.png"
       />
       <Header />
@@ -165,7 +165,7 @@ const Index = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2">
               <div className="flex justify-between items-center mb-6 sm:mb-8">
-                <h1 className="text-xl sm:text-3xl font-bold text-gray-900">Products Launching Today</h1>
+                <h1 className="text-xl sm:text-3xl font-bold text-gray-900">{t('index.productsTitle')}</h1>
                 <button
                   onClick={() => setSortByLikes(!sortByLikes)}
                   className="px-3 sm:px-4 py-1.5 sm:py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm"
@@ -193,9 +193,7 @@ const Index = () => {
 
               {allProducts.length === 0 && (
                 <div className="text-center text-gray-500 mt-8 p-6 sm:p-8 bg-white rounded-xl shadow-sm border border-gray-200">
-                  まだ投稿されたプロダクトはありません。
-                  <br />
-                  最初の投稿者になりませんか？
+                  {t('index.noProducts')}
                 </div>
               )}
             </div>
@@ -204,14 +202,14 @@ const Index = () => {
             <div className="lg:col-span-1">
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-lg font-semibold text-gray-900">最近の記事</h2>
+                  <h2 className="text-lg font-semibold text-gray-900">{t('index.recentArticles')}</h2>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => navigate('/articles')}
                     className="text-gray-600 hover:text-gray-900"
                   >
-                    もっと見る
+                    {t('index.viewMore')}
                     <ChevronRight className="ml-1 h-4 w-4" />
                   </Button>
                 </div>
@@ -233,7 +231,7 @@ const Index = () => {
                         <div>
                           <h3 className="font-medium text-gray-900 line-clamp-2">{article.title}</h3>
                           <p className="text-sm text-gray-500 mt-1">
-                            {article.profiles?.username || "Unknown User"}
+                            {article.profiles?.username || t('index.unknownUser')}
                           </p>
                         </div>
                       </div>
@@ -241,7 +239,7 @@ const Index = () => {
                   ))}
                   {recentArticles.length === 0 && (
                     <p className="text-center text-gray-500 py-4">
-                      まだ記事がありません
+                      {t('index.noArticles')}
                     </p>
                   )}
                 </div>

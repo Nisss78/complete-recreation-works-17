@@ -98,6 +98,11 @@ export const jaTranslations = {
   'articles.myPosts': '投稿した記事',
   'articles.noPosts': 'まだ記事がありません',
 
+  // Article details
+  'article.details.share': 'シェア',
+  'article.details.back': '戻る',
+  'article.details.postedOn': '{date}に投稿',
+
   // Bookmarks
   'bookmarks.title': 'ブックマーク',
   'bookmarks.empty': 'ブックマークはありません',
@@ -106,52 +111,13 @@ export const jaTranslations = {
   'products.sortByLikes': 'いいね順に並び替え',
   'products.sortByDate': '投稿順に並び替え',
 
-  // Product details
-  'product.details.visit': '訪問',
-
-  // Article details
-  'article.details.share': 'シェア',
-  'article.details.back': '戻る',
-  'article.details.postedOn': '{date}に投稿',
-
-  // Settings
-  'settings.profileSettings': 'プロフィール設定',
-
-  'product.details.like': 'いいね',
-  'product.details.likes': 'いいね',
-  'product.details.comment': 'コメント',
-  'product.details.comments': 'コメント',
-  'product.details.bookmark': 'ブックマーク',
-  'product.details.share': 'シェア',
-  'product.details.stats': '統計',
-  'product.details.linkCopied': 'リンクをコピーしました',
-  'product.details.linkCopiedDesc': 'クリップボードにURLをコピーしました',
-  'product.details.bookmarkAdded': 'ブックマークに追加しました',
-  'product.details.bookmarkRemoved': 'ブックマークを解除しました',
-  'product.details.bookmarkAddedDesc': '{name}をブックマークに追加しました',
-  'product.details.bookmarkRemovedDesc': '{name}のブックマークを解除しました',
-  'product.details.loginRequired': 'ログインが必要です',
-  'product.details.loginRequiredDesc': 'この機能を使用するにはログインしてください',
-
-  // New translations
-  'avatar.upload.completed': 'アップロード完了',
-  'avatar.upload.completed.description': 'アバター画像のアップロードが完了しました',
-  'avatar.upload.failed': 'エラー',
-  'avatar.upload.failed.description': '画像のアップロードに失敗しました',
-  'avatar.upload.uploading': 'アップロード中...',
-  'avatar.upload.clickOrDrag': 'クリックまたはドラッグ&ドロップで画像をアップロード',
-  'avatar.upload.sizeLimit': '2MB以下（PNG/JPG形式）',
-  'profile.update.success': 'プロフィールを更新しました',
-  'profile.update.success.description': 'プロフィール画像を更新しました',
-  'profile.update.failed': 'エラーが発生しました',
-  'profile.update.failed.description': '画像のアップロードに失敗しました。もう一度お試しください。',
-  'profile.noName': '名前未設定',
-  'profile.edit': 'プロフィールを編集',
-  'profile.daysAgo': '{days}日前',
-  'profile.postedArticles': '投稿した記事',
-  'profile.noArticlesYet': 'まだ記事がありません',
-  'profile.loginRequired': 'ログインが必要です',
-  'profile.loginRequired.description': '続行するにはログインしてください',
-  'profile.noChanges': '変更なし',
-  'profile.noChanges.description': 'プロフィールに変更はありませんでした',
+  // Index page
+  'index.title': '本日のプロダクト | プロダクト一覧',
+  'index.description': '今日立ち上がった新しいプロダクトをチェックしましょう。最新のイノベーションとクリエイティブなアイデアを発見できます。',
+  'index.productsTitle': '本日のプロダクト',
+  'index.recentArticles': '最近の記事',
+  'index.viewMore': 'もっと見る',
+  'index.unknownUser': '名前未設定',
+  'index.noProducts': 'まだ投稿されたプロダクトはありません。最初の投稿者になりませんか？',
+  'index.noArticles': 'まだ記事がありません',
 } as const;
