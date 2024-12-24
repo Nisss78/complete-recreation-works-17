@@ -12,13 +12,7 @@ const Articles = () => {
       console.log('Fetching articles...');
       const { data: articles, error } = await supabase
         .from('articles')
-        .select(`
-          *,
-          profiles (
-            username,
-            avatar_url
-          )
-        `)
+        .select('*, user:profiles(username, avatar_url)')
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -31,8 +25,8 @@ const Articles = () => {
       return articles.map(article => ({
         ...article,
         profiles: {
-          username: article.profiles?.username || "Unknown User",
-          avatar_url: article.profiles?.avatar_url || "/placeholder.svg"
+          username: article.user?.username || "Unknown User",
+          avatar_url: article.user?.avatar_url || "/placeholder.svg"
         }
       }));
     }
@@ -71,8 +65,8 @@ const Articles = () => {
                   date={formatDate(article.created_at)}
                   title={article.title}
                   author={{
-                    name: article.profiles?.username || "Unknown User",
-                    avatar: article.profiles?.avatar_url || "/placeholder.svg"
+                    name: article.profiles.username,
+                    avatar: article.profiles.avatar_url
                   }}
                   likes={article.likes_count || 0}
                   postedAt={formatTimeAgo(article.created_at)}

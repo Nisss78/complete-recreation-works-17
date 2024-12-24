@@ -12,5 +12,9 @@ export interface Article {
   likes_count: number | null;
   created_at: string;
   updated_at: string;
-  profiles?: Profile | null;
+  user?: Profile;
+  profiles: {
+    username: string;
+    avatar_url: string;
+  };
 }
