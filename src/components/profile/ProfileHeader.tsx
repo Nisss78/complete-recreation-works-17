@@ -75,7 +75,11 @@ export const ProfileHeader = ({ profile, isOwnProfile, onAvatarUpdate, showFollo
         className="w-24 h-24 cursor-pointer"
         onClick={handleAvatarClick}
       >
-        <AvatarImage src={profile.avatar_url || ''} />
+        <AvatarImage 
+          src={profile.avatar_url || ''} 
+          className="object-cover w-full h-full"
+          alt={profile.username || 'プロフィール画像'}
+        />
         <AvatarFallback>
           {profile.username?.[0]?.toUpperCase() || '?'}
         </AvatarFallback>
