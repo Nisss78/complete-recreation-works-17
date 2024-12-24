@@ -6,11 +6,14 @@ import { ProfileForm } from "@/components/profile/ProfileForm";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const SettingsPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [userId, setUserId] = useState<string | null>(null);
+  const { language, setLanguage } = useLanguage();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -50,8 +53,8 @@ const SettingsPage = () => {
 
       if (error) {
         toast({
-          title: "エラー",
-          description: "プロフィールの取得に失敗しました",
+          title: "Error",
+          description: "Failed to fetch profile",
           variant: "destructive",
         });
         throw error;
@@ -61,6 +64,22 @@ const SettingsPage = () => {
     },
     enabled: !!userId,
   });
+
+  const handleLanguageChange = async (newLanguage: string) => {
+    try {
+      await setLanguage(newLanguage);
+      toast({
+        title: "Success",
+        description: "Language preference updated",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update language preference",
+        variant: "destructive",
+      });
+    }
+  };
 
   if (isLoading) {
     return (
@@ -81,8 +100,27 @@ const SettingsPage = () => {
       <Header />
       <main className="container max-w-4xl mx-auto py-8 px-4">
         <div className="space-y-8">
-          <h1 className="text-2xl font-bold">アカウント設定</h1>
-          <ProfileForm onSuccess={() => refetch()} />
+          <h1 className="text-2xl font-bold">Account Settings</h1>
+          
+          <div className="bg-white p-6 rounded-lg shadow-sm space-y-6">
+            <div>
+              <h2 className="text-lg font-semibold mb-4">Language Preferences</h2>
+              <Select value={language} onValueChange={handleLanguageChange}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select language" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="en">English</SelectItem>
+                  <SelectItem value="ja">日本語</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="pt-6 border-t">
+              <h2 className="text-lg font-semibold mb-4">Profile Settings</h2>
+              <ProfileForm onSuccess={() => refetch()} />
+            </div>
+          </div>
         </div>
       </main>
       <Footer />
