@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,49 +13,43 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { User, Link } from "lucide-react";
+import { User } from "lucide-react";
 import { AvatarUpload } from "./AvatarUpload";
 import { useNavigate } from "react-router-dom";
-
-const urlSchema = z.string().url({ message: "有効なURLを入力してください" }).optional().or(z.literal(""));
-
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "ユーザー名は2文字以上で入力してください",
-  }).max(50, {
-    message: "ユーザー名は50文字以下で入力してください",
-  }),
-  bio: z.string().max(160, {
-    message: "自己紹介は160文字以下で入力してください",
-  }).optional(),
-  avatar_url: z.string().url({
-    message: "有効なURLを入力してください",
-  }).optional().or(z.literal("")),
-  twitter_url: urlSchema,
-  instagram_url: urlSchema,
-  github_url: urlSchema,
-  other_url: urlSchema,
-});
+import { SocialLinksFields } from "./SocialLinksFields";
+import { formSchema, ProfileFormValues, ProfileData } from "./profileFormSchema";
+import { useQuery } from "@tanstack/react-query";
 
 interface ProfileFormProps {
-  profile: {
-    id: string;
-    username: string;
-    bio: string | null;
-    avatar_url: string | null;
-    twitter_url: string | null;
-    instagram_url: string | null;
-    github_url: string | null;
-    other_url: string | null;
-  } | null;
   onSuccess?: () => void;
 }
 
-export const ProfileForm = ({ profile, onSuccess }: ProfileFormProps) => {
+export const ProfileForm = ({ onSuccess }: ProfileFormProps) => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const { data: profile, isLoading } = useQuery({
+    queryKey: ["profile"],
+    queryFn: async () => {
+      const session = await supabase.auth.getSession();
+      const userId = session.data.session?.user.id;
+      
+      if (!userId) {
+        throw new Error("Not authenticated");
+      }
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .single();
+
+      if (error) throw error;
+      return data as ProfileData;
+    },
+  });
+
+  const form = useForm<ProfileFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: profile?.username || "",
@@ -69,7 +62,7 @@ export const ProfileForm = ({ profile, onSuccess }: ProfileFormProps) => {
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: ProfileFormValues) => {
     const session = await supabase.auth.getSession();
     const userId = session.data.session?.user.id;
 
@@ -84,7 +77,6 @@ export const ProfileForm = ({ profile, onSuccess }: ProfileFormProps) => {
     }
 
     try {
-      // 変更されたフィールドのみを抽出
       const changedFields = Object.entries(values).reduce((acc, [key, value]) => {
         const originalValue = profile?.[key as keyof typeof profile];
         if (value !== originalValue) {
@@ -93,7 +85,6 @@ export const ProfileForm = ({ profile, onSuccess }: ProfileFormProps) => {
         return acc;
       }, {} as Record<string, any>);
 
-      // 変更がない場合は更新をスキップ
       if (Object.keys(changedFields).length === 0) {
         toast({
           title: "変更なし",
@@ -105,26 +96,18 @@ export const ProfileForm = ({ profile, onSuccess }: ProfileFormProps) => {
 
       console.log("Updating fields:", changedFields);
 
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("profiles")
         .update({
           ...changedFields,
           updated_at: new Date().toISOString(),
         })
-        .eq("id", userId)
-        .select();
+        .eq("id", userId);
 
       if (error) {
-        console.error("Error updating profile:", error);
-        toast({
-          title: "エラー",
-          description: `プロフィールの更新に失敗しました: ${error.message}`,
-          variant: "destructive",
-        });
-        return;
+        throw error;
       }
 
-      console.log("Profile updated successfully:", data);
       toast({
         title: "更新完了",
         description: "プロフィールを更新しました",
@@ -133,10 +116,10 @@ export const ProfileForm = ({ profile, onSuccess }: ProfileFormProps) => {
       onSuccess?.();
       navigate("/profile");
     } catch (error) {
-      console.error("Unexpected error:", error);
+      console.error("Error updating profile:", error);
       toast({
         title: "エラー",
-        description: "予期せぬエラーが発生しました",
+        description: "プロフィールの更新に失敗しました",
         variant: "destructive",
       });
     }
@@ -146,6 +129,16 @@ export const ProfileForm = ({ profile, onSuccess }: ProfileFormProps) => {
     console.log("Avatar URL updated:", url);
     form.setValue("avatar_url", url);
   };
+
+  if (isLoading) {
+    return (
+      <div className="animate-pulse space-y-4">
+        <div className="h-12 bg-gray-200 rounded" />
+        <div className="h-32 bg-gray-200 rounded" />
+        <div className="h-24 bg-gray-200 rounded" />
+      </div>
+    );
+  }
 
   return (
     <Form {...form}>
@@ -213,68 +206,7 @@ export const ProfileForm = ({ profile, onSuccess }: ProfileFormProps) => {
             )}
           />
 
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium flex items-center gap-2">
-              <Link className="w-5 h-5" />
-              ソーシャルリンク
-            </h3>
-
-            <FormField
-              control={form.control}
-              name="twitter_url"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>X (Twitter)</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="https://twitter.com/yourusername" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="instagram_url"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Instagram</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="https://instagram.com/yourusername" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="github_url"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>GitHub</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="https://github.com/yourusername" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="other_url"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>その他のリンク</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="https://yourwebsite.com" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          <SocialLinksFields form={form} />
 
           <Button type="submit" className="w-full">
             保存
