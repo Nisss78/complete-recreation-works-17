@@ -42,12 +42,25 @@ export const Header = () => {
 
   const handleLogout = async () => {
     try {
-      await supabase.auth.signOut();
-      toast({
-        title: "ログアウト完了",
-        description: "ログアウトしました",
-      });
-      setIsAuthenticated(false);
+      // セッションを取得
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      // セッションが存在する場合のみログアウトを実行
+      if (session) {
+        const { error } = await supabase.auth.signOut();
+        if (error) throw error;
+        
+        toast({
+          title: "ログアウト完了",
+          description: "ログアウトしました",
+        });
+        setIsAuthenticated(false);
+        navigate('/');
+      } else {
+        // セッションが存在しない場合は、状態をリセット
+        setIsAuthenticated(false);
+        navigate('/auth');
+      }
     } catch (error) {
       console.error("Logout error:", error);
       toast({
