@@ -2,7 +2,7 @@ import { useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, Image, Play, Plus, HelpCircle } from "lucide-react";
+import { ArrowLeft, Image, Play, HelpCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
@@ -43,35 +43,6 @@ export default function ArticleNew() {
       toast({
         title: "エラー",
         description: "画像のアップロードに失敗しました",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleThumbnailUpload = async (file: File) => {
-    try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `thumbnails/${crypto.randomUUID()}.${fileExt}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('product-images')
-        .upload(fileName, file);
-
-      if (uploadError) throw uploadError;
-
-      const { data: { publicUrl } } = supabase.storage
-        .from('product-images')
-        .getPublicUrl(fileName);
-
-      setThumbnailUrl(publicUrl);
-      toast({
-        title: "サムネイルを設定しました",
-      });
-    } catch (error) {
-      console.error('Thumbnail upload error:', error);
-      toast({
-        title: "エラー",
-        description: "サムネイルのアップロードに失敗しました",
         variant: "destructive",
       });
     }
@@ -151,24 +122,6 @@ export default function ArticleNew() {
                 <Image className="w-4 h-4" />
               </Button>
             </div>
-            <div className="relative">
-              <input
-                type="file"
-                accept="image/*"
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) handleThumbnailUpload(file);
-                }}
-              />
-              <Button
-                variant="outline"
-                size="icon"
-                className="rounded-full bg-white shadow-sm hover:bg-gray-50"
-              >
-                <Plus className="w-4 h-4" />
-              </Button>
-            </div>
             <Button
               variant="outline"
               size="icon"
@@ -178,17 +131,6 @@ export default function ArticleNew() {
               <HelpCircle className="w-4 h-4" />
             </Button>
           </div>
-
-          {/* Thumbnail Preview */}
-          {thumbnailUrl && (
-            <div className="fixed left-8 top-32 bg-white p-3 rounded-lg shadow-sm">
-              <img 
-                src={thumbnailUrl} 
-                alt="サムネイルプレビュー" 
-                className="w-32 h-32 object-cover rounded"
-              />
-            </div>
-          )}
         </div>
       </div>
     </div>
