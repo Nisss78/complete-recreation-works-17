@@ -100,9 +100,6 @@ export const ProfileHeader = ({ profile, isOwnProfile, onAvatarUpdate, showFollo
       <div className="text-center space-y-2">
         <div className="flex items-center justify-center gap-2">
           <h1 className="text-2xl font-bold">{profile.username || "名前未設定"}</h1>
-          {shouldShowFollowButton && (
-            <FollowButton profileId={profile.id} />
-          )}
           {isOwnProfile && (
             <Button
               variant="ghost"
@@ -113,6 +110,9 @@ export const ProfileHeader = ({ profile, isOwnProfile, onAvatarUpdate, showFollo
             >
               <Pencil className="h-4 w-4" />
             </Button>
+          )}
+          {shouldShowFollowButton && (
+            <FollowButton profileId={profile.id} />
           )}
         </div>
         {profile.bio && (
