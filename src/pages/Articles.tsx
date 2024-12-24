@@ -14,7 +14,7 @@ const Articles = () => {
         .from('articles')
         .select(`
           *,
-          profiles!articles_user_id_fkey (
+          profiles (
             username,
             avatar_url
           )
@@ -27,11 +27,13 @@ const Articles = () => {
       }
       
       if (!articles) return [];
-      
-      // Transform the data to match our Article type
+
       return articles.map(article => ({
         ...article,
-        profiles: article.profiles[0] // Extract the first (and only) profile
+        profiles: {
+          username: article.profiles?.username || "Unknown User",
+          avatar_url: article.profiles?.avatar_url || "/placeholder.svg"
+        }
       })) as Article[];
     }
   });
@@ -66,7 +68,6 @@ const Articles = () => {
                   title={article.title}
                   author={{
                     name: article.profiles?.username || "Unknown User",
-                    blog: "mutex Official Tech Blog",
                     avatar: article.profiles?.avatar_url || "/placeholder.svg"
                   }}
                   likes={article.likes_count || 0}
