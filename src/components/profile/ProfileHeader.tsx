@@ -46,7 +46,22 @@ export const ProfileHeader = ({ profile, showFollowButton = false }: ProfileHead
             <AvatarFallback>{profile.username?.[0]?.toUpperCase() || "U"}</AvatarFallback>
           </Avatar>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{profile.username || "Anonymous"}</h1>
+            <div className="flex items-center gap-3">
+              <h1 className="text-2xl font-bold text-gray-900">
+                {profile.username || "Anonymous"}
+              </h1>
+              {isOwnProfile && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate("/settings")}
+                  className="h-8"
+                >
+                  <Edit2 className="w-4 h-4 mr-2" />
+                  編集
+                </Button>
+              )}
+            </div>
             {profile.bio && (
               <p className="mt-1 text-gray-500 max-w-2xl whitespace-pre-wrap">{profile.bio}</p>
             )}
@@ -94,20 +109,10 @@ export const ProfileHeader = ({ profile, showFollowButton = false }: ProfileHead
             </div>
           </div>
         </div>
-        <div className="flex gap-2">
-          {isOwnProfile ? (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => navigate("/settings")}
-              className="flex items-center gap-2"
-            >
-              <Edit2 className="w-4 h-4" />
-              編集
-            </Button>
-          ) : showFollowButton ? (
-            <FollowButton userId={profile.id} />
-          ) : null}
+        <div>
+          {!isOwnProfile && showFollowButton && (
+            <FollowButton followingId={profile.id} />
+          )}
         </div>
       </div>
     </div>
