@@ -35,8 +35,10 @@ export const jaTranslations = {
   'profile.noPosts': '投稿はありません',
   'profile.follow': 'フォロー',
   'profile.unfollow': 'フォロー解除',
-  'profile.sortByLikes': 'いいね順',
-  'profile.sortByDate': '投稿順',
+  
+  // Sort options
+  'sort.byLikes': 'いいね順',
+  'sort.byDate': '投稿順',
   
   // Success messages
   'success.profileUpdated': 'プロフィールを更新しました',

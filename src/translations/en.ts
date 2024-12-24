@@ -35,8 +35,10 @@ export const enTranslations = {
   'profile.noPosts': 'No posts yet',
   'profile.follow': 'Follow',
   'profile.unfollow': 'Unfollow',
-  'profile.sortByLikes': 'Sort by Likes',
-  'profile.sortByDate': 'Sort by Date',
+  
+  // Sort options
+  'sort.byLikes': 'Sort by Likes',
+  'sort.byDate': 'Sort by Date',
   
   // Success messages
   'success.profileUpdated': 'Profile updated',
