@@ -10,6 +10,9 @@ import { useArticleLikes } from "@/hooks/useArticleLikes";
 import { MetaTags } from "@/components/MetaTags";
 import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
+import { ArticleContent } from "./article-detail/ArticleContent";
+import { ArticleHeader } from "./article-detail/ArticleHeader";
+import { ArticleActions } from "./article-detail/ArticleActions";
 
 export default function ArticleDetail() {
   const { id } = useParams();
@@ -62,11 +65,6 @@ export default function ArticleDetail() {
         variant: "destructive",
       });
     }
-  };
-
-  const handleAuthorClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    navigate(`/profile/${article?.author.id}`);
   };
 
   const handleBack = () => {
@@ -141,60 +139,15 @@ export default function ArticleDetail() {
         </Button>
 
         <article className="bg-white rounded-lg shadow-sm p-4 sm:p-8">
-          {article.thumbnail_url && (
-            <div className="mb-4 sm:mb-6">
-              <img
-                src={article.thumbnail_url}
-                alt=""
-                className="w-full h-48 sm:h-64 object-cover rounded-lg"
-              />
-            </div>
-          )}
-
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
-            {article.title}
-          </h1>
-
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8 pb-4 sm:pb-6 border-b gap-4">
-            <button 
-              onClick={handleAuthorClick}
-              className="flex items-center gap-3 sm:gap-4 hover:opacity-80 transition-opacity"
-            >
-              <img
-                src={article.author.avatar}
-                alt=""
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full"
-              />
-              <div className="flex flex-col">
-                <span className="font-medium text-gray-900">{article.author.name}</span>
-                <time className="text-sm text-gray-500">
-                  {new Date(article.created_at).toLocaleDateString('ja-JP')}
-                </time>
-              </div>
-            </button>
-            <div className="flex items-center gap-4">
-              <button
-                onClick={handleShare}
-                className="flex items-center gap-2 text-gray-600 hover:text-gray-900 text-sm sm:text-base"
-              >
-                <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                シェア
-              </button>
-              <button
-                onClick={handleLike}
-                className={`flex items-center gap-2 text-sm sm:text-base ${
-                  hasLiked ? "text-pink-500" : "text-gray-600 hover:text-gray-900"
-                }`}
-              >
-                <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${hasLiked ? "fill-current" : ""}`} />
-                {likesCount}
-              </button>
-            </div>
-          </div>
-
-          <div className="prose prose-sm sm:prose-base md:prose-lg max-w-none">
-            <ReactMarkdown>{article.content}</ReactMarkdown>
-          </div>
+          <ArticleHeader article={article} />
+          <ArticleActions 
+            article={article}
+            hasLiked={hasLiked}
+            likesCount={likesCount}
+            onLike={handleLike}
+            onShare={handleShare}
+          />
+          <ArticleContent content={article.content} />
         </article>
       </main>
       <Footer />
