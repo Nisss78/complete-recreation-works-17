@@ -66,7 +66,9 @@ export const ProductForm = ({
             onChange={(e) => setName(e.target.value)}
             maxLength={50}
           />
-          <p className="text-xs text-gray-400 mt-1">残り {50 - name.length}</p>
+          <p className="text-xs text-gray-400 mt-1">
+            {t('product.submit.nameCharsLeft', { count: 50 - name.length })}
+          </p>
         </div>
 
         <div>
@@ -80,7 +82,9 @@ export const ProductForm = ({
             onChange={(e) => setTagline(e.target.value)}
             maxLength={100}
           />
-          <p className="text-xs text-gray-400 mt-1">残り {100 - tagline.length}</p>
+          <p className="text-xs text-gray-400 mt-1">
+            {t('product.submit.taglineCharsLeft', { count: 100 - tagline.length })}
+          </p>
         </div>
 
         <div>

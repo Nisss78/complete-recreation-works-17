@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { X } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ProductTagsProps {
   tags: string[];
@@ -10,6 +11,8 @@ interface ProductTagsProps {
 }
 
 export const ProductTags = ({ tags, setTags, newTag, setNewTag }: ProductTagsProps) => {
+  const { t } = useLanguage();
+
   const handleAddTag = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && newTag.trim()) {
       setTags([...tags, newTag.trim()]);
@@ -23,7 +26,7 @@ export const ProductTags = ({ tags, setTags, newTag, setNewTag }: ProductTagsPro
 
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">タグ</label>
+      <label className="block text-sm font-medium text-gray-700 mb-1">{t('product.submit.tags')}</label>
       <div className="flex flex-wrap gap-2 mb-2">
         {tags.map((tag) => (
           <Badge
@@ -38,7 +41,7 @@ export const ProductTags = ({ tags, setTags, newTag, setNewTag }: ProductTagsPro
         ))}
       </div>
       <Input
-        placeholder="新しいタグを入力してEnterで追加"
+        placeholder={t('product.submit.tagsPlaceholder')}
         value={newTag}
         onChange={(e) => setNewTag(e.target.value)}
         onKeyDown={handleAddTag}

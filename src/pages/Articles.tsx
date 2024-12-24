@@ -10,7 +10,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Articles() {
   const [showFollowedOnly, setShowFollowedOnly] = useState(false);
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const { data: articles, isLoading } = useQuery({
     queryKey: ["articles", showFollowedOnly],
@@ -71,7 +71,11 @@ export default function Articles() {
     const now = new Date();
     const past = new Date(dateString);
     const diffInDays = Math.floor((now.getTime() - past.getTime()) / (1000 * 60 * 60 * 24));
-    return `${diffInDays}日前`;
+    
+    if (language === 'ja') {
+      return `${diffInDays}日前`;
+    }
+    return `${diffInDays} ${diffInDays === 1 ? 'day' : 'days'} ago`;
   };
 
   return (
