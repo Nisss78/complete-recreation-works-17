@@ -6,6 +6,7 @@ import { ReplyList } from "./comment-replies/ReplyList";
 import { useQuery } from "@tanstack/react-query";
 import { CommentHeader } from "./comment-parts/CommentHeader";
 import { LikeButton } from "./comment-parts/LikeButton";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface CommentItemProps {
   comment: {
@@ -31,8 +32,8 @@ export const CommentItem = ({ comment, onCommentAdded, level = 0 }: CommentItemP
   const [showReplies, setShowReplies] = useState(false);
   const [isLoadingReplies, setIsLoadingReplies] = useState(false);
   const { totalLikes, hasLiked, toggleLike } = useCommentLikes(comment.id);
+  const { t } = useLanguage();
 
-  // Fetch user profile for avatar
   const { data: userProfile } = useQuery({
     queryKey: ["profile", comment.user_id],
     queryFn: async () => {
@@ -128,14 +129,14 @@ export const CommentItem = ({ comment, onCommentAdded, level = 0 }: CommentItemP
               className="text-gray-500 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
               onClick={() => setShowReplyForm(!showReplyForm)}
             >
-              返信
+              {t('comments.replyButton')}
             </button>
             {comment.reply_count > 0 && (
               <button
                 className="text-gray-500 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
                 onClick={handleToggleReplies}
               >
-                {showReplies ? "返信を隠す" : `返信を表示 (${comment.reply_count})`}
+                {showReplies ? t('comment.replies.hide') : t('comment.replies.show').replace('{count}', String(comment.reply_count))}
               </button>
             )}
             <span className="text-gray-400">{comment.timestamp}</span>

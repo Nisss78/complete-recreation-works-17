@@ -1,6 +1,7 @@
 import { ThumbsUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface LikeButtonProps {
   totalLikes: number;
@@ -10,6 +11,7 @@ interface LikeButtonProps {
 
 export const LikeButton = ({ totalLikes, hasLiked, onLike }: LikeButtonProps) => {
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -17,8 +19,8 @@ export const LikeButton = ({ totalLikes, hasLiked, onLike }: LikeButtonProps) =>
     
     if (!session) {
       toast({
-        title: "ログインが必要です",
-        description: "いいねをするにはログインしてください",
+        title: t('comment.loginRequired'),
+        description: t('comment.loginRequired.description'),
         variant: "destructive",
       });
       return;
@@ -27,8 +29,10 @@ export const LikeButton = ({ totalLikes, hasLiked, onLike }: LikeButtonProps) =>
     const success = await onLike();
     if (success) {
       toast({
-        title: hasLiked ? "いいねを取り消しました" : "いいね！",
-        description: hasLiked ? "コメントのいいねを取り消しました" : "コメントにいいねしました",
+        title: hasLiked ? t('comment.like.unliked') : t('comment.like.liked'),
+        description: hasLiked 
+          ? t('comment.like.unliked.description')
+          : t('comment.like.liked.description'),
       });
     }
   };
@@ -43,7 +47,7 @@ export const LikeButton = ({ totalLikes, hasLiked, onLike }: LikeButtonProps) =>
       onClick={handleLike}
     >
       <ThumbsUp className="w-4 h-4" />
-      <span>いいね ({totalLikes})</span>
+      <span>{t('comments.likeCount').replace('{count}', String(totalLikes))}</span>
     </button>
   );
 };

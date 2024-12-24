@@ -5,9 +5,11 @@ export const commentTranslations = {
     'comments.postButton': 'Post',
     'comments.like': 'Like',
     'comments.reply': 'Reply',
-    'comments.likes': 'likes ({count})',
+    'comments.likes': 'Likes ({count})',
     'comments.noComments': 'No comments yet. Be the first to comment!',
     'comments.timeFormat': '{time}',
+    'comments.likeCount': 'Like ({count})',
+    'comments.replyButton': 'Reply',
   },
   ja: {
     'comments.title': 'コメント',
@@ -18,5 +20,7 @@ export const commentTranslations = {
     'comments.likes': 'いいね ({count})',
     'comments.noComments': 'まだコメントはありません。最初のコメントを投稿しましょう！',
     'comments.timeFormat': '{time}',
+    'comments.likeCount': 'いいね ({count})',
+    'comments.replyButton': '返信',
   }
 } as const;
