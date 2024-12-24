@@ -1,3 +1,5 @@
+import { commentTranslations } from './sections/comments';
+
 export const enTranslations = {
   // Header
   'nav.home': 'Home',
@@ -188,14 +190,6 @@ export const enTranslations = {
   'comment.replies.loading': 'Loading replies...',
   'comment.replies.hide': 'Hide replies',
   'comment.replies.show': 'Show replies ({count})',
-  'image.upload.uploading': 'Uploading...',
-  'image.upload.completed': 'Upload completed',
-  'image.upload.completed.description': 'Image upload completed',
-  'image.upload.failed': 'Error',
-  'image.upload.failed.description': 'Failed to upload image',
-  'image.upload.maxFiles': 'You can only upload up to {maxFiles} images',
-  'product.links.descriptionPlaceholder': 'Link description (e.g., Official Site)',
-  'product.links.urlPlaceholder': 'URL (e.g., https://example.com)',
-  'product.name.remaining': 'Remaining {count}',
-  'product.tagline.remaining': 'Remaining {count}',
+
+  ...commentTranslations.en,
 } as const;

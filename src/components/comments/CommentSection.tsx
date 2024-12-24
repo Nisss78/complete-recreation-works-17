@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { CommentItem } from "./CommentItem";
 import { User } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Comment {
   id: number;
@@ -32,6 +33,7 @@ export const CommentSection = ({ productId, comments, onCommentAdded }: CommentS
   const [newComment, setNewComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const { data: userProfile } = useQuery({
     queryKey: ["currentUserProfile"],
@@ -64,8 +66,8 @@ export const CommentSection = ({ productId, comments, onCommentAdded }: CommentS
 
     if (!session) {
       toast({
-        title: "ログインが必要です",
-        description: "コメントを投稿するにはログインしてください",
+        title: t('comment.loginRequired'),
+        description: t('comment.loginRequired.description'),
         variant: "destructive",
       });
       setIsSubmitting(false);
@@ -86,14 +88,14 @@ export const CommentSection = ({ productId, comments, onCommentAdded }: CommentS
       setNewComment("");
       onCommentAdded();
       toast({
-        title: "コメントを投稿しました",
-        description: "あなたのコメントが追加されました",
+        title: t('comment.posted'),
+        description: t('comment.posted.description'),
       });
     } catch (error) {
       console.error('Error posting comment:', error);
       toast({
-        title: "エラー",
-        description: "コメントの投稿に失敗しました",
+        title: t('comment.failed'),
+        description: t('comment.failed.description'),
         variant: "destructive",
       });
     } finally {
@@ -103,7 +105,7 @@ export const CommentSection = ({ productId, comments, onCommentAdded }: CommentS
 
   return (
     <div className="space-y-8">
-      <h3 className="text-xl font-semibold mb-4">コメント</h3>
+      <h3 className="text-xl font-semibold mb-4">{t('comments.title')}</h3>
       
       <div className="flex items-center gap-4 mb-8">
         <Avatar className="w-10 h-10">
@@ -114,7 +116,7 @@ export const CommentSection = ({ productId, comments, onCommentAdded }: CommentS
         </Avatar>
         <div className="flex-1">
           <Input
-            placeholder="コメントを投稿..."
+            placeholder={t('comments.postPlaceholder')}
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             className="w-full"
@@ -124,14 +126,14 @@ export const CommentSection = ({ productId, comments, onCommentAdded }: CommentS
           onClick={handleCommentSubmit}
           disabled={!newComment.trim() || isSubmitting}
         >
-          {isSubmitting ? "投稿中..." : "投稿"}
+          {t('comments.postButton')}
         </Button>
       </div>
 
       <div className="space-y-6">
         {comments.length === 0 ? (
           <div className="text-center text-gray-500 py-8">
-            まだコメントはありません。最初のコメントを投稿してみましょう！
+            {t('comments.noComments')}
           </div>
         ) : (
           comments.map((comment) => (

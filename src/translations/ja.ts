@@ -1,4 +1,7 @@
+import { commentTranslations } from './sections/comments';
+
 export const jaTranslations = {
+  ...commentTranslations.ja,
   // Header
   'nav.home': 'ホーム',
   'nav.articles': '記事',
@@ -86,7 +89,7 @@ export const jaTranslations = {
   'articles.deleteConfirm': 'この記事を削除してもよろしいですか？',
   'articles.deleted': '記事を削除しました',
   'articles.myPosts': '投稿した記事',
-  'articles.noPosts': 'まだ記事を投稿していません',
+  'articles.noPosts': 'まだ記事がありません',
 
   // Bookmarks
   'bookmarks.title': 'ブックマーク',
@@ -114,33 +117,7 @@ export const jaTranslations = {
   'product.details.loginRequired': 'ログインが必要です',
   'product.details.loginRequiredDesc': 'この機能を使用するにはログインしてください',
 
-  // Product submission
-  'product.submit.title': 'プロダクトを投稿',
-  'product.submit.description': '説明',
-  'product.submit.name': 'プロダクト名',
-  'product.submit.namePlaceholder': 'プロダクト名を入力',
-  'product.submit.tagline': 'タグライン',
-  'product.submit.taglinePlaceholder': '短い説明を入力',
-  'product.submit.descriptionPlaceholder': 'プロダクトの説明を入力',
-  'product.submit.icon': 'プロダクトアイコン',
-  'product.submit.iconRequirements': 'プロダクトアイコンをアップロード（PNG/JPG形式）',
-  'product.submit.images': 'プロダクト画像',
-  'product.submit.imageRequirements': 'プロダクト画像をアップロード（PNG/JPG形式）',
-  'product.submit.cancel': 'キャンセル',
-  'product.submit.post': '投稿',
-  'product.submit.posting': '投稿中...',
-
-  // Follow
-  'follow.button': 'フォロー',
-  'follow.following': 'フォロー中',
-  'follow.success': 'フォローしました',
-  'follow.unfollowed': 'フォロー解除しました',
-  'follow.loginRequired': 'フォローするにはログインしてください',
-
-  // Success messages
-  'success.completed': '完了',
-
-  // Avatar
+  // New translations
   'avatar.upload.completed': 'アップロード完了',
   'avatar.upload.completed.description': 'アバター画像のアップロードが完了しました',
   'avatar.upload.failed': 'エラー',
@@ -148,8 +125,6 @@ export const jaTranslations = {
   'avatar.upload.uploading': 'アップロード中...',
   'avatar.upload.clickOrDrag': 'クリックまたはドラッグ&ドロップで画像をアップロード',
   'avatar.upload.sizeLimit': '2MB以下（PNG/JPG形式）',
-
-  // Profile
   'profile.update.success': 'プロフィールを更新しました',
   'profile.update.success.description': 'プロフィール画像を更新しました',
   'profile.update.failed': 'エラーが発生しました',
@@ -163,75 +138,4 @@ export const jaTranslations = {
   'profile.loginRequired.description': '続行するにはログインしてください',
   'profile.noChanges': '変更なし',
   'profile.noChanges.description': 'プロフィールに変更はありませんでした',
-
-  // Product
-  'product.like.liked': 'いいね！',
-  'product.like.unliked': 'いいねを取り消しました',
-  'product.like.liked.description': '{name}にいいねしました',
-  'product.like.unliked.description': '{name}のいいねを取り消しました',
-  'product.like.failed': 'エラー',
-  'product.like.failed.description': '操作に失敗しました',
-  'product.bookmark.bookmarked': 'ブックマークに追加しました',
-  'product.bookmark.unbookmarked': 'ブックマークを解除しました',
-  'product.bookmark.bookmarked.description': '{name}をブックマークに追加しました',
-  'product.bookmark.unbookmarked.description': '{name}のブックマークを解除しました',
-  'product.bookmark.loginRequired': 'ログインが必要です',
-  'product.bookmark.loginRequired.description': 'この機能を使用するにはログインしてください',
-  'product.share.copied': 'リンクをコピーしました',
-  'product.share.copied.description': 'URLをクリップボードにコピーしました',
-  'product.share.failed': 'コピーに失敗しました',
-  'product.share.failed.description': 'URLのコピーに失敗しました',
-  'product.tags.placeholder': '新しいタグを入力してEnterで追加',
-  'product.details.noImages': '画像がありません',
-  'product.links.descriptionPlaceholder': 'リンクの説明（例：公式サイト）',
-  'product.links.urlPlaceholder': 'URL（例：https://example.com）',
-  'product.name.remaining': 'あと{count}文字',
-  'product.tagline.remaining': 'あと{count}文字',
-
-  // Article
-  'article.like.loginRequired': 'ログインが必要です',
-  'article.like.loginRequired.description': 'いいねするにはログインしてください',
-  'article.like.liked': 'いいね！',
-  'article.like.unliked': 'いいねを取り消しました',
-  'article.like.liked.description': '記事にいいねしました',
-  'article.like.unliked.description': '記事のいいねを取り消しました',
-  'article.like.failed': 'エラーが発生しました',
-  'article.like.failed.description': '操作に失敗しました。もう一度お試しください。',
-  'article.delete.confirm': 'この記事を削除してもよろしいですか？',
-  'article.delete.success': '記事を削除しました',
-  'article.delete.success.description': '記事の削除が完了しました',
-  'article.delete.failed': 'エラーが発生しました',
-  'article.delete.failed.description': '記事の削除に失敗しました。もう一度お試しください。',
-
-  // Comments & Replies
-  'reply.loginRequired': 'ログインが必要です',
-  'reply.loginRequired.description': '返信するにはログインしてください',
-  'reply.posted': '返信を投稿しました',
-  'reply.posted.description': '返信が追加されました',
-  'reply.failed': 'エラー',
-  'reply.failed.description': '返信の投稿に失敗しました',
-  'reply.placeholder': '返信を投稿...',
-  'reply.button': '返信',
-  'comment.loginRequired': 'ログインが必要です',
-  'comment.loginRequired.description': 'コメントするにはログインしてください',
-  'comment.posted': 'コメントを投稿しました',
-  'comment.posted.description': 'コメントが追加されました',
-  'comment.failed': 'エラー',
-  'comment.failed.description': 'コメントの投稿に失敗しました',
-  'comment.placeholder': 'コメントを投稿...',
-  'comment.button': '投稿',
-  'comment.noComments': 'まだコメントはありません。最初のコメントを投稿しましょう！',
-  'comment.createdBy': '投稿者',
-  'comment.verified': '認証済み',
-  'comment.replies.loading': '返信を読み込み中...',
-  'comment.replies.hide': '返信を非表示',
-  'comment.replies.show': '返信を表示（{count}件）',
-
-  // Image Upload
-  'image.upload.uploading': 'アップロード中...',
-  'image.upload.completed': 'アップロード完了',
-  'image.upload.completed.description': '画像のアップロードが完了しました',
-  'image.upload.failed': 'エラー',
-  'image.upload.failed.description': '画像のアップロードに失敗しました',
-  'image.upload.maxFiles': '画像は最大{maxFiles}枚までアップロードできます',
 } as const;
