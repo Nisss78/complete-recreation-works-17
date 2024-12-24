@@ -7,7 +7,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { CommentItem } from "./CommentItem";
 import { User } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
 
 interface Comment {
   id: number;
@@ -34,7 +33,6 @@ export const CommentSection = ({ productId, comments, onCommentAdded }: CommentS
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
-  // Fetch current user's profile
   const { data: userProfile } = useQuery({
     queryKey: ["currentUserProfile"],
     queryFn: async () => {
@@ -109,7 +107,7 @@ export const CommentSection = ({ productId, comments, onCommentAdded }: CommentS
       
       <div className="flex items-center gap-4 mb-8">
         <Avatar className="w-10 h-10">
-          <AvatarImage src={userProfile?.avatar_url || undefined} />
+          <AvatarImage src={userProfile?.avatar_url || undefined} className="object-cover" />
           <AvatarFallback>
             <User className="w-5 h-5" />
           </AvatarFallback>
