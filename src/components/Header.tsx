@@ -48,29 +48,39 @@ export const Header = () => {
       const { data: { session } } = await supabase.auth.getSession();
       console.log("Current session:", session);
 
-      // Clear local state immediately for better UX
-      setIsAuthenticated(false);
-
-      if (session) {
-        // If we have a session, try to sign out
-        const { error } = await supabase.auth.signOut();
-        if (error) {
-          console.error("Signout error:", error);
-          throw error;
-        }
+      if (!session) {
+        console.log("No active session found, clearing local state only");
+        setIsAuthenticated(false);
+        navigate("/auth");
+        return;
       }
 
-      // Always show success message and redirect
+      // Try to sign out
+      const { error } = await supabase.auth.signOut();
+      
+      if (error) {
+        console.error("Signout error:", error);
+        // If we get a session_not_found error, just clear local state
+        if (error.message.includes("session_not_found")) {
+          setIsAuthenticated(false);
+          navigate("/auth");
+          return;
+        }
+        throw error;
+      }
+
+      // If successful, update state and redirect
+      setIsAuthenticated(false);
       toast({
         title: "ログアウト完了",
         description: "ログアウトしました",
       });
-      
       navigate("/auth");
+      
     } catch (error) {
       console.error("Logout process error:", error);
       
-      // Even if there's an error, we want to clear the local state
+      // Clear local state regardless of error
       setIsAuthenticated(false);
       
       toast({
