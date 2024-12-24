@@ -140,10 +140,10 @@ export const ProductSubmissionDialog = ({
             キャンセル
           </Button>
           <Button 
-            variant="default"
+            variant="outline"
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="min-w-[100px] h-10 bg-gray-900 hover:bg-gray-800 text-white font-medium"
+            className="min-w-[100px] h-10 bg-white hover:bg-gray-50 text-gray-900 font-medium border border-gray-200"
           >
             {isSubmitting ? "投稿中..." : "投稿"}
           </Button>
