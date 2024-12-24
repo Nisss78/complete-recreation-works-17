@@ -41,17 +41,19 @@ export const CommentItem = ({ comment, onCommentAdded, level = 0 }: CommentItemP
     queryFn: async () => {
       if (!comment.user_id) return null;
       
+      console.log('Fetching profile for comment user:', comment.user_id);
       const { data, error } = await supabase
         .from("profiles")
         .select("avatar_url, username")
         .eq("id", comment.user_id)
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error('Error fetching user profile:', error);
         return null;
       }
 
+      console.log('Fetched comment user profile:', data);
       return data;
     },
     enabled: !!comment.user_id

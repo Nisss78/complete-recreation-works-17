@@ -40,17 +40,19 @@ export const CommentSection = ({ productId, comments, onCommentAdded }: CommentS
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user?.id) return null;
 
+      console.log('Fetching profile for user:', session.user.id);
       const { data, error } = await supabase
         .from("profiles")
         .select("avatar_url")
         .eq("id", session.user.id)
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error('Error fetching user profile:', error);
         return null;
       }
 
+      console.log('Fetched profile:', data);
       return data;
     }
   });
