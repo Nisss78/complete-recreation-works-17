@@ -6,7 +6,6 @@ import { CommentSection } from "./comments/CommentSection";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
-import { X } from "lucide-react";
 
 interface ProductDialogProps {
   open: boolean;
@@ -100,14 +99,6 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl h-[95vh] sm:h-[90vh] p-0 overflow-hidden bg-white dark:bg-gray-900 mx-2 sm:mx-4">
-        <button
-          onClick={() => onOpenChange(false)}
-          className="absolute right-3 top-3 z-50 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
-        >
-          <X className="h-4 w-4" />
-          <span className="sr-only">Close</span>
-        </button>
-
         <DialogTitle className="sr-only">
           {product.name}の詳細
         </DialogTitle>
