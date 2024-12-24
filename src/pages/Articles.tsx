@@ -14,10 +14,7 @@ const Articles = () => {
         .from('articles')
         .select(`
           *,
-          profiles!articles_user_id_fkey (
-            username,
-            avatar_url
-          )
+          profile:profiles(username, avatar_url)
         `)
         .order('created_at', { ascending: false });
 
@@ -31,8 +28,8 @@ const Articles = () => {
       return articles.map(article => ({
         ...article,
         profiles: {
-          username: article.profiles?.username || "Unknown User",
-          avatar_url: article.profiles?.avatar_url || "/placeholder.svg"
+          username: article.profile?.username || "Unknown User",
+          avatar_url: article.profile?.avatar_url || "/placeholder.svg"
         }
       }));
     }
