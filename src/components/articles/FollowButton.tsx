@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useFollow } from "@/hooks/useFollow";
 import { UserPlus, UserMinus } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface FollowButtonProps {
   profileId: string;
@@ -9,6 +10,7 @@ interface FollowButtonProps {
 
 export const FollowButton = ({ profileId, className }: FollowButtonProps) => {
   const { isFollowing, isLoading, toggleFollow } = useFollow(profileId);
+  const { t } = useLanguage();
 
   return (
     <Button
@@ -25,12 +27,12 @@ export const FollowButton = ({ profileId, className }: FollowButtonProps) => {
       {isFollowing ? (
         <>
           <UserMinus className="w-4 h-4 mr-2" />
-          フォロー中
+          {t('follow.following')}
         </>
       ) : (
         <>
           <UserPlus className="w-4 h-4 mr-2" />
-          フォローする
+          {t('follow.button')}
         </>
       )}
     </Button>

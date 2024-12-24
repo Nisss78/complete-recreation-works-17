@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const useFollow = (profileId: string) => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   useEffect(() => {
     const checkFollowStatus = async () => {
@@ -49,8 +51,8 @@ export const useFollow = (profileId: string) => {
       const { data: session } = await supabase.auth.getSession();
       if (!session.session) {
         toast({
-          title: "エラー",
-          description: "フォローするにはログインが必要です",
+          title: t('error.occurred'),
+          description: t('follow.loginRequired'),
           variant: "destructive",
         });
         return;
@@ -67,8 +69,8 @@ export const useFollow = (profileId: string) => {
 
         setIsFollowing(false);
         toast({
-          title: "フォロー解除",
-          description: "フォローを解除しました",
+          title: t('success.completed'),
+          description: t('follow.unfollowed'),
         });
       } else {
         const { error } = await supabase
@@ -82,15 +84,15 @@ export const useFollow = (profileId: string) => {
 
         setIsFollowing(true);
         toast({
-          title: "フォロー完了",
-          description: "フォローしました",
+          title: t('success.completed'),
+          description: t('follow.success'),
         });
       }
     } catch (error) {
       console.error('Error toggling follow:', error);
       toast({
-        title: "エラー",
-        description: "操作に失敗しました",
+        title: t('error.occurred'),
+        description: t('error.tryAgain'),
         variant: "destructive",
       });
     }
