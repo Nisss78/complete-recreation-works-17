@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Plus, User } from "lucide-react";
+import { Plus, User, Settings, LogOut } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ProductSubmissionDialog } from "./ProductSubmissionDialog";
 import { supabase } from "@/integrations/supabase/client";
@@ -81,19 +81,19 @@ export const Header = () => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48">
-                    <DropdownMenuLabel>マイアカウント</DropdownMenuLabel>
+                    <DropdownMenuLabel>アカウント</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => navigate("/profile")}>
+                      <User className="w-4 h-4 mr-2" />
                       プロフィール
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      マイプロダクト
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate("/settings")}>
+                      <Settings className="w-4 h-4 mr-2" />
                       設定
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleLogout}>
+                      <LogOut className="w-4 h-4 mr-2" />
                       ログアウト
                     </DropdownMenuItem>
                   </DropdownMenuContent>
