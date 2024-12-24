@@ -55,7 +55,7 @@ const ArticleDetail = () => {
     const { data: like } = await supabase
       .from('article_likes')
       .select('id')
-      .eq('article_id', id)
+      .eq('article_id', Number(id))
       .eq('user_id', session.user.id)
       .maybeSingle();
 
@@ -79,7 +79,7 @@ const ArticleDetail = () => {
         await supabase
           .from('article_likes')
           .delete()
-          .eq('article_id', id)
+          .eq('article_id', Number(id))
           .eq('user_id', session.user.id);
 
         setLikesCount(prev => Math.max(0, prev - 1));
@@ -94,7 +94,7 @@ const ArticleDetail = () => {
         await supabase
           .from('article_likes')
           .insert({
-            article_id: id,
+            article_id: Number(id),
             user_id: session.user.id
           });
 
