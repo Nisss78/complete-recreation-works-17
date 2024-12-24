@@ -40,8 +40,8 @@ export const ArticleFooter = ({
         >
           <img 
             src={author.avatar}
-            alt=""
-            className="w-5 h-5 rounded-full object-cover"
+            alt={author.name}
+            className="w-5 h-5 rounded-full object-cover cursor-pointer"
           />
           <span className="truncate max-w-[120px] sm:max-w-none">{author.name}</span>
           {author.blog && (
