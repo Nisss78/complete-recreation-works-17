@@ -112,7 +112,7 @@ export const ProductSubmissionDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] bg-[#1A1F2C] text-white border-[#333333] p-0">
+      <DialogContent className="max-w-2xl max-h-[90vh] bg-white text-gray-900 p-0">
         <ScrollArea className="h-full max-h-[calc(90vh-4rem)]">
           <ProductForm
             name={name}
@@ -130,21 +130,22 @@ export const ProductSubmissionDialog = ({
           />
         </ScrollArea>
 
-        <div className="flex justify-end gap-3 p-4 border-t border-[#333333]">
+        <div className="flex justify-end gap-3 p-4 border-t border-gray-100">
           <Button
             variant="ghost"
             onClick={() => onOpenChange(false)}
-            className="text-white hover:bg-[#333333]"
+            className="text-gray-600 hover:bg-gray-50"
             disabled={isSubmitting}
           >
             キャンセル
           </Button>
           <Button 
-            className="bg-[#9b87f5] hover:bg-[#7E69AB] text-white"
+            variant="default"
             onClick={handleSubmit}
             disabled={isSubmitting}
+            className="bg-gray-900 hover:bg-gray-800 text-white"
           >
-            {isSubmitting ? "投稿中..." : "投稿する"}
+            {isSubmitting ? "投稿中..." : "投稿"}
           </Button>
         </div>
       </DialogContent>

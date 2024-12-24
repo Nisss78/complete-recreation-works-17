@@ -25,12 +25,12 @@ export const ProductLinks = ({ links, setLinks }: ProductLinksProps) => {
   return (
     <div>
       <div className="flex items-center justify-between mb-1">
-        <label className="block text-sm font-medium">プロダクトリンク</label>
+        <label className="block text-sm font-medium text-gray-700">プロダクトリンク</label>
         <Button
           variant="ghost"
           size="sm"
           onClick={handleAddLink}
-          className="text-[#9b87f5] hover:text-[#7E69AB]"
+          className="text-gray-600 hover:text-gray-900 hover:bg-gray-50"
         >
           <Plus className="w-4 h-4 mr-1" />
           リンクを追加
@@ -41,13 +41,13 @@ export const ProductLinks = ({ links, setLinks }: ProductLinksProps) => {
           <div key={index} className="flex gap-2">
             <Input
               placeholder="リンクの説明（例：公式サイト、ドキュメント、YouTube動画）"
-              className="bg-[#221F26] border-[#333333] text-white"
+              className="bg-white border-gray-200 text-gray-900 focus:border-gray-400 focus:ring-gray-400"
               value={link.description}
               onChange={(e) => handleLinkChange(index, 'description', e.target.value)}
             />
             <Input
               placeholder="URL（例：https://example.com）"
-              className="bg-[#221F26] border-[#333333] text-white"
+              className="bg-white border-gray-200 text-gray-900 focus:border-gray-400 focus:ring-gray-400"
               value={link.url}
               onChange={(e) => handleLinkChange(index, 'url', e.target.value)}
             />
@@ -55,7 +55,7 @@ export const ProductLinks = ({ links, setLinks }: ProductLinksProps) => {
               variant="ghost"
               size="icon"
               onClick={() => handleRemoveLink(index)}
-              className="text-gray-400 hover:text-white"
+              className="text-gray-400 hover:text-gray-600"
             >
               <X className="w-4 h-4" />
             </Button>

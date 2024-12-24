@@ -44,26 +44,24 @@ export const ProductForm = ({
   };
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-8 p-6">
       <div>
-        <h2 className="text-xl font-bold mb-1">プロダクトを投稿 🎉</h2>
-        <p className="text-sm text-gray-400">
-          投稿したプロダクトは何度でも編集できます！
+        <h2 className="text-2xl font-medium text-gray-900 mb-2">プロダクトを投稿</h2>
+        <p className="text-sm text-gray-500">
+          投稿したプロダクトは何度でも編集できます。
           <br />
-          とりあえず投稿してみましょう！
-          <br />
-          タイムライン機能を使って進捗をアピールするのもアリです！
+          まずは気軽に投稿してみましょう！
         </p>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         <div>
-          <label className="block text-sm font-medium mb-1">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
             プロダクト名 <span className="text-red-500">*</span>
           </label>
           <Input 
             placeholder="例: TaskFlow" 
-            className="bg-[#221F26] border-[#333333] text-white"
+            className="bg-white border-gray-200 text-gray-900 focus:border-gray-400 focus:ring-gray-400"
             value={name}
             onChange={(e) => setName(e.target.value)}
             maxLength={50}
@@ -72,12 +70,12 @@ export const ProductForm = ({
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
             タグライン <span className="text-red-500">*</span>
           </label>
           <Input 
             placeholder="例: 人工知能の力で、あなたの成功物語を" 
-            className="bg-[#221F26] border-[#333333] text-white"
+            className="bg-white border-gray-200 text-gray-900 focus:border-gray-400 focus:ring-gray-400"
             value={tagline}
             onChange={(e) => setTagline(e.target.value)}
             maxLength={100}
@@ -86,12 +84,12 @@ export const ProductForm = ({
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
             説明 <span className="text-red-500">*</span>
           </label>
           <Textarea 
             placeholder="プロダクトの概要を説明してください（50文字以上）" 
-            className="bg-[#221F26] border-[#333333] text-white min-h-[120px]"
+            className="bg-white border-gray-200 text-gray-900 focus:border-gray-400 focus:ring-gray-400 min-h-[120px]"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />

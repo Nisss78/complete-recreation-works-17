@@ -23,13 +23,13 @@ export const ProductTags = ({ tags, setTags, newTag, setNewTag }: ProductTagsPro
 
   return (
     <div>
-      <label className="block text-sm font-medium mb-1">タグ</label>
+      <label className="block text-sm font-medium text-gray-700 mb-1">タグ</label>
       <div className="flex flex-wrap gap-2 mb-2">
         {tags.map((tag) => (
           <Badge
             key={tag}
             variant="secondary"
-            className="bg-[#221F26] text-white hover:bg-[#333333] cursor-pointer"
+            className="bg-gray-100 text-gray-700 hover:bg-gray-200 cursor-pointer"
             onClick={() => handleRemoveTag(tag)}
           >
             {tag}
@@ -42,7 +42,7 @@ export const ProductTags = ({ tags, setTags, newTag, setNewTag }: ProductTagsPro
         value={newTag}
         onChange={(e) => setNewTag(e.target.value)}
         onKeyDown={handleAddTag}
-        className="bg-[#221F26] border-[#333333] text-white"
+        className="bg-white border-gray-200 text-gray-900 focus:border-gray-400 focus:ring-gray-400"
       />
     </div>
   );
