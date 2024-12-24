@@ -42,16 +42,22 @@ export const Header = () => {
 
   const handleLogout = async () => {
     try {
-      setIsAuthenticated(false); // Immediately update UI state
-      const { error } = await supabase.auth.signOut();
+      // First, clear the local state
+      setIsAuthenticated(false);
       
-      if (error) {
-        // If there's an error but it's just that the session wasn't found, we can ignore it
-        if (error.message.includes('session_not_found')) {
-          navigate('/auth');
-          return;
-        }
-        throw error;
+      // Attempt to sign out
+      await supabase.auth.signOut({
+        scope: 'local'  // Only clear the local session first
+      });
+      
+      // Then attempt to clear the global session
+      try {
+        await supabase.auth.signOut({
+          scope: 'global'
+        });
+      } catch (globalError) {
+        // Ignore global session errors as the local logout is sufficient
+        console.log("Global session cleanup failed:", globalError);
       }
 
       toast({
@@ -59,9 +65,12 @@ export const Header = () => {
         description: "ログアウトしました",
       });
       
+      // Always redirect to auth page after logout
       navigate('/auth');
+      
     } catch (error) {
       console.error("Logout error:", error);
+      
       // Even if there's an error, we want to make sure the user is redirected to auth
       navigate('/auth');
       
