@@ -19,11 +19,12 @@ interface ProfileHeaderProps {
   };
   isOwnProfile?: boolean;
   onAvatarUpdate?: (url: string) => void;
+  showFollowButton?: boolean;
 }
 
-export const ProfileHeader = ({ profile, isOwnProfile, onAvatarUpdate }: ProfileHeaderProps) => {
+export const ProfileHeader = ({ profile, isOwnProfile, onAvatarUpdate, showFollowButton }: ProfileHeaderProps) => {
   const { toast } = useToast();
-  const shouldShowFollowButton = !isOwnProfile;
+  const shouldShowFollowButton = showFollowButton && !isOwnProfile;
 
   const handleAvatarClick = async () => {
     if (!isOwnProfile) return;
