@@ -14,7 +14,10 @@ const Articles = () => {
         .from('articles')
         .select(`
           *,
-          profile:profiles(username, avatar_url)
+          profile:profiles!user_id(
+            username,
+            avatar_url
+          )
         `)
         .order('created_at', { ascending: false });
 
