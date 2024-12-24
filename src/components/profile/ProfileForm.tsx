@@ -16,6 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { User, Link } from "lucide-react";
 import { AvatarUpload } from "./AvatarUpload";
+import { useNavigate } from "react-router-dom";
 
 const urlSchema = z.string().url({ message: "有効なURLを入力してください" }).optional().or(z.literal(""));
 
@@ -53,6 +54,7 @@ interface ProfileFormProps {
 
 export const ProfileForm = ({ profile, onSuccess }: ProfileFormProps) => {
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -114,6 +116,8 @@ export const ProfileForm = ({ profile, onSuccess }: ProfileFormProps) => {
       });
 
       onSuccess?.();
+      // 保存成功後にホーム画面にリダイレクト
+      navigate("/");
     } catch (error) {
       console.error("Unexpected error:", error);
       toast({
