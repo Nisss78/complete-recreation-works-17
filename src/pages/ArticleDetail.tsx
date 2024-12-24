@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Share2, Heart } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useArticleLikes } from "@/hooks/useArticleLikes";
+import { MetaTags } from "@/components/MetaTags";
 
 export default function ArticleDetail() {
   const { id } = useParams();
@@ -116,6 +117,13 @@ export default function ArticleDetail() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
+      {article && (
+        <MetaTags 
+          title={article.title}
+          description={article.content.substring(0, 160)}
+          image={article.thumbnail_url || undefined}
+        />
+      )}
       <Header />
       <main className="container max-w-4xl mx-auto py-8 px-4">
         <article className="bg-white rounded-lg shadow-sm p-8">

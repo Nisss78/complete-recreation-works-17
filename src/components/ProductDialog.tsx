@@ -6,6 +6,7 @@ import { CommentSection } from "./comments/CommentSection";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
+import { MetaTags } from "./MetaTags";
 
 interface ProductDialogProps {
   open: boolean;
@@ -98,11 +99,12 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
+      <MetaTags 
+        title={product.name}
+        description={product.tagline}
+        image={productImages[0]}
+      />
       <DialogContent className="max-w-4xl h-[95vh] sm:h-[90vh] p-0 overflow-hidden bg-white dark:bg-gray-900 mx-2 sm:mx-4">
-        <DialogTitle className="sr-only">
-          {product.name}の詳細
-        </DialogTitle>
-        
         <ScrollArea className="h-full">
           <div className="p-3 sm:p-6">
             <ProductDetails 
