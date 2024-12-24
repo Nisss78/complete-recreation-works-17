@@ -7,12 +7,14 @@ import { ArticleCard } from "@/components/articles/ArticleCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [userId, setUserId] = useState<string | null>(null);
   const queryClient = useQueryClient();
+  const { t } = useLanguage();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -125,7 +127,6 @@ const ProfilePage = () => {
   });
 
   const handleArticleDelete = () => {
-    // 記事リストを再取得
     queryClient.invalidateQueries({ queryKey: ["userArticles"] });
   };
 
@@ -168,7 +169,7 @@ const ProfilePage = () => {
           <ProfileHeader profile={profile} />
           
           <div className="space-y-4">
-            <h2 className="text-2xl font-bold text-gray-900">投稿した記事</h2>
+            <h2 className="text-2xl font-bold text-gray-900">{t('articles.myPosts')}</h2>
             {articles && articles.length > 0 ? (
               articles.map((article) => (
                 <ArticleCard 
@@ -190,7 +191,7 @@ const ProfilePage = () => {
               ))
             ) : (
               <div className="text-center py-12 text-gray-500">
-                まだ記事を投稿していません
+                {t('articles.noPosts')}
               </div>
             )}
           </div>

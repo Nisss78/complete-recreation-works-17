@@ -85,13 +85,12 @@ export const jaTranslations = {
   'articles.delete': '削除',
   'articles.deleteConfirm': 'この記事を削除してもよろしいですか？',
   'articles.deleted': '記事を削除しました',
+  'articles.myPosts': '投稿した記事',
+  'articles.noPosts': 'まだ記事を投稿していません',
 
-  // Follow button
-  'follow.button': 'フォローする',
-  'follow.following': 'フォロー中',
-  'follow.loginRequired': 'フォローするにはログインが必要です',
-  'follow.success': 'フォローしました',
-  'follow.unfollowed': 'フォローを解除しました',
+  // Bookmarks
+  'bookmarks.title': 'ブックマーク',
+  'bookmarks.empty': 'ブックマークはありません',
 
   // Product listing
   'products.sortByLikes': 'いいね順に並び替え',

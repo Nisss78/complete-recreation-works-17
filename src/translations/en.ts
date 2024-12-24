@@ -85,13 +85,12 @@ export const enTranslations = {
   'articles.delete': 'Delete',
   'articles.deleteConfirm': 'Are you sure you want to delete this article?',
   'articles.deleted': 'Article deleted successfully',
+  'articles.myPosts': 'My Posts',
+  'articles.noPosts': 'No posts yet',
 
-  // Follow button
-  'follow.button': 'Follow',
-  'follow.following': 'Following',
-  'follow.loginRequired': 'Please login to follow',
-  'follow.success': 'Successfully followed',
-  'follow.unfollowed': 'Unfollowed successfully',
+  // Bookmarks
+  'bookmarks.title': 'Bookmarks',
+  'bookmarks.empty': 'No bookmarks yet',
 
   // Product listing
   'products.sortByLikes': 'Sort by Likes',

@@ -9,7 +9,7 @@ import { ThumbnailUpload } from "@/components/articles/article-new/ThumbnailUplo
 
 export default function ArticleNew() {
   const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState(""); // Initialize with empty string
   const [thumbnailUrl, setThumbnailUrl] = useState("");
   const [isPreview, setIsPreview] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
