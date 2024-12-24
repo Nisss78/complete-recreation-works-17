@@ -8,16 +8,16 @@ import ReactMarkdown from "react-markdown";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Share2, Heart } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useArticleLikes } from "@/hooks/useArticleLikes";
 
 export default function ArticleDetail() {
   const { id } = useParams();
   const { toast } = useToast();
-  const [hasLiked, setHasLiked] = useState(false);
-  const [likesCount, setLikesCount] = useState(0);
+  const articleId = parseInt(id || "0", 10);
+  const { hasLiked, likesCount, handleLike } = useArticleLikes(articleId);
 
   const { data: article, isLoading } = useQuery({
-    queryKey: ["article", id],
+    queryKey: ["article", articleId],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("articles")
@@ -29,7 +29,7 @@ export default function ArticleDetail() {
             avatar_url
           )
         `)
-        .eq("id", id)
+        .eq("id", articleId)
         .single();
 
       if (error) throw error;
@@ -57,58 +57,6 @@ export default function ArticleDetail() {
       toast({
         title: "コピーに失敗しました",
         description: "URLのコピーに失敗しました",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleLike = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      toast({
-        title: "ログインが必要です",
-        description: "いいねをするにはログインしてください",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    try {
-      if (hasLiked) {
-        await supabase
-          .from('article_likes')
-          .delete()
-          .eq('article_id', id)
-          .eq('user_id', session.user.id);
-
-        setLikesCount(prev => Math.max(0, prev - 1));
-        setHasLiked(false);
-
-        toast({
-          title: "いいねを取り消しました",
-          description: "記事のいいねを取り消しました",
-        });
-      } else {
-        await supabase
-          .from('article_likes')
-          .insert({
-            article_id: id,
-            user_id: session.user.id
-          });
-
-        setLikesCount(prev => prev + 1);
-        setHasLiked(true);
-
-        toast({
-          title: "いいね！",
-          description: "記事にいいねしました",
-        });
-      }
-    } catch (error) {
-      console.error('Error toggling like:', error);
-      toast({
-        title: "エラーが発生しました",
-        description: "操作に失敗しました。もう一度お試しください。",
         variant: "destructive",
       });
     }
