@@ -14,19 +14,22 @@ const Articles = () => {
         .from('articles')
         .select(`
           *,
-          profiles!articles_user_id_fkey (
+          profiles (
             username,
             avatar_url
           )
         `)
+        .eq('user_id', 'profiles.id')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching articles:', error);
+        throw error;
+      }
       
-      // Add type assertion here with proper type checking
       if (!articles) return [];
       
-      return articles as unknown as Article[];
+      return articles as Article[];
     }
   });
 
