@@ -14,7 +14,7 @@ const Articles = () => {
         .from('articles')
         .select(`
           *,
-          profiles!articles_user_id_fkey(
+          profiles (
             username,
             avatar_url
           )
@@ -23,7 +23,7 @@ const Articles = () => {
 
       if (error) {
         console.error('Error fetching articles:', error);
-        throw error;
+        return [];
       }
       
       if (!articles) return [];
@@ -34,7 +34,7 @@ const Articles = () => {
           username: article.profiles?.username || "Unknown User",
           avatar_url: article.profiles?.avatar_url || "/placeholder.svg"
         }
-      })) as Article[];
+      }));
     }
   });
 
@@ -58,9 +58,13 @@ const Articles = () => {
           <h1 className="text-3xl font-bold text-gray-900 mb-8">Recent</h1>
           <div className="space-y-4">
             {isLoading ? (
-              <div>Loading...</div>
-            ) : (
-              articles?.map((article) => (
+              <div className="animate-pulse space-y-4">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="bg-white rounded-xl p-4 h-32" />
+                ))}
+              </div>
+            ) : articles && articles.length > 0 ? (
+              articles.map((article) => (
                 <ArticleCard 
                   key={article.id}
                   id={article.id}
@@ -74,6 +78,10 @@ const Articles = () => {
                   postedAt={formatTimeAgo(article.created_at)}
                 />
               ))
+            ) : (
+              <div className="text-center py-12 text-gray-500">
+                まだ記事がありません
+              </div>
             )}
           </div>
         </div>
