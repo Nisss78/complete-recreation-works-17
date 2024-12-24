@@ -11,6 +11,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 export const Header = () => {
   const [showSubmissionDialog, setShowSubmissionDialog] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const { t } = useLanguage();
@@ -19,12 +20,34 @@ export const Header = () => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setIsAuthenticated(!!session);
+
+      if (session?.user?.id) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('is_admin')
+          .eq('id', session.user.id)
+          .single();
+        
+        setIsAdmin(profile?.is_admin || false);
+      }
     };
 
     checkAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setIsAuthenticated(!!session);
+      if (session?.user?.id) {
+        supabase
+          .from('profiles')
+          .select('is_admin')
+          .eq('id', session.user.id)
+          .single()
+          .then(({ data: profile }) => {
+            setIsAdmin(profile?.is_admin || false);
+          });
+      } else {
+        setIsAdmin(false);
+      }
     });
 
     return () => {
@@ -60,15 +83,17 @@ export const Header = () => {
                 <FilePlus className="w-4 h-4 mr-2" />
                 {!isMobile && t('nav.writeArticle')}
               </Button>
-              <Button 
-                variant="outline"
-                size="sm"
-                className="bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 h-9"
-                onClick={() => setShowSubmissionDialog(true)}
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                {!isMobile && t('nav.post')}
-              </Button>
+              {isAdmin && (
+                <Button 
+                  variant="outline"
+                  size="sm"
+                  className="bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 h-9"
+                  onClick={() => setShowSubmissionDialog(true)}
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  {!isMobile && t('nav.post')}
+                </Button>
+              )}
               <UserMenu />
             </>
           ) : (

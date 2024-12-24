@@ -104,14 +104,14 @@ export const ProductForm = ({
 
         <ImageUpload 
           title={t('product.submit.icon')}
-          description={t('product.submit.iconRequirements').split('\n')}
+          description={t('product.submit.iconRequirements')}
           type="icon"
           onUpload={setIconUrl}
         />
 
         <ImageUpload 
           title={t('product.submit.images')}
-          description={t('product.submit.imageRequirements').split('\n')}
+          description={t('product.submit.imageRequirements')}
           type="description"
           onUpload={handleDescriptionImageUpload}
           maxFiles={5}
