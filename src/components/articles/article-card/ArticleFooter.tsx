@@ -1,7 +1,6 @@
 import { Heart, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useNavigate } from "react-router-dom";
 
 interface Author {
   id: string;
@@ -32,7 +31,7 @@ export const ArticleFooter = ({
   onAuthorClick
 }: ArticleFooterProps) => {
   return (
-    <div className="flex items-center gap-4 text-sm text-gray-600">
+    <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-sm text-gray-600">
       <button 
         onClick={onAuthorClick}
         className="flex items-center gap-1.5 hover:text-gray-900 transition-colors"
@@ -42,19 +41,19 @@ export const ArticleFooter = ({
           alt=""
           className="w-5 h-5 rounded-full"
         />
-        <span>{author.name}</span>
+        <span className="truncate max-w-[120px] sm:max-w-none">{author.name}</span>
         {author.blog && (
           <>
-            <span className="text-gray-400">in</span>
-            <span>{author.blog}</span>
+            <span className="text-gray-400 hidden sm:inline">in</span>
+            <span className="hidden sm:inline">{author.blog}</span>
           </>
         )}
       </button>
-      <div className="text-gray-400">{postedAt}</div>
+      <div className="text-gray-400 text-xs sm:text-sm">{postedAt}</div>
       <button 
         onClick={onLike}
         className={cn(
-          "flex items-center gap-1 transition-colors",
+          "flex items-center gap-1 transition-colors ml-auto sm:ml-0",
           hasLiked 
             ? "text-pink-500 hover:text-pink-600" 
             : "text-gray-500 hover:text-gray-900"
@@ -68,7 +67,7 @@ export const ArticleFooter = ({
           variant="ghost"
           size="sm"
           onClick={onDelete}
-          className="text-red-500 hover:text-red-600 hover:bg-red-50"
+          className="text-red-500 hover:text-red-600 hover:bg-red-50 p-1.5 sm:p-2"
         >
           <Trash2 className="w-4 h-4" />
         </Button>

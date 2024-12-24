@@ -96,29 +96,29 @@ export function ProductCard({
 
   return (
     <div 
-      className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 hover:bg-gray-50 transition-colors rounded-lg animate-fade-in cursor-pointer relative" 
+      className="flex items-start gap-3 p-3 sm:p-4 hover:bg-gray-50 transition-colors rounded-lg animate-fade-in cursor-pointer relative" 
       onClick={onClick}
     >
       <img 
         src={icon} 
         alt={name} 
-        className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg object-cover" 
+        className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover" 
       />
       
       <div className="flex-1 min-w-0 space-y-1 sm:space-y-2">
-        <div className="flex justify-between items-start">
-          <div>
+        <div className="flex justify-between items-start gap-4">
+          <div className="min-w-0">
             <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate">{name}</h3>
             <p className="text-sm sm:text-base text-gray-600 mt-0.5 line-clamp-2">{tagline}</p>
           </div>
         </div>
         
-        <div className="flex flex-wrap gap-1 sm:gap-1.5">
+        <div className="flex flex-wrap gap-1.5">
           {tags.map((tag) => (
             <Badge 
               key={tag} 
               variant="secondary" 
-              className="px-1.5 sm:px-2 py-0.5 text-xs bg-gray-100 text-gray-800 hover:bg-gray-200"
+              className="px-1.5 py-0.5 text-xs sm:text-sm bg-gray-100 text-gray-800 hover:bg-gray-200"
             >
               {tag}
             </Badge>

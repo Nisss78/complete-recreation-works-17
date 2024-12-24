@@ -7,7 +7,6 @@ interface ArticleHeaderProps {
 }
 
 export const ArticleHeader = ({ id, title, thumbnail_url }: ArticleHeaderProps) => {
-  // デフォルトのサムネイル画像をランダムに選択
   const defaultThumbnails = [
     'photo-1649972904349-6e44c42644a7',
     'photo-1488590528505-98d2b5aba04b',
@@ -25,8 +24,8 @@ export const ArticleHeader = ({ id, title, thumbnail_url }: ArticleHeaderProps) 
   const thumbnailUrl = thumbnail_url || `https://images.unsplash.com/${randomThumbnail}?auto=format&fit=crop&w=800&q=80`;
 
   return (
-    <div className="flex gap-4">
-      <Link to={`/articles/${id}`} className="w-24 h-24 overflow-hidden rounded-lg shrink-0">
+    <div className="flex gap-3 sm:gap-4">
+      <Link to={`/articles/${id}`} className="w-20 h-20 sm:w-24 sm:h-24 overflow-hidden rounded-lg shrink-0">
         <img 
           src={thumbnailUrl} 
           alt={title}
@@ -34,7 +33,7 @@ export const ArticleHeader = ({ id, title, thumbnail_url }: ArticleHeaderProps) 
         />
       </Link>
       <div className="flex-1 min-w-0">
-        <h2 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2">
+        <h2 className="text-base sm:text-lg font-bold text-gray-900 mb-2 line-clamp-2">
           {title}
         </h2>
       </div>
