@@ -7,7 +7,6 @@ import { Footer } from "@/components/Footer";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useParams, useNavigate } from "react-router-dom";
-import { BookmarkSidebar } from "@/components/BookmarkSidebar";
 
 const fetchProducts = async () => {
   const { data: products, error } = await supabase
@@ -67,23 +66,6 @@ const Index = () => {
     }
   }, [productId, allProducts]);
 
-  // まず日付でグループ化
-  const groupedProducts = allProducts.reduce((groups: any, product) => {
-    const date = format(product.launchDate, 'yyyy-MM-dd');
-    if (!groups[date]) {
-      groups[date] = [];
-    }
-    groups[date].push(product);
-    return groups;
-  }, {});
-
-  // いいね順でソート
-  if (sortByLikes) {
-    Object.keys(groupedProducts).forEach(date => {
-      groupedProducts[date].sort((a: any, b: any) => b.upvotes - a.upvotes);
-    });
-  }
-
   const handleProductClick = (product: any) => {
     setSelectedProduct(product);
     const productSlug = product.name.toLowerCase().replace(/\s+/g, '-');
@@ -121,53 +103,64 @@ const Index = () => {
     );
   }
 
+  // まず日付でグループ化
+  const groupedProducts = allProducts.reduce((groups: any, product) => {
+    const date = format(product.launchDate, 'yyyy-MM-dd');
+    if (!groups[date]) {
+      groups[date] = [];
+    }
+    groups[date].push(product);
+    return groups;
+  }, {});
+
+  // いいね順でソート
+  if (sortByLikes) {
+    Object.keys(groupedProducts).forEach(date => {
+      groupedProducts[date].sort((a: any, b: any) => b.upvotes - a.upvotes);
+    });
+  }
+
   return (
     <div className="min-h-screen w-full flex flex-col">
       <Header />
-      
-      <div className="flex-1 flex">
-        <main className="flex-1">
-          <div className="max-w-4xl mx-auto py-4 px-4">
-            <div className="flex justify-between items-center mb-4">
-              <h1 className="text-2xl font-bold">Products Launching Today</h1>
-              <button
-                onClick={() => setSortByLikes(!sortByLikes)}
-                className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-              >
-                {sortByLikes ? "投稿順に並び替え" : "いいね順に並び替え"}
-              </button>
-            </div>
-            
-            {Object.entries(groupedProducts).map(([date, products]: [string, any]) => (
-              <div key={date} className="mb-4">
-                <h2 className="text-lg font-semibold mb-2">
-                  {format(new Date(date), 'MMMM d, yyyy')}
-                </h2>
-                <div className="space-y-2">
-                  {products.map((product: any) => (
-                    <ProductCard 
-                      key={`${product.id}-${date}`}
-                      {...product}
-                      onClick={() => handleProductClick(product)}
-                    />
-                  ))}
-                </div>
-              </div>
-            ))}
-
-            {allProducts.length === 0 && (
-              <div className="text-center text-gray-500 mt-2">
-                まだ投稿されたプロダクトはありません。
-                <br />
-                最初の投稿者になりませんか？
-              </div>
-            )}
+      <main className="flex-1">
+        <div className="max-w-4xl mx-auto py-4 px-4">
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-2xl font-bold">Products Launching Today</h1>
+            <button
+              onClick={() => setSortByLikes(!sortByLikes)}
+              className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+            >
+              {sortByLikes ? "投稿順に並び替え" : "いいね順に並び替え"}
+            </button>
           </div>
-        </main>
-        
-        <BookmarkSidebar />
-      </div>
+          
+          {Object.entries(groupedProducts).map(([date, products]: [string, any]) => (
+            <div key={date} className="mb-4">
+              <h2 className="text-lg font-semibold mb-2">
+                {format(new Date(date), 'MMMM d, yyyy')}
+              </h2>
+              <div className="space-y-2">
+                {products.map((product: any) => (
+                  <ProductCard 
+                    key={`${product.id}-${date}`}
+                    {...product}
+                    onClick={() => handleProductClick(product)}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
 
+          {allProducts.length === 0 && (
+            <div className="text-center text-gray-500 mt-2">
+              まだ投稿されたプロダクトはありません。
+              <br />
+              最初の投稿者になりませんか？
+            </div>
+          )}
+        </div>
+      </main>
       <Footer />
 
       {selectedProduct && (
