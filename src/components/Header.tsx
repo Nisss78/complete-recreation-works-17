@@ -52,11 +52,11 @@ export const Header = () => {
               <Button 
                 variant="default"
                 size="sm"
-                className="bg-gradient-to-r from-[#9b87f5] to-[#8e77f3] hover:from-[#8e77f3] hover:to-[#7d63f1] text-white shadow-sm transition-all duration-200 ease-in-out transform hover:scale-105"
+                className="bg-primary hover:bg-primary/90"
                 onClick={() => setShowSubmissionDialog(true)}
               >
-                <Plus className="w-4 h-4" />
-                {!isMobile && "投稿する"}
+                <Plus className="w-4 h-4 mr-2" />
+                {!isMobile && "投稿"}
               </Button>
               <UserMenu />
             </>
