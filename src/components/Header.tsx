@@ -79,6 +79,14 @@ export const Header = () => {
                 <Button 
                   variant="ghost" 
                   className="flex items-center gap-2"
+                  onClick={() => navigate("/profile")}
+                >
+                  <User className="w-4 h-4" />
+                  プロフィール
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className="flex items-center gap-2"
                   onClick={handleLogout}
                 >
                   <LogOut className="w-4 h-4" />
