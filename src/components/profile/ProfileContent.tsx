@@ -1,6 +1,6 @@
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { ArticleCard } from "@/components/articles/ArticleCard";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { FollowButton } from "@/components/articles/FollowButton";
