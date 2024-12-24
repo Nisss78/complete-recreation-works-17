@@ -108,6 +108,27 @@ export type Database = {
           },
         ]
       }
+      follows: {
+        Row: {
+          created_at: string
+          follower_id: string
+          following_id: string
+          id: number
+        }
+        Insert: {
+          created_at?: string
+          follower_id: string
+          following_id: string
+          id?: number
+        }
+        Update: {
+          created_at?: string
+          follower_id?: string
+          following_id?: string
+          id?: number
+        }
+        Relationships: []
+      }
       product_bookmarks: {
         Row: {
           created_at: string

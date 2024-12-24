@@ -1,4 +1,5 @@
 export interface Profile {
+  id: string;
   username: string | null;
   avatar_url: string | null;
 }
@@ -13,10 +14,12 @@ export interface Article {
   created_at: string;
   updated_at: string;
   profile?: {
+    id: string;
     username: string | null;
     avatar_url: string | null;
   };
   profiles: {
+    id: string;
     username: string;
     avatar_url: string;
   };
