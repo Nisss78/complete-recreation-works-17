@@ -17,7 +17,6 @@ import { useToast } from "@/hooks/use-toast";
 import { User, Link } from "lucide-react";
 import { AvatarUpload } from "./AvatarUpload";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 
 const urlSchema = z.string().url({ message: "有効なURLを入力してください" }).optional().or(z.literal(""));
 
@@ -60,30 +59,15 @@ export const ProfileForm = ({ profile, onSuccess }: ProfileFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
-      bio: "",
-      avatar_url: "",
-      twitter_url: "",
-      instagram_url: "",
-      github_url: "",
-      other_url: "",
+      username: profile?.username || "",
+      bio: profile?.bio || "",
+      avatar_url: profile?.avatar_url || "",
+      twitter_url: profile?.twitter_url || "",
+      instagram_url: profile?.instagram_url || "",
+      github_url: profile?.github_url || "",
+      other_url: profile?.other_url || "",
     },
   });
-
-  // プロフィールデータが利用可能になったら、フォームの初期値を設定
-  useEffect(() => {
-    if (profile) {
-      form.reset({
-        username: profile.username || "",
-        bio: profile.bio || "",
-        avatar_url: profile.avatar_url || "",
-        twitter_url: profile.twitter_url || "",
-        instagram_url: profile.instagram_url || "",
-        github_url: profile.github_url || "",
-        other_url: profile.other_url || "",
-      });
-    }
-  }, [profile, form]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const session = await supabase.auth.getSession();
