@@ -42,38 +42,27 @@ export const Header = () => {
 
   const handleLogout = async () => {
     try {
-      // First, clear the local state
-      setIsAuthenticated(false);
+      // セッションを取得
+      const { data: { session } } = await supabase.auth.getSession();
       
-      // Attempt to sign out
-      await supabase.auth.signOut({
-        scope: 'local'  // Only clear the local session first
-      });
-      
-      // Then attempt to clear the global session
-      try {
-        await supabase.auth.signOut({
-          scope: 'global'
+      // セッションが存在する場合のみログアウトを実行
+      if (session) {
+        const { error } = await supabase.auth.signOut();
+        if (error) throw error;
+        
+        toast({
+          title: "ログアウト完了",
+          description: "ログアウトしました",
         });
-      } catch (globalError) {
-        // Ignore global session errors as the local logout is sufficient
-        console.log("Global session cleanup failed:", globalError);
+        setIsAuthenticated(false);
+        navigate('/');
+      } else {
+        // セッションが存在しない場合は、状態をリセット
+        setIsAuthenticated(false);
+        navigate('/auth');
       }
-
-      toast({
-        title: "ログアウト完了",
-        description: "ログアウトしました",
-      });
-      
-      // Always redirect to auth page after logout
-      navigate('/auth');
-      
     } catch (error) {
       console.error("Logout error:", error);
-      
-      // Even if there's an error, we want to make sure the user is redirected to auth
-      navigate('/auth');
-      
       toast({
         title: "エラー",
         description: "ログアウトに失敗しました",
