@@ -26,7 +26,7 @@ export const useFollow = (profileId: string) => {
           .select('*')
           .eq('follower_id', session.session.user.id)
           .eq('following_id', profileId)
-          .single();
+          .maybeSingle();
 
         setIsFollowing(!!follow);
       } catch (error) {

@@ -94,6 +94,7 @@ const ProfilePage = () => {
         .select(`
           *,
           profile:profiles!articles_user_id_fkey (
+            id,
             username,
             avatar_url
           )
@@ -114,6 +115,7 @@ const ProfilePage = () => {
       return data.map(article => ({
         ...article,
         profiles: {
+          id: article.profile?.id,
           username: article.profile?.username || "Unknown User",
           avatar_url: article.profile?.avatar_url || "/placeholder.svg"
         }
