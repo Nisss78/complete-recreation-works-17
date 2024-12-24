@@ -61,7 +61,7 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
 
   const t = (key: TranslationKey): string => {
     const value = translations[language][key];
-    return typeof value === 'string' ? value : value.join('\n');
+    return value;
   };
 
   return (
