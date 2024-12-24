@@ -1,11 +1,10 @@
-import { Heart, Trash2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { ArticleHeader } from "./article-card/ArticleHeader";
+import { ArticleFooter } from "./article-card/ArticleFooter";
 
 interface Author {
   id: string;
@@ -23,17 +22,18 @@ interface ArticleCardProps {
   postedAt: string;
   showDeleteButton?: boolean;
   onDelete?: () => void;
+  thumbnail_url?: string | null;
 }
 
 export const ArticleCard = ({ 
   id, 
-  date, 
   title, 
   author, 
   likes: initialLikes, 
   postedAt,
   showDeleteButton,
-  onDelete 
+  onDelete,
+  thumbnail_url
 }: ArticleCardProps) => {
   const [hasLiked, setHasLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(initialLikes);
@@ -101,12 +101,6 @@ export const ArticleCard = ({
           description: "記事にいいねしました",
         });
       }
-
-      await supabase
-        .from('articles')
-        .update({ likes_count: likesCount })
-        .eq('id', id);
-
     } catch (error) {
       console.error('Error toggling like:', error);
       toast({
@@ -156,77 +150,22 @@ export const ArticleCard = ({
   return (
     <Link to={`/articles/${id}`}>
       <Card className="p-4 hover:bg-gray-50 transition-colors cursor-pointer">
-        <div className="flex gap-4">
-          {date ? (
-            <div className="w-16 h-16 bg-gray-200 rounded-lg flex flex-col items-center justify-center text-gray-700">
-              <div className="text-sm">
-                {date.split("/")[0]}
-              </div>
-              <div className="text-xl font-bold">
-                {date.split("/")[1]}
-              </div>
-            </div>
-          ) : (
-            <button 
-              onClick={handleAuthorClick}
-              className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center hover:bg-gray-300 transition-colors"
-            >
-              <img 
-                src={author.avatar} 
-                alt="" 
-                className="w-12 h-12 object-cover rounded-full"
-              />
-            </button>
-          )}
-          
-          <div className="flex-1">
-            <h2 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2">
-              {title}
-            </h2>
-            
-            <div className="flex items-center gap-4 text-sm text-gray-600">
-              <button 
-                onClick={handleAuthorClick}
-                className="flex items-center gap-1.5 hover:text-gray-900 transition-colors"
-              >
-                <img 
-                  src={author.avatar}
-                  alt=""
-                  className="w-5 h-5 rounded-full"
-                />
-                <span>{author.name}</span>
-                {author.blog && (
-                  <>
-                    <span className="text-gray-400">in</span>
-                    <span>{author.blog}</span>
-                  </>
-                )}
-              </button>
-              <div className="text-gray-400">{postedAt}</div>
-              <button 
-                onClick={handleLike}
-                className={cn(
-                  "flex items-center gap-1 transition-colors",
-                  hasLiked 
-                    ? "text-pink-500 hover:text-pink-600" 
-                    : "text-gray-500 hover:text-gray-900"
-                )}
-              >
-                <Heart className={cn("w-4 h-4", hasLiked && "fill-current")} />
-                <span>{likesCount}</span>
-              </button>
-              {showDeleteButton && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleDelete}
-                  className="text-red-500 hover:text-red-600 hover:bg-red-50"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              )}
-            </div>
-          </div>
+        <div className="space-y-4">
+          <ArticleHeader
+            id={id}
+            title={title}
+            thumbnail_url={thumbnail_url}
+          />
+          <ArticleFooter
+            author={author}
+            postedAt={postedAt}
+            likes={likesCount}
+            hasLiked={hasLiked}
+            showDeleteButton={showDeleteButton}
+            onLike={handleLike}
+            onDelete={handleDelete}
+            onAuthorClick={handleAuthorClick}
+          />
         </div>
       </Card>
     </Link>
