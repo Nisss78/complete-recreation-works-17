@@ -59,7 +59,7 @@ export const EditorButtons = ({ isPreview, setIsPreview, onImageUpload }: Editor
   }
 
   return (
-    <div className="absolute right-[-60px] top-0 flex flex-col gap-3">
+    <div className="fixed right-4 top-32 flex flex-col gap-3">
       {buttonGroup}
     </div>
   );
