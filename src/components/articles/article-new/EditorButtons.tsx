@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Image, Play, HelpCircle } from "lucide-react";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 interface EditorButtonsProps {
   isPreview: boolean;
@@ -9,10 +8,8 @@ interface EditorButtonsProps {
 }
 
 export const EditorButtons = ({ isPreview, setIsPreview, onImageUpload }: EditorButtonsProps) => {
-  const isMobile = useIsMobile();
-
-  const buttonGroup = (
-    <>
+  return (
+    <div className="absolute right-[-60px] top-0 flex flex-col gap-3">
       <Button
         variant="outline"
         size="icon"
@@ -47,20 +44,6 @@ export const EditorButtons = ({ isPreview, setIsPreview, onImageUpload }: Editor
       >
         <HelpCircle className="w-4 h-4" />
       </Button>
-    </>
-  );
-
-  if (isMobile) {
-    return (
-      <div className="flex gap-3 justify-end mb-3">
-        {buttonGroup}
-      </div>
-    );
-  }
-
-  return (
-    <div className="fixed right-4 top-32 flex flex-col gap-3">
-      {buttonGroup}
     </div>
   );
 };
