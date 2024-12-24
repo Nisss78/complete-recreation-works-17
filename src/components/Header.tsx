@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, BookOpen } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ProductSubmissionDialog } from "./ProductSubmissionDialog";
 import { supabase } from "@/integrations/supabase/client";
@@ -40,13 +40,23 @@ export const Header = () => {
         <div className="flex items-center gap-2 sm:gap-4">
           {isAuthenticated ? (
             <>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+                onClick={() => navigate("/articles")}
+              >
+                <BookOpen className="w-4 h-4 mr-2" />
+                {!isMobile && "記事"}
+              </Button>
               <Button 
                 variant="default"
-                className="flex items-center gap-1 sm:gap-2 bg-[#9b87f5] hover:bg-[#7E69AB] shadow-sm px-3 sm:px-4 py-2"
+                size="sm"
+                className="bg-gradient-to-r from-[#9b87f5] to-[#8e77f3] hover:from-[#8e77f3] hover:to-[#7d63f1] text-white shadow-sm transition-all duration-200 ease-in-out transform hover:scale-105"
                 onClick={() => setShowSubmissionDialog(true)}
               >
                 <Plus className="w-4 h-4" />
-                {!isMobile && "投稿"}
+                {!isMobile && "投稿する"}
               </Button>
               <UserMenu />
             </>
