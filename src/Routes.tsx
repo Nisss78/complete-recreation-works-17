@@ -16,6 +16,7 @@ export const Routes = () => {
       <Route path="/articles/:id" element={<ArticleDetail />} />
       <Route path="/articles/new" element={<ArticleNew />} />
       <Route path="/auth" element={<Auth />} />
+      <Route path="/profile" element={<Profile />} />
       <Route path="/profile/:id" element={<Profile />} />
       <Route path="/settings" element={<Settings />} />
       <Route path="/bookmarks" element={<Bookmarks />} />
