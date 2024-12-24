@@ -1,7 +1,7 @@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ProductForm } from "./product-submission/ProductForm";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -24,10 +24,37 @@ export const ProductSubmissionDialog = ({
   const [iconUrl, setIconUrl] = useState("");
   const [descriptionImages, setDescriptionImages] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const { toast } = useToast();
   const { t } = useLanguage();
 
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user?.id) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('is_admin')
+          .eq('id', session.user.id)
+          .single();
+        
+        setIsAdmin(profile?.is_admin || false);
+      }
+    };
+
+    checkAdminStatus();
+  }, []);
+
   const handleSubmit = async () => {
+    if (!isAdmin) {
+      toast({
+        title: t('error.occurred'),
+        description: t('error.adminRequired'),
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!name || !tagline || !description || !iconUrl) {
       toast({
         title: t('error.occurred'),
@@ -111,6 +138,10 @@ export const ProductSubmissionDialog = ({
       setIsSubmitting(false);
     }
   };
+
+  if (!isAdmin) {
+    return null;
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
