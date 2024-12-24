@@ -48,6 +48,35 @@ export default function ArticleNew() {
     }
   };
 
+  const handleThumbnailUpload = async (file: File) => {
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `thumbnails/${crypto.randomUUID()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('product-images')
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('product-images')
+        .getPublicUrl(fileName);
+
+      setThumbnailUrl(publicUrl);
+      toast({
+        title: "サムネイルを設定しました",
+      });
+    } catch (error) {
+      console.error('Thumbnail upload error:', error);
+      toast({
+        title: "エラー",
+        description: "サムネイルのアップロードに失敗しました",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#F8F9FC] relative">
       {/* Header */}
@@ -83,6 +112,45 @@ export default function ArticleNew() {
       {/* Main Content */}
       <div className="pt-20 pb-10 px-4">
         <div className="max-w-4xl mx-auto relative">
+          {/* Thumbnail Upload */}
+          <div className="mb-6 bg-white p-6 rounded-lg shadow-sm">
+            <div className="flex items-center gap-4">
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  サムネイル画像
+                </label>
+                <div className="relative">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) handleThumbnailUpload(file);
+                    }}
+                  />
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 transition-colors">
+                    <p className="text-sm text-gray-600">
+                      クリックまたはドラッグ&ドロップで画像をアップロード
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      推奨サイズ: 1200×630px
+                    </p>
+                  </div>
+                </div>
+              </div>
+              {thumbnailUrl && (
+                <div className="w-48">
+                  <img 
+                    src={thumbnailUrl} 
+                    alt="サムネイルプレビュー" 
+                    className="w-full aspect-[1.91/1] object-cover rounded-lg"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Editor */}
           <div data-color-mode="light" className="rounded-lg overflow-hidden bg-white shadow-sm">
             <MDEditor
