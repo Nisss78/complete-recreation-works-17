@@ -6,12 +6,14 @@ import { ProductSubmissionDialog } from "./ProductSubmissionDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { UserMenu } from "./header/UserMenu";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const Header = () => {
   const [showSubmissionDialog, setShowSubmissionDialog] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const { t } = useLanguage();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -47,7 +49,7 @@ export const Header = () => {
                 onClick={() => navigate("/articles")}
               >
                 <BookOpen className="w-4 h-4 mr-2" />
-                {!isMobile && "記事"}
+                {!isMobile && t('nav.articles')}
               </Button>
               <Button 
                 variant="ghost"
@@ -56,7 +58,7 @@ export const Header = () => {
                 onClick={() => navigate("/articles/new")}
               >
                 <FilePlus className="w-4 h-4 mr-2" />
-                {!isMobile && "記事を書く"}
+                {!isMobile && t('nav.writeArticle')}
               </Button>
               <Button 
                 variant="outline"
@@ -65,7 +67,7 @@ export const Header = () => {
                 onClick={() => setShowSubmissionDialog(true)}
               >
                 <Plus className="w-4 h-4 mr-2" />
-                {!isMobile && "投稿"}
+                {!isMobile && t('nav.post')}
               </Button>
               <UserMenu />
             </>
@@ -75,7 +77,7 @@ export const Header = () => {
               onClick={() => navigate("/auth")}
               className="bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 h-9"
             >
-              ログイン
+              {t('nav.login')}
             </Button>
           )}
         </div>

@@ -6,9 +6,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { Article } from "@/types/database";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Articles() {
   const [showFollowedOnly, setShowFollowedOnly] = useState(false);
+  const { t } = useLanguage();
 
   const { data: articles, isLoading } = useQuery({
     queryKey: ["articles", showFollowedOnly],
@@ -78,19 +80,19 @@ export default function Articles() {
       <main className="container max-w-4xl mx-auto py-8 px-4">
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900">記事一覧</h1>
+            <h1 className="text-2xl font-bold text-gray-900">{t('articles.title')}</h1>
             <div className="flex gap-2">
               <Button
                 variant={showFollowedOnly ? "outline" : "default"}
                 onClick={() => setShowFollowedOnly(false)}
               >
-                すべて
+                {t('articles.all')}
               </Button>
               <Button
                 variant={showFollowedOnly ? "default" : "outline"}
                 onClick={() => setShowFollowedOnly(true)}
               >
-                フォロー中
+                {t('articles.following')}
               </Button>
             </div>
           </div>
@@ -124,11 +126,7 @@ export default function Articles() {
             </div>
           ) : (
             <div className="text-center py-12 text-gray-500">
-              {showFollowedOnly ? (
-                "フォローしているユーザーの記事がありません"
-              ) : (
-                "記事がありません"
-              )}
+              {showFollowedOnly ? t('articles.noFollowingArticles') : t('articles.noArticles')}
             </div>
           )}
         </div>
