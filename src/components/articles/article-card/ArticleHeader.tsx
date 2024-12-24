@@ -25,13 +25,13 @@ export const ArticleHeader = ({ id, title, thumbnail_url }: ArticleHeaderProps) 
 
   return (
     <div className="flex gap-3 sm:gap-4">
-      <Link to={`/articles/${id}`} className="w-20 h-20 sm:w-24 sm:h-24 overflow-hidden rounded-lg shrink-0">
+      <div className="w-20 h-20 sm:w-24 sm:h-24 overflow-hidden rounded-lg shrink-0">
         <img 
           src={thumbnailUrl} 
           alt={title}
           className="w-full h-full object-cover"
         />
-      </Link>
+      </div>
       <div className="flex-1 min-w-0">
         <h2 className="text-base sm:text-lg font-bold text-gray-900 mb-2 line-clamp-2">
           {title}

@@ -185,6 +185,7 @@ const ProfilePage = () => {
                   postedAt={formatTimeAgo(article.created_at)}
                   showDeleteButton={true}
                   onDelete={handleArticleDelete}
+                  thumbnail_url={article.thumbnail_url}
                 />
               ))
             ) : (
