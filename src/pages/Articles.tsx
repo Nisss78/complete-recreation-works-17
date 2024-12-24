@@ -22,7 +22,11 @@ const Articles = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return articles as Article[];
+      
+      // Add type assertion here with proper type checking
+      if (!articles) return [];
+      
+      return articles as unknown as Article[];
     }
   });
 
