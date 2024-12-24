@@ -1,10 +1,7 @@
-import { Heart, Share2, User } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { ArticleHeader } from "@/components/articles/ArticleHeader";
 
 const ArticleDetail = () => {
   const article = {
@@ -14,6 +11,7 @@ const ArticleDetail = () => {
       avatar: "/lovable-uploads/d52af139-0d12-4cd2-aec0-d6d4e07ffd34.png"
     },
     postedAt: "2024年12月18日 21:13",
+    thumbnailUrl: "/lovable-uploads/6bbd01fe-acf0-40d4-81c6-3adc8f714a4a.png",
     content: `
       Model Context Protocol (MCP)は、Claudeのようなアシスタントとさまざまなシステムを安全に接続する新しい標準です。この記事では、MCPの基本から始め、Claudeデスクトップアプリでの具体的なセットアップ方法と、日常業務を簡略化する実例を解説します。
 
@@ -40,56 +38,14 @@ const ArticleDetail = () => {
       <Header />
       <main className="flex-1">
         <article className="max-w-3xl mx-auto py-8 px-4">
-          {/* Article Header */}
-          <div className="mb-8 space-y-6">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">
-              {article.title}
-            </h1>
+          <ArticleHeader 
+            title={article.title}
+            author={article.author}
+            postedAt={article.postedAt}
+            likes={article.likes}
+            thumbnailUrl={article.thumbnailUrl}
+          />
 
-            <div className="flex items-center gap-4">
-              <Avatar className="h-12 w-12">
-                <AvatarImage src={article.author.avatar} />
-                <AvatarFallback>
-                  <User className="w-6 h-6" />
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <div className="font-medium text-gray-900">
-                  {article.author.name}
-                </div>
-                <div className="text-sm text-gray-500">
-                  {article.postedAt}
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4 border-y border-gray-100 py-4">
-              <Button 
-                variant="ghost" 
-                size="sm"
-                className={cn(
-                  "gap-2 text-gray-500 hover:text-gray-900",
-                  "hover:bg-gray-50"
-                )}
-              >
-                <Heart className="w-5 h-5" />
-                <span>{article.likes}</span>
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="sm"
-                className={cn(
-                  "gap-2 text-gray-500 hover:text-gray-900",
-                  "hover:bg-gray-50"
-                )}
-              >
-                <Share2 className="w-5 h-5" />
-                <span>シェア</span>
-              </Button>
-            </div>
-          </div>
-
-          {/* Article Content */}
           <ScrollArea className="h-[calc(100vh-400px)]">
             <div className="prose prose-gray max-w-none">
               {article.content.split('\n').map((paragraph, index) => (
