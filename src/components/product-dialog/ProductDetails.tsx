@@ -15,6 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ProductImageCarousel } from "./ProductImageCarousel";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBookmarks } from "@/hooks/useBookmarks";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ProductDetailsProps {
   product: {
@@ -38,6 +39,7 @@ export const ProductDetails = ({ product, isLoadingImages }: ProductDetailsProps
   const { toast } = useToast();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { isBookmarked, toggleBookmark } = useBookmarks(product.id);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const fetchCommentCount = async () => {
@@ -124,67 +126,82 @@ export const ProductDetails = ({ product, isLoadingImages }: ProductDetailsProps
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-start gap-4">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4">
         <img 
           src={product.icon} 
           alt={product.name} 
           className="w-16 h-16 rounded-lg object-cover"
         />
-        <div className="flex-1">
-          <h2 className="text-2xl font-bold mb-2">{product.name}</h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-2">{product.tagline}</p>
-          <p className="text-gray-600 dark:text-gray-300 mb-3">{product.description}</p>
-          <div className="flex flex-wrap gap-2">
+        <div className="flex-1 min-w-0">
+          <h2 className="text-xl sm:text-2xl font-bold mb-2">{product.name}</h2>
+          <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base mb-2">{product.tagline}</p>
+          <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base mb-3">{product.description}</p>
+          <div className="flex flex-wrap gap-1.5 sm:gap-2">
             {product.tags.map((tag) => (
-              <Badge key={tag} variant="secondary" className="text-sm">
+              <Badge key={tag} variant="secondary" className="text-xs sm:text-sm">
                 {tag}
               </Badge>
             ))}
           </div>
         </div>
-        <div className="flex gap-2">
-          <Button 
-            variant="outline" 
-            className="gap-2"
-            onClick={handleVisit}
-            disabled={!product.URL}
-          >
-            <ExternalLink className="w-4 h-4" />
-            Visit
-          </Button>
-          <Button 
-            variant="outline" 
-            className="gap-2"
-            onClick={handleLike}
-          >
-            <ArrowUp className={`w-4 h-4 ${hasLiked ? 'text-blue-500' : ''}`} />
-            {totalLikes}
-          </Button>
-          <Button variant="outline" className="gap-2">
-            <MessageCircle className="w-4 h-4" />
-            {commentCount}
-          </Button>
+      </div>
+
+      <div className="flex flex-wrap gap-2 justify-start">
+        <Button 
+          variant="outline" 
+          className="flex-1 sm:flex-none gap-2 h-9 px-3 sm:px-4"
+          onClick={handleVisit}
+          disabled={!product.URL}
+        >
+          <ExternalLink className="w-4 h-4" />
+          Visit
+        </Button>
+        <Button 
+          variant="outline" 
+          className="flex-1 sm:flex-none gap-2 h-9 px-3 sm:px-4"
+          onClick={handleLike}
+        >
+          <ArrowUp className={`w-4 h-4 ${hasLiked ? 'text-blue-500' : ''}`} />
+          {totalLikes}
+        </Button>
+        <Button 
+          variant="outline" 
+          className="flex-1 sm:flex-none gap-2 h-9 px-3 sm:px-4"
+        >
+          <MessageCircle className="w-4 h-4" />
+          {commentCount}
+        </Button>
+        <Button 
+          variant="outline" 
+          size="icon"
+          onClick={handleBookmark}
+          className={`h-9 w-9 ${isBookmarked ? 'text-blue-500 border-blue-500' : ''}`}
+        >
+          <Bookmark className="w-4 h-4" />
+        </Button>
+        <Button 
+          variant="outline" 
+          size="icon"
+          onClick={handleShare}
+          className="h-9 w-9"
+        >
+          <Share2 className="w-4 h-4" />
+        </Button>
+        {!isMobile && (
           <Button 
             variant="outline" 
             size="icon"
-            onClick={handleBookmark}
-            className={isBookmarked ? 'text-blue-500 border-blue-500' : ''}
+            className="h-9 w-9"
           >
-            <Bookmark className="w-4 h-4" />
-          </Button>
-          <Button variant="outline" size="icon" onClick={handleShare}>
-            <Share2 className="w-4 h-4" />
-          </Button>
-          <Button variant="outline" size="icon">
             <BarChart2 className="w-4 h-4" />
           </Button>
-        </div>
+        )}
       </div>
 
       {isLoadingImages ? (
         <div className="space-y-4">
-          <Skeleton className="w-full h-[500px] rounded-lg" />
+          <Skeleton className="w-full h-[300px] sm:h-[500px] rounded-lg" />
         </div>
       ) : (
         <ProductImageCarousel 
