@@ -6,8 +6,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { FollowButton } from "./FollowButton";
 
 interface Author {
+  id: string;
   name: string;
   blog?: string;
   avatar: string;
@@ -212,6 +214,7 @@ export const ArticleCard = ({
                   <Trash2 className="w-4 h-4" />
                 </Button>
               )}
+              <FollowButton profileId={author.id} />
             </div>
           </div>
         </div>

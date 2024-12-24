@@ -10,6 +10,11 @@ export const useFollow = (profileId: string) => {
   useEffect(() => {
     const checkFollowStatus = async () => {
       try {
+        if (!profileId) {
+          setIsLoading(false);
+          return;
+        }
+
         const { data: session } = await supabase.auth.getSession();
         if (!session.session) {
           setIsLoading(false);
@@ -36,6 +41,11 @@ export const useFollow = (profileId: string) => {
 
   const toggleFollow = async () => {
     try {
+      if (!profileId) {
+        console.error('Profile ID is undefined');
+        return;
+      }
+
       const { data: session } = await supabase.auth.getSession();
       if (!session.session) {
         toast({

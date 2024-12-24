@@ -1,146 +1,68 @@
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ArticleHeader } from "@/components/articles/ArticleHeader";
-import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import ReactMarkdown from "react-markdown";
-import type { Article } from "@/types/database";
 import { useToast } from "@/hooks/use-toast";
-import { useState, useEffect } from "react";
 
 const ArticleDetail = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const { toast } = useToast();
-  const [hasLiked, setHasLiked] = useState(false);
-  const [likesCount, setLikesCount] = useState(0);
-  
-  const { data: article, isLoading } = useQuery({
-    queryKey: ['article', id],
-    queryFn: async () => {
-      console.log('Fetching article details for id:', id);
-      const { data: article, error } = await supabase
-        .from('articles')
-        .select(`
-          *,
-          profile:profiles!articles_user_id_fkey (
-            username,
-            avatar_url
-          )
-        `)
-        .eq('id', id)
-        .single();
-
-      if (error) {
-        console.error('Error fetching article:', error);
-        throw error;
-      }
-
-      return article;
-    },
-    enabled: !!id
-  });
+  const [article, setArticle] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (article) {
-      setLikesCount(article.likes_count || 0);
-      checkIfLiked();
-    }
-  }, [article]);
+    const fetchArticle = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("articles")
+          .select(`
+            *,
+            profile:profiles!articles_user_id_fkey (
+              id,
+              username,
+              avatar_url
+            )
+          `)
+          .eq("id", id)
+          .single();
 
-  const checkIfLiked = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) return;
+        if (error) {
+          throw error;
+        }
 
-    const { data: like } = await supabase
-      .from('article_likes')
-      .select('id')
-      .eq('article_id', Number(id))
-      .eq('user_id', session.user.id)
-      .maybeSingle();
-
-    setHasLiked(!!like);
-  };
-
-  const handleLike = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      toast({
-        title: "ログインが必要です",
-        description: "いいねをするにはログインしてください",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    try {
-      if (hasLiked) {
-        // いいねを削除
-        await supabase
-          .from('article_likes')
-          .delete()
-          .eq('article_id', Number(id))
-          .eq('user_id', session.user.id);
-
-        setLikesCount(prev => Math.max(0, prev - 1));
-        setHasLiked(false);
-
+        setArticle(data);
+      } catch (error) {
+        console.error("Error fetching article:", error);
         toast({
-          title: "いいねを取り消しました",
-          description: "記事のいいねを取り消しました",
+          title: "エラー",
+          description: "記事の取得に失敗しました",
+          variant: "destructive",
         });
-      } else {
-        // いいねを追加
-        await supabase
-          .from('article_likes')
-          .insert({
-            article_id: Number(id),
-            user_id: session.user.id
-          });
-
-        setLikesCount(prev => prev + 1);
-        setHasLiked(true);
-
-        toast({
-          title: "いいね！",
-          description: "記事にいいねしました",
-        });
+        navigate("/articles");
+      } finally {
+        setLoading(false);
       }
+    };
 
-      // 記事のいいね数を更新
-      await supabase
-        .from('articles')
-        .update({ likes_count: likesCount })
-        .eq('id', id);
+    fetchArticle();
+  }, [id, navigate, toast]);
 
-    } catch (error) {
-      console.error('Error toggling like:', error);
-      toast({
-        title: "エラーが発生しました",
-        description: "操作に失敗しました。もう一度お試しください。",
-        variant: "destructive",
-      });
-    }
-  };
-
-  if (isLoading) {
+  if (loading) {
     return (
-      <div className="min-h-screen w-full flex flex-col bg-white">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
         <Header />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="animate-pulse text-gray-500">Loading article...</div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
-  if (!article) {
-    return (
-      <div className="min-h-screen w-full flex flex-col bg-white">
-        <Header />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="text-gray-500">Article not found</div>
+        <main className="container max-w-4xl mx-auto py-8 px-4">
+          <div className="animate-pulse space-y-4">
+            <div className="h-32 bg-white/50 rounded-xl" />
+            <div className="space-y-4">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="h-32 bg-white/50 rounded-xl" />
+              ))}
+            </div>
+          </div>
         </main>
         <Footer />
       </div>
@@ -148,22 +70,22 @@ const ArticleDetail = () => {
   }
 
   return (
-    <div className="min-h-screen w-full flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-1">
         <article className="max-w-3xl mx-auto py-8 px-4">
-          <ArticleHeader 
-            author={{
-              id: article.profile.id,
-              name: article.profile.username || "Unknown User",
-              avatar: article.profile.avatar_url || "/placeholder.svg"
-            }}
-            postedAt={article.created_at}
-          />
-
-          <div className="prose prose-gray max-w-none">
-            <ReactMarkdown>{article.content}</ReactMarkdown>
-          </div>
+          {article && (
+            <ArticleHeader 
+              author={{
+                id: article.profile.id,
+                name: article.profile.username || "Unknown User",
+                avatar: article.profile.avatar_url || "/placeholder.svg"
+              }}
+              postedAt={article.created_at}
+            />
+          )}
+          <h1 className="text-3xl font-bold text-gray-900">{article.title}</h1>
+          <div className="mt-4 text-gray-700">{article.content}</div>
         </article>
       </main>
       <Footer />
