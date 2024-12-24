@@ -95,4 +95,22 @@ export const enTranslations = {
   // Product listing
   'products.sortByLikes': 'Sort by Likes',
   'products.sortByDate': 'Sort by Date',
+
+  // Product details
+  'product.details.visit': 'Visit',
+  'product.details.like': 'Like',
+  'product.details.likes': 'likes',
+  'product.details.comment': 'Comment',
+  'product.details.comments': 'comments',
+  'product.details.bookmark': 'Bookmark',
+  'product.details.share': 'Share',
+  'product.details.stats': 'Stats',
+  'product.details.linkCopied': 'Link copied',
+  'product.details.linkCopiedDesc': 'URL has been copied to clipboard',
+  'product.details.bookmarkAdded': 'Added to bookmarks',
+  'product.details.bookmarkRemoved': 'Removed from bookmarks',
+  'product.details.bookmarkAddedDesc': '{name} has been added to your bookmarks',
+  'product.details.bookmarkRemovedDesc': '{name} has been removed from your bookmarks',
+  'product.details.loginRequired': 'Login required',
+  'product.details.loginRequiredDesc': 'Please login to use this feature',
 } as const;

@@ -95,4 +95,22 @@ export const jaTranslations = {
   // Product listing
   'products.sortByLikes': 'いいね順に並び替え',
   'products.sortByDate': '投稿順に並び替え',
+
+  // Product details
+  'product.details.visit': '訪問',
+  'product.details.like': 'いいね',
+  'product.details.likes': 'いいね',
+  'product.details.comment': 'コメント',
+  'product.details.comments': 'コメント',
+  'product.details.bookmark': 'ブックマーク',
+  'product.details.share': 'シェア',
+  'product.details.stats': '統計',
+  'product.details.linkCopied': 'リンクをコピーしました',
+  'product.details.linkCopiedDesc': 'クリップボードにURLをコピーしました',
+  'product.details.bookmarkAdded': 'ブックマークに追加しました',
+  'product.details.bookmarkRemoved': 'ブックマークを解除しました',
+  'product.details.bookmarkAddedDesc': '{name}をブックマークに追加しました',
+  'product.details.bookmarkRemovedDesc': '{name}のブックマークを解除しました',
+  'product.details.loginRequired': 'ログインが必要です',
+  'product.details.loginRequiredDesc': 'この機能を使用するにはログインしてください',
 } as const;

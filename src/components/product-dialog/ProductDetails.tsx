@@ -16,6 +16,7 @@ import { ProductImageCarousel } from "./ProductImageCarousel";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ProductDetailsProps {
   product: {
@@ -40,6 +41,7 @@ export const ProductDetails = ({ product, isLoadingImages }: ProductDetailsProps
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { isBookmarked, toggleBookmark } = useBookmarks(product.id);
   const isMobile = useIsMobile();
+  const { t } = useLanguage();
 
   useEffect(() => {
     const fetchCommentCount = async () => {
@@ -63,8 +65,8 @@ export const ProductDetails = ({ product, isLoadingImages }: ProductDetailsProps
   const handleLike = async () => {
     if (!isAuthenticated) {
       toast({
-        title: "ログインが必要です",
-        description: "いいねをするにはログインしてください",
+        title: t('product.details.loginRequired'),
+        description: t('product.details.loginRequiredDesc'),
         className: "text-sm p-2"
       });
       return;
@@ -72,8 +74,10 @@ export const ProductDetails = ({ product, isLoadingImages }: ProductDetailsProps
     const success = await toggleLike();
     if (success) {
       toast({
-        title: hasLiked ? "いいねを取り消しました" : "いいね！",
-        description: hasLiked ? `${product.name}のいいねを取り消しました` : `${product.name}にいいねしました`,
+        title: hasLiked ? t('product.details.like') : t('product.details.like'),
+        description: hasLiked 
+          ? `${product.name}のいいねを取り消しました` 
+          : `${product.name}にいいねしました`,
         className: "text-sm p-2"
       });
     }
@@ -82,8 +86,8 @@ export const ProductDetails = ({ product, isLoadingImages }: ProductDetailsProps
   const handleBookmark = async () => {
     if (!isAuthenticated) {
       toast({
-        title: "ログインが必要です",
-        description: "ブックマークをするにはログインしてください",
+        title: t('product.details.loginRequired'),
+        description: t('product.details.loginRequiredDesc'),
         className: "text-sm p-2"
       });
       return;
@@ -91,10 +95,12 @@ export const ProductDetails = ({ product, isLoadingImages }: ProductDetailsProps
     const success = await toggleBookmark();
     if (success) {
       toast({
-        title: isBookmarked ? "ブックマークを解除しました" : "ブックマークに追加しました",
+        title: isBookmarked 
+          ? t('product.details.bookmarkRemoved')
+          : t('product.details.bookmarkAdded'),
         description: isBookmarked 
-          ? `${product.name}のブックマークを解除しました` 
-          : `${product.name}をブックマークに追加しました`,
+          ? t('product.details.bookmarkRemovedDesc').replace('{name}', product.name)
+          : t('product.details.bookmarkAddedDesc').replace('{name}', product.name),
       });
     }
   };
@@ -112,13 +118,13 @@ export const ProductDetails = ({ product, isLoadingImages }: ProductDetailsProps
     try {
       await navigator.clipboard.writeText(shareUrl);
       toast({
-        title: "リンクをコピーしました",
-        description: "クリップボードにURLをコピーしました",
+        title: t('product.details.linkCopied'),
+        description: t('product.details.linkCopiedDesc'),
       });
     } catch (err) {
       console.error('Failed to copy URL:', err);
       toast({
-        title: "コピーに失敗しました",
+        title: "エラー",
         description: "URLのコピーに失敗しました",
         variant: "destructive",
       });
@@ -155,7 +161,7 @@ export const ProductDetails = ({ product, isLoadingImages }: ProductDetailsProps
           disabled={!product.URL}
         >
           <ExternalLink className="w-4 h-4" />
-          Visit
+          {t('product.details.visit')}
         </Button>
         <Button 
           variant="outline" 
