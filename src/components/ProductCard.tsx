@@ -4,6 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { ProductActions } from "./product-card/ProductActions";
 import { useProductLikes } from "@/hooks/useProductLikes";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ProductCardProps {
   id: number;
@@ -29,6 +30,7 @@ export function ProductCard({
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { toast } = useToast();
   const { totalLikes, hasLiked, toggleLike } = useProductLikes(id);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const fetchCommentCount = async () => {
@@ -94,25 +96,29 @@ export function ProductCard({
 
   return (
     <div 
-      className="flex items-start gap-4 p-4 hover:bg-gray-50 transition-colors rounded-lg animate-fade-in cursor-pointer relative" 
+      className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 hover:bg-gray-50 transition-colors rounded-lg animate-fade-in cursor-pointer relative" 
       onClick={onClick}
     >
-      <img src={icon} alt={name} className="w-16 h-16 rounded-lg object-cover" />
+      <img 
+        src={icon} 
+        alt={name} 
+        className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg object-cover" 
+      />
       
-      <div className="flex-1 space-y-2">
+      <div className="flex-1 min-w-0 space-y-1 sm:space-y-2">
         <div className="flex justify-between items-start">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900">{name}</h3>
-            <p className="text-gray-600 text-base mt-0.5">{tagline}</p>
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate">{name}</h3>
+            <p className="text-sm sm:text-base text-gray-600 mt-0.5 line-clamp-2">{tagline}</p>
           </div>
         </div>
         
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap gap-1 sm:gap-1.5">
           {tags.map((tag) => (
             <Badge 
               key={tag} 
               variant="secondary" 
-              className="px-2 py-0.5 text-xs bg-gray-100 text-gray-800 hover:bg-gray-200"
+              className="px-1.5 sm:px-2 py-0.5 text-xs bg-gray-100 text-gray-800 hover:bg-gray-200"
             >
               {tag}
             </Badge>
@@ -128,6 +134,7 @@ export function ProductCard({
         hasLiked={hasLiked}
         isAuthenticated={isAuthenticated}
         onLike={handleLike}
+        isMobile={isMobile}
       />
     </div>
   );

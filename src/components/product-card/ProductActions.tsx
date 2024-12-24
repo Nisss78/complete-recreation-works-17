@@ -11,6 +11,7 @@ interface ProductActionsProps {
   hasLiked: boolean;
   isAuthenticated: boolean;
   onLike: () => Promise<void>;
+  isMobile: boolean;
 }
 
 export function ProductActions({
@@ -20,7 +21,8 @@ export function ProductActions({
   comments,
   hasLiked,
   isAuthenticated,
-  onLike
+  onLike,
+  isMobile
 }: ProductActionsProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -89,51 +91,55 @@ export function ProductActions({
   };
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-1.5 sm:gap-3">
       <button 
-        className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-colors ${
+        className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 rounded-full border transition-colors ${
           hasLiked 
             ? "text-upvote border-upvote" 
             : "text-gray-700 hover:text-upvote border-gray-200 hover:border-upvote"
         }`}
         onClick={handleLike}
       >
-        <ArrowUp className="w-4 h-4" />
-        <span className="font-medium">{likes}</span>
+        <ArrowUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+        <span className="text-sm sm:text-base font-medium">{likes}</span>
       </button>
       
       <button 
-        className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-gray-900 rounded-full border border-gray-200 hover:border-gray-400 transition-colors"
+        className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 text-gray-700 hover:text-gray-900 rounded-full border border-gray-200 hover:border-gray-400 transition-colors"
         onClick={(e) => handleInteraction(e, 'comment')}
       >
-        <MessageCircle className="w-4 h-4" />
-        <span className="font-medium">{comments}</span>
+        <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+        <span className="text-sm sm:text-base font-medium">{comments}</span>
       </button>
 
-      <button 
-        className={`p-2 rounded-full border transition-colors ${
-          isBookmarked
-            ? "text-blue-500 border-blue-500"
-            : "text-gray-700 hover:text-gray-900 border-gray-200 hover:border-gray-400"
-        }`}
-        onClick={handleBookmark}
-      >
-        <Bookmark className="w-4 h-4" />
-      </button>
+      {!isMobile && (
+        <>
+          <button 
+            className={`p-1.5 sm:p-2 rounded-full border transition-colors ${
+              isBookmarked
+                ? "text-blue-500 border-blue-500"
+                : "text-gray-700 hover:text-gray-900 border-gray-200 hover:border-gray-400"
+            }`}
+            onClick={handleBookmark}
+          >
+            <Bookmark className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          </button>
 
-      <button 
-        className="p-2 text-gray-700 hover:text-gray-900 rounded-full border border-gray-200 hover:border-gray-400 transition-colors"
-        onClick={handleShare}
-      >
-        <Share2 className="w-4 h-4" />
-      </button>
+          <button 
+            className="p-1.5 sm:p-2 text-gray-700 hover:text-gray-900 rounded-full border border-gray-200 hover:border-gray-400 transition-colors"
+            onClick={handleShare}
+          >
+            <Share2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          </button>
 
-      <button 
-        className="p-2 text-gray-700 hover:text-gray-900 rounded-full border border-gray-200 hover:border-gray-400 transition-colors"
-        onClick={(e) => handleInteraction(e, 'stats')}
-      >
-        <BarChart2 className="w-4 h-4" />
-      </button>
+          <button 
+            className="p-1.5 sm:p-2 text-gray-700 hover:text-gray-900 rounded-full border border-gray-200 hover:border-gray-400 transition-colors"
+            onClick={(e) => handleInteraction(e, 'stats')}
+          >
+            <BarChart2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          </button>
+        </>
+      )}
     </div>
   );
 }
