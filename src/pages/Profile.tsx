@@ -20,7 +20,6 @@ const ProfilePage = () => {
         navigate("/auth");
         return;
       }
-      console.log("Current user ID:", session.user.id);
       setUserId(session.user.id);
     };
 
@@ -30,7 +29,6 @@ const ProfilePage = () => {
       if (event === 'SIGNED_OUT') {
         navigate("/auth");
       } else if (session) {
-        console.log("Auth state changed - User ID:", session.user.id);
         setUserId(session.user.id);
       }
     });
@@ -45,7 +43,6 @@ const ProfilePage = () => {
     queryFn: async () => {
       if (!userId) return null;
       
-      console.log("Fetching profile for user:", userId);
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
@@ -53,7 +50,6 @@ const ProfilePage = () => {
         .maybeSingle();
 
       if (error) {
-        console.error("Error fetching profile:", error);
         toast({
           title: "エラー",
           description: "プロフィールの取得に失敗しました",
@@ -63,7 +59,6 @@ const ProfilePage = () => {
       }
 
       if (!data) {
-        console.log("No profile found, creating new profile");
         const { data: newProfile, error: createError } = await supabase
           .from("profiles")
           .insert([{ id: userId }])
@@ -71,7 +66,6 @@ const ProfilePage = () => {
           .single();
 
         if (createError) {
-          console.error("Error creating profile:", createError);
           toast({
             title: "エラー",
             description: "プロフィールの作成に失敗しました",
@@ -83,24 +77,19 @@ const ProfilePage = () => {
         return newProfile;
       }
 
-      console.log("Profile data:", data);
       return data;
     },
     enabled: !!userId,
   });
 
-  if (error) {
-    console.error("Query error:", error);
-  }
-
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
         <Header />
         <main className="container max-w-4xl mx-auto py-8 px-4">
           <div className="animate-pulse space-y-4">
-            <div className="h-32 bg-muted rounded-lg" />
-            <div className="h-64 bg-muted rounded-lg" />
+            <div className="h-32 bg-white/50 rounded-xl" />
+            <div className="h-64 bg-white/50 rounded-xl" />
           </div>
         </main>
         <Footer />
@@ -109,7 +98,7 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
       <Header />
       <main className="container max-w-4xl mx-auto py-8 px-4">
         <div className="space-y-8">
