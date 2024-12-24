@@ -27,6 +27,16 @@ export const enTranslations = {
   'profile.save': 'Save',
   'profile.usernamePlaceholder': 'Your name',
   'profile.bioPlaceholder': 'Tell us about yourself (up to 160 characters)',
+  'profile.twitter': 'Twitter URL',
+  'profile.instagram': 'Instagram URL',
+  'profile.github': 'GitHub URL',
+  'profile.website': 'Website URL',
+  'profile.posts': 'Posts',
+  'profile.noPosts': 'No posts yet',
+  'profile.follow': 'Follow',
+  'profile.unfollow': 'Unfollow',
+  'profile.sortByLikes': 'Sort by Likes',
+  'profile.sortByDate': 'Sort by Date',
   
   // Success messages
   'success.profileUpdated': 'Profile updated',
@@ -47,5 +57,29 @@ export const enTranslations = {
   'error.post': 'Failed to post. Please try again.',
   'error.maxFiles': 'Maximum number of files reached',
   'error.login': 'Please login to continue',
-  'error.sessionCleared': 'Session has been cleared'
+  'error.sessionCleared': 'Session has been cleared',
+
+  // Articles
+  'articles.title': 'Articles',
+  'articles.all': 'All Articles',
+  'articles.following': 'Following',
+  'articles.noArticles': 'No articles found',
+  'articles.noFollowingArticles': 'No articles from followed users',
+
+  // Product submission
+  'product.submit.title': 'Submit Product',
+  'product.submit.description': 'Share your product with the community',
+  'product.submit.name': 'Product Name',
+  'product.submit.namePlaceholder': 'Enter product name',
+  'product.submit.tagline': 'Tagline',
+  'product.submit.taglinePlaceholder': 'Brief description of your product',
+  'product.submit.description': 'Description',
+  'product.submit.descriptionPlaceholder': 'Detailed description of your product',
+  'product.submit.icon': 'Product Icon',
+  'product.submit.iconRequirements': 'Upload a square image\nRecommended size: 512x512px\nMax size: 2MB',
+  'product.submit.images': 'Product Images',
+  'product.submit.imageRequirements': 'Upload up to 5 images\nMax size per image: 2MB',
+  'product.submit.cancel': 'Cancel',
+  'product.submit.post': 'Post',
+  'product.submit.posting': 'Posting...'
 } as const;
