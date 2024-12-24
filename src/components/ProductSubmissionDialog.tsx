@@ -130,11 +130,11 @@ export const ProductSubmissionDialog = ({
           />
         </ScrollArea>
 
-        <div className="flex justify-end items-center gap-3 p-4 border-t border-gray-100">
+        <div className="flex justify-end items-center gap-4 p-6 border-t border-gray-100">
           <Button
             variant="ghost"
             onClick={() => onOpenChange(false)}
-            className="h-9 px-4 text-gray-600 hover:bg-gray-50"
+            className="min-w-[100px] h-10 text-gray-600 hover:bg-gray-50 hover:text-gray-900"
             disabled={isSubmitting}
           >
             キャンセル
@@ -143,7 +143,7 @@ export const ProductSubmissionDialog = ({
             variant="default"
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="h-9 px-4 bg-gray-900 hover:bg-gray-800 text-white"
+            className="min-w-[100px] h-10 bg-gray-900 hover:bg-gray-800 text-white font-medium"
           >
             {isSubmitting ? "投稿中..." : "投稿"}
           </Button>
