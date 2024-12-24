@@ -15,11 +15,20 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
+import { User, Link, FileText } from "lucide-react";
 
 const formSchema = z.object({
-  username: z.string().min(2).max(50),
-  bio: z.string().max(160).optional(),
-  avatar_url: z.string().url().optional().or(z.literal("")),
+  username: z.string().min(2, {
+    message: "ユーザー名は2文字以上で入力してください",
+  }).max(50, {
+    message: "ユーザー名は50文字以下で入力してください",
+  }),
+  bio: z.string().max(160, {
+    message: "自己紹介は160文字以下で入力してください",
+  }).optional(),
+  avatar_url: z.string().url({
+    message: "有効なURLを入力してください",
+  }).optional().or(z.literal("")),
 });
 
 interface ProfileFormProps {
@@ -75,13 +84,14 @@ export const ProfileForm = ({ profile }: ProfileFormProps) => {
     queryClient.invalidateQueries({ queryKey: ["profile"] });
   };
 
-  if (!profile) return null;
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="space-y-4 p-6 bg-card rounded-lg shadow-sm">
-          <h2 className="text-xl font-semibold">プロフィール設定</h2>
+          <div className="flex items-center gap-2 mb-4">
+            <User className="w-5 h-5" />
+            <h2 className="text-xl font-semibold">プロフィール設定</h2>
+          </div>
           <FormField
             control={form.control}
             name="username"
@@ -89,7 +99,7 @@ export const ProfileForm = ({ profile }: ProfileFormProps) => {
               <FormItem>
                 <FormLabel>ユーザー名</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} placeholder="あなたの名前" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
