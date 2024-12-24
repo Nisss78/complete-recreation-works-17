@@ -3,13 +3,13 @@ import { supabase } from '@/integrations/supabase/client';
 import { enTranslations } from '@/translations/en';
 import { jaTranslations } from '@/translations/ja';
 
-type Language = 'en' | 'ja';
+export type Language = 'en' | 'ja';
 type TranslationKey = keyof typeof enTranslations;
 
 type LanguageContextType = {
   language: Language;
   setLanguage: (lang: Language) => Promise<void>;
-  t: (key: TranslationKey) => string;
+  t: (key: TranslationKey) => string | string[];
 };
 
 const translations = {
@@ -59,7 +59,7 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
     }
   };
 
-  const t = (key: TranslationKey): string => {
+  const t = (key: TranslationKey): string | string[] => {
     return translations[language][key];
   };
 

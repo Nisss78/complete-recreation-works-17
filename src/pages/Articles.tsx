@@ -80,19 +80,19 @@ export default function Articles() {
       <main className="container max-w-4xl mx-auto py-8 px-4">
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900">{t('articles.title')}</h1>
+            <h1 className="text-2xl font-bold text-gray-900">{t('articles.title') as string}</h1>
             <div className="flex gap-2">
               <Button
                 variant={showFollowedOnly ? "outline" : "default"}
                 onClick={() => setShowFollowedOnly(false)}
               >
-                {t('articles.all')}
+                {t('articles.all') as string}
               </Button>
               <Button
                 variant={showFollowedOnly ? "default" : "outline"}
                 onClick={() => setShowFollowedOnly(true)}
               >
-                {t('articles.following')}
+                {t('articles.following') as string}
               </Button>
             </div>
           </div>
@@ -126,7 +126,7 @@ export default function Articles() {
             </div>
           ) : (
             <div className="text-center py-12 text-gray-500">
-              {showFollowedOnly ? t('articles.noFollowingArticles') : t('articles.noArticles')}
+              {showFollowedOnly ? t('articles.noFollowingArticles') as string : t('articles.noArticles') as string}
             </div>
           )}
         </div>

@@ -24,6 +24,13 @@ export const jaTranslations = {
   'profile.usernamePlaceholder': 'あなたの名前',
   'profile.bioPlaceholder': 'あなたについて教えてください（160文字まで）',
   
+  // Articles
+  'articles.title': '記事一覧',
+  'articles.all': '全ての記事',
+  'articles.following': 'フォロー中',
+  'articles.noArticles': '記事がありません',
+  'articles.noFollowingArticles': 'フォローしているユーザーの記事がありません',
+  
   // Product submission
   'product.submit.title': 'プロダクトを投稿',
   'product.submit.description': '投稿したプロダクトは何度でも編集できます。\nまずは気軽に投稿してみましょう！',
@@ -38,9 +45,9 @@ export const jaTranslations = {
   'product.submit.tags': 'タグ',
   'product.submit.tagsPlaceholder': '新しいタグを入力してEnterで追加',
   'product.submit.icon': 'アイコン画像',
-  'product.submit.iconRequirements': '512×512ピクセル以上の画像をアップロード（2MB以下、PNG/JPG形式）',
+  'product.submit.iconRequirements': ['512×512ピクセル以上の画像をアップロード', '2MB以下、PNG/JPG形式'],
   'product.submit.images': '説明画像（最大5枚）',
-  'product.submit.imageRequirements': 'クリックまたはドラッグ&ドロップで画像をアップロード（5MB以下、PNG/JPG形式、16:9推奨）',
+  'product.submit.imageRequirements': ['クリックまたはドラッグ&ドロップで画像をアップロード', '5MB以下、PNG/JPG形式、16:9推奨'],
   'product.submit.cancel': 'キャンセル',
   'product.submit.post': '投稿',
   'product.submit.posting': '投稿中...',

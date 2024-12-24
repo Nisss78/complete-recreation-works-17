@@ -24,6 +24,13 @@ export const enTranslations = {
   'profile.usernamePlaceholder': 'Your name',
   'profile.bioPlaceholder': 'Tell us about yourself (up to 160 characters)',
   
+  // Articles
+  'articles.title': 'Articles',
+  'articles.all': 'All Articles',
+  'articles.following': 'Following',
+  'articles.noArticles': 'No articles yet',
+  'articles.noFollowingArticles': 'No articles from followed users',
+  
   // Product submission
   'product.submit.title': 'Post a Product',
   'product.submit.description': 'You can edit your product anytime after posting.\nLet\'s start by sharing it!',
@@ -38,9 +45,9 @@ export const enTranslations = {
   'product.submit.tags': 'Tags',
   'product.submit.tagsPlaceholder': 'Enter new tag and press Enter',
   'product.submit.icon': 'Icon Image',
-  'product.submit.iconRequirements': 'Upload a 512×512 pixels or larger image (Under 2MB, PNG/JPG format)',
+  'product.submit.iconRequirements': ['Upload a 512×512 pixels or larger image', 'Under 2MB, PNG/JPG format'],
   'product.submit.images': 'Description Images (max 5)',
-  'product.submit.imageRequirements': 'Click or drag & drop to upload images (Under 5MB, PNG/JPG format, 16:9 aspect ratio recommended)',
+  'product.submit.imageRequirements': ['Click or drag & drop to upload images', 'Under 5MB, PNG/JPG format, 16:9 aspect ratio recommended'],
   'product.submit.cancel': 'Cancel',
   'product.submit.post': 'Post',
   'product.submit.posting': 'Posting...',

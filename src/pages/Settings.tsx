@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import type { Language } from "@/contexts/LanguageContext";
 
 const SettingsPage = () => {
   const navigate = useNavigate();
@@ -53,8 +54,8 @@ const SettingsPage = () => {
 
       if (error) {
         toast({
-          title: t('error.occurred'),
-          description: t('error.fetchProfile'),
+          title: t('error.occurred') as string,
+          description: t('error.fetchProfile') as string,
           variant: "destructive",
         });
         throw error;
@@ -65,17 +66,17 @@ const SettingsPage = () => {
     enabled: !!userId,
   });
 
-  const handleLanguageChange = async (newLanguage: string) => {
+  const handleLanguageChange = async (newLanguage: Language) => {
     try {
       await setLanguage(newLanguage);
       toast({
-        title: t('success.languageUpdated'),
-        description: t('success.languageUpdated'),
+        title: t('success.languageUpdated') as string,
+        description: t('success.languageUpdated') as string,
       });
     } catch (error) {
       toast({
-        title: t('error.occurred'),
-        description: t('error.updateLanguage'),
+        title: t('error.occurred') as string,
+        description: t('error.updateLanguage') as string,
         variant: "destructive",
       });
     }
@@ -100,14 +101,14 @@ const SettingsPage = () => {
       <Header />
       <main className="container max-w-4xl mx-auto py-8 px-4">
         <div className="space-y-8">
-          <h1 className="text-2xl font-bold">{t('settings.title')}</h1>
+          <h1 className="text-2xl font-bold">{t('settings.title') as string}</h1>
           
           <div className="bg-white p-6 rounded-lg shadow-sm space-y-6">
             <div>
-              <h2 className="text-lg font-semibold mb-4">{t('settings.language')}</h2>
+              <h2 className="text-lg font-semibold mb-4">{t('settings.language') as string}</h2>
               <Select value={language} onValueChange={handleLanguageChange}>
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder={t('settings.selectLanguage')} />
+                  <SelectValue placeholder={t('settings.selectLanguage') as string} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="en">English</SelectItem>
@@ -117,7 +118,7 @@ const SettingsPage = () => {
             </div>
 
             <div className="pt-6 border-t">
-              <h2 className="text-lg font-semibold mb-4">{t('settings.profile')}</h2>
+              <h2 className="text-lg font-semibold mb-4">{t('settings.profile') as string}</h2>
               <ProfileForm onSuccess={() => refetch()} />
             </div>
           </div>
