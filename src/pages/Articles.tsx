@@ -12,7 +12,7 @@ const Articles = () => {
       console.log('Fetching articles...');
       const { data: articles, error } = await supabase
         .from('articles')
-        .select('*, user:profiles(username, avatar_url)')
+        .select('*, profiles(username, avatar_url)')
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -25,8 +25,8 @@ const Articles = () => {
       return articles.map(article => ({
         ...article,
         profiles: {
-          username: article.user?.username || "Unknown User",
-          avatar_url: article.user?.avatar_url || "/placeholder.svg"
+          username: article.profiles?.username || "Unknown User",
+          avatar_url: article.profiles?.avatar_url || "/placeholder.svg"
         }
       }));
     }
