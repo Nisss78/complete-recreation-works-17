@@ -16,7 +16,7 @@ interface ProfileHeaderProps {
     instagram_url?: string | null;
     github_url?: string | null;
     other_url?: string | null;
-  };
+  } | null;
   isOwnProfile?: boolean;
   onAvatarUpdate?: (url: string) => void;
   showFollowButton?: boolean;
@@ -24,10 +24,10 @@ interface ProfileHeaderProps {
 
 export const ProfileHeader = ({ profile, isOwnProfile, onAvatarUpdate, showFollowButton }: ProfileHeaderProps) => {
   const { toast } = useToast();
-  const shouldShowFollowButton = showFollowButton && !isOwnProfile;
+  const shouldShowFollowButton = showFollowButton && !isOwnProfile && profile;
 
   const handleAvatarClick = async () => {
-    if (!isOwnProfile) return;
+    if (!isOwnProfile || !profile) return;
 
     const input = document.createElement('input');
     input.type = 'file';
@@ -68,6 +68,18 @@ export const ProfileHeader = ({ profile, isOwnProfile, onAvatarUpdate, showFollo
     };
     input.click();
   };
+
+  if (!profile) {
+    return (
+      <div className="flex flex-col items-center space-y-4 p-6">
+        <div className="w-24 h-24 rounded-full bg-gray-200 animate-pulse" />
+        <div className="space-y-2">
+          <div className="h-6 w-32 bg-gray-200 rounded animate-pulse" />
+          <div className="h-4 w-48 bg-gray-200 rounded animate-pulse" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center space-y-4 p-6">
