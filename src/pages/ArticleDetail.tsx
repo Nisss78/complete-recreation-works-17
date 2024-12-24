@@ -6,9 +6,15 @@ import { Footer } from "@/components/Footer";
 import { ArticleHeader } from "@/components/articles/ArticleHeader";
 import ReactMarkdown from "react-markdown";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Share2, Heart } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 
 export default function ArticleDetail() {
   const { id } = useParams();
+  const { toast } = useToast();
+  const [hasLiked, setHasLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(0);
 
   const { data: article, isLoading } = useQuery({
     queryKey: ["article", id],
@@ -38,6 +44,75 @@ export default function ArticleDetail() {
       };
     },
   });
+
+  const handleShare = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      toast({
+        title: "リンクをコピーしました",
+        description: "クリップボードにURLをコピーしました",
+      });
+    } catch (err) {
+      console.error('Failed to copy URL:', err);
+      toast({
+        title: "コピーに失敗しました",
+        description: "URLのコピーに失敗しました",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleLike = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      toast({
+        title: "ログインが必要です",
+        description: "いいねをするにはログインしてください",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      if (hasLiked) {
+        await supabase
+          .from('article_likes')
+          .delete()
+          .eq('article_id', id)
+          .eq('user_id', session.user.id);
+
+        setLikesCount(prev => Math.max(0, prev - 1));
+        setHasLiked(false);
+
+        toast({
+          title: "いいねを取り消しました",
+          description: "記事のいいねを取り消しました",
+        });
+      } else {
+        await supabase
+          .from('article_likes')
+          .insert({
+            article_id: id,
+            user_id: session.user.id
+          });
+
+        setLikesCount(prev => prev + 1);
+        setHasLiked(true);
+
+        toast({
+          title: "いいね！",
+          description: "記事にいいねしました",
+        });
+      }
+    } catch (error) {
+      console.error('Error toggling like:', error);
+      toast({
+        title: "エラーが発生しました",
+        description: "操作に失敗しました。もう一度お試しください。",
+        variant: "destructive",
+      });
+    }
+  };
 
   if (isLoading) {
     return (
@@ -90,14 +165,8 @@ export default function ArticleDetail() {
       <Header />
       <main className="container max-w-4xl mx-auto py-8 px-4">
         <article className="bg-white rounded-lg shadow-sm p-8">
-          <ArticleHeader
-            author={article.author}
-            postedAt={article.created_at}
-            showFollowButton={true}
-          />
-          
           {article.thumbnail_url && (
-            <div className="mt-6">
+            <div className="mb-6">
               <img
                 src={article.thumbnail_url}
                 alt=""
@@ -106,9 +175,35 @@ export default function ArticleDetail() {
             </div>
           )}
 
-          <h1 className="text-3xl font-bold text-gray-900 mt-6 mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-6">
             {article.title}
           </h1>
+
+          <div className="flex items-center justify-between mb-8 pb-6 border-b">
+            <ArticleHeader
+              author={article.author}
+              postedAt={article.created_at}
+              showFollowButton={true}
+            />
+            <div className="flex items-center gap-4">
+              <button
+                onClick={handleShare}
+                className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+              >
+                <Share2 className="w-5 h-5" />
+                シェア
+              </button>
+              <button
+                onClick={handleLike}
+                className={`flex items-center gap-2 ${
+                  hasLiked ? "text-pink-500" : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                <Heart className={`w-5 h-5 ${hasLiked ? "fill-current" : ""}`} />
+                {likesCount}
+              </button>
+            </div>
+          </div>
 
           <div className="prose prose-lg max-w-none">
             <ReactMarkdown>{article.content}</ReactMarkdown>
