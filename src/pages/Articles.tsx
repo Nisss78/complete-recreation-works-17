@@ -14,7 +14,7 @@ const Articles = () => {
         .from('articles')
         .select(`
           *,
-          profiles!articles_user_id_fkey (
+          user:profiles!inner(
             username,
             avatar_url
           )
@@ -31,8 +31,8 @@ const Articles = () => {
       return articles.map(article => ({
         ...article,
         profiles: {
-          username: article.profiles?.username || "Unknown User",
-          avatar_url: article.profiles?.avatar_url || "/placeholder.svg"
+          username: article.user?.username || "Unknown User",
+          avatar_url: article.user?.avatar_url || "/placeholder.svg"
         }
       })) as Article[];
     }
