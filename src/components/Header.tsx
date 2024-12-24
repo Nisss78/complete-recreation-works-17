@@ -1,10 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Plus, User, Settings, LogOut } from "lucide-react";
+import { Plus, User, Settings, LogOut, Bookmark } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ProductSubmissionDialog } from "./ProductSubmissionDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useBookmarks } from "@/hooks/useBookmarks";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,6 +13,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
 
 export const Header = () => {
@@ -19,6 +21,7 @@ export const Header = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { bookmarks } = useBookmarks();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -80,7 +83,7 @@ export const Header = () => {
                       <User className="w-5 h-5" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuContent align="end" className="w-56">
                     <DropdownMenuLabel>アカウント</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => navigate("/profile")}>
@@ -91,6 +94,43 @@ export const Header = () => {
                       <Settings className="w-4 h-4 mr-2" />
                       設定
                     </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuLabel>ブックマーク</DropdownMenuLabel>
+                    <DropdownMenuGroup className="max-h-[200px] overflow-y-auto">
+                      {bookmarks.length === 0 ? (
+                        <DropdownMenuItem disabled>
+                          ブックマークはありません
+                        </DropdownMenuItem>
+                      ) : (
+                        bookmarks.map((bookmark) => (
+                          <DropdownMenuItem
+                            key={bookmark.id}
+                            onClick={() => {
+                              const productSlug = bookmark.name
+                                .toLowerCase()
+                                .replace(/\s+/g, "-");
+                              navigate(`/posts/${productSlug}`);
+                            }}
+                          >
+                            <div className="flex items-center gap-2 w-full">
+                              <img
+                                src={bookmark.icon_url}
+                                alt={bookmark.name}
+                                className="w-6 h-6 rounded"
+                              />
+                              <div className="flex flex-col">
+                                <span className="text-sm font-medium">
+                                  {bookmark.name}
+                                </span>
+                                <span className="text-xs text-gray-500 truncate">
+                                  {bookmark.tagline}
+                                </span>
+                              </div>
+                            </div>
+                          </DropdownMenuItem>
+                        ))
+                      )}
+                    </DropdownMenuGroup>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleLogout}>
                       <LogOut className="w-4 h-4 mr-2" />

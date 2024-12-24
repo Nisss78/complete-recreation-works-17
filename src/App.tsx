@@ -4,7 +4,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { BookmarkSidebar } from "@/components/BookmarkSidebar";
 import Index from "./pages/Index";
 import AuthPage from "./pages/Auth";
 import ProfilePage from "./pages/Profile";
@@ -35,7 +34,6 @@ const App = () => {
                 <Route path="/posts/:productId" element={<Index />} />
                 <Route path="/" element={<Index />} />
               </Routes>
-              <BookmarkSidebar />
             </div>
           </BrowserRouter>
         </SidebarProvider>
