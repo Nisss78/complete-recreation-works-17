@@ -59,6 +59,7 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
 
   const fetchComments = async () => {
     try {
+      console.log('Fetching comments for product:', product.id);
       const { data: commentsData, error } = await supabase
         .from('product_comments')
         .select(`
@@ -67,7 +68,7 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
           created_at,
           reply_count,
           user_id,
-          profiles:profiles (
+          user:profiles!product_comments_user_id_fkey (
             username,
             avatar_url
           )
@@ -78,11 +79,13 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
 
       if (error) throw error;
 
+      console.log('Fetched comments:', commentsData);
+
       const formattedComments = commentsData.map(comment => ({
         id: comment.id,
-        author: comment.profiles?.username || "ユーザー",
-        username: comment.profiles?.username ? `@${comment.profiles.username}` : "@user",
-        avatar: comment.profiles?.avatar_url || "https://github.com/shadcn.png",
+        author: comment.user?.username || "ユーザー",
+        username: comment.user?.username ? `@${comment.user.username}` : "@user",
+        avatar: comment.user?.avatar_url || "https://github.com/shadcn.png",
         content: comment.content,
         timestamp: format(new Date(comment.created_at), 'yyyy/MM/dd HH:mm'),
         upvotes: 0,
