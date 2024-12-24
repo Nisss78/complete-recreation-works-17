@@ -55,37 +55,60 @@ export const ProfileForm = ({ profile }: ProfileFormProps) => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    if (!profile?.id) return;
-
-    const { error } = await supabase
-      .from("profiles")
-      .update({
-        username: values.username,
-        bio: values.bio,
-        avatar_url: values.avatar_url,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", profile.id);
-
-    if (error) {
-      console.error("Error updating profile:", error);
+    if (!profile?.id) {
+      console.error("Profile ID is missing");
       toast({
         title: "エラー",
-        description: "プロフィールの更新に失敗しました",
+        description: "プロフィールIDが見つかりません",
         variant: "destructive",
       });
       return;
     }
 
-    toast({
-      title: "更新完了",
-      description: "プロフィールを更新しました",
-    });
+    console.log("Updating profile with values:", values);
+    console.log("Profile ID:", profile.id);
 
-    queryClient.invalidateQueries({ queryKey: ["profile"] });
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .update({
+          username: values.username,
+          bio: values.bio,
+          avatar_url: values.avatar_url,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", profile.id)
+        .select();
+
+      if (error) {
+        console.error("Error updating profile:", error);
+        toast({
+          title: "エラー",
+          description: `プロフィールの更新に失敗しました: ${error.message}`,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      console.log("Profile updated successfully:", data);
+      toast({
+        title: "更新完了",
+        description: "プロフィールを更新しました",
+      });
+
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+    } catch (error) {
+      console.error("Unexpected error:", error);
+      toast({
+        title: "エラー",
+        description: "予期せぬエラーが発生しました",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleAvatarUpload = (url: string) => {
+    console.log("Avatar URL updated:", url);
     form.setValue("avatar_url", url);
   };
 
