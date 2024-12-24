@@ -14,6 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { ProductImageCarousel } from "./ProductImageCarousel";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useBookmarks } from "@/hooks/useBookmarks";
 
 interface ProductDetailsProps {
   product: {
@@ -36,6 +37,7 @@ export const ProductDetails = ({ product, isLoadingImages }: ProductDetailsProps
   const { totalLikes, hasLiked, toggleLike } = useProductLikes(product.id);
   const { toast } = useToast();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { isBookmarked, toggleBookmark } = useBookmarks(product.id);
 
   useEffect(() => {
     const fetchCommentCount = async () => {
@@ -71,6 +73,26 @@ export const ProductDetails = ({ product, isLoadingImages }: ProductDetailsProps
         title: hasLiked ? "いいねを取り消しました" : "いいね！",
         description: hasLiked ? `${product.name}のいいねを取り消しました` : `${product.name}にいいねしました`,
         className: "text-sm p-2"
+      });
+    }
+  };
+
+  const handleBookmark = async () => {
+    if (!isAuthenticated) {
+      toast({
+        title: "ログインが必要です",
+        description: "ブックマークをするにはログインしてください",
+        className: "text-sm p-2"
+      });
+      return;
+    }
+    const success = await toggleBookmark();
+    if (success) {
+      toast({
+        title: isBookmarked ? "ブックマークを解除しました" : "ブックマークに追加しました",
+        description: isBookmarked 
+          ? `${product.name}のブックマークを解除しました` 
+          : `${product.name}をブックマークに追加しました`,
       });
     }
   };
@@ -143,7 +165,12 @@ export const ProductDetails = ({ product, isLoadingImages }: ProductDetailsProps
             <MessageCircle className="w-4 h-4" />
             {commentCount}
           </Button>
-          <Button variant="outline" size="icon">
+          <Button 
+            variant="outline" 
+            size="icon"
+            onClick={handleBookmark}
+            className={isBookmarked ? 'text-blue-500 border-blue-500' : ''}
+          >
             <Bookmark className="w-4 h-4" />
           </Button>
           <Button variant="outline" size="icon" onClick={handleShare}>
