@@ -9,11 +9,12 @@ const Articles = () => {
   const { data: articles, isLoading } = useQuery({
     queryKey: ['articles'],
     queryFn: async () => {
+      console.log('Fetching articles...');
       const { data: articles, error } = await supabase
         .from('articles')
         .select(`
           *,
-          author:profiles!inner(
+          profiles!articles_user_id_fkey (
             username,
             avatar_url
           )
@@ -30,7 +31,7 @@ const Articles = () => {
       // Transform the data to match our Article type
       return articles.map(article => ({
         ...article,
-        profiles: article.author[0] // Extract the first (and only) profile from the array
+        profiles: article.profiles[0] // Extract the first (and only) profile
       })) as Article[];
     }
   });
