@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { CommentItem } from "./CommentItem";
+import { User } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 interface Comment {
   id: number;
@@ -17,6 +19,7 @@ interface Comment {
   isMaker: boolean;
   isVerified: boolean;
   reply_count?: number;
+  user_id?: string;
 }
 
 interface CommentSectionProps {
@@ -29,6 +32,28 @@ export const CommentSection = ({ productId, comments, onCommentAdded }: CommentS
   const [newComment, setNewComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+
+  // Fetch current user's profile
+  const { data: userProfile } = useQuery({
+    queryKey: ["currentUserProfile"],
+    queryFn: async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user?.id) return null;
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("avatar_url")
+        .eq("id", session.user.id)
+        .single();
+
+      if (error) {
+        console.error('Error fetching user profile:', error);
+        return null;
+      }
+
+      return data;
+    }
+  });
 
   const handleCommentSubmit = async () => {
     if (!newComment.trim()) return;
@@ -81,8 +106,10 @@ export const CommentSection = ({ productId, comments, onCommentAdded }: CommentS
       
       <div className="flex items-center gap-4 mb-8">
         <Avatar className="w-10 h-10">
-          <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarImage src={userProfile?.avatar_url || undefined} />
+          <AvatarFallback>
+            <User className="w-5 h-5" />
+          </AvatarFallback>
         </Avatar>
         <div className="flex-1">
           <Input

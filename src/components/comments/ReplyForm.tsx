@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { User } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 interface ReplyFormProps {
   parentId: number;
@@ -14,6 +16,28 @@ export const ReplyForm = ({ parentId, onReplyAdded }: ReplyFormProps) => {
   const [replyContent, setReplyContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+
+  // Fetch current user's profile
+  const { data: userProfile } = useQuery({
+    queryKey: ["currentUserProfile"],
+    queryFn: async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user?.id) return null;
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("avatar_url")
+        .eq("id", session.user.id)
+        .single();
+
+      if (error) {
+        console.error('Error fetching user profile:', error);
+        return null;
+      }
+
+      return data;
+    }
+  });
 
   const handleSubmit = async () => {
     if (!replyContent.trim()) return;
@@ -70,8 +94,10 @@ export const ReplyForm = ({ parentId, onReplyAdded }: ReplyFormProps) => {
   return (
     <div className="flex items-center gap-4">
       <Avatar className="w-8 h-8">
-        <AvatarImage src="https://github.com/shadcn.png" />
-        <AvatarFallback>U</AvatarFallback>
+        <AvatarImage src={userProfile?.avatar_url || undefined} />
+        <AvatarFallback>
+          <User className="w-4 h-4" />
+        </AvatarFallback>
       </Avatar>
       <div className="flex-1">
         <Input

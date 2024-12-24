@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Reply, Share2, Flag, ThumbsUp } from "lucide-react";
+import { Reply, Share2, Flag, ThumbsUp, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useCommentLikes } from "@/hooks/useCommentLikes";
 import { supabase } from "@/integrations/supabase/client";
 import { ReplyForm } from "./ReplyForm";
 import { ReplyList } from "./comment-replies/ReplyList";
+import { useQuery } from "@tanstack/react-query";
 
 interface CommentItemProps {
   comment: {
@@ -20,6 +21,7 @@ interface CommentItemProps {
     isMaker: boolean;
     isVerified: boolean;
     reply_count?: number;
+    user_id?: string;
   };
   onCommentAdded: () => void;
   level?: number;
@@ -32,6 +34,28 @@ export const CommentItem = ({ comment, onCommentAdded, level = 0 }: CommentItemP
   const [isLoadingReplies, setIsLoadingReplies] = useState(false);
   const { totalLikes, hasLiked, toggleLike } = useCommentLikes(comment.id);
   const { toast } = useToast();
+
+  // Fetch user profile for avatar
+  const { data: userProfile } = useQuery({
+    queryKey: ["profile", comment.user_id],
+    queryFn: async () => {
+      if (!comment.user_id) return null;
+      
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("avatar_url, username")
+        .eq("id", comment.user_id)
+        .single();
+
+      if (error) {
+        console.error('Error fetching user profile:', error);
+        return null;
+      }
+
+      return data;
+    },
+    enabled: !!comment.user_id
+  });
 
   const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -83,7 +107,8 @@ export const CommentItem = ({ comment, onCommentAdded, level = 0 }: CommentItemP
         timestamp: new Date(reply.created_at).toLocaleString(),
         upvotes: 0,
         isMaker: false,
-        isVerified: false
+        isVerified: false,
+        user_id: reply.user_id
       }));
 
       console.log('Formatted replies:', formattedReplies);
@@ -117,13 +142,14 @@ export const CommentItem = ({ comment, onCommentAdded, level = 0 }: CommentItemP
       <div className={`bg-gray-50 dark:bg-gray-800/50 p-6 rounded-lg ${level > 0 ? 'ml-8' : ''}`}>
         <div className="flex gap-4">
           <Avatar className="w-10 h-10">
-            <AvatarImage src={comment.avatar} alt={comment.author} />
-            <AvatarFallback>{comment.author[0]}</AvatarFallback>
+            <AvatarImage src={userProfile?.avatar_url || undefined} />
+            <AvatarFallback>
+              <User className="w-5 h-5" />
+            </AvatarFallback>
           </Avatar>
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
-              <span className="font-semibold">{comment.author}</span>
-              <span className="text-gray-500">{comment.username}</span>
+              <span className="font-semibold">{userProfile?.username || "ユーザー"}</span>
               {comment.isMaker && (
                 <Badge variant="secondary" className="text-xs">
                   作成者
