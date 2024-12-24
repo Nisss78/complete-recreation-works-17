@@ -30,11 +30,13 @@ const ProfilePage = () => {
     queryKey: ["profile", userId],
     queryFn: async () => {
       if (!userId) return null;
+      
+      console.log("Fetching profile for user:", userId);
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
         .eq("id", userId)
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error("Error fetching profile:", error);
@@ -46,6 +48,7 @@ const ProfilePage = () => {
         return null;
       }
 
+      console.log("Profile data:", data);
       return data;
     },
     enabled: !!userId,
