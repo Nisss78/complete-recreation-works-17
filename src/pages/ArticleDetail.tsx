@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Header } from "@/components/Header";
@@ -12,6 +12,7 @@ import { useArticleLikes } from "@/hooks/useArticleLikes";
 
 export default function ArticleDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const articleId = parseInt(id || "0", 10);
   const { hasLiked, likesCount, handleLike } = useArticleLikes(articleId);
@@ -60,6 +61,11 @@ export default function ArticleDetail() {
         variant: "destructive",
       });
     }
+  };
+
+  const handleAuthorClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigate(`/profile/${article?.author.id}`);
   };
 
   if (isLoading) {
@@ -128,11 +134,16 @@ export default function ArticleDetail() {
           </h1>
 
           <div className="flex items-center justify-between mb-8 pb-6 border-b">
-            <ArticleHeader
-              author={article.author}
-              postedAt={article.created_at}
-              showFollowButton={true}
-            />
+            <button 
+              onClick={handleAuthorClick}
+              className="flex items-center gap-4 hover:opacity-80 transition-opacity"
+            >
+              <ArticleHeader
+                author={article.author}
+                postedAt={article.created_at}
+                showFollowButton={true}
+              />
+            </button>
             <div className="flex items-center gap-4">
               <button
                 onClick={handleShare}
