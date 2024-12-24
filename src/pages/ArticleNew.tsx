@@ -140,27 +140,29 @@ export default function ArticleNew() {
       />
 
       <div className="pt-20 pb-10 px-4">
-        <div className="max-w-4xl mx-auto relative">
+        <div className="max-w-4xl mx-auto">
           <ThumbnailUpload
             thumbnailUrl={thumbnailUrl}
             onThumbnailUpload={handleThumbnailUpload}
           />
 
-          <div data-color-mode="light" className="rounded-lg overflow-hidden bg-white shadow-sm">
-            <MDEditor
-              value={content}
-              onChange={(value) => setContent(value || "")}
-              preview={isPreview ? "preview" : "edit"}
-              height={600}
-              className="border-none"
+          <div className="relative">
+            <div data-color-mode="light" className="rounded-lg overflow-hidden bg-white shadow-sm">
+              <MDEditor
+                value={content}
+                onChange={(value) => setContent(value || "")}
+                preview={isPreview ? "preview" : "edit"}
+                height={600}
+                className="border-none"
+              />
+            </div>
+
+            <EditorButtons
+              isPreview={isPreview}
+              setIsPreview={setIsPreview}
+              onImageUpload={handleImageUpload}
             />
           </div>
-
-          <EditorButtons
-            isPreview={isPreview}
-            setIsPreview={setIsPreview}
-            onImageUpload={handleImageUpload}
-          />
         </div>
       </div>
     </div>
