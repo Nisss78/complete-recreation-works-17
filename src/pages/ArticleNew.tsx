@@ -3,9 +3,10 @@ import MDEditor from "@uiw/react-md-editor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link, Image, HelpCircle, Play } from "lucide-react";
+import { ArrowLeft, Image, Eye, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 
 export default function ArticleNew() {
   const [title, setTitle] = useState("");
@@ -13,6 +14,7 @@ export default function ArticleNew() {
   const [thumbnailUrl, setThumbnailUrl] = useState("");
   const [isPreview, setIsPreview] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleImageUpload = async (file: File) => {
     try {
@@ -30,7 +32,6 @@ export default function ArticleNew() {
         .from('product-images')
         .getPublicUrl(filePath);
 
-      // Markdownの画像構文を挿入
       const imageMarkdown = `![${file.name}](${publicUrl})`;
       setContent((prev) => prev + "\n" + imageMarkdown);
 
@@ -81,29 +82,52 @@ export default function ArticleNew() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
+    <div className="max-w-4xl mx-auto px-4 py-6">
+      <div className="flex items-center mb-6">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => navigate(-1)}
+          className="mr-4"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          戻る
+        </Button>
+        <h1 className="text-2xl font-semibold">記事を書く</h1>
+      </div>
+
       <div className="space-y-6">
         <div>
-          <Label htmlFor="title">タイトル</Label>
+          <Label htmlFor="title" className="text-base">タイトル</Label>
           <Input
             id="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="記事のタイトルを入力"
-            className="mt-1"
+            placeholder="記事のタイトルを入力してください"
+            className="mt-2"
           />
         </div>
 
         <div>
-          <Label htmlFor="thumbnail">サムネイル画像</Label>
-          <div className="mt-1 flex items-center gap-4">
-            <Input
-              id="thumbnail"
-              type="file"
-              accept="image/*"
-              onChange={handleThumbnailUpload}
-              className="max-w-xs"
-            />
+          <Label htmlFor="thumbnail" className="text-base">サムネイル画像</Label>
+          <div className="mt-2 flex items-center gap-4">
+            <div className="relative">
+              <Input
+                id="thumbnail"
+                type="file"
+                accept="image/*"
+                onChange={handleThumbnailUpload}
+                className="hidden"
+              />
+              <Button
+                variant="outline"
+                onClick={() => document.getElementById('thumbnail')?.click()}
+                className="flex items-center"
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                画像をアップロード
+              </Button>
+            </div>
             {thumbnailUrl && (
               <img 
                 src={thumbnailUrl} 
@@ -116,10 +140,10 @@ export default function ArticleNew() {
 
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label>本文</Label>
+            <Label className="text-base">本文</Label>
             <div className="flex items-center gap-2">
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
                 onClick={() => {
                   const input = document.createElement('input');
@@ -136,43 +160,34 @@ export default function ArticleNew() {
                 画像を挿入
               </Button>
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
                 onClick={() => setIsPreview(!isPreview)}
               >
-                <Play className="w-4 h-4 mr-2" />
+                <Eye className="w-4 h-4 mr-2" />
                 {isPreview ? "編集に戻る" : "プレビュー"}
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                asChild
-              >
-                <a 
-                  href="https://www.markdownguide.org/basic-syntax/" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                >
-                  <HelpCircle className="w-4 h-4 mr-2" />
-                  Markdownヘルプ
-                </a>
               </Button>
             </div>
           </div>
 
-          <div data-color-mode="light">
+          <div data-color-mode="light" className="border rounded-lg overflow-hidden">
             <MDEditor
               value={content}
               onChange={(value) => setContent(value || "")}
               preview={isPreview ? "preview" : "edit"}
               height={500}
+              className="border-none"
             />
           </div>
         </div>
 
-        <div className="flex justify-end gap-4">
-          <Button variant="outline">下書き保存</Button>
-          <Button>公開</Button>
+        <div className="flex justify-end gap-4 pt-4">
+          <Button variant="outline" onClick={() => navigate(-1)}>
+            キャンセル
+          </Button>
+          <Button>
+            投稿する
+          </Button>
         </div>
       </div>
     </div>
