@@ -1,6 +1,6 @@
 export interface Profile {
-  username: string;
-  avatar_url: string;
+  username: string | null;
+  avatar_url: string | null;
 }
 
 export interface Article {

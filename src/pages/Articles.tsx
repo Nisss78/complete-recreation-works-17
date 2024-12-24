@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { BookOpen } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ArticleCard } from "@/components/articles/ArticleCard";
@@ -14,12 +13,11 @@ const Articles = () => {
         .from('articles')
         .select(`
           *,
-          profiles (
+          author:profiles!inner(
             username,
             avatar_url
           )
         `)
-        .eq('user_id', 'profiles.id')
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -29,7 +27,11 @@ const Articles = () => {
       
       if (!articles) return [];
       
-      return articles as Article[];
+      // Transform the data to match our Article type
+      return articles.map(article => ({
+        ...article,
+        profiles: article.author[0] // Extract the first (and only) profile from the array
+      })) as Article[];
     }
   });
 
