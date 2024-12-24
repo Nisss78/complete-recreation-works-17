@@ -2,6 +2,7 @@ import { Upload } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface AvatarUploadProps {
   onUpload: (url: string) => void;
@@ -10,6 +11,7 @@ interface AvatarUploadProps {
 export const AvatarUpload = ({ onUpload }: AvatarUploadProps) => {
   const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handleUpload = async (file: File) => {
     if (!file) return;
@@ -38,14 +40,14 @@ export const AvatarUpload = ({ onUpload }: AvatarUploadProps) => {
       onUpload(publicUrl);
       
       toast({
-        title: "アップロード完了",
-        description: "アバター画像のアップロードが完了しました",
+        title: t('success.imageUploaded'),
+        description: t('success.profileUpdated'),
       });
     } catch (error) {
       console.error('Upload error:', error);
       toast({
-        title: "エラー",
-        description: "画像のアップロードに失敗しました",
+        title: t('error.occurred'),
+        description: t('error.upload'),
         variant: "destructive",
       });
     } finally {
@@ -81,11 +83,11 @@ export const AvatarUpload = ({ onUpload }: AvatarUploadProps) => {
         <div className="flex flex-col items-center">
           <Upload className="w-6 h-6 text-muted-foreground mb-2" />
           <p className="text-sm text-muted-foreground">
-            {isUploading ? "アップロード中..." : (
+            {isUploading ? t('profile.uploading') : (
               <>
-                クリックまたはドラッグ&ドロップで画像をアップロード
+                {t('profile.avatarUpload')}
                 <br />
-                2MB以下（PNG/JPG形式）
+                {t('profile.avatarSize')}
               </>
             )}
           </p>

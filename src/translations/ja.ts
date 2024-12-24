@@ -49,6 +49,7 @@ export const jaTranslations = {
   'profile.avatarSize': '2MB以下（PNG/JPG形式）',
   'profile.noAvatarSelected': '選択されていません',
   'profile.avatarPreview': 'アバタープレビュー',
+  'profile.uploading': 'アップロード中...',
   'profile.twitterPlaceholder': 'https://twitter.com/yourusername',
   'profile.instagramPlaceholder': 'https://instagram.com/yourusername',
   'profile.githubPlaceholder': 'https://github.com/yourusername',

@@ -50,6 +50,7 @@ export const enTranslations = {
   'profile.avatarSize': 'Max 2MB (PNG/JPG format)',
   'profile.noAvatarSelected': 'No image selected',
   'profile.avatarPreview': 'Avatar Preview',
+  'profile.uploading': 'Uploading...',
   'profile.twitterPlaceholder': 'https://twitter.com/yourusername',
   'profile.instagramPlaceholder': 'https://instagram.com/yourusername',
   'profile.githubPlaceholder': 'https://github.com/yourusername',
