@@ -79,6 +79,26 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
     }
   };
 
+  const handleShare = async () => {
+    const productSlug = product.name.toLowerCase().replace(/\s+/g, '-');
+    const shareUrl = `${window.location.origin}/posts/${productSlug}`;
+    
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      toast({
+        title: "リンクをコピーしました",
+        description: "クリップボードにURLをコピーしました",
+      });
+    } catch (err) {
+      console.error('Failed to copy URL:', err);
+      toast({
+        title: "コピーに失敗しました",
+        description: "URLのコピーに失敗しました",
+        variant: "destructive",
+      });
+    }
+  };
+
   console.log("Product images in ProductDetails:", product.images);
 
   return (
@@ -126,7 +146,7 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
           <Button variant="outline" size="icon">
             <Bookmark className="w-4 h-4" />
           </Button>
-          <Button variant="outline" size="icon">
+          <Button variant="outline" size="icon" onClick={handleShare}>
             <Share2 className="w-4 h-4" />
           </Button>
           <Button variant="outline" size="icon">
