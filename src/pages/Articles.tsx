@@ -12,7 +12,13 @@ const Articles = () => {
       console.log('Fetching articles...');
       const { data: articles, error } = await supabase
         .from('articles')
-        .select('*, profiles(username, avatar_url)')
+        .select(`
+          *,
+          profiles!articles_user_id_fkey (
+            username,
+            avatar_url
+          )
+        `)
         .order('created_at', { ascending: false });
 
       if (error) {
