@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { ProfileForm } from "@/components/profile/ProfileForm";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -38,7 +37,7 @@ const ProfilePage = () => {
     };
   }, [navigate]);
 
-  const { data: profile, isLoading, error, refetch } = useQuery({
+  const { data: profile, isLoading, error } = useQuery({
     queryKey: ["profile", userId],
     queryFn: async () => {
       if (!userId) return null;
@@ -89,7 +88,6 @@ const ProfilePage = () => {
         <main className="container max-w-4xl mx-auto py-8 px-4">
           <div className="animate-pulse space-y-4">
             <div className="h-32 bg-white/50 rounded-xl" />
-            <div className="h-64 bg-white/50 rounded-xl" />
           </div>
         </main>
         <Footer />
@@ -103,7 +101,6 @@ const ProfilePage = () => {
       <main className="container max-w-4xl mx-auto py-8 px-4">
         <div className="space-y-8">
           <ProfileHeader profile={profile} />
-          <ProfileForm profile={profile} onSuccess={() => refetch()} />
         </div>
       </main>
       <Footer />
