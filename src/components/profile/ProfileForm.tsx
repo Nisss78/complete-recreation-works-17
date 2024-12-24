@@ -15,7 +15,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
-import { User, Link, FileText } from "lucide-react";
+import { User } from "lucide-react";
+import { AvatarUpload } from "./AvatarUpload";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -84,6 +85,10 @@ export const ProfileForm = ({ profile }: ProfileFormProps) => {
     queryClient.invalidateQueries({ queryKey: ["profile"] });
   };
 
+  const handleAvatarUpload = (url: string) => {
+    form.setValue("avatar_url", url);
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -126,9 +131,24 @@ export const ProfileForm = ({ profile }: ProfileFormProps) => {
             name="avatar_url"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>アバター画像URL</FormLabel>
+                <FormLabel>アバター画像</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="https://example.com/avatar.jpg" />
+                  <div className="space-y-4">
+                    <AvatarUpload onUpload={handleAvatarUpload} />
+                    {field.value && (
+                      <div className="mt-2">
+                        <img 
+                          src={field.value} 
+                          alt="アバタープレビュー" 
+                          className="w-24 h-24 rounded-full object-cover"
+                        />
+                      </div>
+                    )}
+                    <Input 
+                      {...field} 
+                      type="hidden"
+                    />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
