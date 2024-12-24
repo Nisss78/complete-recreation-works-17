@@ -17,7 +17,7 @@ export const ArticleHeader = ({ author, postedAt, showFollowButton = true }: Art
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-3">
         <Avatar className="w-10 h-10">
-          <AvatarImage src={author.avatar} alt={author.name} />
+          <AvatarImage src={author.avatar} alt={author.name} className="object-cover" />
           <AvatarFallback>{author.name[0]}</AvatarFallback>
         </Avatar>
         <div>
