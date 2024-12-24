@@ -14,7 +14,7 @@ const Articles = () => {
         .from('articles')
         .select(`
           *,
-          profiles (
+          profiles!articles_user_id_fkey (
             username,
             avatar_url
           )

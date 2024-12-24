@@ -12,5 +12,5 @@ export interface Article {
   likes_count: number | null;
   created_at: string;
   updated_at: string;
-  profiles?: Profile;
+  profiles?: Profile | null;
 }
