@@ -84,16 +84,31 @@ export const ProfileForm = ({ profile, onSuccess }: ProfileFormProps) => {
     }
 
     try {
+      // 変更されたフィールドのみを抽出
+      const changedFields = Object.entries(values).reduce((acc, [key, value]) => {
+        const originalValue = profile?.[key as keyof typeof profile];
+        if (value !== originalValue) {
+          acc[key] = value;
+        }
+        return acc;
+      }, {} as Record<string, any>);
+
+      // 変更がない場合は更新をスキップ
+      if (Object.keys(changedFields).length === 0) {
+        toast({
+          title: "変更なし",
+          description: "プロフィールに変更はありませんでした",
+        });
+        navigate("/");
+        return;
+      }
+
+      console.log("Updating fields:", changedFields);
+
       const { data, error } = await supabase
         .from("profiles")
         .update({
-          username: values.username,
-          bio: values.bio,
-          avatar_url: values.avatar_url,
-          twitter_url: values.twitter_url,
-          instagram_url: values.instagram_url,
-          github_url: values.github_url,
-          other_url: values.other_url,
+          ...changedFields,
           updated_at: new Date().toISOString(),
         })
         .eq("id", userId)
@@ -116,7 +131,6 @@ export const ProfileForm = ({ profile, onSuccess }: ProfileFormProps) => {
       });
 
       onSuccess?.();
-      // 保存成功後にホーム画面にリダイレクト
       navigate("/");
     } catch (error) {
       console.error("Unexpected error:", error);
