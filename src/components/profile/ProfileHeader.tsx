@@ -93,10 +93,10 @@ export const ProfileHeader = ({ profile, showFollowButton = false }: ProfileHead
         </AvatarFallback>
       </Avatar>
       <div className="text-center space-y-2">
-        <div className="flex items-center justify-center gap-4">
+        <div className="flex items-center justify-center gap-2">
           <h1 className="text-2xl font-bold">{profile.username || "名前未設定"}</h1>
           {shouldShowFollowButton && (
-            <FollowButton profileId={profile.id} />
+            <FollowButton profileId={profile.id} className="ml-2" />
           )}
         </div>
         {profile.bio && (
