@@ -1,38 +1,64 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ArticleHeader } from "@/components/articles/ArticleHeader";
-import { cn } from "@/lib/utils";
+import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import ReactMarkdown from "react-markdown";
+import type { Article } from "@/types/database";
 
 const ArticleDetail = () => {
-  const article = {
-    title: "MCPツールをClaudeデスクトップアプリで活用し日常タスクを自動化する方法",
-    author: {
-      name: "生成AI活用研究部",
-      avatar: "/lovable-uploads/d52af139-0d12-4cd2-aec0-d6d4e07ffd34.png"
+  const { id } = useParams();
+  
+  const { data: article, isLoading } = useQuery({
+    queryKey: ['article', id],
+    queryFn: async () => {
+      console.log('Fetching article details for id:', id);
+      const { data: article, error } = await supabase
+        .from('articles')
+        .select(`
+          *,
+          profile:profiles!articles_user_id_fkey (
+            username,
+            avatar_url
+          )
+        `)
+        .eq('id', id)
+        .single();
+
+      if (error) {
+        console.error('Error fetching article:', error);
+        throw error;
+      }
+
+      return article;
     },
-    postedAt: "2024年12月18日 21:13",
-    thumbnailUrl: "/lovable-uploads/6bbd01fe-acf0-40d4-81c6-3adc8f714a4a.png",
-    content: `
-# MCPツールの基礎
+    enabled: !!id
+  });
 
-MCPは、Claudeのようなアシスタントとさまざまなシステムを安全に接続する新しい標準です。この記事では、MCPの基本から始め、Claudeデスクトップアプリでの具体的なセットアップ方法と、日常業務を簡略化する実例を解説します。
+  if (isLoading) {
+    return (
+      <div className="min-h-screen w-full flex flex-col bg-white">
+        <Header />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="animate-pulse text-gray-500">Loading article...</div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
-## MCPの基本構造
-
-MCPは、メッセージプロトコルスタンダードのクライアント実装です。主な機能は以下のサービスメッセージとプロトコールシーケンスに関係します。
-
-- MCPプロトコル / Claudeデスクトップアプリケーションソリューション
-- MCPクライアント / 独自のクライアント機能を実装するためのコアポーネント
-- MCPサーバー / 独自の機能を付加可能なプロトコル
-
-## MCPがサポートするリソース
-
-- ローカルリソース / コンピューターのハードウェアリソースを活用
-- リモートリソース / APIやクラウドリソースサービス
-    `,
-    likes: 16,
-  };
+  if (!article) {
+    return (
+      <div className="min-h-screen w-full flex flex-col bg-white">
+        <Header />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="text-gray-500">Article not found</div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen w-full flex flex-col bg-white">
@@ -41,10 +67,19 @@ MCPは、メッセージプロトコルスタンダードのクライアント�
         <article className="max-w-3xl mx-auto py-8 px-4">
           <ArticleHeader 
             title={article.title}
-            author={article.author}
-            postedAt={article.postedAt}
-            likes={article.likes}
-            thumbnailUrl={article.thumbnailUrl}
+            author={{
+              name: article.profile.username || "Unknown User",
+              avatar: article.profile.avatar_url || "/placeholder.svg"
+            }}
+            postedAt={new Date(article.created_at).toLocaleString('ja-JP', {
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit'
+            })}
+            likes={article.likes_count || 0}
+            thumbnailUrl={article.thumbnail_url}
           />
 
           <div className="prose prose-gray max-w-none">
