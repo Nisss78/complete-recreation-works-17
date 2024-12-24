@@ -338,6 +338,7 @@ export type Database = {
           github_url: string | null
           id: string
           instagram_url: string | null
+          is_admin: boolean | null
           language_preference: string
           other_url: string | null
           streak_count: number | null
@@ -352,6 +353,7 @@ export type Database = {
           github_url?: string | null
           id: string
           instagram_url?: string | null
+          is_admin?: boolean | null
           language_preference?: string
           other_url?: string | null
           streak_count?: number | null
@@ -366,6 +368,7 @@ export type Database = {
           github_url?: string | null
           id?: string
           instagram_url?: string | null
+          is_admin?: boolean | null
           language_preference?: string
           other_url?: string | null
           streak_count?: number | null

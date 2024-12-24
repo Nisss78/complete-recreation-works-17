@@ -31,6 +31,7 @@ export const productTranslations = {
     'product.details.linkCopied': 'Link Copied',
     'product.details.linkCopiedDesc': 'URL copied to clipboard',
     'product.details.visit': 'Visit',
+    'product.details.like': 'Like',
     'error.adminRequired': 'Only administrators can post products',
   },
   ja: {
@@ -65,6 +66,7 @@ export const productTranslations = {
     'product.details.linkCopied': 'リンクをコピーしました',
     'product.details.linkCopiedDesc': 'URLをクリップボードにコピーしました',
     'product.details.visit': '訪問',
+    'product.details.like': 'いいね',
     'error.adminRequired': '管理者のみがプロダクトを投稿できます',
   }
 } as const;
