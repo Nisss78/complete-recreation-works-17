@@ -1,4 +1,5 @@
-import { Routes as RouterRoutes, Route } from "react-router-dom";
+import { Routes as RouterRoutes, Route, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import Articles from "@/pages/Articles";
 import ArticleDetail from "@/pages/ArticleDetail";
 import ArticleNew from "@/pages/ArticleNew";
@@ -9,6 +10,12 @@ import Settings from "@/pages/Settings";
 import Bookmarks from "@/pages/Bookmarks";
 
 export const Routes = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   return (
     <RouterRoutes>
       <Route path="/" element={<Index />} />
