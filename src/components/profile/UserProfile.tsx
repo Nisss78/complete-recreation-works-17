@@ -113,6 +113,7 @@ export const UserProfile = () => {
                   }}
                   likes={article.likes_count || 0}
                   postedAt={formatTimeAgo(article.created_at)}
+                  thumbnail_url={article.thumbnail_url}
                 />
               ))
             ) : (
