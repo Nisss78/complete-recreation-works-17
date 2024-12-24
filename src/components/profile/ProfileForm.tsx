@@ -54,18 +54,21 @@ export const ProfileForm = ({ profile, onSuccess }: ProfileFormProps) => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    if (!profile?.id) {
-      console.error("Profile ID is missing");
+    const session = await supabase.auth.getSession();
+    const userId = session.data.session?.user.id;
+
+    if (!userId) {
+      console.error("User is not authenticated");
       toast({
         title: "エラー",
-        description: "プロフィールIDが見つかりません",
+        description: "ログインが必要です",
         variant: "destructive",
       });
       return;
     }
 
     console.log("Updating profile with values:", values);
-    console.log("Profile ID:", profile.id);
+    console.log("User ID:", userId);
 
     try {
       const { data, error } = await supabase
@@ -76,7 +79,7 @@ export const ProfileForm = ({ profile, onSuccess }: ProfileFormProps) => {
           avatar_url: values.avatar_url,
           updated_at: new Date().toISOString(),
         })
-        .eq("id", profile.id)
+        .eq("id", userId)
         .select();
 
       if (error) {
