@@ -7,6 +7,7 @@ import { Footer } from "@/components/Footer";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useParams, useNavigate } from "react-router-dom";
+import { BookmarkSidebar } from "@/components/BookmarkSidebar";
 
 const fetchProducts = async () => {
   const { data: products, error } = await supabase
@@ -96,7 +97,7 @@ const Index = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white flex flex-col">
+      <div className="min-h-screen w-full flex flex-col">
         <Header />
         <main className="flex-1 flex items-center justify-center">
           <div className="animate-pulse text-gray-500">Loading products...</div>
@@ -108,7 +109,7 @@ const Index = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-white flex flex-col">
+      <div className="min-h-screen w-full flex flex-col">
         <Header />
         <main className="flex-1 flex items-center justify-center">
           <div className="text-red-500">
@@ -121,47 +122,51 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen w-full flex flex-col">
       <Header />
       
-      <main className="flex-1">
-        <div className="max-w-4xl mx-auto py-4 px-4">
-          <div className="flex justify-between items-center mb-4">
-            <h1 className="text-2xl font-bold">Products Launching Today</h1>
-            <button
-              onClick={() => setSortByLikes(!sortByLikes)}
-              className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-            >
-              {sortByLikes ? "投稿順に並び替え" : "いいね順に並び替え"}
-            </button>
-          </div>
-          
-          {Object.entries(groupedProducts).map(([date, products]: [string, any]) => (
-            <div key={date} className="mb-4">
-              <h2 className="text-lg font-semibold mb-2">
-                {format(new Date(date), 'MMMM d, yyyy')}
-              </h2>
-              <div className="space-y-2">
-                {products.map((product: any) => (
-                  <ProductCard 
-                    key={`${product.id}-${date}`}
-                    {...product}
-                    onClick={() => handleProductClick(product)}
-                  />
-                ))}
+      <div className="flex-1 flex">
+        <main className="flex-1">
+          <div className="max-w-4xl mx-auto py-4 px-4">
+            <div className="flex justify-between items-center mb-4">
+              <h1 className="text-2xl font-bold">Products Launching Today</h1>
+              <button
+                onClick={() => setSortByLikes(!sortByLikes)}
+                className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+              >
+                {sortByLikes ? "投稿順に並び替え" : "いいね順に並び替え"}
+              </button>
+            </div>
+            
+            {Object.entries(groupedProducts).map(([date, products]: [string, any]) => (
+              <div key={date} className="mb-4">
+                <h2 className="text-lg font-semibold mb-2">
+                  {format(new Date(date), 'MMMM d, yyyy')}
+                </h2>
+                <div className="space-y-2">
+                  {products.map((product: any) => (
+                    <ProductCard 
+                      key={`${product.id}-${date}`}
+                      {...product}
+                      onClick={() => handleProductClick(product)}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
 
-          {allProducts.length === 0 && (
-            <div className="text-center text-gray-500 mt-2">
-              まだ投稿されたプロダクトはありません。
-              <br />
-              最初の投稿者になりませんか？
-            </div>
-          )}
-        </div>
-      </main>
+            {allProducts.length === 0 && (
+              <div className="text-center text-gray-500 mt-2">
+                まだ投稿されたプロダクトはありません。
+                <br />
+                最初の投稿者になりませんか？
+              </div>
+            )}
+          </div>
+        </main>
+        
+        <BookmarkSidebar />
+      </div>
 
       <Footer />
 

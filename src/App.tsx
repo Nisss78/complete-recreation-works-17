@@ -27,15 +27,17 @@ const App = () => {
           <BrowserRouter basename="/">
             <Toaster />
             <Sonner />
-            <div className="flex w-full">
-              <Routes>
-                <Route path="/auth" element={<AuthPage />} />
-                <Route path="/profile" element={<ProfilePage />} />
-                <Route path="/settings" element={<SettingsPage />} />
-                <Route path="/bookmarks" element={<BookmarksPage />} />
-                <Route path="/posts/:productId" element={<Index />} />
-                <Route path="/" element={<Index />} />
-              </Routes>
+            <div className="min-h-screen w-full flex">
+              <div className="flex-1 flex flex-col">
+                <Routes>
+                  <Route path="/auth" element={<AuthPage />} />
+                  <Route path="/profile" element={<ProfilePage />} />
+                  <Route path="/settings" element={<SettingsPage />} />
+                  <Route path="/bookmarks" element={<BookmarksPage />} />
+                  <Route path="/posts/:productId" element={<Index />} />
+                  <Route path="/" element={<Index />} />
+                </Routes>
+              </div>
             </div>
           </BrowserRouter>
         </SidebarProvider>
