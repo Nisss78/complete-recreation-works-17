@@ -8,6 +8,7 @@ import { ProductImageCarousel } from "./ProductImageCarousel";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ProductHeader } from "./product-details/ProductHeader";
 import { ProductActions } from "./product-details/ProductActions";
+import { useProductLikes } from "@/hooks/useProductLikes";
 
 interface ProductDetailsProps {
   product: {
