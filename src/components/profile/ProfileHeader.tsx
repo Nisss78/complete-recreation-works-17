@@ -108,7 +108,8 @@ export const ProfileHeader = ({ profile, isOwnProfile, onAvatarUpdate, showFollo
               variant="ghost"
               size="icon"
               onClick={() => navigate("/settings")}
-              className="ml-2"
+              className="hover:bg-gray-100"
+              title="プロフィールを編集"
             >
               <Pencil className="h-4 w-4" />
             </Button>
