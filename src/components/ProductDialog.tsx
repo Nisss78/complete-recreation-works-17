@@ -34,6 +34,7 @@ interface Comment {
   isMaker: boolean;
   isVerified: boolean;
   reply_count?: number;
+  user_id?: string;
 }
 
 const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps) => {
@@ -64,7 +65,12 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
           id,
           content,
           created_at,
-          reply_count
+          reply_count,
+          user_id,
+          profiles:profiles (
+            username,
+            avatar_url
+          )
         `)
         .eq('product_id', product.id)
         .is('parent_id', null)
@@ -74,15 +80,16 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
 
       const formattedComments = commentsData.map(comment => ({
         id: comment.id,
-        author: "ユーザー",
-        username: "@user",
-        avatar: "https://github.com/shadcn.png",
+        author: comment.profiles?.username || "ユーザー",
+        username: comment.profiles?.username ? `@${comment.profiles.username}` : "@user",
+        avatar: comment.profiles?.avatar_url || "https://github.com/shadcn.png",
         content: comment.content,
         timestamp: format(new Date(comment.created_at), 'yyyy/MM/dd HH:mm'),
         upvotes: 0,
         isMaker: false,
         isVerified: false,
-        reply_count: comment.reply_count
+        reply_count: comment.reply_count,
+        user_id: comment.user_id
       }));
 
       setComments(formattedComments);

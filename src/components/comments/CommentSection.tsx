@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { CommentItem } from "./CommentItem";
 import { User } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
 
 interface Comment {
   id: number;
@@ -43,7 +44,7 @@ export const CommentSection = ({ productId, comments, onCommentAdded }: CommentS
       console.log('Fetching profile for user:', session.user.id);
       const { data, error } = await supabase
         .from("profiles")
-        .select("avatar_url")
+        .select("avatar_url, username")
         .eq("id", session.user.id)
         .maybeSingle();
 
