@@ -41,20 +41,26 @@ export const Header = () => {
   }, []);
 
   const handleLogout = async () => {
+    console.log("Starting logout process...");
+    
     try {
-      // まずローカルの認証状態をクリア
+      // First check if we have a session
+      const { data: { session } } = await supabase.auth.getSession();
+      console.log("Current session:", session);
+
+      // Clear local state immediately for better UX
       setIsAuthenticated(false);
 
-      // ローカルサインアウトを試みる
-      await supabase.auth.signOut({ scope: 'local' });
-      
-      // グローバルサインアウトを試みる（エラーは無視）
-      try {
-        await supabase.auth.signOut({ scope: 'global' });
-      } catch (globalError) {
-        console.log('Global sign out failed, but local sign out succeeded');
+      if (session) {
+        // If we have a session, try to sign out
+        const { error } = await supabase.auth.signOut();
+        if (error) {
+          console.error("Signout error:", error);
+          throw error;
+        }
       }
 
+      // Always show success message and redirect
       toast({
         title: "ログアウト完了",
         description: "ログアウトしました",
@@ -62,13 +68,17 @@ export const Header = () => {
       
       navigate("/auth");
     } catch (error) {
-      console.error("Logout error:", error);
-      setIsAuthenticated(false); // エラーが発生しても認証状態をクリア
+      console.error("Logout process error:", error);
+      
+      // Even if there's an error, we want to clear the local state
+      setIsAuthenticated(false);
+      
       toast({
-        title: "エラー",
-        description: "ログアウトに問題が発生しましたが、セッションはクリアされました",
+        title: "注意",
+        description: "セッションをクリアしました",
         variant: "destructive",
       });
+      
       navigate("/auth");
     }
   };
