@@ -23,14 +23,6 @@ export const ImageUpload = ({
   const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
 
-  const sanitizeFileName = (fileName: string) => {
-    // Remove Japanese characters and special characters, replace spaces with underscores
-    return fileName
-      .replace(/[^\x00-\x7F]/g, '')
-      .replace(/[^a-zA-Z0-9.-]/g, '_')
-      .toLowerCase();
-  };
-
   const handleUpload = async (file: File) => {
     if (!file) return;
 
@@ -43,27 +35,46 @@ export const ImageUpload = ({
       return;
     }
 
+    // ファイルサイズチェック (2MB)
+    const maxSize = 2 * 1024 * 1024; // 2MB in bytes
+    if (file.size > maxSize) {
+      toast({
+        title: "エラー",
+        description: "ファイルサイズは2MB以下にしてください",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsUploading(true);
     try {
-      const fileExt = file.name.split('.').pop();
-      const sanitizedFileName = `${crypto.randomUUID()}.${fileExt}`;
-      const filePath = `${type}s/${sanitizedFileName}`;
+      console.log('Starting file upload:', { type, fileName: file.name, fileSize: file.size });
+
+      const fileExt = file.name.split('.').pop()?.toLowerCase();
+      const fileName = `${crypto.randomUUID()}.${fileExt}`;
+      const filePath = `${type}s/${fileName}`;
+
+      console.log('Uploading file to path:', filePath);
 
       const { data, error } = await supabase.storage
         .from('product-images')
         .upload(filePath, file, {
-          contentType: file.type,
+          cacheControl: '3600',
           upsert: false
         });
 
       if (error) {
+        console.error('Upload error:', error);
         throw error;
       }
 
-      // Get the public URL after successful upload
+      console.log('Upload successful:', data);
+
       const { data: { publicUrl } } = supabase.storage
         .from('product-images')
         .getPublicUrl(filePath);
+
+      console.log('Generated public URL:', publicUrl);
 
       onUpload(publicUrl);
       
@@ -85,9 +96,9 @@ export const ImageUpload = ({
 
   return (
     <div>
-      <label className="block text-sm font-medium mb-2">{title}</label>
+      <label className="block text-sm font-medium text-gray-700 mb-1">{title}</label>
       <div 
-        className={`border-2 border-dashed border-[#333333] rounded-lg p-8 text-center bg-[#221F26] relative ${
+        className={`border-2 border-dashed rounded-lg p-8 text-center relative ${
           isUploading ? 'opacity-50' : ''
         }`}
         onDragOver={(e) => {
@@ -98,7 +109,7 @@ export const ImageUpload = ({
           e.preventDefault();
           e.stopPropagation();
           const file = e.dataTransfer.files[0];
-          handleUpload(file);
+          if (file) handleUpload(file);
         }}
       >
         <input
@@ -113,7 +124,7 @@ export const ImageUpload = ({
         />
         <div className="flex flex-col items-center">
           <Upload className="w-8 h-8 text-gray-400 mb-2" />
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-gray-500">
             {isUploading ? "アップロード中..." : (
               <>
                 {description.map((line, index) => (
