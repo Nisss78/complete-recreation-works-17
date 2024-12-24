@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User, Flame } from "lucide-react";
+import { User, Flame, Twitter, Instagram, Github, Link } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { FollowButton } from "@/components/articles/FollowButton";
@@ -11,6 +11,10 @@ interface ProfileHeaderProps {
     avatar_url: string | null;
     bio: string | null;
     streak_count: number;
+    twitter_url: string | null;
+    instagram_url: string | null;
+    github_url: string | null;
+    other_url: string | null;
   } | null;
   showFollowButton?: boolean;
 }
@@ -49,6 +53,21 @@ export const ProfileHeader = ({ profile, showFollowButton = false }: ProfileHead
   });
 
   const shouldShowFollowButton = showFollowButton && profile?.id !== session?.user.id;
+
+  const SocialLink = ({ url, icon: Icon, label }: { url: string | null, icon: any, label: string }) => {
+    if (!url) return null;
+    return (
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-muted-foreground hover:text-foreground transition-colors"
+        title={label}
+      >
+        <Icon className="w-5 h-5" />
+      </a>
+    );
+  };
 
   if (!profile) {
     return (
@@ -92,6 +111,12 @@ export const ProfileHeader = ({ profile, showFollowButton = false }: ProfileHead
             <span>{followStats?.following || 0} フォロー中</span>
             <span>{followStats?.followers || 0} フォロワー</span>
           </div>
+        </div>
+        <div className="flex justify-center gap-4 mt-4">
+          <SocialLink url={profile.twitter_url} icon={Twitter} label="X (Twitter)" />
+          <SocialLink url={profile.instagram_url} icon={Instagram} label="Instagram" />
+          <SocialLink url={profile.github_url} icon={Github} label="GitHub" />
+          <SocialLink url={profile.other_url} icon={Link} label="Website" />
         </div>
       </div>
     </div>

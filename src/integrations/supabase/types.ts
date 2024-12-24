@@ -328,8 +328,12 @@ export type Database = {
           avatar_url: string | null
           bio: string | null
           created_at: string
+          github_url: string | null
           id: string
+          instagram_url: string | null
+          other_url: string | null
           streak_count: number | null
+          twitter_url: string | null
           updated_at: string
           username: string | null
         }
@@ -337,8 +341,12 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
+          github_url?: string | null
           id: string
+          instagram_url?: string | null
+          other_url?: string | null
           streak_count?: number | null
+          twitter_url?: string | null
           updated_at?: string
           username?: string | null
         }
@@ -346,8 +354,12 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
+          github_url?: string | null
           id?: string
+          instagram_url?: string | null
+          other_url?: string | null
           streak_count?: number | null
+          twitter_url?: string | null
           updated_at?: string
           username?: string | null
         }
