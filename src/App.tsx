@@ -9,6 +9,7 @@ import ProfilePage from "./pages/Profile";
 import SettingsPage from "./pages/Settings";
 import BookmarksPage from "./pages/Bookmarks";
 import Articles from "./pages/Articles";
+import ArticleDetail from "./pages/ArticleDetail";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,6 +35,7 @@ const App = () => {
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/bookmarks" element={<BookmarksPage />} />
                 <Route path="/articles" element={<Articles />} />
+                <Route path="/articles/:id" element={<ArticleDetail />} />
                 <Route path="/posts/:productId" element={<Index />} />
                 <Route path="/" element={<Index />} />
               </Routes>
