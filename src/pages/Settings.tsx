@@ -13,7 +13,7 @@ const SettingsPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [userId, setUserId] = useState<string | null>(null);
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -53,8 +53,8 @@ const SettingsPage = () => {
 
       if (error) {
         toast({
-          title: "Error",
-          description: "Failed to fetch profile",
+          title: t('error.occurred'),
+          description: t('error.fetchProfile'),
           variant: "destructive",
         });
         throw error;
@@ -69,13 +69,13 @@ const SettingsPage = () => {
     try {
       await setLanguage(newLanguage);
       toast({
-        title: "Success",
-        description: "Language preference updated",
+        title: t('success.languageUpdated'),
+        description: t('success.languageUpdated'),
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to update language preference",
+        title: t('error.occurred'),
+        description: t('error.updateLanguage'),
         variant: "destructive",
       });
     }
@@ -100,14 +100,14 @@ const SettingsPage = () => {
       <Header />
       <main className="container max-w-4xl mx-auto py-8 px-4">
         <div className="space-y-8">
-          <h1 className="text-2xl font-bold">Account Settings</h1>
+          <h1 className="text-2xl font-bold">{t('settings.title')}</h1>
           
           <div className="bg-white p-6 rounded-lg shadow-sm space-y-6">
             <div>
-              <h2 className="text-lg font-semibold mb-4">Language Preferences</h2>
+              <h2 className="text-lg font-semibold mb-4">{t('settings.language')}</h2>
               <Select value={language} onValueChange={handleLanguageChange}>
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select language" />
+                  <SelectValue placeholder={t('settings.selectLanguage')} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="en">English</SelectItem>
@@ -117,7 +117,7 @@ const SettingsPage = () => {
             </div>
 
             <div className="pt-6 border-t">
-              <h2 className="text-lg font-semibold mb-4">Profile Settings</h2>
+              <h2 className="text-lg font-semibold mb-4">{t('settings.profile')}</h2>
               <ProfileForm onSuccess={() => refetch()} />
             </div>
           </div>

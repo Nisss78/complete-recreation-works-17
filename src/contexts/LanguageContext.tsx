@@ -10,89 +10,77 @@ type LanguageContextType = {
 const translations = {
   en: {
     // Header
+    'nav.home': 'Home',
     'nav.articles': 'Articles',
     'nav.writeArticle': 'Write Article',
     'nav.post': 'Post',
     'nav.login': 'Login',
+    'nav.settings': 'Settings',
+    'nav.profile': 'Profile',
+    'nav.logout': 'Logout',
     
-    // Articles page
-    'articles.title': 'Articles',
-    'articles.all': 'All',
-    'articles.following': 'Following',
-    'articles.noArticles': 'No articles found',
-    'articles.noFollowingArticles': 'No articles from followed users',
+    // Settings page
+    'settings.title': 'Account Settings',
+    'settings.language': 'Language Preferences',
+    'settings.profile': 'Profile Settings',
+    'settings.selectLanguage': 'Select language',
     
-    // Article interactions
-    'article.like': 'Like',
-    'article.liked': 'Liked',
-    'article.delete': 'Delete',
-    'article.deleteConfirm': 'Are you sure you want to delete this article?',
-    'article.deleted': 'Article deleted',
-    'article.deleteError': 'Error deleting article',
-    
-    // Comments
-    'comments.title': 'Comments',
-    'comments.post': 'Post',
-    'comments.posting': 'Posting...',
-    'comments.placeholder': 'Write a comment...',
-    'comments.none': 'No comments yet. Be the first to comment!',
-    
-    // Auth messages
-    'auth.required': 'Login required',
-    'auth.likeLogin': 'Please login to like articles',
-    'auth.commentLogin': 'Please login to comment',
+    // Profile form
+    'profile.username': 'Username',
+    'profile.bio': 'Bio',
+    'profile.avatar': 'Avatar',
+    'profile.socialLinks': 'Social Links',
+    'profile.save': 'Save',
+    'profile.usernamePlaceholder': 'Your name',
+    'profile.bioPlaceholder': 'Tell us about yourself (up to 160 characters)',
     
     // Success messages
-    'success.commentPosted': 'Comment posted',
-    'success.liked': 'Article liked',
-    'success.unliked': 'Article unliked',
+    'success.profileUpdated': 'Profile updated',
+    'success.languageUpdated': 'Language preference updated',
     
     // Error messages
     'error.occurred': 'An error occurred',
     'error.tryAgain': 'Please try again',
+    'error.fetchProfile': 'Failed to fetch profile',
+    'error.updateProfile': 'Failed to update profile',
+    'error.updateLanguage': 'Failed to update language preference',
   },
   ja: {
     // Header
+    'nav.home': 'ホーム',
     'nav.articles': '記事',
     'nav.writeArticle': '記事を書く',
     'nav.post': '投稿',
     'nav.login': 'ログイン',
+    'nav.settings': '設定',
+    'nav.profile': 'プロフィール',
+    'nav.logout': 'ログアウト',
     
-    // Articles page
-    'articles.title': '記事一覧',
-    'articles.all': 'すべて',
-    'articles.following': 'フォロー中',
-    'articles.noArticles': '記事がありません',
-    'articles.noFollowingArticles': 'フォローしているユーザーの記事がありません',
+    // Settings page
+    'settings.title': 'アカウント設定',
+    'settings.language': '言語設定',
+    'settings.profile': 'プロフィール設定',
+    'settings.selectLanguage': '言語を選択',
     
-    // Article interactions
-    'article.like': 'いいね',
-    'article.liked': 'いいね済み',
-    'article.delete': '削除',
-    'article.deleteConfirm': 'この記事を削除してもよろしいですか？',
-    'article.deleted': '記事を削除しました',
-    'article.deleteError': '記事の削除に失敗しました',
-    
-    // Comments
-    'comments.title': 'コメント',
-    'comments.post': '投稿',
-    'comments.posting': '投稿中...',
-    'comments.placeholder': 'コメントを投稿...',
-    'comments.none': 'まだコメントはありません。最初のコメントを投稿してみましょう！',
-    
-    // Auth messages
-    'auth.required': 'ログインが必要です',
-    'auth.likeLogin': 'いいねをするにはログインしてください',
-    'auth.commentLogin': 'コメントを投稿するにはログインしてください',
+    // Profile form
+    'profile.username': 'ユーザー名',
+    'profile.bio': '自己紹介',
+    'profile.avatar': 'アバター画像',
+    'profile.socialLinks': 'ソーシャルリンク',
+    'profile.save': '保存',
+    'profile.usernamePlaceholder': 'あなたの名前',
+    'profile.bioPlaceholder': 'あなたについて教えてください（160文字まで）',
     
     // Success messages
-    'success.commentPosted': 'コメントを投稿しました',
-    'success.liked': 'いいね！',
-    'success.unliked': 'いいねを取り消しました',
+    'success.profileUpdated': 'プロフィールを更新しました',
+    'success.languageUpdated': '言語設定を更新しました',
     
     // Error messages
     'error.occurred': 'エラーが発生しました',
     'error.tryAgain': 'もう一度お試しください',
+    'error.fetchProfile': 'プロフィールの取得に失敗しました',
+    'error.updateProfile': 'プロフィールの更新に失敗しました',
+    'error.updateLanguage': '言語設定の更新に失敗しました',
   }
 };
 
@@ -121,17 +109,24 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
   }, []);
 
   const setLanguage = async (lang: string) => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session?.user?.id) {
-      await supabase
-        .from('profiles')
-        .update({ language_preference: lang })
-        .eq('id', session.user.id);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user?.id) {
+        const { error } = await supabase
+          .from('profiles')
+          .update({ language_preference: lang })
+          .eq('id', session.user.id);
+
+        if (error) throw error;
+      }
+      setLanguageState(lang);
+    } catch (error) {
+      console.error('Error updating language preference:', error);
+      throw error;
     }
-    setLanguageState(lang);
   };
 
-  const t = (key: string) => {
+  const t = (key: string): string => {
     return translations[language as keyof typeof translations]?.[key as keyof typeof translations['en']] || key;
   };
 
