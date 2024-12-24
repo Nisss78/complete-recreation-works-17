@@ -14,7 +14,7 @@ const Articles = () => {
         .from('articles')
         .select(`
           *,
-          profile:profiles!user_id(
+          profile:profiles!articles_user_id_fkey (
             username,
             avatar_url
           )
@@ -23,7 +23,7 @@ const Articles = () => {
 
       if (error) {
         console.error('Error fetching articles:', error);
-        return [];
+        throw error;
       }
       
       if (!articles) return [];
