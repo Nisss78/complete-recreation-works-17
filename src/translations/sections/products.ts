@@ -22,6 +22,16 @@ export const productTranslations = {
     'product.submit.cancel': 'Cancel',
     'product.submit.post': 'Post',
     'product.submit.posting': 'Posting...',
+    'product.details.loginRequired': 'Login Required',
+    'product.details.loginRequiredDesc': 'Please login to continue',
+    'product.details.like': 'Like',
+    'product.details.bookmarkRemoved': 'Bookmark Removed',
+    'product.details.bookmarkAdded': 'Bookmark Added',
+    'product.details.bookmarkRemovedDesc': 'Removed {name} from bookmarks',
+    'product.details.bookmarkAddedDesc': 'Added {name} to bookmarks',
+    'product.details.linkCopied': 'Link Copied',
+    'product.details.linkCopiedDesc': 'URL copied to clipboard',
+    'product.details.visit': 'Visit'
   },
   ja: {
     'product.submit.title': 'プロダクトを投稿',
@@ -46,5 +56,15 @@ export const productTranslations = {
     'product.submit.cancel': 'キャンセル',
     'product.submit.post': '投稿する',
     'product.submit.posting': '投稿中...',
+    'product.details.loginRequired': 'ログインが必要です',
+    'product.details.loginRequiredDesc': '続行するにはログインしてください',
+    'product.details.like': 'いいね',
+    'product.details.bookmarkRemoved': 'ブックマークを解除しました',
+    'product.details.bookmarkAdded': 'ブックマークに追加しました',
+    'product.details.bookmarkRemovedDesc': '{name}のブックマークを解除しました',
+    'product.details.bookmarkAddedDesc': '{name}をブックマークに追加しました',
+    'product.details.linkCopied': 'リンクをコピーしました',
+    'product.details.linkCopiedDesc': 'URLをクリップボードにコピーしました',
+    'product.details.visit': '訪問'
   }
 } as const;

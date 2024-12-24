@@ -1,11 +1,13 @@
 import { commentTranslations } from './sections/comments';
 import { productTranslations } from './sections/products';
 import { followTranslations } from './sections/follows';
+import { successTranslations } from './sections/success';
 
 export const jaTranslations = {
   ...commentTranslations.ja,
   ...productTranslations.ja,
   ...followTranslations.ja,
+  ...successTranslations.ja,
   
   // Header
   'nav.home': 'ホーム',

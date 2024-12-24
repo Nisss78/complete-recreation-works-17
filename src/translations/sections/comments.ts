@@ -10,6 +10,18 @@ export const commentTranslations = {
     'comments.timeFormat': '{time}',
     'comments.likeCount': 'Like ({count})',
     'comments.replyButton': 'Reply',
+    'comment.replies.hide': 'Hide replies',
+    'comment.replies.show': 'Show {count} replies',
+    'comment.loginRequired': 'Login Required',
+    'comment.loginRequired.description': 'Please login to continue',
+    'comment.posted': 'Comment Posted',
+    'comment.posted.description': 'Your comment has been posted successfully',
+    'comment.failed': 'Error',
+    'comment.failed.description': 'Failed to post comment. Please try again.',
+    'comment.like.liked': 'Liked',
+    'comment.like.unliked': 'Unliked',
+    'comment.like.liked.description': 'Comment liked successfully',
+    'comment.like.unliked.description': 'Comment unliked successfully'
   },
   ja: {
     'comments.title': 'コメント',
@@ -22,5 +34,17 @@ export const commentTranslations = {
     'comments.timeFormat': '{time}',
     'comments.likeCount': 'いいね ({count})',
     'comments.replyButton': '返信',
+    'comment.replies.hide': '返信を隠す',
+    'comment.replies.show': '{count}件の返信を表示',
+    'comment.loginRequired': 'ログインが必要です',
+    'comment.loginRequired.description': '続行するにはログインしてください',
+    'comment.posted': '投稿完了',
+    'comment.posted.description': 'コメントを投稿しました',
+    'comment.failed': 'エラー',
+    'comment.failed.description': 'コメントの投稿に失敗しました。もう一度お試しください。',
+    'comment.like.liked': 'いいねしました',
+    'comment.like.unliked': 'いいねを取り消しました',
+    'comment.like.liked.description': 'コメントにいいねしました',
+    'comment.like.unliked.description': 'コメントのいいねを取り消しました'
   }
 } as const;
