@@ -92,4 +92,8 @@ export const enTranslations = {
   'follow.loginRequired': 'Please login to follow',
   'follow.success': 'Successfully followed',
   'follow.unfollowed': 'Unfollowed successfully',
+
+  // Product listing
+  'products.sortByLikes': 'Sort by Likes',
+  'products.sortByDate': 'Sort by Date',
 } as const;

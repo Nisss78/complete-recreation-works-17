@@ -92,4 +92,8 @@ export const jaTranslations = {
   'follow.loginRequired': 'フォローするにはログインが必要です',
   'follow.success': 'フォローしました',
   'follow.unfollowed': 'フォローを解除しました',
+
+  // Product listing
+  'products.sortByLikes': 'いいね順に並び替え',
+  'products.sortByDate': '投稿順に並び替え',
 } as const;

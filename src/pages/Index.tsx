@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useParams, useNavigate } from "react-router-dom";
 import { MetaTags } from "@/components/MetaTags";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const fetchProducts = async () => {
   const { data: products, error } = await supabase
@@ -52,6 +53,7 @@ const Index = () => {
   const [sortByLikes, setSortByLikes] = useState(false);
   const { productId } = useParams();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   
   const { data: allProducts = [], isLoading, error } = useQuery({
     queryKey: ['products'],
@@ -142,7 +144,7 @@ const Index = () => {
               onClick={() => setSortByLikes(!sortByLikes)}
               className="px-3 sm:px-4 py-1.5 sm:py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm"
             >
-              {sortByLikes ? "投稿順に並び替え" : "いいね順に並び替え"}
+              {sortByLikes ? t('products.sortByDate') : t('products.sortByLikes')}
             </button>
           </div>
           
