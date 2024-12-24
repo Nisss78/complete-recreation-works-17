@@ -7,6 +7,7 @@ import { Footer } from "@/components/Footer";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useParams, useNavigate } from "react-router-dom";
+import { MetaTags } from "@/components/MetaTags";
 
 const fetchProducts = async () => {
   const { data: products, error } = await supabase
@@ -122,6 +123,11 @@ const Index = () => {
 
   return (
     <div className="min-h-screen w-full flex flex-col bg-gray-50/50">
+      <MetaTags 
+        title="Products Launching Today | プロダクト一覧"
+        description="今日立ち上がった新しいプロダクトをチェックしましょう。最新のイノベーションとクリエイティブなアイデアを発見できます。"
+        image="og-image.png"
+      />
       <Header />
       <main className="flex-1">
         <div className="max-w-4xl mx-auto py-4 sm:py-8 px-3 sm:px-4">
