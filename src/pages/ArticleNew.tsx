@@ -12,8 +12,61 @@ export default function ArticleNew() {
   const [content, setContent] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
   const [isPreview, setIsPreview] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  const handleSubmit = async () => {
+    if (!title || !content) {
+      toast({
+        title: "入力エラー",
+        description: "タイトルと本文は必須項目です",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const { data: session } = await supabase.auth.getSession();
+      if (!session.session) {
+        toast({
+          title: "エラー",
+          description: "記事を投稿するにはログインが必要です",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const { error } = await supabase
+        .from('articles')
+        .insert({
+          title,
+          content,
+          thumbnail_url: thumbnailUrl || null,
+          user_id: session.session.user.id,
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "投稿完了",
+        description: "記事が投稿されました",
+      });
+
+      navigate('/articles');
+    } catch (error) {
+      console.error('Error submitting article:', error);
+      toast({
+        title: "エラー",
+        description: "記事の投稿に失敗しました",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const handleImageUpload = async (file: File) => {
     try {
@@ -79,7 +132,6 @@ export default function ArticleNew() {
 
   return (
     <div className="min-h-screen bg-[#F8F9FC] relative">
-      {/* Header */}
       <div className="fixed top-0 left-0 right-0 bg-white border-b z-10 px-4 py-3">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -99,20 +151,25 @@ export default function ArticleNew() {
             />
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={() => navigate(-1)}>
+            <Button 
+              variant="outline" 
+              onClick={() => navigate(-1)}
+              disabled={isSubmitting}
+            >
               キャンセル
             </Button>
-            <Button>
-              投稿する
+            <Button 
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "投稿中..." : "投稿する"}
             </Button>
           </div>
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="pt-20 pb-10 px-4">
         <div className="max-w-4xl mx-auto relative">
-          {/* Thumbnail Upload */}
           <div className="mb-6 bg-white p-6 rounded-lg shadow-sm">
             <div className="flex items-center gap-4">
               <div className="flex-1">
@@ -151,7 +208,6 @@ export default function ArticleNew() {
             </div>
           </div>
 
-          {/* Editor */}
           <div data-color-mode="light" className="rounded-lg overflow-hidden bg-white shadow-sm">
             <MDEditor
               value={content}
@@ -162,7 +218,6 @@ export default function ArticleNew() {
             />
           </div>
 
-          {/* Toolbar */}
           <div className="fixed right-8 top-1/2 -translate-y-1/2 flex flex-col gap-3">
             <Button
               variant="outline"
