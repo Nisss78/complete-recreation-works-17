@@ -20,6 +20,7 @@ export const Routes = () => {
       <Route path="/profile/:id" element={<Profile />} />
       <Route path="/settings" element={<Settings />} />
       <Route path="/bookmarks" element={<Bookmarks />} />
+      <Route path="/posts/:productId" element={<Index />} />
     </RouterRoutes>
   );
 };

@@ -60,22 +60,29 @@ const Index = () => {
 
   useEffect(() => {
     if (productId && allProducts.length > 0) {
+      console.log('Looking for product with ID:', productId);
       const product = allProducts.find((p) => p.name.toLowerCase().replace(/\s+/g, '-') === productId);
       if (product) {
+        console.log('Found product:', product);
         setSelectedProduct(product);
+      } else {
+        console.log('Product not found, redirecting to home');
+        navigate('/', { replace: true });
       }
     }
   }, [productId, allProducts]);
 
   const handleProductClick = (product: any) => {
+    console.log('Product clicked:', product);
     setSelectedProduct(product);
     const productSlug = product.name.toLowerCase().replace(/\s+/g, '-');
     navigate(`/posts/${productSlug}`);
   };
 
   const handleDialogClose = () => {
+    console.log('Dialog closing, redirecting to home');
     setSelectedProduct(null);
-    navigate('/');
+    navigate('/', { replace: true });
   };
 
   if (isLoading) {
@@ -104,7 +111,6 @@ const Index = () => {
     );
   }
 
-  // まず日付でグループ化
   const groupedProducts = allProducts.reduce((groups: any, product) => {
     const date = format(product.launchDate, 'yyyy-MM-dd');
     if (!groups[date]) {
@@ -114,7 +120,6 @@ const Index = () => {
     return groups;
   }, {});
 
-  // いいね順でソート
   if (sortByLikes) {
     Object.keys(groupedProducts).forEach(date => {
       groupedProducts[date].sort((a: any, b: any) => b.upvotes - a.upvotes);
