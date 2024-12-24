@@ -113,4 +113,30 @@ export const jaTranslations = {
   'product.details.bookmarkRemovedDesc': '{name}のブックマークを解除しました',
   'product.details.loginRequired': 'ログインが必要です',
   'product.details.loginRequiredDesc': 'この機能を使用するにはログインしてください',
+
+  // Product submission
+  'product.submit.title': 'プロダクトを投稿',
+  'product.submit.description': '説明',
+  'product.submit.name': 'プロダクト名',
+  'product.submit.namePlaceholder': 'プロダクト名を入力',
+  'product.submit.tagline': 'タグライン',
+  'product.submit.taglinePlaceholder': '短い説明を入力',
+  'product.submit.descriptionPlaceholder': 'プロダクトの説明を入力',
+  'product.submit.icon': 'プロダクトアイコン',
+  'product.submit.iconRequirements': 'プロダクトアイコンをアップロード（PNG/JPG形式）',
+  'product.submit.images': 'プロダクト画像',
+  'product.submit.imageRequirements': 'プロダクト画像をアップロード（PNG/JPG形式）',
+  'product.submit.cancel': 'キャンセル',
+  'product.submit.post': '投稿',
+  'product.submit.posting': '投稿中...',
+
+  // Follow
+  'follow.button': 'フォロー',
+  'follow.following': 'フォロー中',
+  'follow.success': 'フォローしました',
+  'follow.unfollowed': 'フォロー解除しました',
+  'follow.loginRequired': 'フォローするにはログインしてください',
+
+  // Success messages
+  'success.completed': '完了',
 } as const;

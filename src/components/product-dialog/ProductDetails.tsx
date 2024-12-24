@@ -1,22 +1,13 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { 
-  ArrowUp, 
-  MessageCircle, 
-  Share2, 
-  Bookmark, 
-  BarChart2, 
-  ExternalLink,
-} from "lucide-react";
-import { useProductLikes } from "@/hooks/useProductLikes";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { ProductImageCarousel } from "./ProductImageCarousel";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { ProductImageCarousel } from "./ProductImageCarousel";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ProductHeader } from "./product-details/ProductHeader";
+import { ProductActions } from "./product-details/ProductActions";
 
 interface ProductDetailsProps {
   product: {
@@ -69,7 +60,7 @@ export const ProductDetails = ({ product, isLoadingImages }: ProductDetailsProps
         description: t('product.details.loginRequiredDesc'),
         className: "text-sm p-2"
       });
-      return;
+      return false;
     }
     const success = await toggleLike();
     if (success) {
@@ -81,6 +72,7 @@ export const ProductDetails = ({ product, isLoadingImages }: ProductDetailsProps
         className: "text-sm p-2"
       });
     }
+    return success;
   };
 
   const handleBookmark = async () => {
@@ -90,7 +82,7 @@ export const ProductDetails = ({ product, isLoadingImages }: ProductDetailsProps
         description: t('product.details.loginRequiredDesc'),
         className: "text-sm p-2"
       });
-      return;
+      return false;
     }
     const success = await toggleBookmark();
     if (success) {
@@ -103,107 +95,31 @@ export const ProductDetails = ({ product, isLoadingImages }: ProductDetailsProps
           : t('product.details.bookmarkAddedDesc').replace('{name}', product.name),
       });
     }
-  };
-
-  const handleVisit = () => {
-    if (product.URL) {
-      window.open(product.URL, '_blank');
-    }
-  };
-
-  const handleShare = async () => {
-    const productSlug = product.name.toLowerCase().replace(/\s+/g, '-');
-    const shareUrl = `${window.location.origin}/posts/${productSlug}`;
-    
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      toast({
-        title: t('product.details.linkCopied'),
-        description: t('product.details.linkCopiedDesc'),
-      });
-    } catch (err) {
-      console.error('Failed to copy URL:', err);
-      toast({
-        title: "エラー",
-        description: "URLのコピーに失敗しました",
-        variant: "destructive",
-      });
-    }
+    return success;
   };
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4">
-        <img 
-          src={product.icon} 
-          alt={product.name} 
-          className="w-16 h-16 rounded-lg object-cover"
-        />
-        <div className="flex-1 min-w-0">
-          <h2 className="text-xl sm:text-2xl font-bold mb-2">{product.name}</h2>
-          <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base mb-2">{product.tagline}</p>
-          <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base mb-3">{product.description}</p>
-          <div className="flex flex-wrap gap-1.5 sm:gap-2">
-            {product.tags.map((tag) => (
-              <Badge key={tag} variant="secondary" className="text-xs sm:text-sm">
-                {tag}
-              </Badge>
-            ))}
-          </div>
-        </div>
-      </div>
+      <ProductHeader 
+        name={product.name}
+        tagline={product.tagline}
+        description={product.description}
+        icon={product.icon}
+        tags={product.tags}
+      />
 
-      <div className="flex flex-wrap gap-2 justify-start">
-        <Button 
-          variant="outline" 
-          className="flex-1 sm:flex-none gap-2 h-9 px-3 sm:px-4"
-          onClick={handleVisit}
-          disabled={!product.URL}
-        >
-          <ExternalLink className="w-4 h-4" />
-          {t('product.details.visit')}
-        </Button>
-        <Button 
-          variant="outline" 
-          className="flex-1 sm:flex-none gap-2 h-9 px-3 sm:px-4"
-          onClick={handleLike}
-        >
-          <ArrowUp className={`w-4 h-4 ${hasLiked ? 'text-blue-500' : ''}`} />
-          {totalLikes}
-        </Button>
-        <Button 
-          variant="outline" 
-          className="flex-1 sm:flex-none gap-2 h-9 px-3 sm:px-4"
-        >
-          <MessageCircle className="w-4 h-4" />
-          {commentCount}
-        </Button>
-        <Button 
-          variant="outline" 
-          size="icon"
-          onClick={handleBookmark}
-          className={`h-9 w-9 ${isBookmarked ? 'text-blue-500 border-blue-500' : ''}`}
-        >
-          <Bookmark className="w-4 h-4" />
-        </Button>
-        <Button 
-          variant="outline" 
-          size="icon"
-          onClick={handleShare}
-          className="h-9 w-9"
-        >
-          <Share2 className="w-4 h-4" />
-        </Button>
-        {!isMobile && (
-          <Button 
-            variant="outline" 
-            size="icon"
-            className="h-9 w-9"
-          >
-            <BarChart2 className="w-4 h-4" />
-          </Button>
-        )}
-      </div>
+      <ProductActions 
+        productId={product.id}
+        productName={product.name}
+        productUrl={product.URL}
+        totalLikes={totalLikes}
+        hasLiked={hasLiked}
+        commentCount={commentCount}
+        isBookmarked={isBookmarked}
+        isMobile={isMobile}
+        onLike={handleLike}
+        onBookmark={handleBookmark}
+      />
 
       {isLoadingImages ? (
         <div className="space-y-4">

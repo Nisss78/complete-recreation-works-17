@@ -113,4 +113,30 @@ export const enTranslations = {
   'product.details.bookmarkRemovedDesc': '{name} has been removed from your bookmarks',
   'product.details.loginRequired': 'Login required',
   'product.details.loginRequiredDesc': 'Please login to use this feature',
+
+  // Product submission
+  'product.submit.title': 'Submit Product',
+  'product.submit.description': 'Description',
+  'product.submit.name': 'Product Name',
+  'product.submit.namePlaceholder': 'Enter product name',
+  'product.submit.tagline': 'Tagline',
+  'product.submit.taglinePlaceholder': 'Enter a short description',
+  'product.submit.descriptionPlaceholder': 'Enter product description',
+  'product.submit.icon': 'Product Icon',
+  'product.submit.iconRequirements': 'Upload a product icon (PNG/JPG format)',
+  'product.submit.images': 'Product Images',
+  'product.submit.imageRequirements': 'Upload product images (PNG/JPG format)',
+  'product.submit.cancel': 'Cancel',
+  'product.submit.post': 'Post',
+  'product.submit.posting': 'Posting...',
+
+  // Follow
+  'follow.button': 'Follow',
+  'follow.following': 'Following',
+  'follow.success': 'Successfully followed user',
+  'follow.unfollowed': 'Unfollowed user',
+  'follow.loginRequired': 'Please login to follow users',
+
+  // Success messages
+  'success.completed': 'Completed',
 } as const;
