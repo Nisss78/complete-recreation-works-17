@@ -9,7 +9,7 @@ type TranslationKey = keyof typeof enTranslations;
 type LanguageContextType = {
   language: Language;
   setLanguage: (lang: Language) => Promise<void>;
-  t: (key: TranslationKey) => string | string[];
+  t: (key: TranslationKey) => string;
 };
 
 const translations = {
@@ -59,8 +59,9 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
     }
   };
 
-  const t = (key: TranslationKey): string | string[] => {
-    return translations[language][key];
+  const t = (key: TranslationKey): string => {
+    const value = translations[language][key];
+    return typeof value === 'string' ? value : value.join('\n');
   };
 
   return (
