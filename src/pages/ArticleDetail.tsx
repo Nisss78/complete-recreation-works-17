@@ -13,11 +13,13 @@ import ReactMarkdown from "react-markdown";
 import { ArticleContent } from "./article-detail/ArticleContent";
 import { ArticleHeader } from "./article-detail/ArticleHeader";
 import { ArticleActions } from "./article-detail/ArticleActions";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function ArticleDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const articleId = parseInt(id || "0", 10);
   const { hasLiked, likesCount, handleLike } = useArticleLikes(articleId);
 
@@ -135,18 +137,34 @@ export default function ArticleDetail() {
           className="mb-4 text-gray-600 hover:text-gray-900"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
-          戻る
+          {t('article.details.back')}
         </Button>
 
         <article className="bg-white rounded-lg shadow-sm p-4 sm:p-8">
           <ArticleHeader article={article} />
-          <ArticleActions 
-            article={article}
-            hasLiked={hasLiked}
-            likesCount={likesCount}
-            onLike={handleLike}
-            onShare={handleShare}
-          />
+          <div className="flex items-center gap-4 mb-6 pb-4 border-b">
+            <time className="text-sm text-gray-500">
+              {t('article.details.postedOn').replace('{date}', new Date(article.created_at).toLocaleDateString())}
+            </time>
+            <div className="flex items-center gap-4 ml-auto">
+              <button
+                onClick={handleShare}
+                className="flex items-center gap-2 text-gray-600 hover:text-gray-900 text-sm sm:text-base"
+              >
+                <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                {t('article.details.share')}
+              </button>
+              <button
+                onClick={handleLike}
+                className={`flex items-center gap-2 text-sm sm:text-base ${
+                  hasLiked ? "text-pink-500" : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${hasLiked ? "fill-current" : ""}`} />
+                {likesCount}
+              </button>
+            </div>
+          </div>
           <ArticleContent content={article.content} />
         </article>
       </main>

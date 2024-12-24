@@ -101,6 +101,15 @@ export const jaTranslations = {
 
   // Product details
   'product.details.visit': '訪問',
+
+  // Article details
+  'article.details.share': 'シェア',
+  'article.details.back': '戻る',
+  'article.details.postedOn': '{date}に投稿',
+
+  // Settings
+  'settings.profileSettings': 'プロフィール設定',
+
   'product.details.like': 'いいね',
   'product.details.likes': 'いいね',
   'product.details.comment': 'コメント',
@@ -139,3 +148,4 @@ export const jaTranslations = {
   'profile.noChanges': '変更なし',
   'profile.noChanges.description': 'プロフィールに変更はありませんでした',
 } as const;
+

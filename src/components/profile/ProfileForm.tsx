@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { SocialLinksFields } from "./SocialLinksFields";
 import { formSchema, ProfileFormValues, ProfileData } from "./profileFormSchema";
 import { useQuery } from "@tanstack/react-query";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ProfileFormProps {
   onSuccess?: () => void;
@@ -27,6 +28,7 @@ interface ProfileFormProps {
 export const ProfileForm = ({ onSuccess }: ProfileFormProps) => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const { data: profile, isLoading } = useQuery({
     queryKey: ["profile"],
@@ -146,7 +148,7 @@ export const ProfileForm = ({ onSuccess }: ProfileFormProps) => {
         <div className="space-y-4 p-6 bg-card rounded-lg shadow-sm">
           <div className="flex items-center gap-2 mb-4">
             <User className="w-5 h-5" />
-            <h2 className="text-xl font-semibold">プロフィール設定</h2>
+            <h2 className="text-xl font-semibold">{t('settings.profileSettings')}</h2>
           </div>
           
           <FormField
@@ -154,9 +156,9 @@ export const ProfileForm = ({ onSuccess }: ProfileFormProps) => {
             name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>ユーザー名</FormLabel>
+                <FormLabel>{t('profile.username')}</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="あなたの名前" />
+                  <Input {...field} placeholder={t('profile.usernamePlaceholder')} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -168,11 +170,11 @@ export const ProfileForm = ({ onSuccess }: ProfileFormProps) => {
             name="bio"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>自己紹介</FormLabel>
+                <FormLabel>{t('profile.bio')}</FormLabel>
                 <FormControl>
                   <Textarea
                     {...field}
-                    placeholder="あなたについて教えてください（160文字まで）"
+                    placeholder={t('profile.bioPlaceholder')}
                   />
                 </FormControl>
                 <FormMessage />
@@ -185,7 +187,7 @@ export const ProfileForm = ({ onSuccess }: ProfileFormProps) => {
             name="avatar_url"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>アバター画像</FormLabel>
+                <FormLabel>{t('profile.avatar')}</FormLabel>
                 <FormControl>
                   <div className="space-y-4">
                     <AvatarUpload onUpload={handleAvatarUpload} />
@@ -209,7 +211,7 @@ export const ProfileForm = ({ onSuccess }: ProfileFormProps) => {
           <SocialLinksFields form={form} />
 
           <Button type="submit" className="w-full">
-            保存
+            {t('profile.save')}
           </Button>
         </div>
       </form>

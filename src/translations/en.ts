@@ -20,6 +20,7 @@ export const enTranslations = {
   'settings.language': 'Language Preferences',
   'settings.profile': 'Profile Settings',
   'settings.selectLanguage': 'Select language',
+  'settings.profileSettings': 'Profile Settings',
   
   // Profile form
   'profile.username': 'Username',
@@ -89,6 +90,11 @@ export const enTranslations = {
   'articles.deleted': 'Article deleted successfully',
   'articles.myPosts': 'My Posts',
   'articles.noPosts': 'No posts yet',
+
+  // Article details
+  'article.details.share': 'Share',
+  'article.details.back': 'Back',
+  'article.details.postedOn': 'Posted on {date}',
 
   // Bookmarks
   'bookmarks.title': 'Bookmarks',
