@@ -125,23 +125,23 @@ const Index = () => {
       <Header />
       
       <main className="flex-1">
-        <div className="max-w-4xl mx-auto py-8 px-4">
-          <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold">Products Launching Today</h1>
+        <div className="max-w-4xl mx-auto py-4 px-4">
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-2xl font-bold">Products Launching Today</h1>
             <button
               onClick={() => setSortByLikes(!sortByLikes)}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+              className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
             >
               {sortByLikes ? "投稿順に並び替え" : "いいね順に並び替え"}
             </button>
           </div>
           
           {Object.entries(groupedProducts).map(([date, products]: [string, any]) => (
-            <div key={date} className="mb-8">
-              <h2 className="text-xl font-semibold mb-4">
+            <div key={date} className="mb-4">
+              <h2 className="text-lg font-semibold mb-2">
                 {format(new Date(date), 'MMMM d, yyyy')}
               </h2>
-              <div className="space-y-4">
+              <div className="space-y-2">
                 {products.map((product: any) => (
                   <ProductCard 
                     key={`${product.id}-${date}`}
@@ -154,7 +154,7 @@ const Index = () => {
           ))}
 
           {allProducts.length === 0 && (
-            <div className="text-center text-gray-500 mt-4">
+            <div className="text-center text-gray-500 mt-2">
               まだ投稿されたプロダクトはありません。
               <br />
               最初の投稿者になりませんか？
