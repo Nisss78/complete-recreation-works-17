@@ -53,20 +53,26 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
   const [comments, setComments] = useState<Comment[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  console.log('ProductDialog rendered with product:', product);
+
   const { data: productImages = [], isLoading: isLoadingImages } = useQuery({
     queryKey: ['product-images', product.id],
     queryFn: async () => {
+      console.log('Fetching images for product:', product.id);
       const { data: imagesData, error } = await supabase
         .from('product_images')
         .select('image_url')
         .eq('product_id', product.id)
         .order('created_at', { ascending: true });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching product images:', error);
+        throw error;
+      }
       console.log('Fetched product images:', imagesData?.map(img => img.image_url));
       return imagesData?.map(img => img.image_url) || [];
     },
-    enabled: open,
+    enabled: open && product.id !== undefined,
   });
 
   const fetchComments = async () => {
@@ -89,7 +95,10 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
         .is('parent_id', null)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching comments:', error);
+        throw error;
+      }
 
       console.log('Fetched comments:', commentsData);
 
@@ -114,7 +123,8 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
   };
 
   useEffect(() => {
-    if (open) {
+    if (open && product.id) {
+      console.log('Dialog opened, fetching comments for product:', product.id);
       fetchComments();
     }
   }, [open, product.id]);
