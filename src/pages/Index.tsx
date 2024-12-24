@@ -57,7 +57,6 @@ const Index = () => {
     queryFn: fetchProducts,
   });
 
-  // URLパラメータからプロダクトを選択
   useEffect(() => {
     if (productId && allProducts.length > 0) {
       const product = allProducts.find((p) => p.name.toLowerCase().replace(/\s+/g, '-') === productId);
@@ -67,19 +66,22 @@ const Index = () => {
     }
   }, [productId, allProducts]);
 
+  // まず日付でグループ化
   const groupedProducts = allProducts.reduce((groups: any, product) => {
     const date = format(product.launchDate, 'yyyy-MM-dd');
     if (!groups[date]) {
       groups[date] = [];
     }
     groups[date].push(product);
-    
-    if (sortByLikes) {
-      groups[date].sort((a: any, b: any) => b.upvotes - a.upvotes);
-    }
-    
     return groups;
   }, {});
+
+  // いいね順でソート
+  if (sortByLikes) {
+    Object.keys(groupedProducts).forEach(date => {
+      groupedProducts[date].sort((a: any, b: any) => b.upvotes - a.upvotes);
+    });
+  }
 
   const handleProductClick = (product: any) => {
     setSelectedProduct(product);
