@@ -177,12 +177,18 @@ export const ArticleCard = ({
             
             <div className="flex items-center gap-4 text-sm text-gray-600">
               <div className="flex items-center gap-1.5">
-                <img 
-                  src={author.avatar}
-                  alt=""
-                  className="w-5 h-5 rounded-full"
-                />
-                <span>{author.name}</span>
+                <Link 
+                  to={`/profile/${author.id}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="flex items-center gap-1.5 hover:text-gray-900"
+                >
+                  <img 
+                    src={author.avatar}
+                    alt=""
+                    className="w-5 h-5 rounded-full"
+                  />
+                  <span>{author.name}</span>
+                </Link>
                 {author.blog && (
                   <>
                     <span className="text-gray-400">in</span>
