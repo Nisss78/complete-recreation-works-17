@@ -1,6 +1,6 @@
 import { Heart, Trash2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -38,6 +38,7 @@ export const ArticleCard = ({
   const [hasLiked, setHasLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(initialLikes);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     checkIfLiked();
@@ -58,7 +59,7 @@ export const ArticleCard = ({
   };
 
   const handleLike = async (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigation when clicking the like button
+    e.preventDefault();
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
       toast({
@@ -117,7 +118,7 @@ export const ArticleCard = ({
   };
 
   const handleDelete = async (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigation
+    e.preventDefault();
     
     if (!window.confirm('この記事を削除してもよろしいですか？')) {
       return;
@@ -147,6 +148,11 @@ export const ArticleCard = ({
     }
   };
 
+  const handleAuthorClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigate(`/profile/${author.id}`);
+  };
+
   return (
     <Link to={`/articles/${id}`}>
       <Card className="p-4 hover:bg-gray-50 transition-colors cursor-pointer">
@@ -161,13 +167,16 @@ export const ArticleCard = ({
               </div>
             </div>
           ) : (
-            <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
+            <button 
+              onClick={handleAuthorClick}
+              className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center hover:bg-gray-300 transition-colors"
+            >
               <img 
                 src={author.avatar} 
                 alt="" 
-                className="w-12 h-12 object-cover"
+                className="w-12 h-12 object-cover rounded-full"
               />
-            </div>
+            </button>
           )}
           
           <div className="flex-1">
@@ -176,7 +185,10 @@ export const ArticleCard = ({
             </h2>
             
             <div className="flex items-center gap-4 text-sm text-gray-600">
-              <div className="flex items-center gap-1.5">
+              <button 
+                onClick={handleAuthorClick}
+                className="flex items-center gap-1.5 hover:text-gray-900 transition-colors"
+              >
                 <img 
                   src={author.avatar}
                   alt=""
@@ -189,7 +201,7 @@ export const ArticleCard = ({
                     <span>{author.blog}</span>
                   </>
                 )}
-              </div>
+              </button>
               <div className="text-gray-400">{postedAt}</div>
               <button 
                 onClick={handleLike}

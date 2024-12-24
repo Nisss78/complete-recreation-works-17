@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User, Flame } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { FollowButton } from "@/components/articles/FollowButton";
 
 interface ProfileHeaderProps {
   profile: {
@@ -11,9 +12,18 @@ interface ProfileHeaderProps {
     bio: string | null;
     streak_count: number;
   } | null;
+  showFollowButton?: boolean;
 }
 
-export const ProfileHeader = ({ profile }: ProfileHeaderProps) => {
+export const ProfileHeader = ({ profile, showFollowButton = false }: ProfileHeaderProps) => {
+  const { data: session } = useQuery({
+    queryKey: ["session"],
+    queryFn: async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      return session;
+    },
+  });
+
   const { data: followStats } = useQuery({
     queryKey: ["followStats", profile?.id],
     queryFn: async () => {
@@ -37,6 +47,8 @@ export const ProfileHeader = ({ profile }: ProfileHeaderProps) => {
     },
     enabled: !!profile?.id
   });
+
+  const shouldShowFollowButton = showFollowButton && profile?.id !== session?.user.id;
 
   if (!profile) {
     return (
@@ -62,7 +74,12 @@ export const ProfileHeader = ({ profile }: ProfileHeaderProps) => {
         </AvatarFallback>
       </Avatar>
       <div className="text-center space-y-2">
-        <h1 className="text-2xl font-bold">{profile.username || "名前未設定"}</h1>
+        <div className="flex items-center justify-center gap-4">
+          <h1 className="text-2xl font-bold">{profile.username || "名前未設定"}</h1>
+          {shouldShowFollowButton && (
+            <FollowButton profileId={profile.id} />
+          )}
+        </div>
         {profile.bio && (
           <p className="text-muted-foreground max-w-md">{profile.bio}</p>
         )}
