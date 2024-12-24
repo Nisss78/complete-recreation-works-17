@@ -82,7 +82,7 @@ const SettingsPage = () => {
       <main className="container max-w-4xl mx-auto py-8 px-4">
         <div className="space-y-8">
           <h1 className="text-2xl font-bold">アカウント設定</h1>
-          <ProfileForm profile={profile} onSuccess={() => refetch()} />
+          <ProfileForm onSuccess={() => refetch()} />
         </div>
       </main>
       <Footer />
