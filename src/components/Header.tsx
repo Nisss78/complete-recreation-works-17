@@ -95,14 +95,18 @@ export const Header = () => {
                       設定
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuLabel>ブックマーク</DropdownMenuLabel>
+                    <DropdownMenuItem onClick={() => navigate("/bookmarks")}>
+                      <Bookmark className="w-4 h-4 mr-2" />
+                      ブックマーク一覧を見る
+                    </DropdownMenuItem>
+                    <DropdownMenuLabel>最近のブックマーク</DropdownMenuLabel>
                     <DropdownMenuGroup className="max-h-[200px] overflow-y-auto">
                       {bookmarks.length === 0 ? (
                         <DropdownMenuItem disabled>
                           ブックマークはありません
                         </DropdownMenuItem>
                       ) : (
-                        bookmarks.map((bookmark) => (
+                        bookmarks.slice(0, 5).map((bookmark) => (
                           <DropdownMenuItem
                             key={bookmark.id}
                             onClick={() => {
