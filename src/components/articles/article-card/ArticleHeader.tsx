@@ -1,12 +1,39 @@
 import { Link } from "react-router-dom";
+import { Heart, Bookmark } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 interface ArticleHeaderProps {
   id: number;
   title: string;
   thumbnail_url?: string | null;
+  author: {
+    id: string;
+    name: string;
+    avatar: string;
+  };
+  postedAt: string;
+  likes: number;
+  hasLiked: boolean;
+  isBookmarked: boolean;
+  onLike: (e: React.MouseEvent) => void;
+  onBookmark: (e: React.MouseEvent) => void;
+  onAuthorClick: (e: React.MouseEvent) => void;
 }
 
-export const ArticleHeader = ({ id, title, thumbnail_url }: ArticleHeaderProps) => {
+export const ArticleHeader = ({ 
+  id, 
+  title, 
+  thumbnail_url,
+  author,
+  postedAt,
+  likes,
+  hasLiked,
+  isBookmarked,
+  onLike,
+  onBookmark,
+  onAuthorClick
+}: ArticleHeaderProps) => {
   const defaultThumbnails = [
     'photo-1649972904349-6e44c42644a7',
     'photo-1488590528505-98d2b5aba04b',
@@ -32,10 +59,51 @@ export const ArticleHeader = ({ id, title, thumbnail_url }: ArticleHeaderProps) 
           className="w-full h-full object-cover"
         />
       </div>
-      <div className="flex-1 min-w-0">
-        <h2 className="text-base sm:text-lg font-bold text-gray-900 mb-2 line-clamp-2 text-left">
+      <div className="flex-1 min-w-0 space-y-2">
+        <h2 className="text-base sm:text-lg font-bold text-gray-900 line-clamp-2 text-left">
           {title}
         </h2>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={onAuthorClick}
+              className="flex items-center gap-2 hover:text-gray-900 transition-colors"
+            >
+              <img 
+                src={author.avatar}
+                alt={author.name}
+                className="w-6 h-6 rounded-full object-cover cursor-pointer"
+              />
+              <span className="text-sm text-gray-600">{author.name}</span>
+            </button>
+            <span className="text-gray-400 text-sm">{postedAt}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={onLike}
+              className={cn(
+                "flex items-center gap-1 transition-colors",
+                hasLiked 
+                  ? "text-pink-500 hover:text-pink-600" 
+                  : "text-gray-500 hover:text-gray-900"
+              )}
+            >
+              <Heart className={cn("w-4 h-4", hasLiked && "fill-current")} />
+              <span>{likes}</span>
+            </button>
+            <button
+              onClick={onBookmark}
+              className={cn(
+                "flex items-center gap-1 transition-colors p-1",
+                isBookmarked
+                  ? "text-blue-500 hover:text-blue-600"
+                  : "text-gray-500 hover:text-gray-900"
+              )}
+            >
+              <Bookmark className={cn("w-4 h-4", isBookmarked && "fill-current")} />
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

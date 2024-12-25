@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { ArticleHeader } from "./article-card/ArticleHeader";
-import { ArticleFooter } from "./article-card/ArticleFooter";
+import { useArticleBookmarks } from "@/hooks/useArticleBookmarks";
 
 interface Author {
   id: string;
@@ -39,6 +39,7 @@ export const ArticleCard = ({
   const [likesCount, setLikesCount] = useState(initialLikes);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { isBookmarked, toggleBookmark } = useArticleBookmarks(id);
 
   useEffect(() => {
     checkIfLiked();
@@ -156,27 +157,28 @@ export const ArticleCard = ({
     navigate(`/profile/${author.id}`);
   };
 
+  const handleBookmark = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    await toggleBookmark();
+  };
+
   return (
     <Link to={`/articles/${id}`}>
       <Card className="p-3 sm:p-4 hover:bg-gray-50 transition-colors cursor-pointer">
-        <div className="space-y-3 sm:space-y-4">
-          <ArticleHeader
-            id={id}
-            title={title}
-            thumbnail_url={thumbnail_url}
-          />
-          <ArticleFooter
-            author={author}
-            postedAt={postedAt}
-            likes={likesCount}
-            hasLiked={hasLiked}
-            showDeleteButton={showDeleteButton}
-            onLike={handleLike}
-            onDelete={handleDelete}
-            onAuthorClick={handleAuthorClick}
-            articleId={id}
-          />
-        </div>
+        <ArticleHeader
+          id={id}
+          title={title}
+          thumbnail_url={thumbnail_url}
+          author={author}
+          postedAt={postedAt}
+          likes={likesCount}
+          hasLiked={hasLiked}
+          isBookmarked={isBookmarked}
+          onLike={handleLike}
+          onBookmark={handleBookmark}
+          onAuthorClick={handleAuthorClick}
+        />
       </Card>
     </Link>
   );
