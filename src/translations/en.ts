@@ -19,9 +19,10 @@ export const enTranslations = {
   'nav.profile': 'Profile',
   'nav.logout': 'Logout',
   'nav.account': 'Account',
-  'nav.viewBookmarks': 'View All Bookmarks',
+  'nav.viewBookmarks': 'View All',
   'nav.recentBookmarks': 'Recent Bookmarks',
   'nav.noBookmarks': 'No bookmarks yet',
+  'nav.myApp': 'My App',
   
   // Settings page
   'settings.title': 'Account Settings',

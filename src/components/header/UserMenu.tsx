@@ -4,6 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useQuery } from "@tanstack/react-query";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,6 +21,42 @@ export const UserMenu = () => {
   const { toast } = useToast();
   const { bookmarks } = useBookmarks();
   const { t } = useLanguage();
+
+  const { data: articleBookmarks } = useQuery({
+    queryKey: ["articleBookmarks"],
+    queryFn: async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return [];
+
+      const { data } = await supabase
+        .from('article_bookmarks')
+        .select(`
+          article_id,
+          articles (
+            id,
+            title,
+            thumbnail_url,
+            created_at,
+            profile:profiles!articles_user_id_fkey (
+              username,
+              avatar_url
+            )
+          )
+        `)
+        .order('created_at', { ascending: false })
+        .limit(5);
+
+      return data?.map(bookmark => ({
+        id: bookmark.articles.id,
+        title: bookmark.articles.title,
+        thumbnail: bookmark.articles.thumbnail_url,
+        author: {
+          name: bookmark.articles.profile.username || "Unknown User",
+          avatar: bookmark.articles.profile.avatar_url || "/placeholder.svg"
+        }
+      })) || [];
+    }
+  });
 
   const handleLogout = async () => {
     console.log("Starting logout process...");
@@ -71,7 +108,7 @@ export const UserMenu = () => {
           <User className="w-5 h-5" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
+      <DropdownMenuContent align="end" className="w-72">
         <DropdownMenuLabel>{t('nav.account')}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => navigate("/profile")}>
@@ -83,39 +120,34 @@ export const UserMenu = () => {
           {t('nav.settings')}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => navigate("/bookmarks")}>
+        <DropdownMenuItem onClick={() => navigate("/my-app")}>
           <Bookmark className="w-4 h-4 mr-2" />
-          {t('nav.viewBookmarks')}
+          My App
         </DropdownMenuItem>
-        <DropdownMenuLabel>{t('nav.recentBookmarks')}</DropdownMenuLabel>
+        <DropdownMenuLabel>Recent Article Bookmarks</DropdownMenuLabel>
         <DropdownMenuGroup className="max-h-[200px] overflow-y-auto">
-          {bookmarks.length === 0 ? (
+          {!articleBookmarks || articleBookmarks.length === 0 ? (
             <DropdownMenuItem disabled>
-              {t('nav.noBookmarks')}
+              No bookmarked articles
             </DropdownMenuItem>
           ) : (
-            bookmarks.slice(0, 5).map((bookmark) => (
+            articleBookmarks.map((bookmark) => (
               <DropdownMenuItem
                 key={bookmark.id}
-                onClick={() => {
-                  const productSlug = bookmark.name
-                    .toLowerCase()
-                    .replace(/\s+/g, "-");
-                  navigate(`/posts/${productSlug}`);
-                }}
+                onClick={() => navigate(`/articles/${bookmark.id}`)}
               >
                 <div className="flex items-center gap-2 w-full">
                   <img
-                    src={bookmark.icon_url}
-                    alt={bookmark.name}
-                    className="w-6 h-6 rounded"
+                    src={bookmark.thumbnail || "/placeholder.svg"}
+                    alt={bookmark.title}
+                    className="w-8 h-8 rounded object-cover"
                   />
-                  <div className="flex flex-col">
-                    <span className="text-sm font-medium">
-                      {bookmark.name}
+                  <div className="flex flex-col flex-1 min-w-0">
+                    <span className="text-sm font-medium truncate">
+                      {bookmark.title}
                     </span>
-                    <span className="text-xs text-gray-500 truncate">
-                      {bookmark.tagline}
+                    <span className="text-xs text-gray-500">
+                      By {bookmark.author.name}
                     </span>
                   </div>
                 </div>

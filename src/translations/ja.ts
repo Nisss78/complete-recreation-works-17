@@ -19,9 +19,10 @@ export const jaTranslations = {
   'nav.profile': 'プロフィール',
   'nav.logout': 'ログアウト',
   'nav.account': 'アカウント',
-  'nav.viewBookmarks': 'ブックマーク一覧を見る',
+  'nav.viewBookmarks': '全て表示',
   'nav.recentBookmarks': '最近のブックマーク',
   'nav.noBookmarks': 'ブックマークはありません',
+  'nav.myApp': 'マイアプリ',
   
   // Settings page
   'settings.title': 'アカウント設定',
