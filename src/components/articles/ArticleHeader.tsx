@@ -13,7 +13,7 @@ interface ArticleHeaderProps {
   showFollowButton?: boolean;
 }
 
-export const ArticleHeader = ({ author, postedAt, showFollowButton = true }: ArticleHeaderProps) => {
+export const ArticleHeader = ({ author, postedAt, showFollowButton = false }: ArticleHeaderProps) => {
   const navigate = useNavigate();
 
   const handleAuthorClick = (e: React.MouseEvent) => {
