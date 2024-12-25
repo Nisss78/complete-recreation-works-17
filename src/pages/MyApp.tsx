@@ -13,7 +13,6 @@ const MyApp = () => {
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
   const { t } = useLanguage();
 
-  // Fetch complete product details when a product is selected
   const { data: productDetails } = useQuery({
     queryKey: ['product', selectedProduct?.id],
     queryFn: async () => {
@@ -38,7 +37,6 @@ const MyApp = () => {
         throw error;
       }
 
-      // Transform the data to match the expected format
       return data ? {
         id: data.id,
         name: data.name,
@@ -46,8 +44,8 @@ const MyApp = () => {
         description: data.description,
         icon: data.icon_url,
         tags: data.product_tags?.map((t: any) => t.tag) || [],
-        upvotes: 0, // Default value since we don't have this in the database
-        comments: 0  // This will be updated by the ProductCard component
+        upvotes: 0,
+        comments: 0
       } : null;
     },
     enabled: !!selectedProduct?.id,
@@ -79,9 +77,9 @@ const MyApp = () => {
       <Header />
       <main className="flex-1">
         <div className="max-w-7xl mx-auto py-4 sm:py-8 px-4 sm:px-6 lg:px-8">
-          <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-8">{t('nav.myApp')}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-8 text-left">{t('nav.myApp')}</h1>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 gap-4">
             {bookmarks?.map((bookmark) => {
               const product = {
                 id: bookmark.id,
