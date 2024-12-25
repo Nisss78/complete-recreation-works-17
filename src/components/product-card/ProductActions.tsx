@@ -1,7 +1,8 @@
-import { MessageCircle, ArrowUp, Share2, Bookmark, BarChart2 } from "lucide-react";
+import { MessageCircle, ArrowUp, Share2, BarChart2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useBookmarks } from "@/hooks/useBookmarks";
+import { AnimatedStarButton } from "@/components/products/AnimatedStarButton";
 
 interface ProductActionsProps {
   productId: number;
@@ -114,16 +115,11 @@ export function ProductActions({
 
       {!isMobile && (
         <>
-          <button 
-            className={`p-1.5 sm:p-2 rounded-full border transition-colors ${
-              isBookmarked
-                ? "text-blue-500 border-blue-500"
-                : "text-gray-700 hover:text-gray-900 border-gray-200 hover:border-gray-400"
-            }`}
+          <AnimatedStarButton
+            isBookmarked={isBookmarked}
             onClick={handleBookmark}
-          >
-            <Bookmark className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-          </button>
+            className="p-1.5 sm:p-2 rounded-full border border-gray-200 hover:border-gray-400"
+          />
 
           <button 
             className="p-1.5 sm:p-2 text-gray-700 hover:text-gray-900 rounded-full border border-gray-200 hover:border-gray-400 transition-colors"
