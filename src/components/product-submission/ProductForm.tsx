@@ -42,7 +42,7 @@ export const ProductForm = ({
   tags: string[];
   setTags: React.Dispatch<React.SetStateAction<string[]>>;
   setIconUrl: (url: string) => void;
-  setDescriptionImages: (url: string[]) => void;
+  setDescriptionImages: React.Dispatch<React.SetStateAction<string[]>>;
 }) => {
   const { t } = useLanguage();
   const [newTag, setNewTag] = useState("");
@@ -93,9 +93,9 @@ export const ProductForm = ({
         <ImageUpload
           title={t('product.submit.icon')}
           description={[
-            t('product.submit.iconRequirements.0'),
-            t('product.submit.iconRequirements.1'),
-            t('product.submit.iconRequirements.2')
+            "Upload a square icon image",
+            "Recommended size: 512x512px",
+            "Max size: 2MB"
           ]}
           type="icon"
           onUpload={setIconUrl}
@@ -109,9 +109,9 @@ export const ProductForm = ({
         <ImageUpload
           title={t('product.submit.images')}
           description={[
-            t('product.submit.imageRequirements.0'),
-            t('product.submit.imageRequirements.1'),
-            t('product.submit.imageRequirements.2')
+            "Add up to 5 images showcasing your product",
+            "Recommended aspect ratio: 16:9",
+            "Max size per image: 2MB"
           ]}
           type="description"
           onUpload={(url) => setDescriptionImages(prev => [...prev, url])}
