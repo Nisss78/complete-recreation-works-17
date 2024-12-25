@@ -43,22 +43,7 @@ export const ArticleFooter = ({
   };
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex items-center gap-2">
-        <button 
-          onClick={onAuthorClick}
-          className="flex items-center gap-2 hover:text-gray-900 transition-colors"
-        >
-          <img 
-            src={author.avatar}
-            alt={author.name}
-            className="w-6 h-6 rounded-full object-cover cursor-pointer"
-          />
-          <span className="text-sm text-gray-600 hover:text-gray-900">{author.name}</span>
-        </button>
-        <span className="text-gray-400 text-sm">{postedAt}</span>
-      </div>
-
+    <div className="flex justify-between items-center">
       <div className="flex items-center gap-3">
         <button 
           onClick={onLike}
@@ -93,6 +78,21 @@ export const ArticleFooter = ({
             <Trash2 className="w-4 h-4" />
           </Button>
         )}
+      </div>
+
+      <div className="flex items-center gap-2">
+        <button 
+          onClick={onAuthorClick}
+          className="flex items-center gap-2 hover:text-gray-900 transition-colors"
+        >
+          <span className="text-sm text-gray-600">{author.name}</span>
+          <img 
+            src={author.avatar}
+            alt={author.name}
+            className="w-6 h-6 rounded-full object-cover cursor-pointer"
+          />
+        </button>
+        <span className="text-gray-400 text-sm">{postedAt}</span>
       </div>
     </div>
   );
