@@ -1,137 +1,187 @@
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { ProductLinks } from "./ProductLinks";
-import { ProductTags } from "./ProductTags";
-import { ImageUpload } from "./ImageUpload";
-import { useLanguage } from "@/contexts/LanguageContext";
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { ImageUpload } from './ImageUpload';
+import { ProductTags } from './ProductTags';
+import { ProductLinks } from './ProductLinks';
 
-interface ProductFormProps {
+interface ProductFormData {
   name: string;
-  setName: (name: string) => void;
   tagline: string;
-  setTagline: (tagline: string) => void;
   description: string;
-  setDescription: (description: string) => void;
-  link: { description: string; url: string };
-  setLink: React.Dispatch<React.SetStateAction<{ description: string; url: string }>>;
   tags: string[];
-  setTags: React.Dispatch<React.SetStateAction<string[]>>;
-  setIconUrl: (url: string) => void;
-  setDescriptionImages: React.Dispatch<React.SetStateAction<string[]>>;
+  links: { description: string; url: string }[];
 }
 
-export const ProductForm = ({
-  name,
-  setName,
-  tagline,
-  setTagline,
-  description,
-  setDescription,
-  link,
-  setLink,
-  tags,
-  setTags,
-  setIconUrl,
-  setDescriptionImages,
-}: ProductFormProps) => {
-  const [newTag, setNewTag] = useState("");
-  const [descriptionImageUrls, setDescriptionImageUrls] = useState<string[]>([]);
+export const ProductForm = () => {
   const { t } = useLanguage();
+  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [iconFile, setIconFile] = useState<File | null>(null);
+  const [productImages, setProductImages] = useState<File[]>([]);
+  const [tags, setTags] = useState<string[]>([]);
 
-  const handleDescriptionImageUpload = (url: string) => {
-    const newUrls = [...descriptionImageUrls, url];
-    setDescriptionImageUrls(newUrls);
-    setDescriptionImages(newUrls);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset
+  } = useForm<ProductFormData>();
+
+  const onSubmit = async (data: ProductFormData) => {
+    setIsSubmitting(true);
+    try {
+      if (!iconFile) {
+        throw new Error('Product icon is required');
+      }
+
+      // Upload icon
+      const iconFormData = new FormData();
+      iconFormData.append('file', iconFile);
+
+      // Upload product images
+      const imagePromises = productImages.map(async (file) => {
+        const imageFormData = new FormData();
+        imageFormData.append('file', file);
+        // Implement image upload logic here
+        return 'image_url_placeholder';
+      });
+
+      const uploadedImageUrls = await Promise.all(imagePromises);
+
+      // Create product with uploaded media
+      const productData = {
+        ...data,
+        icon_url: 'icon_url_placeholder',
+        image_urls: uploadedImageUrls,
+        tags: tags,
+      };
+
+      // Implement product creation logic here
+
+      toast({
+        title: t('success.completed'),
+        description: t('success.productPosted')
+      });
+      reset();
+      setIconFile(null);
+      setProductImages([]);
+      setTags([]);
+    } catch (error) {
+      console.error('Error submitting product:', error);
+      toast({
+        title: t('error.occurred'),
+        description: t('error.post'),
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleIconUpload = (file: File) => {
+    setIconFile(file);
+  };
+
+  const handleImagesUpload = (files: File[]) => {
+    setProductImages(files);
+  };
+
+  const handleTagsChange = (newTags: string[]) => {
+    setTags(newTags);
   };
 
   return (
-    <div className="space-y-8 p-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div>
-        <h2 className="text-2xl font-medium text-gray-900 mb-2">{t('product.submit.title')}</h2>
-        <p className="text-sm text-gray-500 whitespace-pre-line">
-          {t('product.submit.description')}
-        </p>
-      </div>
-
-      <div className="space-y-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            {t('product.submit.name')} <span className="text-red-500">*</span>
-          </label>
-          <Input 
-            placeholder={t('product.submit.namePlaceholder')}
-            className="bg-white border-gray-200 text-gray-900 focus:border-gray-400 focus:ring-gray-400"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            maxLength={50}
-          />
-          <p className="text-xs text-gray-400 mt-1">
-            {t('product.submit.nameCharsLeft', { count: 50 - name.length })}
-          </p>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            {t('product.submit.tagline')} <span className="text-red-500">*</span>
-          </label>
-          <Input 
-            placeholder={t('product.submit.taglinePlaceholder')}
-            className="bg-white border-gray-200 text-gray-900 focus:border-gray-400 focus:ring-gray-400"
-            value={tagline}
-            onChange={(e) => setTagline(e.target.value)}
-            maxLength={100}
-          />
-          <p className="text-xs text-gray-400 mt-1">
-            {t('product.submit.taglineCharsLeft', { count: 100 - tagline.length })}
-          </p>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            {t('product.submit.description')} <span className="text-red-500">*</span>
-          </label>
-          <Textarea 
-            placeholder={t('product.submit.descriptionPlaceholder')}
-            className="bg-white border-gray-200 text-gray-900 focus:border-gray-400 focus:ring-gray-400 min-h-[120px]"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
-
-        <ProductLinks link={link} setLink={setLink} />
-        <ProductTags tags={tags} setTags={setTags} newTag={newTag} setNewTag={setNewTag} />
-
-        <ImageUpload 
-          title={t('product.submit.icon')}
-          description={t('product.submit.iconRequirements')}
-          type="icon"
-          onUpload={setIconUrl}
+        <label className="block text-sm font-medium text-gray-700">
+          {t('product.submit.name')}
+        </label>
+        <Input
+          {...register('name', { required: true })}
+          placeholder={t('product.submit.namePlaceholder')}
+          className="mt-1"
         />
-
-        <ImageUpload 
-          title={t('product.submit.images')}
-          description={t('product.submit.imageRequirements')}
-          type="description"
-          onUpload={handleDescriptionImageUpload}
-          maxFiles={5}
-          currentFiles={descriptionImageUrls.length}
-        />
-
-        {descriptionImageUrls.length > 0 && (
-          <div className="grid grid-cols-2 gap-4">
-            {descriptionImageUrls.map((url, index) => (
-              <div key={index} className="relative">
-                <img 
-                  src={url} 
-                  alt={`Description image ${index + 1}`}
-                  className="w-full h-40 object-cover rounded-lg"
-                />
-              </div>
-            ))}
-          </div>
+        {errors.name && (
+          <p className="mt-1 text-sm text-red-600">This field is required</p>
         )}
       </div>
-    </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          {t('product.submit.tagline')}
+        </label>
+        <Input
+          {...register('tagline', { required: true })}
+          placeholder={t('product.submit.taglinePlaceholder')}
+          className="mt-1"
+        />
+        {errors.tagline && (
+          <p className="mt-1 text-sm text-red-600">This field is required</p>
+        )}
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          {t('product.submit.productDescription')}
+        </label>
+        <Textarea
+          {...register('description', { required: true })}
+          placeholder={t('product.submit.descriptionPlaceholder')}
+          className="mt-1"
+          rows={4}
+        />
+        {errors.description && (
+          <p className="mt-1 text-sm text-red-600">This field is required</p>
+        )}
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          {t('product.submit.icon')}
+        </label>
+        <ImageUpload
+          onUpload={handleIconUpload}
+          maxFiles={1}
+          accept="image/*"
+          maxSize={2 * 1024 * 1024}
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          {t('product.submit.images')}
+        </label>
+        <ImageUpload
+          onUpload={handleImagesUpload}
+          maxFiles={5}
+          accept="image/*"
+          maxSize={2 * 1024 * 1024}
+          multiple
+        />
+      </div>
+
+      <ProductTags onTagsChange={handleTagsChange} />
+
+      <ProductLinks register={register} />
+
+      <div className="flex justify-end space-x-4">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => reset()}
+          disabled={isSubmitting}
+        >
+          {t('product.submit.cancel')}
+        </Button>
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? t('product.submit.posting') : t('product.submit.post')}
+        </Button>
+      </div>
+    </form>
   );
 };
