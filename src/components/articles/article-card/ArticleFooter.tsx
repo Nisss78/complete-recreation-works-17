@@ -1,7 +1,6 @@
 import { Heart, Trash2, Bookmark } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { FollowButton } from "@/components/articles/FollowButton";
 import { useArticleBookmarks } from "@/hooks/useArticleBookmarks";
 
 interface Author {
@@ -66,7 +65,6 @@ export const ArticleFooter = ({
       </div>
 
       <div className="flex items-center gap-2">
-        <FollowButton profileId={author.id} className="h-8" />
         <button 
           onClick={onLike}
           className={cn(
