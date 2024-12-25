@@ -1,9 +1,11 @@
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft } from "lucide-react";
 
 const AuthPage = () => {
   const navigate = useNavigate();
@@ -33,9 +35,18 @@ const AuthPage = () => {
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-purple-50 to-indigo-50 flex items-center justify-center">
       <div className="w-full max-w-md px-4">
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 relative">
+          <Link 
+            to="/" 
+            className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-900"
+          >
+            <Button variant="ghost" size="sm">
+              <ChevronLeft className="w-4 h-4 mr-1" />
+              Back to Home
+            </Button>
+          </Link>
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-            Producto
+            Protoduct
           </h1>
         </div>
         <div className="bg-white py-8 px-4 shadow-xl rounded-xl sm:px-10 border border-gray-100">
