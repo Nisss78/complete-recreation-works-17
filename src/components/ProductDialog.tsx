@@ -23,6 +23,32 @@ interface ProductDialogProps {
   } | null;
 }
 
+interface Comment {
+  id: number;
+  author: string;
+  username: string;
+  avatar: string;
+  content: string;
+  timestamp: string;
+  upvotes: number;
+  isMaker: boolean;
+  isVerified: boolean;
+  reply_count?: number;
+  user_id?: string;
+}
+
+interface CommentData {
+  id: number;
+  content: string;
+  created_at: string;
+  reply_count: number | null;
+  user_id: string;
+  user: {
+    username: string | null;
+    avatar_url: string | null;
+  };
+}
+
 const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -80,7 +106,7 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
 
       console.log('Fetched comments:', commentsData);
 
-      const formattedComments = (commentsData as CommentData[]).map(comment => ({
+      const formattedComments: Comment[] = (commentsData as CommentData[]).map(comment => ({
         id: comment.id,
         author: comment.user?.username || "ユーザー",
         username: comment.user?.username ? `@${comment.user.username}` : "@user",

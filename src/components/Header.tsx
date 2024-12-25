@@ -65,7 +65,7 @@ export const Header = () => {
         <div className="flex items-center gap-2 sm:gap-4">
           <Button
             variant="ghost"
-            size="icon"
+            size={isMobile ? "icon" : "default"}
             className="text-gray-700 hover:text-gray-900 hover:bg-gray-50"
             onClick={() => navigate("/articles")}
           >
@@ -77,7 +77,7 @@ export const Header = () => {
             <>
               <Button 
                 variant="ghost"
-                size="icon"
+                size={isMobile ? "icon" : "default"}
                 className="text-gray-700 hover:text-gray-900 hover:bg-gray-50"
                 onClick={() => navigate("/articles/new")}
               >
@@ -88,7 +88,7 @@ export const Header = () => {
               {isAdmin && (
                 <Button 
                   variant="ghost"
-                  size="icon"
+                  size={isMobile ? "icon" : "default"}
                   className="text-gray-700 hover:text-gray-900 hover:bg-gray-50"
                   onClick={() => setShowSubmissionDialog(true)}
                 >
@@ -112,12 +112,12 @@ export const Header = () => {
             </>
           ) : (
             <Button 
-              variant={isMobile ? "ghost" : "outline"}
+              variant={isMobile ? "ghost" : "default"}
               size={isMobile ? "icon" : "default"}
               onClick={() => navigate("/auth")}
               className={isMobile ? 
                 "text-gray-700 hover:text-gray-900 hover:bg-gray-50" : 
-                "bg-white hover:bg-gray-50 text-gray-900 border border-gray-200"
+                "bg-white hover:bg-gray-50 text-gray-900"
               }
             >
               {isMobile ? (
