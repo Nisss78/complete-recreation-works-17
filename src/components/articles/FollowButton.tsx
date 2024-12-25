@@ -15,23 +15,23 @@ export const FollowButton = ({ profileId, className }: FollowButtonProps) => {
   return (
     <Button
       variant={isFollowing ? "outline" : "default"}
-      size="sm"
+      size="xs"
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
         toggleFollow();
       }}
       disabled={isLoading}
-      className={className}
+      className={`h-6 px-2 text-xs font-normal ${className}`}
     >
       {isFollowing ? (
         <>
-          <UserMinus className="w-4 h-4 mr-2" />
+          <UserMinus className="w-3 h-3 mr-1" />
           {t('follow.following')}
         </>
       ) : (
         <>
-          <UserPlus className="w-4 h-4 mr-2" />
+          <UserPlus className="w-3 h-3 mr-1" />
           {t('follow.button')}
         </>
       )}

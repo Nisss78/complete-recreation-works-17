@@ -89,7 +89,7 @@ export const ArticleHeader = ({
                 </span>
               </button>
               {isAuthenticated && (
-                <FollowButton profileId={author.id} className="ml-2" />
+                <FollowButton profileId={author.id} className="ml-1" />
               )}
             </div>
             <span className="text-gray-400 text-xs sm:text-sm shrink-0">{postedAt}</span>
