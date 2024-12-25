@@ -64,7 +64,9 @@ export const useArticleLikes = (articleId: number) => {
         if (error) throw error;
 
         // Update likes count in articles table
-        await supabase.rpc('decrement_article_likes', { article_id: articleId });
+        await supabase.rpc('decrement_article_likes', { 
+          article_id: articleId as number 
+        });
         
         setLikesCount(prev => Math.max(0, prev - 1));
         setHasLiked(false);
@@ -89,7 +91,9 @@ export const useArticleLikes = (articleId: number) => {
         if (error) throw error;
 
         // Update likes count in articles table
-        await supabase.rpc('increment_article_likes', { article_id: articleId });
+        await supabase.rpc('increment_article_likes', { 
+          article_id: articleId as number 
+        });
 
         setLikesCount(prev => prev + 1);
         setHasLiked(true);
