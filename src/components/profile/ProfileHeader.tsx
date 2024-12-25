@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Github, Twitter, Instagram, Globe, Pencil } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { FollowStats } from "./FollowStats";
 
 interface ProfileHeaderProps {
   profile: {
@@ -118,6 +119,7 @@ export const ProfileHeader = ({ profile, isOwnProfile, onAvatarUpdate, showFollo
         {profile.bio && (
           <p className="text-gray-600 max-w-md">{profile.bio}</p>
         )}
+        <FollowStats profileId={profile.id} />
         <div className="flex justify-center gap-2 mt-4">
           {profile.twitter_url && (
             <Button variant="ghost" size="icon" asChild>

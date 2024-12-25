@@ -30,6 +30,12 @@ export const enTranslations = {
   'settings.selectLanguage': 'Select language',
   'settings.profileSettings': 'Profile Settings',
   
+  // Profile
+  'profile.followers': 'Followers',
+  'profile.following': 'Following',
+  'profile.noFollowers': 'No followers yet',
+  'profile.noFollowing': 'Not following anyone yet',
+
   // Profile form
   'profile.username': 'Username',
   'profile.bio': 'Bio',

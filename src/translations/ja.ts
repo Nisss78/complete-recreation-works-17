@@ -29,7 +29,7 @@ export const jaTranslations = {
   'settings.profile': 'プロフィール設定',
   'settings.selectLanguage': '言語を選択',
   
-  // Profile form
+  // Profile
   'profile.username': 'ユーザー名',
   'profile.bio': '自己紹介',
   'profile.avatar': 'アバター画像',
@@ -54,6 +54,10 @@ export const jaTranslations = {
   'profile.instagramPlaceholder': 'https://instagram.com/yourusername',
   'profile.githubPlaceholder': 'https://github.com/yourusername',
   'profile.websitePlaceholder': 'https://yourwebsite.com',
+  'profile.followers': 'フォロワー',
+  'profile.following': 'フォロー中',
+  'profile.noFollowers': 'まだフォロワーがいません',
+  'profile.noFollowing': 'まだ誰もフォローしていません',
 
   // Success messages
   'success.profileUpdated': 'プロフィールを更新しました',
