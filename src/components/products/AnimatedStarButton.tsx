@@ -1,6 +1,4 @@
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
-import { Star } from "lucide-react";
 
 interface AnimatedStarButtonProps {
   isBookmarked: boolean;
@@ -9,101 +7,107 @@ interface AnimatedStarButtonProps {
 }
 
 export const AnimatedStarButton = ({ isBookmarked, onClick, className }: AnimatedStarButtonProps) => {
-  const [checked, setChecked] = useState(false);
-
-  useEffect(() => {
-    setChecked(isBookmarked);
-  }, [isBookmarked]);
-
   return (
-    <div className={cn("relative", className)}>
-      <label className="ui-star cursor-pointer">
-        <input 
-          type="checkbox" 
-          className="hidden" 
-          checked={checked}
-          onChange={() => {}}
-          onClick={onClick}
-        />
-        <div className="star-icon">
-          <Star className={cn(
-            "w-5 h-5 transition-all duration-300",
-            checked ? "fill-yellow-400 text-yellow-400 scale-110" : "text-gray-400"
-          )} />
+    <button
+      onClick={onClick}
+      className={cn(
+        "relative w-10 h-10 sm:w-12 sm:h-12 rounded-lg border transition-all duration-300",
+        isBookmarked ? "border-blue-500 bg-blue-50" : "border-gray-200 hover:border-gray-400",
+        className
+      )}
+    >
+      <div className="squid-bookmark relative w-full h-full">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <svg 
+            viewBox="0 0 24 24" 
+            className={cn(
+              "w-5 h-5 sm:w-6 sm:h-6 transition-all duration-300",
+              isBookmarked ? "text-blue-500" : "text-gray-600"
+            )}
+          >
+            <path
+              d="M12,2 C14,2 16,4 16,6 C16,8 14,10 12,12 C10,10 8,8 8,6 C8,4 10,2 12,2 Z"
+              fill={isBookmarked ? "currentColor" : "none"}
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M4,12 C4,14 8,18 12,22 C16,18 20,14 20,12"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         </div>
-      </label>
+      </div>
 
-      <style jsx>{`
-        .ui-star {
-          --icon-size: 20px;
-          --icon-color: rgb(234 179 8);
-          --icon-circle-border: 1px solid var(--icon-color);
-          --icon-circle-size: 35px;
-          --icon-anmt-duration: 0.3s;
+      <style>{`
+        .squid-bookmark {
+          --primary: rgb(59, 130, 246);
         }
 
-        .star-icon {
-          width: var(--icon-size);
-          height: auto;
-          cursor: pointer;
-          transition: 0.2s;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          position: relative;
-          transform-origin: center;
-        }
-
-        .star-icon::after {
-          content: "";
+        .squid-bookmark::before {
+          content: '';
           position: absolute;
-          width: 10px;
-          height: 10px;
-          box-shadow: 0 30px 0 -4px var(--icon-color),
-            30px 0 0 -4px var(--icon-color),
-            0 -30px 0 -4px var(--icon-color),
-            -30px 0 0 -4px var(--icon-color),
-            -22px 22px 0 -4px var(--icon-color),
-            -22px -22px 0 -4px var(--icon-color),
-            22px -22px 0 -4px var(--icon-color),
-            22px 22px 0 -4px var(--icon-color);
+          inset: -2px;
+          border-radius: inherit;
+          background: var(--primary);
+          opacity: 0;
+          transition: opacity 0.3s;
+        }
+
+        button:hover .squid-bookmark::before {
+          opacity: 0.1;
+        }
+
+        button[data-state="checked"] .squid-bookmark::before {
+          opacity: 0.15;
+        }
+
+        .squid-bookmark::after {
+          content: '';
+          position: absolute;
+          inset: 50%;
+          transform: translate(-50%, -50%) scale(0);
+          width: 35px;
+          height: 35px;
+          background: var(--primary);
           border-radius: 50%;
-          transform: scale(0);
+          opacity: 0;
         }
 
-        .ui-star input:checked + .star-icon::after {
-          animation: sparkles var(--icon-anmt-duration)
-            cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-          animation-delay: var(--icon-anmt-duration);
+        button[data-state="checked"] .squid-bookmark::after {
+          animation: ripple 0.6s ease-out;
         }
 
-        .ui-star input:checked + .star-icon {
-          animation: bounce var(--icon-anmt-duration) forwards;
-          transition-delay: 0.3s;
-        }
-
-        @keyframes sparkles {
+        @keyframes ripple {
           from {
-            transform: scale(0);
-          }
-          40% {
-            opacity: 1;
+            opacity: 0.3;
+            transform: translate(-50%, -50%) scale(0);
           }
           to {
-            transform: scale(0.8);
             opacity: 0;
+            transform: translate(-50%, -50%) scale(2);
           }
         }
 
-        @keyframes bounce {
-          50% {
-            transform: scale(1.2);
+        @keyframes tentacle {
+          0%, 100% {
+            transform: translateY(0);
           }
-          100% {
-            transform: scale(1);
+          50% {
+            transform: translateY(2px);
           }
         }
+
+        .squid-bookmark path:last-child {
+          animation: tentacle 2s ease-in-out infinite;
+        }
       `}</style>
-    </div>
+    </button>
   );
 };
