@@ -126,4 +126,7 @@ export const jaTranslations = {
   'index.unknownUser': '名前未設定',
   'index.noProducts': 'まだ投稿されたプロダクトはありません。最初の投稿者になりませんか？',
   'index.noArticles': 'まだ記事がありません',
+
+  // Common
+  'common.loading': '読み込み中...',
 } as const;

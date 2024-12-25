@@ -4,6 +4,10 @@ import { followTranslations } from './sections/follows';
 import { successTranslations } from './sections/success';
 
 export const enTranslations = {
+
+  // Common
+  'common.loading': 'Loading...',
+
   ...commentTranslations.en,
   ...productTranslations.en,
   ...followTranslations.en,

@@ -3,6 +3,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ArticleCard } from "@/components/articles/ArticleCard";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { formatTimeAgo } from "@/lib/utils";
 
 const BookmarksPage = () => {
   const { bookmarks, isLoading } = useAllArticleBookmarks();
@@ -13,7 +14,7 @@ const BookmarksPage = () => {
       <div className="min-h-screen bg-white flex flex-col">
         <Header />
         <main className="flex-1 flex items-center justify-center p-4">
-          <div className="animate-pulse text-gray-500">{t('loading')}</div>
+          <div className="animate-pulse text-gray-500">{t('common.loading')}</div>
         </main>
         <Footer />
       </div>
@@ -44,7 +45,7 @@ const BookmarksPage = () => {
                     avatar: article.profiles.avatar_url || '',
                   }}
                   likes={article.likes_count || 0}
-                  postedAt={article.created_at}
+                  postedAt={formatTimeAgo(article.created_at)}
                   thumbnail_url={article.thumbnail_url}
                 />
               ))

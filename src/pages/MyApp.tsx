@@ -8,18 +8,9 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useBookmarks } from "@/hooks/useBookmarks";
 
-interface Product {
-  id: number;
-  name: string;
-  tagline: string;
-  description: string;
-  icon_url: string;
-  URL?: string;
-}
-
 const MyApp = () => {
   const { bookmarks, isLoading } = useBookmarks();
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
   const { t } = useLanguage();
 
   // Fetch complete product details when a product is selected
@@ -52,7 +43,7 @@ const MyApp = () => {
     enabled: !!selectedProduct?.id,
   });
 
-  const handleProductClick = (product: Product) => {
+  const handleProductClick = (product: any) => {
     console.log('Product clicked:', product);
     setSelectedProduct(product);
   };
@@ -66,7 +57,7 @@ const MyApp = () => {
       <div className="min-h-screen bg-white flex flex-col">
         <Header />
         <main className="flex-1 flex items-center justify-center p-4">
-          <div className="animate-pulse text-gray-500">{t('loading')}</div>
+          <div className="animate-pulse text-gray-500">{t('common.loading')}</div>
         </main>
         <Footer />
       </div>
@@ -78,23 +69,35 @@ const MyApp = () => {
       <Header />
       <main className="flex-1">
         <div className="max-w-7xl mx-auto py-4 sm:py-8 px-4 sm:px-6 lg:px-8">
-          <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-8">My App</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-8">{t('nav.myApp')}</h1>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {bookmarks?.map((bookmark) => (
-              <ProductCard
-                key={bookmark.id}
-                product={bookmark.products}
-                onClick={() => handleProductClick(bookmark.products)}
-              />
-            ))}
+            {bookmarks?.map((bookmark) => {
+              const product = {
+                id: bookmark.id,
+                name: bookmark.name,
+                tagline: bookmark.tagline,
+                description: bookmark.description,
+                icon: bookmark.icon_url,
+                tags: bookmark.product_tags?.map((t: any) => t.tag) || [],
+                upvotes: 0,
+                comments: 0,
+              };
+              return (
+                <ProductCard
+                  key={bookmark.id}
+                  {...product}
+                  onClick={() => handleProductClick(bookmark)}
+                />
+              );
+            })}
           </div>
 
           {selectedProduct && (
             <ProductDialog
-              product={productDetails}
               open={!!selectedProduct}
-              onClose={handleDialogClose}
+              onOpenChange={handleDialogClose}
+              product={productDetails}
             />
           )}
         </div>
