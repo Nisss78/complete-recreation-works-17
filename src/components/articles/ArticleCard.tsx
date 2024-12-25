@@ -165,20 +165,22 @@ export const ArticleCard = ({
 
   return (
     <Link to={`/articles/${id}`}>
-      <Card className="p-3 sm:p-4 hover:bg-gray-50 transition-colors cursor-pointer">
-        <ArticleHeader
-          id={id}
-          title={title}
-          thumbnail_url={thumbnail_url}
-          author={author}
-          postedAt={postedAt}
-          likes={likesCount}
-          hasLiked={hasLiked}
-          isBookmarked={isBookmarked}
-          onLike={handleLike}
-          onBookmark={handleBookmark}
-          onAuthorClick={handleAuthorClick}
-        />
+      <Card className="hover:bg-gray-50 transition-colors cursor-pointer rounded-none sm:rounded-lg">
+        <div className="p-3 sm:p-4">
+          <ArticleHeader
+            id={id}
+            title={title}
+            thumbnail_url={thumbnail_url}
+            author={author}
+            postedAt={postedAt}
+            likes={likesCount}
+            hasLiked={hasLiked}
+            isBookmarked={isBookmarked}
+            onLike={handleLike}
+            onBookmark={handleBookmark}
+            onAuthorClick={handleAuthorClick}
+          />
+        </div>
       </Card>
     </Link>
   );

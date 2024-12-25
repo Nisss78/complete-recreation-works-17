@@ -81,9 +81,9 @@ export default function Articles() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
       <Header />
-      <main className="container max-w-4xl mx-auto py-4 px-2 sm:px-4">
-        <div className="space-y-3 sm:space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+      <main className="mx-auto py-4 sm:container sm:px-4">
+        <div className="space-y-3 sm:space-y-4 px-0">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-3 sm:px-0">
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
               {t('articles.title')}
             </h1>
@@ -106,7 +106,7 @@ export default function Articles() {
           </div>
 
           {isLoading ? (
-            <div className="space-y-2">
+            <div className="space-y-2 px-3 sm:px-0">
               {[...Array(3)].map((_, i) => (
                 <div key={i} className="animate-pulse">
                   <div className="h-24 sm:h-32 bg-gray-200 rounded-lg" />
@@ -116,24 +116,25 @@ export default function Articles() {
           ) : articles && articles.length > 0 ? (
             <div className="space-y-2">
               {articles.map((article: Article) => (
-                <ArticleCard
-                  key={article.id}
-                  id={article.id}
-                  date={formatDate(article.created_at)}
-                  title={article.title}
-                  author={{
-                    id: article.profiles.id,
-                    name: article.profiles.username,
-                    avatar: article.profiles.avatar_url
-                  }}
-                  likes={article.likes_count || 0}
-                  postedAt={formatTimeAgo(article.created_at)}
-                  thumbnail_url={article.thumbnail_url}
-                />
+                <div key={article.id} className="px-0">
+                  <ArticleCard
+                    id={article.id}
+                    date={formatDate(article.created_at)}
+                    title={article.title}
+                    author={{
+                      id: article.profiles.id,
+                      name: article.profiles.username,
+                      avatar: article.profiles.avatar_url
+                    }}
+                    likes={article.likes_count || 0}
+                    postedAt={formatTimeAgo(article.created_at)}
+                    thumbnail_url={article.thumbnail_url}
+                  />
+                </div>
               ))}
             </div>
           ) : (
-            <div className="text-center py-6 sm:py-8 text-gray-500 bg-white rounded-lg shadow-sm">
+            <div className="text-center py-6 sm:py-8 text-gray-500 bg-white rounded-lg shadow-sm mx-3 sm:mx-0">
               {showFollowedOnly ? t('articles.noFollowingArticles') : t('articles.noArticles')}
             </div>
           )}
