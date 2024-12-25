@@ -53,7 +53,7 @@ export const AnimatedLikeButton = ({ hasLiked, onClick, className }: AnimatedLik
           justify-content: center;
           align-items: center;
           position: relative;
-          transform-origin: top;
+          transform-origin: center;
         }
 
         .bookmark::after {
@@ -85,16 +85,16 @@ export const AnimatedLikeButton = ({ hasLiked, onClick, className }: AnimatedLik
           fill: var(--icon-hover-color);
         }
 
-        .ui-bookmark input:checked + .bookmark::after {
-          animation: circles var(--icon-anmt-duration)
-            cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-          animation-delay: var(--icon-anmt-duration);
-        }
-
         .ui-bookmark input:checked + .bookmark {
           fill: var(--icon-primary-color);
           animation: bookmark var(--icon-anmt-duration) forwards;
           transition-delay: 0.3s;
+        }
+
+        .ui-bookmark input:checked + .bookmark::after {
+          animation: circles var(--icon-anmt-duration)
+            cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+          animation-delay: var(--icon-anmt-duration);
         }
 
         .ui-bookmark input:checked + .bookmark::before {
@@ -105,10 +105,10 @@ export const AnimatedLikeButton = ({ hasLiked, onClick, className }: AnimatedLik
 
         @keyframes bookmark {
           50% {
-            transform: scaleY(0.6);
+            transform: scale(0.8);
           }
           100% {
-            transform: scaleY(1);
+            transform: scale(1);
           }
         }
 
