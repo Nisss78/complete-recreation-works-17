@@ -56,6 +56,19 @@ export const enTranslations = {
   'profile.githubPlaceholder': 'https://github.com/yourusername',
   'profile.websitePlaceholder': 'https://yourwebsite.com',
 
+  // Product details
+  'product.details.loginRequired': 'Login Required',
+  'product.details.loginRequiredDesc': 'Please login to perform this action',
+  'product.details.like': 'Like',
+  'product.details.bookmarkRemoved': 'Bookmark Removed',
+  'product.details.bookmarkAdded': 'Bookmark Added',
+  'product.details.bookmarkRemovedDesc': 'Product removed from bookmarks',
+  'product.details.bookmarkAddedDesc': 'Product added to bookmarks',
+  'product.details.linkCopied': 'Link Copied',
+  'product.details.linkCopiedDesc': 'Product link copied to clipboard',
+  'product.details.visit': 'Visit',
+  'error.adminRequired': 'Admin access required',
+
   // Success messages
   'success.profileUpdated': 'Profile updated',
   'success.languageUpdated': 'Language preference updated',

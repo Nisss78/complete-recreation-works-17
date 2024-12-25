@@ -4,7 +4,7 @@ import { enTranslations } from '@/translations/en';
 import { jaTranslations } from '@/translations/ja';
 
 export type Language = 'en' | 'ja';
-type TranslationKey = keyof typeof enTranslations & keyof typeof jaTranslations;
+type TranslationKey = keyof typeof enTranslations;
 
 type LanguageContextType = {
   language: Language;
@@ -60,8 +60,7 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
   };
 
   const t = (key: TranslationKey): string => {
-    const value = translations[language][key];
-    return value;
+    return translations[language][key] as string;
   };
 
   return (

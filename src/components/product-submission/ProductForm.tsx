@@ -17,6 +17,14 @@ interface ProductFormData {
   links: { description: string; url: string }[];
 }
 
+interface ProductTagsProps {
+  onTagsChange: (newTags: string[]) => void;
+}
+
+interface ProductLinksProps {
+  register: UseFormRegister<ProductFormData>;
+}
+
 export const ProductForm = () => {
   const { t } = useLanguage();
   const { toast } = useToast();
