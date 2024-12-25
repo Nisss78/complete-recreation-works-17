@@ -6,10 +6,12 @@ import { useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const AuthPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const checkUser = async () => {
@@ -38,11 +40,15 @@ const AuthPage = () => {
         <div className="text-center mb-8 relative">
           <Link 
             to="/" 
-            className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-900"
+            className={`absolute left-0 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-900 ${isMobile ? 'p-2' : ''}`}
           >
-            <Button variant="ghost" size="sm">
-              <ChevronLeft className="w-4 h-4 mr-1" />
-              Back to Home
+            <Button 
+              variant="ghost" 
+              size={isMobile ? "icon" : "sm"}
+              className={isMobile ? "w-8 h-8 p-0" : ""}
+            >
+              <ChevronLeft className="w-4 h-4" />
+              {!isMobile && <span className="ml-1">Back to Home</span>}
             </Button>
           </Link>
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">
