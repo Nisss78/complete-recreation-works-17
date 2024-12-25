@@ -4,15 +4,17 @@ import { supabase } from "@/integrations/supabase/client";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Share2, Heart, ArrowLeft } from "lucide-react";
+import { Share2, Heart, ArrowLeft, Bookmark } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useArticleLikes } from "@/hooks/useArticleLikes";
+import { useArticleBookmarks } from "@/hooks/useArticleBookmarks";
 import { MetaTags } from "@/components/MetaTags";
 import { Button } from "@/components/ui/button";
 import { ArticleContent } from "./article-detail/ArticleContent";
 import { ArticleHeader } from "./article-detail/ArticleHeader";
 import { ArticleActions } from "./article-detail/ArticleActions";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { cn } from "@/lib/utils";
 
 export default function ArticleDetail() {
   const { id } = useParams();
@@ -21,6 +23,7 @@ export default function ArticleDetail() {
   const { t } = useLanguage();
   const articleId = parseInt(id || "0", 10);
   const { hasLiked, likesCount, handleLike } = useArticleLikes(articleId);
+  const { isBookmarked, toggleBookmark } = useArticleBookmarks(articleId);
 
   const { data: article, isLoading } = useQuery({
     queryKey: ["article", articleId],
@@ -70,6 +73,18 @@ export default function ArticleDetail() {
 
   const handleBack = () => {
     navigate(-1);
+  };
+
+  const handleBookmark = async () => {
+    const success = await toggleBookmark();
+    if (success) {
+      toast({
+        title: isBookmarked ? "ブックマークを解除しました" : "ブックマークに追加しました",
+        description: isBookmarked 
+          ? "記事のブックマークを解除しました" 
+          : "記事をブックマークに追加しました",
+      });
+    }
   };
 
   if (isLoading) {
@@ -161,6 +176,17 @@ export default function ArticleDetail() {
               >
                 <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${hasLiked ? "fill-current" : ""}`} />
                 {likesCount}
+              </button>
+              <button
+                onClick={handleBookmark}
+                className={cn(
+                  "flex items-center gap-2 text-sm sm:text-base p-1",
+                  isBookmarked
+                    ? "text-blue-500 hover:text-blue-600"
+                    : "text-gray-600 hover:text-gray-900"
+                )}
+              >
+                <Bookmark className={cn("w-4 h-4 sm:w-5 sm:h-5", isBookmarked && "fill-current")} />
               </button>
             </div>
           </div>
