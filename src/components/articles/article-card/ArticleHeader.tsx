@@ -24,18 +24,20 @@ export const ArticleHeader = ({ id, title, thumbnail_url }: ArticleHeaderProps) 
   const thumbnailUrl = thumbnail_url || `https://images.unsplash.com/${randomThumbnail}?auto=format&fit=crop&w=800&q=80`;
 
   return (
-    <div className="flex gap-3 sm:gap-4">
-      <div className="w-20 h-20 sm:w-24 sm:h-24 overflow-hidden rounded-lg shrink-0">
-        <img 
-          src={thumbnailUrl} 
-          alt={title}
-          className="w-full h-full object-cover"
-        />
-      </div>
-      <div className="flex-1 min-w-0">
-        <h2 className="text-base sm:text-lg font-bold text-gray-900 mb-2 line-clamp-2">
-          {title}
-        </h2>
+    <div className="flex flex-col gap-3 sm:gap-4">
+      <div className="flex gap-3 sm:gap-4">
+        <div className="w-20 h-20 sm:w-24 sm:h-24 overflow-hidden rounded-lg shrink-0">
+          <img 
+            src={thumbnailUrl} 
+            alt={title}
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="flex-1 min-w-0">
+          <h2 className="text-base sm:text-lg font-bold text-gray-900 mb-2 line-clamp-2 text-left">
+            {title}
+          </h2>
+        </div>
       </div>
     </div>
   );

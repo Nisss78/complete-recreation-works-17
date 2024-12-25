@@ -2,6 +2,7 @@ import { Heart, Trash2, Bookmark } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useArticleBookmarks } from "@/hooks/useArticleBookmarks";
+import { Avatar } from "@/components/ui/avatar";
 
 interface Author {
   id: string;
@@ -42,29 +43,23 @@ export const ArticleFooter = ({
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-sm text-gray-600">
-      <div className="flex items-center gap-2 flex-1">
+    <div className="flex flex-col gap-3">
+      <div className="flex items-center gap-2">
         <button 
           onClick={onAuthorClick}
-          className="flex items-center gap-1.5 hover:text-gray-900 transition-colors"
+          className="flex items-center gap-2 hover:text-gray-900 transition-colors"
         >
           <img 
             src={author.avatar}
             alt={author.name}
-            className="w-5 h-5 rounded-full object-cover cursor-pointer"
+            className="w-6 h-6 rounded-full object-cover cursor-pointer"
           />
-          <span className="truncate max-w-[120px] sm:max-w-none">{author.name}</span>
-          {author.blog && (
-            <>
-              <span className="text-gray-400 hidden sm:inline">in</span>
-              <span className="hidden sm:inline">{author.blog}</span>
-            </>
-          )}
+          <span className="text-sm text-gray-600 hover:text-gray-900">{author.name}</span>
         </button>
-        <div className="text-gray-400 text-xs sm:text-sm">{postedAt}</div>
+        <span className="text-gray-400 text-sm">{postedAt}</span>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         <button 
           onClick={onLike}
           className={cn(
