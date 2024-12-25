@@ -1,10 +1,27 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Article } from '@/types/database';
 import { useToast } from './use-toast';
 
+interface Profile {
+  id: string;
+  username: string;
+  avatar_url: string;
+}
+
+interface BookmarkedArticle {
+  id: number;
+  title: string;
+  content: string;
+  thumbnail_url: string | null;
+  likes_count: number;
+  created_at: string;
+  user_id: string;
+  updated_at: string;
+  profiles: Profile;
+}
+
 export const useAllArticleBookmarks = () => {
-  const [bookmarks, setBookmarks] = useState<Article[]>([]);
+  const [bookmarks, setBookmarks] = useState<BookmarkedArticle[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
@@ -27,7 +44,9 @@ export const useAllArticleBookmarks = () => {
               content,
               thumbnail_url,
               likes_count,
+              user_id,
               created_at,
+              updated_at,
               profiles (
                 id,
                 username,
@@ -42,7 +61,10 @@ export const useAllArticleBookmarks = () => {
         }
 
         if (bookmarksData) {
-          setBookmarks(bookmarksData.map(b => b.articles).filter(Boolean));
+          const articles = bookmarksData
+            .map(b => b.articles)
+            .filter((article): article is BookmarkedArticle => article !== null);
+          setBookmarks(articles);
         }
       } catch (error) {
         console.error('Error fetching bookmarks:', error);

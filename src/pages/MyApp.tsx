@@ -1,4 +1,3 @@
-import { useBookmarks } from "@/hooks/useBookmarks";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ProductCard } from "@/components/ProductCard";
@@ -7,6 +6,7 @@ import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useBookmarks } from "@/hooks/useBookmarks";
 
 interface Product {
   id: number;
@@ -14,10 +14,7 @@ interface Product {
   tagline: string;
   description: string;
   icon_url: string;
-  URL: string | null;
-  tags: string[];
-  upvotes: number;
-  comments: number;
+  URL?: string;
 }
 
 const MyApp = () => {
@@ -31,12 +28,13 @@ const MyApp = () => {
     queryFn: async () => {
       if (!selectedProduct?.id) return null;
 
-      console.log('Fetching complete product details for:', selectedProduct.id);
-      
-      const { data: product, error } = await supabase
+      const { data, error } = await supabase
         .from('products')
         .select(`
           *,
+          product_images (
+            image_url
+          ),
           product_tags (
             tag
           )
@@ -49,14 +47,7 @@ const MyApp = () => {
         throw error;
       }
 
-      // Transform the data to match the expected format
-      return {
-        ...product,
-        icon: product.icon_url,
-        tags: product.product_tags?.map((pt: { tag: string }) => pt.tag) || [],
-        upvotes: 0, // You might want to fetch the actual upvotes count
-        comments: 0, // You might want to fetch the actual comments count
-      };
+      return data;
     },
     enabled: !!selectedProduct?.id,
   });
@@ -72,10 +63,10 @@ const MyApp = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
+      <div className="min-h-screen bg-white flex flex-col">
         <Header />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="animate-pulse text-gray-500">Loading bookmarks...</div>
+        <main className="flex-1 flex items-center justify-center p-4">
+          <div className="animate-pulse text-gray-500">{t('loading')}</div>
         </main>
         <Footer />
       </div>
@@ -83,44 +74,32 @@ const MyApp = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
+    <div className="min-h-screen bg-white flex flex-col">
       <Header />
-      <main className="container max-w-4xl mx-auto py-8 px-4">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">My Products</h1>
-        <div className="space-y-4">
-          {bookmarks.length === 0 ? (
-            <div className="text-center text-gray-500 py-8">
-              {t('bookmarks.empty')}
-            </div>
-          ) : (
-            bookmarks.map((product) => (
+      <main className="flex-1">
+        <div className="max-w-7xl mx-auto py-4 sm:py-8 px-4 sm:px-6 lg:px-8">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-8">My App</h1>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {bookmarks?.map((bookmark) => (
               <ProductCard
-                key={product.id}
-                id={product.id}
-                name={product.name}
-                tagline={product.tagline}
-                description=""
-                icon={product.icon_url}
-                tags={[]}
-                comments={0}
-                onClick={() => handleProductClick(product)}
+                key={bookmark.id}
+                product={bookmark.products}
+                onClick={() => handleProductClick(bookmark.products)}
               />
-            ))
+            ))}
+          </div>
+
+          {selectedProduct && (
+            <ProductDialog
+              product={productDetails}
+              open={!!selectedProduct}
+              onClose={handleDialogClose}
+            />
           )}
         </div>
       </main>
       <Footer />
-
-      {selectedProduct && productDetails && (
-        <ProductDialog
-          open={!!selectedProduct}
-          onOpenChange={handleDialogClose}
-          product={{
-            ...productDetails,
-            icon: productDetails.icon_url,
-          }}
-        />
-      )}
     </div>
   );
 };

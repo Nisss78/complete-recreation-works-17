@@ -12,8 +12,8 @@ const BookmarksPage = () => {
     return (
       <div className="min-h-screen bg-white flex flex-col">
         <Header />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="animate-pulse text-gray-500">Loading bookmarks...</div>
+        <main className="flex-1 flex items-center justify-center p-4">
+          <div className="animate-pulse text-gray-500">{t('loading')}</div>
         </main>
         <Footer />
       </div>
@@ -24,8 +24,8 @@ const BookmarksPage = () => {
     <div className="min-h-screen bg-white flex flex-col">
       <Header />
       <main className="flex-1">
-        <div className="max-w-4xl mx-auto py-8 px-4">
-          <h1 className="text-3xl font-bold mb-8">{t('bookmarks.title')}</h1>
+        <div className="max-w-4xl mx-auto py-4 sm:py-8 px-4 sm:px-6 lg:px-8">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-8">{t('bookmarks.title')}</h1>
           
           <div className="space-y-4">
             {bookmarks && bookmarks.length === 0 ? (
@@ -38,7 +38,11 @@ const BookmarksPage = () => {
                   key={article.id}
                   id={article.id}
                   title={article.title}
-                  author={article.profiles}
+                  author={{
+                    id: article.profiles.id,
+                    name: article.profiles.username || '',
+                    avatar: article.profiles.avatar_url || '',
+                  }}
                   likes={article.likes_count || 0}
                   postedAt={article.created_at}
                   thumbnail_url={article.thumbnail_url}
