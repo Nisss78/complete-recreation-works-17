@@ -27,19 +27,12 @@ export const useArticleLikes = (articleId: number) => {
   };
 
   const fetchLikesCount = async () => {
-    console.log('Fetching likes count for article:', articleId);
-    
-    const { data: article } = await supabase
-      .from('articles')
-      .select('likes_count')
-      .eq('id', articleId)
-      .single();
+    const { data: likes } = await supabase
+      .from('article_likes')
+      .select('id', { count: 'exact' })
+      .eq('article_id', articleId);
 
-    console.log('Article likes count from DB:', article?.likes_count);
-    
-    if (article) {
-      setLikesCount(article.likes_count || 0);
-    }
+    setLikesCount(likes?.length || 0);
   };
 
   const handleLike = async () => {
@@ -55,19 +48,12 @@ export const useArticleLikes = (articleId: number) => {
 
     try {
       if (hasLiked) {
-        const { error } = await supabase
+        await supabase
           .from('article_likes')
           .delete()
           .eq('article_id', articleId)
           .eq('user_id', session.user.id);
 
-        if (error) throw error;
-
-        // Update likes count in articles table
-        await supabase.rpc('decrement_article_likes', { 
-          article_id: articleId as number 
-        });
-        
         setLikesCount(prev => Math.max(0, prev - 1));
         setHasLiked(false);
 
@@ -89,11 +75,6 @@ export const useArticleLikes = (articleId: number) => {
         }
 
         if (error) throw error;
-
-        // Update likes count in articles table
-        await supabase.rpc('increment_article_likes', { 
-          article_id: articleId as number 
-        });
 
         setLikesCount(prev => prev + 1);
         setHasLiked(true);

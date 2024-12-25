@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft } from "lucide-react";
+import { Share2, Heart, ArrowLeft, Bookmark } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useArticleLikes } from "@/hooks/useArticleLikes";
 import { useArticleBookmarks } from "@/hooks/useArticleBookmarks";
@@ -12,10 +12,9 @@ import { MetaTags } from "@/components/MetaTags";
 import { Button } from "@/components/ui/button";
 import { ArticleContent } from "./article-detail/ArticleContent";
 import { ArticleHeader } from "./article-detail/ArticleHeader";
+import { ArticleActions } from "./article-detail/ArticleActions";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
-import { AnimatedLikeButton } from "@/components/articles/AnimatedLikeButton";
-import { AnimatedBookmarkButton } from "@/components/articles/AnimatedBookmarkButton";
 
 export default function ArticleDetail() {
   const { id } = useParams();
@@ -164,23 +163,31 @@ export default function ArticleDetail() {
             <div className="flex items-center gap-4 ml-auto">
               <button
                 onClick={handleShare}
-                className="text-gray-600 hover:text-gray-900 text-sm sm:text-base"
+                className="flex items-center gap-2 text-gray-600 hover:text-gray-900 text-sm sm:text-base"
               >
+                <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
                 {t('article.details.share')}
               </button>
-              <div className="flex items-center gap-2">
-                <AnimatedLikeButton
-                  hasLiked={hasLiked}
-                  onClick={handleLike}
-                  className="p-1"
-                />
-                <span className="text-sm text-gray-600">{likesCount}</span>
-              </div>
-              <AnimatedBookmarkButton
-                isBookmarked={isBookmarked}
+              <button
+                onClick={handleLike}
+                className={`flex items-center gap-2 text-sm sm:text-base ${
+                  hasLiked ? "text-pink-500" : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${hasLiked ? "fill-current" : ""}`} />
+                {likesCount}
+              </button>
+              <button
                 onClick={handleBookmark}
-                className="p-1"
-              />
+                className={cn(
+                  "flex items-center gap-2 text-sm sm:text-base p-1",
+                  isBookmarked
+                    ? "text-blue-500 hover:text-blue-600"
+                    : "text-gray-600 hover:text-gray-900"
+                )}
+              >
+                <Bookmark className={cn("w-4 h-4 sm:w-5 sm:h-5", isBookmarked && "fill-current")} />
+              </button>
             </div>
           </div>
           <ArticleContent content={article.content} />

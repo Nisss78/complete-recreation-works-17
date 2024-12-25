@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
+import { Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AnimatedBookmarkButton } from "../AnimatedBookmarkButton";
-import { AnimatedLikeButton } from "../AnimatedLikeButton";
 
 interface ArticleHeaderProps {
   id: number;
@@ -86,14 +86,18 @@ export const ArticleHeader = ({
             <span className="text-gray-400 text-xs sm:text-sm shrink-0">{postedAt}</span>
           </div>
           <div className="flex items-center gap-1 shrink-0">
-            <div className="flex items-center gap-1">
-              <AnimatedLikeButton
-                hasLiked={hasLiked}
-                onClick={onLike}
-                className="p-1"
-              />
-              <span className="text-sm text-gray-600">{likes}</span>
-            </div>
+            <button 
+              onClick={onLike}
+              className={cn(
+                "flex items-center gap-1 transition-colors p-1",
+                hasLiked 
+                  ? "text-pink-500 hover:text-pink-600" 
+                  : "text-gray-500 hover:text-gray-900"
+              )}
+            >
+              <Heart className={cn("w-4 h-4", hasLiked && "fill-current")} />
+              <span className="text-sm">{likes}</span>
+            </button>
             <AnimatedBookmarkButton
               isBookmarked={isBookmarked}
               onClick={onBookmark}
