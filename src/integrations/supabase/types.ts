@@ -9,6 +9,35 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      article_bookmarks: {
+        Row: {
+          article_id: number
+          created_at: string
+          id: number
+          user_id: string
+        }
+        Insert: {
+          article_id: number
+          created_at?: string
+          id?: number
+          user_id: string
+        }
+        Update: {
+          article_id?: number
+          created_at?: string
+          id?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "article_bookmarks_article_id_fkey"
+            columns: ["article_id"]
+            isOneToOne: false
+            referencedRelation: "articles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       article_likes: {
         Row: {
           article_id: number | null

@@ -1,7 +1,8 @@
-import { Heart, Trash2 } from "lucide-react";
+import { Heart, Trash2, Bookmark } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { FollowButton } from "@/components/articles/FollowButton";
+import { useArticleBookmarks } from "@/hooks/useArticleBookmarks";
 
 interface Author {
   id: string;
@@ -19,6 +20,7 @@ interface ArticleFooterProps {
   onLike: (e: React.MouseEvent) => void;
   onDelete: (e: React.MouseEvent) => void;
   onAuthorClick: (e: React.MouseEvent) => void;
+  articleId: number;
 }
 
 export const ArticleFooter = ({
@@ -29,8 +31,17 @@ export const ArticleFooter = ({
   showDeleteButton,
   onLike,
   onDelete,
-  onAuthorClick
+  onAuthorClick,
+  articleId
 }: ArticleFooterProps) => {
+  const { isBookmarked, toggleBookmark } = useArticleBookmarks(articleId);
+
+  const handleBookmark = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    await toggleBookmark();
+  };
+
   return (
     <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-sm text-gray-600">
       <div className="flex items-center gap-2 flex-1">
@@ -67,6 +78,17 @@ export const ArticleFooter = ({
         >
           <Heart className={cn("w-4 h-4", hasLiked && "fill-current")} />
           <span>{likes}</span>
+        </button>
+        <button
+          onClick={handleBookmark}
+          className={cn(
+            "flex items-center gap-1 transition-colors p-1",
+            isBookmarked
+              ? "text-blue-500 hover:text-blue-600"
+              : "text-gray-500 hover:text-gray-900"
+          )}
+        >
+          <Bookmark className={cn("w-4 h-4", isBookmarked && "fill-current")} />
         </button>
         {showDeleteButton && (
           <Button

@@ -174,6 +174,7 @@ export const ArticleCard = ({
             onLike={handleLike}
             onDelete={handleDelete}
             onAuthorClick={handleAuthorClick}
+            articleId={id}
           />
         </div>
       </Card>
