@@ -33,7 +33,8 @@ export const AnimatedBookmarkButton = ({ isBookmarked, onClick, className }: Ani
         </div>
       </label>
 
-      <style jsx>{`
+      <style>
+        {`
         .ui-bookmark {
           --icon-size: 20px;
           --icon-secondary-color: rgb(148 163 184);
@@ -141,7 +142,8 @@ export const AnimatedBookmarkButton = ({ isBookmarked, onClick, className }: Ani
             opacity: 0;
           }
         }
-      `}</style>
+      `}
+      </style>
     </div>
   );
 };
