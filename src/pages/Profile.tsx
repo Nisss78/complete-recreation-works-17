@@ -71,29 +71,15 @@ const ProfilePage = () => {
         throw error;
       }
 
-      if (!data) {
-        const { data: newProfile, error: createError } = await supabase
-          .from("profiles")
-          .insert([{ id: targetId }])
-          .select()
-          .single();
-
-        if (createError) {
-          toast({
-            title: "エラー",
-            description: "プロフィールの作成に失敗しました",
-            variant: "destructive",
-          });
-          throw createError;
-        }
-
-        return newProfile;
-      }
-
       return data;
     },
     enabled: !!(profileId || userId),
   });
+
+  const handleAvatarUpdate = (newAvatarUrl: string) => {
+    // Invalidate the profile query to refetch the updated data
+    queryClient.invalidateQueries({ queryKey: ["profile", profileId || userId] });
+  };
 
   const { data: articles, isLoading: articlesLoading } = useQuery({
     queryKey: ["userArticles", profileId || userId],
@@ -181,6 +167,7 @@ const ProfilePage = () => {
           <ProfileHeader 
             profile={profile} 
             isOwnProfile={isOwnProfile}
+            onAvatarUpdate={handleAvatarUpdate}
           />
           
           <div className="space-y-4">

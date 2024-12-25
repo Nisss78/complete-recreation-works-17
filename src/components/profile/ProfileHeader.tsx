@@ -23,10 +23,14 @@ interface ProfileHeaderProps {
   showFollowButton?: boolean;
 }
 
-export const ProfileHeader = ({ profile, isOwnProfile, onAvatarUpdate, showFollowButton }: ProfileHeaderProps) => {
+export const ProfileHeader = ({ 
+  profile, 
+  isOwnProfile, 
+  onAvatarUpdate,
+  showFollowButton 
+}: ProfileHeaderProps) => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const shouldShowFollowButton = showFollowButton && !isOwnProfile && profile;
 
   const handleAvatarClick = async () => {
     if (!isOwnProfile || !profile) return;
@@ -52,6 +56,13 @@ export const ProfileHeader = ({ profile, isOwnProfile, onAvatarUpdate, showFollo
         const { data: { publicUrl } } = supabase.storage
           .from('profile-images')
           .getPublicUrl(filePath);
+
+        const { error: updateError } = await supabase
+          .from('profiles')
+          .update({ avatar_url: publicUrl })
+          .eq('id', profile.id);
+
+        if (updateError) throw updateError;
 
         onAvatarUpdate?.(publicUrl);
 
@@ -112,7 +123,7 @@ export const ProfileHeader = ({ profile, isOwnProfile, onAvatarUpdate, showFollo
               <Pencil className="h-4 w-4" />
             </Button>
           )}
-          {shouldShowFollowButton && (
+          {showFollowButton && (
             <FollowButton profileId={profile.id} />
           )}
         </div>
