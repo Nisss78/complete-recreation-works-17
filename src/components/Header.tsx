@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Plus, BookOpen, FilePlus, User } from "lucide-react";
+import { Plus, BookOpen, FilePlus } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ProductSubmissionDialog } from "./ProductSubmissionDialog";
 import { supabase } from "@/integrations/supabase/client";
@@ -97,18 +97,7 @@ export const Header = () => {
                 </Button>
               )}
 
-              {isMobile ? (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-                  onClick={() => navigate("/profile")}
-                >
-                  <User className="h-5 w-5" />
-                </Button>
-              ) : (
-                <UserMenu />
-              )}
+              <UserMenu />
             </>
           ) : (
             <Button 
