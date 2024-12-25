@@ -9,7 +9,6 @@ import { useToast } from "@/hooks/use-toast";
 import { useArticleLikes } from "@/hooks/useArticleLikes";
 import { MetaTags } from "@/components/MetaTags";
 import { Button } from "@/components/ui/button";
-import ReactMarkdown from "react-markdown";
 import { ArticleContent } from "./article-detail/ArticleContent";
 import { ArticleHeader } from "./article-detail/ArticleHeader";
 import { ArticleActions } from "./article-detail/ArticleActions";
