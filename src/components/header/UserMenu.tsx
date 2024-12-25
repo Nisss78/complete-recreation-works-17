@@ -1,8 +1,7 @@
-import { User, Settings, LogOut, Bookmark } from "lucide-react";
+import { User, Settings, LogOut, Bookmark, BookOpen } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { useBookmarks } from "@/hooks/useBookmarks";
 import { useLanguage } from "@/contexts/LanguageContext";
 import {
   DropdownMenu,
@@ -82,8 +81,12 @@ export const UserMenu = () => {
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => navigate("/my-app")}>
-          <Bookmark className="w-4 h-4 mr-2" />
+          <BookOpen className="w-4 h-4 mr-2" />
           My App
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => navigate("/bookmarks")}>
+          <Bookmark className="w-4 h-4 mr-2" />
+          Bookmarks
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout}>
