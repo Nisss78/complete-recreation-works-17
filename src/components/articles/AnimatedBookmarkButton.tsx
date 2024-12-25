@@ -25,10 +25,8 @@ export const AnimatedBookmarkButton = ({ isBookmarked, onClick, className }: Ani
           onClick={onClick}
         />
         <div className="bookmark">
-          <svg viewBox="0 0 32 32" className="w-5 h-5">
-            <g>
-              <path d="M27 4v27a1 1 0 0 1-1.625.781L16 24.281l-9.375 7.5A1 1 0 0 1 5 31V4a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4z" />
-            </g>
+          <svg viewBox="0 0 16 16" style={{marginTop: 4}} className="bi bi-heart-fill" height={25} width={25}>
+            <path d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" fillRule="evenodd" />
           </svg>
         </div>
       </label>
@@ -36,10 +34,10 @@ export const AnimatedBookmarkButton = ({ isBookmarked, onClick, className }: Ani
       <style>
         {`
         .ui-bookmark {
-          --icon-size: 20px;
+          --icon-size: 24px;
           --icon-secondary-color: rgb(148 163 184);
           --icon-hover-color: rgb(100 116 139);
-          --icon-primary-color: rgb(59 130 246);
+          --icon-primary-color: rgb(252, 54, 54);
           --icon-circle-border: 1px solid var(--icon-primary-color);
           --icon-circle-size: 35px;
           --icon-anmt-duration: 0.3s;
@@ -73,6 +71,7 @@ export const AnimatedBookmarkButton = ({ isBookmarked, onClick, className }: Ani
             22px 22px 0 -4px var(--icon-primary-color);
           border-radius: 50%;
           transform: scale(0);
+          padding: 1px;
         }
 
         .bookmark::before {
