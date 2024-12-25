@@ -81,22 +81,26 @@ export default function Articles() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
       <Header />
-      <main className="container max-w-4xl mx-auto py-8 px-4">
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900">{t('articles.title') as string}</h1>
+      <main className="container max-w-4xl mx-auto py-6 sm:py-8 px-4">
+        <div className="space-y-4 sm:space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
+              {t('articles.title')}
+            </h1>
             <div className="flex gap-2">
               <Button
                 variant={showFollowedOnly ? "outline" : "default"}
                 onClick={() => setShowFollowedOnly(false)}
+                className="flex-1 sm:flex-none text-sm sm:text-base px-3 py-2"
               >
-                {t('articles.all') as string}
+                {t('articles.all')}
               </Button>
               <Button
                 variant={showFollowedOnly ? "default" : "outline"}
                 onClick={() => setShowFollowedOnly(true)}
+                className="flex-1 sm:flex-none text-sm sm:text-base px-3 py-2"
               >
-                {t('articles.following') as string}
+                {t('articles.following')}
               </Button>
             </div>
           </div>
@@ -105,12 +109,12 @@ export default function Articles() {
             <div className="space-y-4">
               {[...Array(3)].map((_, i) => (
                 <div key={i} className="animate-pulse">
-                  <div className="h-48 bg-gray-200 rounded-lg" />
+                  <div className="h-32 sm:h-48 bg-gray-200 rounded-lg" />
                 </div>
               ))}
             </div>
           ) : articles && articles.length > 0 ? (
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {articles.map((article: Article) => (
                 <ArticleCard
                   key={article.id}
@@ -129,8 +133,8 @@ export default function Articles() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 text-gray-500">
-              {showFollowedOnly ? t('articles.noFollowingArticles') as string : t('articles.noArticles') as string}
+            <div className="text-center py-8 sm:py-12 text-gray-500 bg-white rounded-xl shadow-sm">
+              {showFollowedOnly ? t('articles.noFollowingArticles') : t('articles.noArticles')}
             </div>
           )}
         </div>

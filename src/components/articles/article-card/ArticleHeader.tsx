@@ -60,25 +60,27 @@ export const ArticleHeader = ({
         />
       </div>
       <div className="flex-1 min-w-0 space-y-2">
-        <h2 className="text-base sm:text-lg font-bold text-gray-900 line-clamp-2 text-left">
+        <h2 className="text-base sm:text-lg font-bold text-gray-900 line-clamp-2 text-left break-words">
           {title}
         </h2>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
             <button 
               onClick={onAuthorClick}
-              className="flex items-center gap-2 hover:text-gray-900 transition-colors"
+              className="flex items-center gap-2 hover:text-gray-900 transition-colors group min-w-0"
             >
               <img 
                 src={author.avatar}
                 alt={author.name}
-                className="w-6 h-6 rounded-full object-cover cursor-pointer"
+                className="w-6 h-6 rounded-full object-cover shrink-0"
               />
-              <span className="text-sm text-gray-600">{author.name}</span>
+              <span className="text-sm text-gray-600 truncate group-hover:text-gray-900">
+                {author.name}
+              </span>
             </button>
-            <span className="text-gray-400 text-sm">{postedAt}</span>
+            <span className="text-gray-400 text-sm shrink-0">{postedAt}</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <button 
               onClick={onLike}
               className={cn(
