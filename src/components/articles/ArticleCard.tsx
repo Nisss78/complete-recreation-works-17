@@ -163,18 +163,8 @@ export const ArticleCard = ({
     await toggleBookmark();
   };
 
-  const handleCardClick = (e: React.MouseEvent) => {
-    // Only navigate if the click wasn't on a button or interactive element
-    if (
-      !(e.target as HTMLElement).closest('button') && 
-      !(e.target as HTMLElement).closest('.bookmark')
-    ) {
-      navigate(`/articles/${id}`);
-    }
-  };
-
   return (
-    <div onClick={handleCardClick}>
+    <Link to={`/articles/${id}`}>
       <Card className="hover:bg-gray-50 transition-colors cursor-pointer rounded-none sm:rounded-lg">
         <div className="p-3 sm:p-4">
           <ArticleHeader
@@ -192,6 +182,6 @@ export const ArticleCard = ({
           />
         </div>
       </Card>
-    </div>
+    </Link>
   );
 };
