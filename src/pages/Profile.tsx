@@ -171,6 +171,8 @@ const ProfilePage = () => {
     );
   }
 
+  const isOwnProfile = !profileId || profileId === userId;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
       <Header />
@@ -178,7 +180,7 @@ const ProfilePage = () => {
         <div className="space-y-8">
           <ProfileHeader 
             profile={profile} 
-            isOwnProfile={!profileId || profileId === userId}
+            isOwnProfile={isOwnProfile}
           />
           
           <div className="space-y-4">
@@ -197,7 +199,7 @@ const ProfilePage = () => {
                   }}
                   likes={article.likes_count || 0}
                   postedAt={formatTimeAgo(article.created_at)}
-                  showDeleteButton={true}
+                  showDeleteButton={isOwnProfile}
                   onDelete={handleArticleDelete}
                   thumbnail_url={article.thumbnail_url}
                 />
