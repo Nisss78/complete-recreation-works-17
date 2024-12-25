@@ -1,11 +1,11 @@
-import { useArticleBookmarks } from "@/hooks/useArticleBookmarks";
+import { useAllArticleBookmarks } from "@/hooks/useAllArticleBookmarks";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ArticleCard } from "@/components/articles/ArticleCard";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const BookmarksPage = () => {
-  const { bookmarks, isLoading } = useArticleBookmarks();
+  const { bookmarks, isLoading } = useAllArticleBookmarks();
   const { t } = useLanguage();
 
   if (isLoading) {
@@ -28,12 +28,12 @@ const BookmarksPage = () => {
           <h1 className="text-3xl font-bold mb-8">{t('bookmarks.title')}</h1>
           
           <div className="space-y-4">
-            {bookmarks.length === 0 ? (
+            {bookmarks && bookmarks.length === 0 ? (
               <div className="text-center text-gray-500 py-8">
                 {t('bookmarks.empty')}
               </div>
             ) : (
-              bookmarks.map((article) => (
+              bookmarks?.map((article) => (
                 <ArticleCard
                   key={article.id}
                   id={article.id}
