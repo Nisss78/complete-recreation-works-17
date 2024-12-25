@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
@@ -11,25 +11,32 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
+  const { id: profileId } = useParams();
   const { toast } = useToast();
   const [userId, setUserId] = useState<string | null>(null);
   const queryClient = useQueryClient();
   const { t } = useLanguage();
 
+  console.log('Profile Page - Params:', {
+    profileId,
+    currentUserId: userId,
+    isOwnProfile: profileId === userId
+  });
+
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
+      if (!session && !profileId) {
         navigate("/auth");
         return;
       }
-      setUserId(session.user.id);
+      setUserId(session?.user.id || null);
     };
 
     checkAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_OUT') {
+      if (event === 'SIGNED_OUT' && !profileId) {
         navigate("/auth");
       } else if (session) {
         setUserId(session.user.id);
@@ -39,17 +46,20 @@ const ProfilePage = () => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [navigate]);
+  }, [navigate, profileId]);
 
   const { data: profile, isLoading: profileLoading } = useQuery({
-    queryKey: ["profile", userId],
+    queryKey: ["profile", profileId || userId],
     queryFn: async () => {
-      if (!userId) return null;
+      const targetId = profileId || userId;
+      if (!targetId) return null;
+      
+      console.log('Profile Page - Fetching profile for:', targetId);
       
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
-        .eq("id", userId)
+        .eq("id", targetId)
         .maybeSingle();
 
       if (error) {
@@ -64,7 +74,7 @@ const ProfilePage = () => {
       if (!data) {
         const { data: newProfile, error: createError } = await supabase
           .from("profiles")
-          .insert([{ id: userId }])
+          .insert([{ id: targetId }])
           .select()
           .single();
 
@@ -82,15 +92,15 @@ const ProfilePage = () => {
 
       return data;
     },
-    enabled: !!userId,
+    enabled: !!(profileId || userId),
   });
 
   const { data: articles, isLoading: articlesLoading } = useQuery({
-    queryKey: ["userArticles", userId],
+    queryKey: ["userArticles", profileId || userId],
     queryFn: async () => {
-      if (!userId) return [];
+      const targetId = profileId || userId;
+      if (!targetId) return [];
 
-      console.log("Fetching user articles for:", userId);
       const { data, error } = await supabase
         .from('articles')
         .select(`
@@ -101,7 +111,7 @@ const ProfilePage = () => {
             avatar_url
           )
         `)
-        .eq('user_id', userId)
+        .eq('user_id', targetId)
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -123,7 +133,7 @@ const ProfilePage = () => {
         }
       }));
     },
-    enabled: !!userId,
+    enabled: !!(profileId || userId),
   });
 
   const handleArticleDelete = () => {
@@ -166,7 +176,10 @@ const ProfilePage = () => {
       <Header />
       <main className="container max-w-4xl mx-auto py-8 px-4">
         <div className="space-y-8">
-          <ProfileHeader profile={profile} />
+          <ProfileHeader 
+            profile={profile} 
+            isOwnProfile={!profileId || profileId === userId}
+          />
           
           <div className="space-y-4">
             <h2 className="text-2xl font-bold text-gray-900">{t('articles.myPosts')}</h2>

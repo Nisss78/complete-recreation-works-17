@@ -148,6 +148,11 @@ export const ArticleCard = ({
   const handleAuthorClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    console.log('ArticleCard - Author click:', {
+      authorId: author.id,
+      authorName: author.name,
+      fullAuthor: author
+    });
     navigate(`/profile/${author.id}`);
   };
 
