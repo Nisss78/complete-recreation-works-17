@@ -8,6 +8,7 @@ import Index from "@/pages/Index";
 import Profile from "@/pages/Profile";
 import Settings from "@/pages/Settings";
 import Bookmarks from "@/pages/Bookmarks";
+import MyApp from "@/pages/MyApp";
 
 export const Routes = () => {
   const location = useLocation();
@@ -27,6 +28,7 @@ export const Routes = () => {
       <Route path="/profile/:id" element={<Profile />} />
       <Route path="/settings" element={<Settings />} />
       <Route path="/bookmarks" element={<Bookmarks />} />
+      <Route path="/my-app" element={<MyApp />} />
       <Route path="/posts/:productId" element={<Index />} />
     </RouterRoutes>
   );
