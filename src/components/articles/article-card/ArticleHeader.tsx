@@ -88,13 +88,13 @@ export const ArticleHeader = ({
                   {truncatedName}
                 </span>
               </button>
-              {isAuthenticated && (
-                <FollowButton profileId={author.id} className="ml-1" />
-              )}
             </div>
             <span className="text-gray-400 text-xs sm:text-sm shrink-0">{postedAt}</span>
           </div>
           <div className="flex items-center gap-1 shrink-0">
+            {isAuthenticated && (
+              <FollowButton profileId={author.id} className="mr-1" />
+            )}
             <button 
               onClick={onLike}
               className={cn(

@@ -15,7 +15,7 @@ export const FollowButton = ({ profileId, className }: FollowButtonProps) => {
   return (
     <Button
       variant={isFollowing ? "outline" : "default"}
-      size="xs"
+      size="sm"
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
