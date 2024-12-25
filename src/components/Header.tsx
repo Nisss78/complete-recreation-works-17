@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Plus, BookOpen, FilePlus } from "lucide-react";
+import { Plus, BookOpen, FilePlus, User } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ProductSubmissionDialog } from "./ProductSubmissionDialog";
 import { supabase } from "@/integrations/supabase/client";
@@ -62,48 +62,69 @@ export const Header = () => {
           Protoduct
         </Link>
         
-        <div className="flex items-center gap-3 sm:gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           <Button
             variant="ghost"
-            size="sm"
-            className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 h-9"
+            size="icon"
+            className="text-gray-700 hover:text-gray-900 hover:bg-gray-50"
             onClick={() => navigate("/articles")}
           >
-            <BookOpen className="w-4 h-4 mr-2" />
-            {!isMobile && t('nav.articles')}
+            <BookOpen className="h-5 w-5" />
+            {!isMobile && <span className="ml-2">{t('nav.articles')}</span>}
           </Button>
           
           {isAuthenticated ? (
             <>
               <Button 
                 variant="ghost"
-                size="sm"
-                className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 h-9"
+                size="icon"
+                className="text-gray-700 hover:text-gray-900 hover:bg-gray-50"
                 onClick={() => navigate("/articles/new")}
               >
-                <FilePlus className="w-4 h-4 mr-2" />
-                {!isMobile && t('nav.writeArticle')}
+                <FilePlus className="h-5 w-5" />
+                {!isMobile && <span className="ml-2">{t('nav.writeArticle')}</span>}
               </Button>
+
               {isAdmin && (
                 <Button 
-                  variant="outline"
-                  size="sm"
-                  className="bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 h-9"
+                  variant="ghost"
+                  size="icon"
+                  className="text-gray-700 hover:text-gray-900 hover:bg-gray-50"
                   onClick={() => setShowSubmissionDialog(true)}
                 >
-                  <Plus className="w-4 h-4 mr-2" />
-                  {!isMobile && t('nav.post')}
+                  <Plus className="h-5 w-5" />
+                  {!isMobile && <span className="ml-2">{t('nav.post')}</span>}
                 </Button>
               )}
-              <UserMenu />
+
+              {isMobile ? (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                  onClick={() => navigate("/profile")}
+                >
+                  <User className="h-5 w-5" />
+                </Button>
+              ) : (
+                <UserMenu />
+              )}
             </>
           ) : (
             <Button 
-              variant="outline"
+              variant={isMobile ? "ghost" : "outline"}
+              size={isMobile ? "icon" : "default"}
               onClick={() => navigate("/auth")}
-              className="bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 h-9"
+              className={isMobile ? 
+                "text-gray-700 hover:text-gray-900 hover:bg-gray-50" : 
+                "bg-white hover:bg-gray-50 text-gray-900 border border-gray-200"
+              }
             >
-              {t('nav.login')}
+              {isMobile ? (
+                <User className="h-5 w-5" />
+              ) : (
+                t('nav.login')
+              )}
             </Button>
           )}
         </div>
