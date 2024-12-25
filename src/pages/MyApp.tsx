@@ -4,7 +4,6 @@ import { Footer } from "@/components/Footer";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductDialog } from "@/components/ProductDialog";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -24,7 +23,6 @@ interface Product {
 const MyApp = () => {
   const { bookmarks, isLoading } = useBookmarks();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const navigate = useNavigate();
   const { t } = useLanguage();
 
   // Fetch complete product details when a product is selected
@@ -63,16 +61,13 @@ const MyApp = () => {
     enabled: !!selectedProduct?.id,
   });
 
-  const handleProductClick = (product: any) => {
+  const handleProductClick = (product: Product) => {
     console.log('Product clicked:', product);
     setSelectedProduct(product);
-    const productSlug = product.name.toLowerCase().replace(/\s+/g, '-');
-    navigate(`/posts/${productSlug}`);
   };
 
   const handleDialogClose = () => {
     setSelectedProduct(null);
-    navigate('/my-app');
   };
 
   if (isLoading) {
