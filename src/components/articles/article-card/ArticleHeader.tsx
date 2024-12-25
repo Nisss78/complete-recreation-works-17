@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
-import { Heart, Bookmark } from "lucide-react";
+import { Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { FollowButton } from "../FollowButton";
+import { AnimatedBookmark } from "@/components/ui/animated-bookmark";
 
 interface ArticleHeaderProps {
   id: number;
@@ -107,17 +108,13 @@ export const ArticleHeader = ({
               <Heart className={cn("w-4 h-4", hasLiked && "fill-current")} />
               <span className="text-sm">{likes}</span>
             </button>
-            <button
-              onClick={onBookmark}
-              className={cn(
-                "flex items-center transition-colors p-1",
-                isBookmarked
-                  ? "text-blue-500 hover:text-blue-600"
-                  : "text-gray-500 hover:text-gray-900"
-              )}
-            >
-              <Bookmark className={cn("w-4 h-4", isBookmarked && "fill-current")} />
-            </button>
+            {isAuthenticated && (
+              <AnimatedBookmark
+                checked={isBookmarked}
+                onCheckedChange={() => onBookmark({} as React.MouseEvent)}
+                className="p-1"
+              />
+            )}
           </div>
         </div>
       </div>
