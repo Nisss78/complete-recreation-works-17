@@ -1,8 +1,9 @@
-import { MessageCircle, ArrowUp, Share2, BarChart2 } from "lucide-react";
+import { MessageCircle, Share2, BarChart2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { AnimatedStarButton } from "@/components/products/AnimatedStarButton";
+import { AnimatedLikeButton } from "@/components/products/AnimatedLikeButton";
 
 interface ProductActionsProps {
   productId: number;
@@ -93,17 +94,11 @@ export function ProductActions({
 
   return (
     <div className="flex items-center gap-1.5 sm:gap-3">
-      <button 
-        className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 rounded-full border transition-colors ${
-          hasLiked 
-            ? "text-upvote border-upvote" 
-            : "text-gray-700 hover:text-upvote border-gray-200 hover:border-upvote"
-        }`}
+      <AnimatedLikeButton 
+        hasLiked={hasLiked}
+        likes={likes}
         onClick={handleLike}
-      >
-        <ArrowUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-        <span className="text-sm sm:text-base font-medium">{likes}</span>
-      </button>
+      />
       
       <button 
         className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 text-gray-700 hover:text-gray-900 rounded-full border border-gray-200 hover:border-gray-400 transition-colors"
