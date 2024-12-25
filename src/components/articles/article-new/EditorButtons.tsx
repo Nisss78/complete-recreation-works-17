@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Image, Play, HelpCircle } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface EditorButtonsProps {
   isPreview: boolean;
@@ -8,12 +9,14 @@ interface EditorButtonsProps {
 }
 
 export const EditorButtons = ({ isPreview, setIsPreview, onImageUpload }: EditorButtonsProps) => {
+  const isMobile = useIsMobile();
+
   return (
-    <div className="absolute right-[-60px] top-0 flex flex-col gap-3">
+    <div className={`${isMobile ? 'fixed bottom-4 right-4' : 'absolute right-[-60px] top-0'} flex ${isMobile ? 'flex-row-reverse' : 'flex-col'} gap-3 z-20`}>
       <Button
         variant="outline"
         size="icon"
-        className="rounded-full bg-white shadow-sm hover:bg-gray-50"
+        className="rounded-full bg-white shadow-md hover:bg-gray-50"
         onClick={() => setIsPreview(!isPreview)}
       >
         <Play className="w-4 h-4" />
@@ -31,7 +34,7 @@ export const EditorButtons = ({ isPreview, setIsPreview, onImageUpload }: Editor
         <Button
           variant="outline"
           size="icon"
-          className="rounded-full bg-white shadow-sm hover:bg-gray-50"
+          className="rounded-full bg-white shadow-md hover:bg-gray-50"
         >
           <Image className="w-4 h-4" />
         </Button>
@@ -39,7 +42,7 @@ export const EditorButtons = ({ isPreview, setIsPreview, onImageUpload }: Editor
       <Button
         variant="outline"
         size="icon"
-        className="rounded-full bg-white shadow-sm hover:bg-gray-50"
+        className="rounded-full bg-white shadow-md hover:bg-gray-50"
         onClick={() => window.open('https://www.markdownguide.org/basic-syntax/', '_blank')}
       >
         <HelpCircle className="w-4 h-4" />
