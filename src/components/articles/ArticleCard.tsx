@@ -152,7 +152,7 @@ export const ArticleCard = ({
   };
 
   return (
-    <Link to={`/articles/${id}`} className="block">
+    <Link to={`/articles/${id}`}>
       <Card className="p-3 sm:p-4 hover:bg-gray-50 transition-colors cursor-pointer">
         <div className="space-y-3 sm:space-y-4">
           <ArticleHeader
