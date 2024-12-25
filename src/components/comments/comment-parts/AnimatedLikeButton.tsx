@@ -1,6 +1,5 @@
-import React from 'react';
-import { Heart } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
+import { Heart } from "lucide-react";
 
 interface AnimatedLikeButtonProps {
   hasLiked: boolean;
@@ -19,7 +18,7 @@ export const AnimatedLikeButton = ({
     <button
       onClick={onLike}
       className={cn(
-        "group flex items-center gap-1.5 transition-all duration-300",
+        "group relative flex items-center gap-1.5 transition-all duration-300",
         "hover:scale-105 active:scale-95",
         hasLiked ? "text-pink-500" : "text-gray-500 hover:text-pink-400",
         className
@@ -35,13 +34,14 @@ export const AnimatedLikeButton = ({
         />
         {hasLiked && (
           <>
-            {/* Particle effects */}
+            {/* Glow effect */}
             <div className="absolute -inset-1 animate-ping-once">
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                 <Heart className="w-6 h-6 text-pink-300 opacity-50" />
               </div>
             </div>
-            {/* Sparkles */}
+            
+            {/* Particles */}
             <div className="absolute -inset-2">
               {[...Array(6)].map((_, i) => (
                 <div
@@ -55,9 +55,21 @@ export const AnimatedLikeButton = ({
                 />
               ))}
             </div>
+            
+            {/* Rings */}
+            <div className="absolute -inset-2">
+              {[...Array(3)].map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute inset-0 border border-pink-400 rounded-full animate-ring-pulse"
+                  style={{ animationDelay: `${i * 0.1}s` }}
+                />
+              ))}
+            </div>
           </>
         )}
       </div>
+      
       <span className={cn(
         "text-sm font-medium transition-all duration-300",
         hasLiked ? "text-pink-500" : "text-gray-600"
@@ -84,6 +96,11 @@ export const AnimatedLikeButton = ({
           100% { transform: scale(0) translate(-20px, -20px); opacity: 0; }
         }
 
+        @keyframes ring-pulse {
+          0% { transform: scale(0); opacity: 1; }
+          100% { transform: scale(1.5); opacity: 0; }
+        }
+
         .animate-scale-once {
           animation: scale-once 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -94,6 +111,10 @@ export const AnimatedLikeButton = ({
 
         .animate-sparkle {
           animation: sparkle 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .animate-ring-pulse {
+          animation: ring-pulse 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
       `}</style>
     </button>
