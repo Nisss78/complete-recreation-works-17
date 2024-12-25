@@ -4,7 +4,7 @@ import { Heart } from "lucide-react";
 interface AnimatedLikeButtonProps {
   hasLiked: boolean;
   totalLikes: number;
-  onLike: () => void;
+  onLike: (e: React.MouseEvent) => void;
   className?: string;
 }
 
@@ -77,7 +77,8 @@ export const AnimatedLikeButton = ({
         {totalLikes}
       </span>
 
-      <style jsx>{`
+      <style>
+        {`
         @keyframes scale-once {
           0% { transform: scale(1); }
           50% { transform: scale(1.3); }
@@ -116,7 +117,8 @@ export const AnimatedLikeButton = ({
         .animate-ring-pulse {
           animation: ring-pulse 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
-      `}</style>
+        `}
+      </style>
     </button>
   );
 };
