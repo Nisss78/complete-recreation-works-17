@@ -1,9 +1,7 @@
-import { MessageCircle, Share2, BarChart2 } from "lucide-react";
+import { MessageCircle, ArrowUp, Share2, Bookmark, BarChart2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useBookmarks } from "@/hooks/useBookmarks";
-import { AnimatedStarButton } from "@/components/products/AnimatedStarButton";
-import { AnimatedLikeButton } from "@/components/products/AnimatedLikeButton";
 
 interface ProductActionsProps {
   productId: number;
@@ -94,11 +92,17 @@ export function ProductActions({
 
   return (
     <div className="flex items-center gap-1.5 sm:gap-3">
-      <AnimatedLikeButton 
-        hasLiked={hasLiked}
-        likes={likes}
+      <button 
+        className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 rounded-full border transition-colors ${
+          hasLiked 
+            ? "text-upvote border-upvote" 
+            : "text-gray-700 hover:text-upvote border-gray-200 hover:border-upvote"
+        }`}
         onClick={handleLike}
-      />
+      >
+        <ArrowUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+        <span className="text-sm sm:text-base font-medium">{likes}</span>
+      </button>
       
       <button 
         className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 text-gray-700 hover:text-gray-900 rounded-full border border-gray-200 hover:border-gray-400 transition-colors"
@@ -110,11 +114,16 @@ export function ProductActions({
 
       {!isMobile && (
         <>
-          <AnimatedStarButton
-            isBookmarked={isBookmarked}
+          <button 
+            className={`p-1.5 sm:p-2 rounded-full border transition-colors ${
+              isBookmarked
+                ? "text-blue-500 border-blue-500"
+                : "text-gray-700 hover:text-gray-900 border-gray-200 hover:border-gray-400"
+            }`}
             onClick={handleBookmark}
-            className="p-1.5 sm:p-2 rounded-full border border-gray-200 hover:border-gray-400"
-          />
+          >
+            <Bookmark className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          </button>
 
           <button 
             className="p-1.5 sm:p-2 text-gray-700 hover:text-gray-900 rounded-full border border-gray-200 hover:border-gray-400 transition-colors"
