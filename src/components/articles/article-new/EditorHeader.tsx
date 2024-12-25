@@ -16,9 +16,9 @@ export const EditorHeader = ({ title, setTitle, onSubmit, isSubmitting }: Editor
   const { t } = useLanguage();
 
   return (
-    <div className="fixed top-0 left-0 right-0 bg-white border-b z-10 px-4 py-3">
-      <div className="max-w-4xl mx-auto flex items-center justify-between">
-        <div className="flex items-center gap-4">
+    <div className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-b z-10">
+      <div className="max-w-4xl mx-auto px-4 py-3">
+        <div className="flex items-center gap-4 mb-3">
           <Button
             variant="ghost"
             size="icon"
@@ -27,28 +27,28 @@ export const EditorHeader = ({ title, setTitle, onSubmit, isSubmitting }: Editor
           >
             <ArrowLeft className="w-5 h-5 text-gray-600" />
           </Button>
-          <Input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder={t('articles.new.titlePlaceholder')}
-            className="w-[300px] border-none text-lg placeholder:text-gray-400 focus-visible:ring-0"
-          />
+          <div className="flex items-center gap-2 ml-auto">
+            <Button 
+              variant="outline" 
+              onClick={() => navigate(-1)}
+              disabled={isSubmitting}
+            >
+              {t('articles.new.cancel')}
+            </Button>
+            <Button 
+              onClick={onSubmit}
+              disabled={isSubmitting || !title.trim()}
+            >
+              {isSubmitting ? t('articles.new.posting') : t('articles.new.post')}
+            </Button>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
-            onClick={() => navigate(-1)}
-            disabled={isSubmitting}
-          >
-            {t('articles.new.cancel')}
-          </Button>
-          <Button 
-            onClick={onSubmit}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? t('articles.new.posting') : t('articles.new.post')}
-          </Button>
-        </div>
+        <Input
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder={t('articles.new.titlePlaceholder')}
+          className="w-full text-2xl font-medium border-none bg-transparent placeholder:text-gray-400 focus-visible:ring-0 px-0"
+        />
       </div>
     </div>
   );
