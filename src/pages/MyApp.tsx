@@ -6,14 +6,65 @@ import { ProductDialog } from "@/components/ProductDialog";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+
+interface Product {
+  id: number;
+  name: string;
+  tagline: string;
+  description: string;
+  icon_url: string;
+  URL: string | null;
+  tags: string[];
+  upvotes: number;
+  comments: number;
+}
 
 const MyApp = () => {
   const { bookmarks, isLoading } = useBookmarks();
-  const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const navigate = useNavigate();
   const { t } = useLanguage();
 
+  // Fetch complete product details when a product is selected
+  const { data: productDetails } = useQuery({
+    queryKey: ['product', selectedProduct?.id],
+    queryFn: async () => {
+      if (!selectedProduct?.id) return null;
+
+      console.log('Fetching complete product details for:', selectedProduct.id);
+      
+      const { data: product, error } = await supabase
+        .from('products')
+        .select(`
+          *,
+          product_tags (
+            tag
+          )
+        `)
+        .eq('id', selectedProduct.id)
+        .single();
+
+      if (error) {
+        console.error('Error fetching product details:', error);
+        throw error;
+      }
+
+      // Transform the data to match the expected format
+      return {
+        ...product,
+        icon: product.icon_url,
+        tags: product.product_tags?.map((pt: { tag: string }) => pt.tag) || [],
+        upvotes: 0, // You might want to fetch the actual upvotes count
+        comments: 0, // You might want to fetch the actual comments count
+      };
+    },
+    enabled: !!selectedProduct?.id,
+  });
+
   const handleProductClick = (product: any) => {
+    console.log('Product clicked:', product);
     setSelectedProduct(product);
     const productSlug = product.name.toLowerCase().replace(/\s+/g, '-');
     navigate(`/posts/${productSlug}`);
@@ -65,11 +116,14 @@ const MyApp = () => {
       </main>
       <Footer />
 
-      {selectedProduct && (
+      {selectedProduct && productDetails && (
         <ProductDialog
           open={!!selectedProduct}
           onOpenChange={handleDialogClose}
-          product={selectedProduct}
+          product={{
+            ...productDetails,
+            icon: productDetails.icon_url,
+          }}
         />
       )}
     </div>
