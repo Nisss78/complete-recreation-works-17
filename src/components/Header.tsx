@@ -63,17 +63,18 @@ export const Header = () => {
         </Link>
         
         <div className="flex items-center gap-3 sm:gap-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 h-9"
+            onClick={() => navigate("/articles")}
+          >
+            <BookOpen className="w-4 h-4 mr-2" />
+            {!isMobile && t('nav.articles')}
+          </Button>
+          
           {isAuthenticated ? (
             <>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 h-9"
-                onClick={() => navigate("/articles")}
-              >
-                <BookOpen className="w-4 h-4 mr-2" />
-                {!isMobile && t('nav.articles')}
-              </Button>
               <Button 
                 variant="ghost"
                 size="sm"
