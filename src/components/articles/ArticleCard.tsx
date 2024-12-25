@@ -43,7 +43,8 @@ export const ArticleCard = ({
 
   useEffect(() => {
     checkIfLiked();
-  }, []);
+    fetchLikesCount();
+  }, [id]);
 
   const checkIfLiked = async () => {
     const { data: { session } } = await supabase.auth.getSession();
@@ -57,6 +58,22 @@ export const ArticleCard = ({
       .maybeSingle();
 
     setHasLiked(!!like);
+  };
+
+  const fetchLikesCount = async () => {
+    console.log('Fetching likes count for article:', id);
+    
+    const { data: article } = await supabase
+      .from('articles')
+      .select('likes_count')
+      .eq('id', id)
+      .single();
+
+    console.log('Article likes count from DB:', article?.likes_count);
+    
+    if (article) {
+      setLikesCount(article.likes_count || 0);
+    }
   };
 
   const handleLike = async (e: React.MouseEvent) => {
@@ -164,7 +181,6 @@ export const ArticleCard = ({
   };
 
   const handleCardClick = (e: React.MouseEvent) => {
-    // Only navigate if the click wasn't on a button or interactive element
     if (
       !(e.target as HTMLElement).closest('button') && 
       !(e.target as HTMLElement).closest('.bookmark')
