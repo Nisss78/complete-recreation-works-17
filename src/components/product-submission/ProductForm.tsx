@@ -14,109 +14,51 @@ interface ProductFormData {
   tagline: string;
   description: string;
   tags: string[];
-  links: { description: string; url: string }[];
+  link: { description: string; url: string };
 }
 
-interface ProductTagsProps {
-  onTagsChange: (newTags: string[]) => void;
-}
-
-interface ProductLinksProps {
-  register: UseFormRegister<ProductFormData>;
-}
-
-export const ProductForm = () => {
+export const ProductForm = ({
+  name,
+  setName,
+  tagline,
+  setTagline,
+  description,
+  setDescription,
+  link,
+  setLink,
+  tags,
+  setTags,
+  setIconUrl,
+  setDescriptionImages,
+}: {
+  name: string;
+  setName: React.Dispatch<React.SetStateAction<string>>;
+  tagline: string;
+  setTagline: React.Dispatch<React.SetStateAction<string>>;
+  description: string;
+  setDescription: React.Dispatch<React.SetStateAction<string>>;
+  link: { description: string; url: string };
+  setLink: React.Dispatch<React.SetStateAction<{ description: string; url: string }>>;
+  tags: string[];
+  setTags: React.Dispatch<React.SetStateAction<string[]>>;
+  setIconUrl: (url: string) => void;
+  setDescriptionImages: (url: string[]) => void;
+}) => {
   const { t } = useLanguage();
-  const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [iconFile, setIconFile] = useState<File | null>(null);
-  const [productImages, setProductImages] = useState<File[]>([]);
-  const [tags, setTags] = useState<string[]>([]);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset
-  } = useForm<ProductFormData>();
-
-  const onSubmit = async (data: ProductFormData) => {
-    setIsSubmitting(true);
-    try {
-      if (!iconFile) {
-        throw new Error('Product icon is required');
-      }
-
-      // Upload icon
-      const iconFormData = new FormData();
-      iconFormData.append('file', iconFile);
-
-      // Upload product images
-      const imagePromises = productImages.map(async (file) => {
-        const imageFormData = new FormData();
-        imageFormData.append('file', file);
-        // Implement image upload logic here
-        return 'image_url_placeholder';
-      });
-
-      const uploadedImageUrls = await Promise.all(imagePromises);
-
-      // Create product with uploaded media
-      const productData = {
-        ...data,
-        icon_url: 'icon_url_placeholder',
-        image_urls: uploadedImageUrls,
-        tags: tags,
-      };
-
-      // Implement product creation logic here
-
-      toast({
-        title: t('success.completed'),
-        description: t('success.productPosted')
-      });
-      reset();
-      setIconFile(null);
-      setProductImages([]);
-      setTags([]);
-    } catch (error) {
-      console.error('Error submitting product:', error);
-      toast({
-        title: t('error.occurred'),
-        description: t('error.post'),
-        variant: "destructive"
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleIconUpload = (file: File) => {
-    setIconFile(file);
-  };
-
-  const handleImagesUpload = (files: File[]) => {
-    setProductImages(files);
-  };
-
-  const handleTagsChange = (newTags: string[]) => {
-    setTags(newTags);
-  };
+  const [newTag, setNewTag] = useState("");
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <div className="space-y-6 p-6">
       <div>
         <label className="block text-sm font-medium text-gray-700">
           {t('product.submit.name')}
         </label>
         <Input
-          {...register('name', { required: true })}
           placeholder={t('product.submit.namePlaceholder')}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           className="mt-1"
         />
-        {errors.name && (
-          <p className="mt-1 text-sm text-red-600">This field is required</p>
-        )}
       </div>
 
       <div>
@@ -124,13 +66,11 @@ export const ProductForm = () => {
           {t('product.submit.tagline')}
         </label>
         <Input
-          {...register('tagline', { required: true })}
           placeholder={t('product.submit.taglinePlaceholder')}
+          value={tagline}
+          onChange={(e) => setTagline(e.target.value)}
           className="mt-1"
         />
-        {errors.tagline && (
-          <p className="mt-1 text-sm text-red-600">This field is required</p>
-        )}
       </div>
 
       <div>
@@ -138,14 +78,12 @@ export const ProductForm = () => {
           {t('product.submit.productDescription')}
         </label>
         <Textarea
-          {...register('description', { required: true })}
           placeholder={t('product.submit.descriptionPlaceholder')}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
           className="mt-1"
           rows={4}
         />
-        {errors.description && (
-          <p className="mt-1 text-sm text-red-600">This field is required</p>
-        )}
       </div>
 
       <div>
@@ -153,10 +91,14 @@ export const ProductForm = () => {
           {t('product.submit.icon')}
         </label>
         <ImageUpload
-          onUpload={handleIconUpload}
-          maxFiles={1}
-          accept="image/*"
-          maxSize={2 * 1024 * 1024}
+          title={t('product.submit.icon')}
+          description={[
+            t('product.submit.iconRequirements.0'),
+            t('product.submit.iconRequirements.1'),
+            t('product.submit.iconRequirements.2')
+          ]}
+          type="icon"
+          onUpload={setIconUrl}
         />
       </div>
 
@@ -165,31 +107,30 @@ export const ProductForm = () => {
           {t('product.submit.images')}
         </label>
         <ImageUpload
-          onUpload={handleImagesUpload}
+          title={t('product.submit.images')}
+          description={[
+            t('product.submit.imageRequirements.0'),
+            t('product.submit.imageRequirements.1'),
+            t('product.submit.imageRequirements.2')
+          ]}
+          type="description"
+          onUpload={(url) => setDescriptionImages(prev => [...prev, url])}
           maxFiles={5}
-          accept="image/*"
-          maxSize={2 * 1024 * 1024}
-          multiple
+          currentFiles={0}
         />
       </div>
 
-      <ProductTags onTagsChange={handleTagsChange} />
+      <ProductTags
+        tags={tags}
+        setTags={setTags}
+        newTag={newTag}
+        setNewTag={setNewTag}
+      />
 
-      <ProductLinks register={register} />
-
-      <div className="flex justify-end space-x-4">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => reset()}
-          disabled={isSubmitting}
-        >
-          {t('product.submit.cancel')}
-        </Button>
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? t('product.submit.posting') : t('product.submit.post')}
-        </Button>
-      </div>
-    </form>
+      <ProductLinks
+        link={link}
+        setLink={setLink}
+      />
+    </div>
   );
 };
