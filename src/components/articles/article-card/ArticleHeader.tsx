@@ -1,10 +1,7 @@
 import { Link } from "react-router-dom";
-import { Heart } from "lucide-react";
+import { Heart, Bookmark } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/hooks/useAuth";
-import { FollowButton } from "../FollowButton";
-import { AnimatedBookmark } from "@/components/ui/animated-bookmark";
 
 interface ArticleHeaderProps {
   id: number;
@@ -37,8 +34,6 @@ export const ArticleHeader = ({
   onBookmark,
   onAuthorClick
 }: ArticleHeaderProps) => {
-  const { isAuthenticated } = useAuth();
-  
   const defaultThumbnails = [
     'photo-1649972904349-6e44c42644a7',
     'photo-1488590528505-98d2b5aba04b',
@@ -74,28 +69,23 @@ export const ArticleHeader = ({
         </h2>
         <div className="flex items-center justify-between gap-2 mt-auto">
           <div className="flex items-center gap-2 min-w-0 flex-1">
-            <div className="flex items-center gap-1.5 min-w-0">
-              <button 
-                onClick={onAuthorClick}
-                className="flex items-center gap-1.5 group min-w-0"
-                title={author.name}
-              >
-                <img 
-                  src={author.avatar}
-                  alt={author.name}
-                  className="w-5 h-5 rounded-full object-cover shrink-0"
-                />
-                <span className="text-sm text-gray-600 truncate group-hover:text-gray-900">
-                  {truncatedName}
-                </span>
-              </button>
-            </div>
+            <button 
+              onClick={onAuthorClick}
+              className="flex items-center gap-1.5 group min-w-0"
+              title={author.name}
+            >
+              <img 
+                src={author.avatar}
+                alt={author.name}
+                className="w-5 h-5 rounded-full object-cover shrink-0"
+              />
+              <span className="text-sm text-gray-600 truncate group-hover:text-gray-900">
+                {truncatedName}
+              </span>
+            </button>
             <span className="text-gray-400 text-xs sm:text-sm shrink-0">{postedAt}</span>
           </div>
           <div className="flex items-center gap-1 shrink-0">
-            {isAuthenticated && (
-              <FollowButton profileId={author.id} className="mr-1" />
-            )}
             <button 
               onClick={onLike}
               className={cn(
@@ -108,13 +98,17 @@ export const ArticleHeader = ({
               <Heart className={cn("w-4 h-4", hasLiked && "fill-current")} />
               <span className="text-sm">{likes}</span>
             </button>
-            {isAuthenticated && (
-              <AnimatedBookmark
-                checked={isBookmarked}
-                onCheckedChange={() => onBookmark({} as React.MouseEvent)}
-                className="p-1"
-              />
-            )}
+            <button
+              onClick={onBookmark}
+              className={cn(
+                "flex items-center transition-colors p-1",
+                isBookmarked
+                  ? "text-blue-500 hover:text-blue-600"
+                  : "text-gray-500 hover:text-gray-900"
+              )}
+            >
+              <Bookmark className={cn("w-4 h-4", isBookmarked && "fill-current")} />
+            </button>
           </div>
         </div>
       </div>

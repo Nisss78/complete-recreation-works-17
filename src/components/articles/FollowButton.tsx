@@ -22,16 +22,16 @@ export const FollowButton = ({ profileId, className }: FollowButtonProps) => {
         toggleFollow();
       }}
       disabled={isLoading}
-      className={`h-6 px-2 text-xs font-normal ${className}`}
+      className={className}
     >
       {isFollowing ? (
         <>
-          <UserMinus className="w-3 h-3 mr-1" />
+          <UserMinus className="w-4 h-4 mr-2" />
           {t('follow.following')}
         </>
       ) : (
         <>
-          <UserPlus className="w-3 h-3 mr-1" />
+          <UserPlus className="w-4 h-4 mr-2" />
           {t('follow.button')}
         </>
       )}
