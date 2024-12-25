@@ -10,7 +10,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Articles() {
   const [showFollowedOnly, setShowFollowedOnly] = useState(false);
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
 
   const { data: articles, isLoading } = useQuery({
     queryKey: ["articles", showFollowedOnly],
@@ -81,9 +81,9 @@ export default function Articles() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
       <Header />
-      <main className="container max-w-4xl mx-auto py-6 sm:py-8 px-4">
-        <div className="space-y-4 sm:space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <main className="container max-w-4xl mx-auto py-4 px-2 sm:px-4">
+        <div className="space-y-3 sm:space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
               {t('articles.title')}
             </h1>
@@ -91,14 +91,14 @@ export default function Articles() {
               <Button
                 variant={showFollowedOnly ? "outline" : "default"}
                 onClick={() => setShowFollowedOnly(false)}
-                className="flex-1 sm:flex-none text-sm sm:text-base px-3 py-2"
+                className="flex-1 sm:flex-none text-sm sm:text-base px-3 py-1.5"
               >
                 {t('articles.all')}
               </Button>
               <Button
                 variant={showFollowedOnly ? "default" : "outline"}
                 onClick={() => setShowFollowedOnly(true)}
-                className="flex-1 sm:flex-none text-sm sm:text-base px-3 py-2"
+                className="flex-1 sm:flex-none text-sm sm:text-base px-3 py-1.5"
               >
                 {t('articles.following')}
               </Button>
@@ -106,15 +106,15 @@ export default function Articles() {
           </div>
 
           {isLoading ? (
-            <div className="space-y-4">
+            <div className="space-y-2">
               {[...Array(3)].map((_, i) => (
                 <div key={i} className="animate-pulse">
-                  <div className="h-32 sm:h-48 bg-gray-200 rounded-lg" />
+                  <div className="h-24 sm:h-32 bg-gray-200 rounded-lg" />
                 </div>
               ))}
             </div>
           ) : articles && articles.length > 0 ? (
-            <div className="space-y-3 sm:space-y-4">
+            <div className="space-y-2">
               {articles.map((article: Article) => (
                 <ArticleCard
                   key={article.id}
@@ -133,7 +133,7 @@ export default function Articles() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-8 sm:py-12 text-gray-500 bg-white rounded-xl shadow-sm">
+            <div className="text-center py-6 sm:py-8 text-gray-500 bg-white rounded-lg shadow-sm">
               {showFollowedOnly ? t('articles.noFollowingArticles') : t('articles.noArticles')}
             </div>
           )}

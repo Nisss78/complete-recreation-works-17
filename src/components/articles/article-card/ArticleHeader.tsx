@@ -51,52 +51,52 @@ export const ArticleHeader = ({
   const thumbnailUrl = thumbnail_url || `https://images.unsplash.com/${randomThumbnail}?auto=format&fit=crop&w=800&q=80`;
 
   return (
-    <div className="flex gap-3 sm:gap-4">
-      <div className="w-20 h-20 sm:w-24 sm:h-24 overflow-hidden rounded-lg shrink-0">
+    <div className="flex gap-2 sm:gap-3">
+      <div className="w-16 h-16 sm:w-20 sm:h-20 overflow-hidden rounded-lg shrink-0">
         <img 
           src={thumbnailUrl} 
           alt={title}
           className="w-full h-full object-cover"
         />
       </div>
-      <div className="flex-1 min-w-0 space-y-2">
-        <h2 className="text-base sm:text-lg font-bold text-gray-900 line-clamp-2 text-left break-words">
+      <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+        <h2 className="text-base sm:text-lg font-bold text-gray-900 line-clamp-2 text-left break-all">
           {title}
         </h2>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-          <div className="flex items-center gap-2 min-w-0">
+        <div className="flex items-center justify-between gap-2 mt-auto">
+          <div className="flex items-center gap-2 min-w-0 flex-1">
             <button 
               onClick={onAuthorClick}
-              className="flex items-center gap-2 hover:text-gray-900 transition-colors group min-w-0"
+              className="flex items-center gap-1.5 group min-w-0"
             >
               <img 
                 src={author.avatar}
                 alt={author.name}
-                className="w-6 h-6 rounded-full object-cover shrink-0"
+                className="w-5 h-5 rounded-full object-cover shrink-0"
               />
-              <span className="text-sm text-gray-600 truncate group-hover:text-gray-900">
+              <span className="text-sm text-gray-600 truncate group-hover:text-gray-900 max-w-[120px]">
                 {author.name}
               </span>
             </button>
-            <span className="text-gray-400 text-sm shrink-0">{postedAt}</span>
+            <span className="text-gray-400 text-xs sm:text-sm shrink-0">{postedAt}</span>
           </div>
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-1 shrink-0">
             <button 
               onClick={onLike}
               className={cn(
-                "flex items-center gap-1 transition-colors",
+                "flex items-center gap-1 transition-colors p-1",
                 hasLiked 
                   ? "text-pink-500 hover:text-pink-600" 
                   : "text-gray-500 hover:text-gray-900"
               )}
             >
               <Heart className={cn("w-4 h-4", hasLiked && "fill-current")} />
-              <span>{likes}</span>
+              <span className="text-sm">{likes}</span>
             </button>
             <button
               onClick={onBookmark}
               className={cn(
-                "flex items-center gap-1 transition-colors p-1",
+                "flex items-center transition-colors p-1",
                 isBookmarked
                   ? "text-blue-500 hover:text-blue-600"
                   : "text-gray-500 hover:text-gray-900"
