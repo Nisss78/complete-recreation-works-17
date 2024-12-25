@@ -165,7 +165,7 @@ export const ArticleCard = ({
 
   return (
     <Link to={`/articles/${id}`}>
-      <Card className="hover:bg-gray-50 transition-colors cursor-pointer rounded-none sm:rounded-lg">
+      <Card className="hover:bg-gray-50 transition-colors cursor-pointer rounded-none sm:rounded-lg border-x-0 sm:border-x">
         <div className="p-3 sm:p-4">
           <ArticleHeader
             id={id}

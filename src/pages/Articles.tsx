@@ -79,11 +79,11 @@ export default function Articles() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-purple-50 to-indigo-50">
       <Header />
-      <main className="mx-auto py-4 sm:container sm:px-4">
-        <div className="space-y-3 sm:space-y-4 px-0">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-3 sm:px-0">
+      <main className="flex-1">
+        <div className="space-y-3 sm:space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-3 sm:container sm:mx-auto sm:px-4">
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
               {t('articles.title')}
             </h1>
@@ -106,7 +106,7 @@ export default function Articles() {
           </div>
 
           {isLoading ? (
-            <div className="space-y-2 px-3 sm:px-0">
+            <div className="space-y-2 px-3 sm:container sm:mx-auto sm:px-4">
               {[...Array(3)].map((_, i) => (
                 <div key={i} className="animate-pulse">
                   <div className="h-24 sm:h-32 bg-gray-200 rounded-lg" />
@@ -114,28 +114,29 @@ export default function Articles() {
               ))}
             </div>
           ) : articles && articles.length > 0 ? (
-            <div className="space-y-2">
+            <div className="space-y-[1px] sm:space-y-2 bg-gray-100 sm:bg-transparent">
               {articles.map((article: Article) => (
-                <div key={article.id} className="px-0">
-                  <ArticleCard
-                    id={article.id}
-                    date={formatDate(article.created_at)}
-                    title={article.title}
-                    author={{
-                      id: article.profiles.id,
-                      name: article.profiles.username,
-                      avatar: article.profiles.avatar_url
-                    }}
-                    likes={article.likes_count || 0}
-                    postedAt={formatTimeAgo(article.created_at)}
-                    thumbnail_url={article.thumbnail_url}
-                  />
-                </div>
+                <ArticleCard
+                  key={article.id}
+                  id={article.id}
+                  date={formatDate(article.created_at)}
+                  title={article.title}
+                  author={{
+                    id: article.profiles.id,
+                    name: article.profiles.username,
+                    avatar: article.profiles.avatar_url
+                  }}
+                  likes={article.likes_count || 0}
+                  postedAt={formatTimeAgo(article.created_at)}
+                  thumbnail_url={article.thumbnail_url}
+                />
               ))}
             </div>
           ) : (
-            <div className="text-center py-6 sm:py-8 text-gray-500 bg-white rounded-lg shadow-sm mx-3 sm:mx-0">
-              {showFollowedOnly ? t('articles.noFollowingArticles') : t('articles.noArticles')}
+            <div className="mx-3 sm:container sm:mx-auto sm:px-4">
+              <div className="text-center py-6 sm:py-8 text-gray-500 bg-white rounded-lg shadow-sm">
+                {showFollowedOnly ? t('articles.noFollowingArticles') : t('articles.noArticles')}
+              </div>
             </div>
           )}
         </div>
