@@ -50,6 +50,10 @@ export const ArticleHeader = ({
   const randomThumbnail = defaultThumbnails[Math.floor(Math.random() * defaultThumbnails.length)];
   const thumbnailUrl = thumbnail_url || `https://images.unsplash.com/${randomThumbnail}?auto=format&fit=crop&w=800&q=80`;
 
+  const truncatedName = author.name.length > 7 
+    ? `${author.name.slice(0, 7)}...` 
+    : author.name;
+
   return (
     <div className="flex gap-2 sm:gap-3">
       <div className="w-16 h-16 sm:w-20 sm:h-20 overflow-hidden rounded-lg shrink-0">
@@ -68,14 +72,15 @@ export const ArticleHeader = ({
             <button 
               onClick={onAuthorClick}
               className="flex items-center gap-1.5 group min-w-0"
+              title={author.name}
             >
               <img 
                 src={author.avatar}
                 alt={author.name}
                 className="w-5 h-5 rounded-full object-cover shrink-0"
               />
-              <span className="text-sm text-gray-600 truncate group-hover:text-gray-900 max-w-[120px]">
-                {author.name}
+              <span className="text-sm text-gray-600 truncate group-hover:text-gray-900">
+                {truncatedName}
               </span>
             </button>
             <span className="text-gray-400 text-xs sm:text-sm shrink-0">{postedAt}</span>

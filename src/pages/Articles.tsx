@@ -10,7 +10,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Articles() {
   const [showFollowedOnly, setShowFollowedOnly] = useState(false);
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const { data: articles, isLoading } = useQuery({
     queryKey: ["articles", showFollowedOnly],
