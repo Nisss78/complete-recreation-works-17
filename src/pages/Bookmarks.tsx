@@ -1,28 +1,12 @@
-import { useBookmarks } from "@/hooks/useBookmarks";
+import { useArticleBookmarks } from "@/hooks/useArticleBookmarks";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { ProductCard } from "@/components/ProductCard";
-import { ProductDialog } from "@/components/ProductDialog";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { ArticleCard } from "@/components/articles/ArticleCard";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const BookmarksPage = () => {
-  const { bookmarks, isLoading } = useBookmarks();
-  const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
-  const navigate = useNavigate();
+  const { bookmarks, isLoading } = useArticleBookmarks();
   const { t } = useLanguage();
-
-  const handleProductClick = (product: any) => {
-    setSelectedProduct(product);
-    const productSlug = product.name.toLowerCase().replace(/\s+/g, '-');
-    navigate(`/posts/${productSlug}`);
-  };
-
-  const handleDialogClose = () => {
-    setSelectedProduct(null);
-    navigate('/bookmarks');
-  };
 
   if (isLoading) {
     return (
@@ -49,17 +33,15 @@ const BookmarksPage = () => {
                 {t('bookmarks.empty')}
               </div>
             ) : (
-              bookmarks.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  id={product.id}
-                  name={product.name}
-                  tagline={product.tagline}
-                  description=""
-                  icon={product.icon_url}
-                  tags={[]}
-                  comments={0}
-                  onClick={() => handleProductClick(product)}
+              bookmarks.map((article) => (
+                <ArticleCard
+                  key={article.id}
+                  id={article.id}
+                  title={article.title}
+                  author={article.profiles}
+                  likes={article.likes_count || 0}
+                  postedAt={article.created_at}
+                  thumbnail_url={article.thumbnail_url}
                 />
               ))
             )}
@@ -67,14 +49,6 @@ const BookmarksPage = () => {
         </div>
       </main>
       <Footer />
-
-      {selectedProduct && (
-        <ProductDialog
-          open={!!selectedProduct}
-          onOpenChange={handleDialogClose}
-          product={selectedProduct}
-        />
-      )}
     </div>
   );
 };
