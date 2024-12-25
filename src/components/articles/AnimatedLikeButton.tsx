@@ -1,18 +1,18 @@
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
-interface AnimatedBookmarkButtonProps {
-  isBookmarked: boolean;
+interface AnimatedLikeButtonProps {
+  hasLiked: boolean;
   onClick: (e: React.MouseEvent) => void;
   className?: string;
 }
 
-export const AnimatedBookmarkButton = ({ isBookmarked, onClick, className }: AnimatedBookmarkButtonProps) => {
+export const AnimatedLikeButton = ({ hasLiked, onClick, className }: AnimatedLikeButtonProps) => {
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    setChecked(isBookmarked);
-  }, [isBookmarked]);
+    setChecked(hasLiked);
+  }, [hasLiked]);
 
   return (
     <div className={cn("relative", className)}>
@@ -25,10 +25,8 @@ export const AnimatedBookmarkButton = ({ isBookmarked, onClick, className }: Ani
           onClick={onClick}
         />
         <div className="bookmark">
-          <svg viewBox="0 0 32 32" className="w-5 h-5">
-            <g>
-              <path d="M27 4v27a1 1 0 0 1-1.625.781L16 24.281l-9.375 7.5A1 1 0 0 1 5 31V4a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4z" />
-            </g>
+          <svg viewBox="0 0 16 16" className="w-5 h-5">
+            <path d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" fillRule="evenodd" />
           </svg>
         </div>
       </label>
@@ -39,7 +37,7 @@ export const AnimatedBookmarkButton = ({ isBookmarked, onClick, className }: Ani
           --icon-size: 20px;
           --icon-secondary-color: rgb(148 163 184);
           --icon-hover-color: rgb(100 116 139);
-          --icon-primary-color: rgb(59 130 246);
+          --icon-primary-color: rgb(244 63 94);
           --icon-circle-border: 1px solid var(--icon-primary-color);
           --icon-circle-size: 35px;
           --icon-anmt-duration: 0.3s;
