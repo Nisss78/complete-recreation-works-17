@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { memo, useState, useRef, useEffect } from "react";
 import { ProductDetails } from "./product-dialog/ProductDetails";
@@ -20,32 +20,6 @@ interface ProductDialogProps {
     tags: string[];
     upvotes: number;
     comments: number;
-  };
-}
-
-interface Comment {
-  id: number;
-  author: string;
-  username: string;
-  avatar: string;
-  content: string;
-  timestamp: string;
-  upvotes: number;
-  isMaker: boolean;
-  isVerified: boolean;
-  reply_count?: number;
-  user_id?: string;
-}
-
-interface CommentData {
-  id: number;
-  content: string;
-  created_at: string;
-  reply_count: number | null;
-  user_id: string;
-  user: {
-    username: string | null;
-    avatar_url: string | null;
   } | null;
 }
 
@@ -56,8 +30,10 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
   console.log('ProductDialog rendered with product:', product);
 
   const { data: productImages = [], isLoading: isLoadingImages } = useQuery({
-    queryKey: ['product-images', product.id],
+    queryKey: ['product-images', product?.id],
     queryFn: async () => {
+      if (!product?.id) return [];
+      
       console.log('Fetching images for product:', product.id);
       const { data: imagesData, error } = await supabase
         .from('product_images')
@@ -72,10 +48,12 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
       console.log('Fetched product images:', imagesData?.map(img => img.image_url));
       return imagesData?.map(img => img.image_url) || [];
     },
-    enabled: open && product.id !== undefined,
+    enabled: open && !!product?.id,
   });
 
   const fetchComments = async () => {
+    if (!product?.id) return;
+    
     try {
       console.log('Fetching comments for product:', product.id);
       const { data: commentsData, error } = await supabase
@@ -123,11 +101,13 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
   };
 
   useEffect(() => {
-    if (open && product.id) {
+    if (open && product?.id) {
       console.log('Dialog opened, fetching comments for product:', product.id);
       fetchComments();
     }
-  }, [open, product.id]);
+  }, [open, product?.id]);
+
+  if (!product) return null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

@@ -38,7 +38,17 @@ const MyApp = () => {
         throw error;
       }
 
-      return data;
+      // Transform the data to match the expected format
+      return data ? {
+        id: data.id,
+        name: data.name,
+        tagline: data.tagline,
+        description: data.description,
+        icon: data.icon_url,
+        tags: data.product_tags?.map((t: any) => t.tag) || [],
+        upvotes: 0, // Default value since we don't have this in the database
+        comments: 0  // This will be updated by the ProductCard component
+      } : null;
     },
     enabled: !!selectedProduct?.id,
   });
