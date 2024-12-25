@@ -36,7 +36,7 @@ export const AnimatedLikeButton = ({ hasLiked, onClick, className }: AnimatedLik
         .ui-bookmark {
           --icon-size: 20px;
           --icon-secondary-color: rgb(148 163 184);
-          --icon-hover-color: rgb(100 116 139);
+          --icon-hover-color: rgb(244 63 94);
           --icon-primary-color: rgb(244 63 94);
           --icon-circle-border: 1px solid var(--icon-primary-color);
           --icon-circle-size: 35px;
