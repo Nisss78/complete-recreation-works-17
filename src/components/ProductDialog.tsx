@@ -135,12 +135,18 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
 
   if (!product) return null;
 
+  // 最初の画像のURLを取得（存在しない場合はアイコンを使用）
+  const mainImage = productImages[0] || product.icon;
+  const absoluteImageUrl = mainImage.startsWith('http') 
+    ? mainImage 
+    : `${window.location.origin}${mainImage}`;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <MetaTags 
         title={product.name}
         description={product.tagline}
-        image={productImages[0]}
+        image={absoluteImageUrl}
         type="product"
       />
       <DialogContent className="max-w-4xl h-[95vh] sm:h-[90vh] p-0 overflow-hidden bg-white dark:bg-gray-900 mx-2 sm:mx-4">
