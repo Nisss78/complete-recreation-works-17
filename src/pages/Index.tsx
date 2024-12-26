@@ -73,12 +73,22 @@ const Index = () => {
     navigate('/', { replace: true });
   };
 
+  // Always call useEffect, but conditionally perform the action inside
+  useEffect(() => {
+    if (productId && allProducts.length > 0) {
+      const product = allProducts.find(p => p.id === parseInt(productId));
+      if (product) {
+        setSelectedProduct(product);
+      }
+    }
+  }, [productId, allProducts]);
+
   if (isLoading) {
     return (
       <div className="min-h-screen w-full flex flex-col bg-gray-50/50">
         <Header />
         <main className="flex-1 flex items-center justify-center">
-          <div className="animate-pulse text-gray-500">Loading products...</div>
+          <div className="animate-pulse text-gray-500">{t('common.loading')}</div>
         </main>
         <Footer />
       </div>
@@ -113,16 +123,6 @@ const Index = () => {
       groupedProducts[date].sort((a: any, b: any) => b.upvotes - a.upvotes);
     });
   }
-
-  // 製品IDがURLにある場合、その製品を表示
-  useEffect(() => {
-    if (productId) {
-      const product = allProducts.find(p => p.id === parseInt(productId));
-      if (product) {
-        setSelectedProduct(product);
-      }
-    }
-  }, [productId, allProducts]);
 
   return (
     <div className="min-h-screen w-full flex flex-col bg-gray-50/50">
