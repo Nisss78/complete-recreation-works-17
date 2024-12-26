@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -52,7 +52,7 @@ const fetchProducts = async () => {
 const Index = () => {
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
   const [sortByLikes, setSortByLikes] = useState(false);
-  const { productId } = useParams();
+  const { id: productId } = useParams();
   const navigate = useNavigate();
   const { t } = useLanguage();
 
@@ -64,8 +64,7 @@ const Index = () => {
   const handleProductClick = (product: any) => {
     console.log('Product clicked:', product);
     setSelectedProduct(product);
-    const productSlug = product.name.toLowerCase().replace(/\s+/g, '-');
-    navigate(`/posts/${productSlug}`);
+    navigate(`/products/${product.id}`);
   };
 
   const handleDialogClose = () => {
@@ -115,6 +114,16 @@ const Index = () => {
     });
   }
 
+  // 製品IDがURLにある場合、その製品を表示
+  useEffect(() => {
+    if (productId) {
+      const product = allProducts.find(p => p.id === parseInt(productId));
+      if (product) {
+        setSelectedProduct(product);
+      }
+    }
+  }, [productId, allProducts]);
+
   return (
     <div className="min-h-screen w-full flex flex-col bg-gray-50/50">
       <MetaTags 
@@ -128,7 +137,9 @@ const Index = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2">
               <div className="flex justify-between items-center mb-6 sm:mb-8">
-                <h1 className="text-xl sm:text-3xl font-bold text-gray-900">{t('index.productsTitle')}</h1>
+                <h1 className="text-xl sm:text-3xl font-bold text-gray-900">
+                  {t('index.productsTitle')}
+                </h1>
                 <button
                   onClick={() => setSortByLikes(!sortByLikes)}
                   className="px-3 sm:px-4 py-1.5 sm:py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm"
