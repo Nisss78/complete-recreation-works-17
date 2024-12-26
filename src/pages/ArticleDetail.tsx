@@ -140,6 +140,8 @@ export default function ArticleDetail() {
           title={article.title}
           description={article.content.substring(0, 160)}
           image={article.thumbnail_url || undefined}
+          type="article"
+          author={article.author.name}
         />
       )}
       <Header />

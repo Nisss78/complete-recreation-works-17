@@ -141,6 +141,7 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
         title={product.name}
         description={product.tagline}
         image={productImages[0]}
+        type="product"
       />
       <DialogContent className="max-w-4xl h-[95vh] sm:h-[90vh] p-0 overflow-hidden bg-white dark:bg-gray-900 mx-2 sm:mx-4">
         <ScrollArea className="h-full">
