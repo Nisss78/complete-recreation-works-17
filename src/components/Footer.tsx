@@ -32,21 +32,21 @@ export const Footer = () => {
             </ul>
           </div>
           
-          <div>
+          <div className="items-center">
             <h3 className="font-bold mb-3 sm:mb-4 text-gray-900">Social</h3>
-            <div className="flex gap-4">
-              <a 
-                href="https://twitter.com" 
-                target="_blank" 
-                rel="noopener noreferrer" 
+            <div className="flex flex-col gap-2 items-center">
+              <a
+                href="https://twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-600 hover:text-gray-900 transition-colors p-2 rounded-full hover:bg-gray-100"
               >
                 <X className="w-5 h-5" />
               </a>
-              <a 
-                href="https://website.com" 
-                target="_blank" 
-                rel="noopener noreferrer" 
+              <a
+                href="https://website.com"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-600 hover:text-gray-900 transition-colors p-2 rounded-full hover:bg-gray-100"
               >
                 <LinkIcon className="w-5 h-5" />

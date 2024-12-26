@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+import { supabase } from "../integrations/supabase/client";
+import { useToast } from "./use-toast";
 
-export const useArticleLikes = (articleId: number) => {
+export const useArticleLikes = (articleId: number, initialLikes: number = 0) => {
   const [hasLiked, setHasLiked] = useState(false);
-  const [likesCount, setLikesCount] = useState(0);
+  const [likesCount, setLikesCount] = useState(initialLikes);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export const useArticleLikes = (articleId: number) => {
       .select('id', { count: 'exact' })
       .eq('article_id', articleId);
 
-    setLikesCount(likes?.length || 0);
+    setLikesCount(likes?.length || initialLikes);
   };
 
   const handleLike = async () => {
