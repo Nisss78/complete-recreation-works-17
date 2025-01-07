@@ -1,4 +1,4 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { memo } from "react";
 import { ProductDetails } from "./product-dialog/ProductDetails";
@@ -24,63 +24,33 @@ interface ProductDialogProps {
   } | null;
 }
 
-interface Comment {
-  id: number;
-  author: string;
-  username: string;
-  avatar: string;
-  content: string;
-  timestamp: string;
-  upvotes: number;
-  isMaker: boolean;
-  isVerified: boolean;
-  reply_count?: number;
-  user_id?: string;
-}
-
-interface CommentData {
-  id: number;
-  content: string;
-  created_at: string;
-  reply_count: number | null;
-  user_id: string;
-  user: {
-    username: string | null;
-    avatar_url: string | null;
-  };
-}
-
 const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps) => {
   console.log('ProductDialog rendered with product:', product);
 
   if (!product) return null;
 
-  // 画像URLの絶対パスを生成
-  const mainImage = product.images?.[0] || product.icon;
-  const absoluteImageUrl = mainImage.startsWith('http') 
-    ? mainImage 
-    : `${window.location.origin}${mainImage}`;
-
-  // Ensure images is always an array and preserve the URL if it exists
-  const productWithImages = {
-    ...product,
-    images: product.images || [],
-    URL: product.URL // Keep the original URL if it exists
-  };
+  // OGP画像のURLを生成
+  const ogpImageUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-ogp?type=product&data=${encodeURIComponent(
+    JSON.stringify({
+      name: product.name,
+      imageUrl: product.icon
+    })
+  )}`;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogTitle className="sr-only">{product.name}</DialogTitle>
       <MetaTags 
         title={product.name}
         description={product.tagline}
-        image={absoluteImageUrl}
+        image={ogpImageUrl}
         type="product"
       />
       <DialogContent className="max-w-4xl h-[95vh] sm:h-[90vh] p-0 overflow-hidden bg-white dark:bg-gray-900 mx-2 sm:mx-4">
         <ScrollArea className="h-full">
           <div className="p-3 sm:p-6">
             <ProductDetails 
-              product={productWithImages}
+              product={product}
               isLoadingImages={false}
             />
             <div className="mt-6 sm:mt-8">

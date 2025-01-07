@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FollowButton } from "@/components/articles/FollowButton";
 import { useNavigate } from "react-router-dom";
+import { MetaTags } from "@/components/MetaTags";
 
 interface ArticleHeaderProps {
   article: {
@@ -22,42 +23,60 @@ export const ArticleHeader = ({ article }: ArticleHeaderProps) => {
     navigate(`/profile/${article.author.id}`);
   };
 
+  // OGP画像のURLを生成
+  const ogpImageUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-ogp?type=article&data=${encodeURIComponent(
+    JSON.stringify({
+      title: article.title,
+      authorName: article.author.name,
+      authorIcon: article.author.avatar
+    })
+  )}`;
+
   return (
-    <div className="space-y-4 sm:space-y-6 mb-6">
-      {article.thumbnail_url && (
-        <div className="mb-4 sm:mb-6">
-          <img
-            src={article.thumbnail_url}
-            alt=""
-            className="w-full h-48 sm:h-64 object-cover rounded-lg"
-          />
-        </div>
-      )}
+    <>
+      <MetaTags 
+        title={article.title}
+        description=""
+        image={ogpImageUrl}
+        type="article"
+        author={article.author.name}
+      />
+      <div className="space-y-4 sm:space-y-6 mb-6">
+        {article.thumbnail_url && (
+          <div className="mb-4 sm:mb-6">
+            <img
+              src={article.thumbnail_url}
+              alt=""
+              className="w-full h-48 sm:h-64 object-cover rounded-lg"
+            />
+          </div>
+        )}
 
-      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-        {article.title}
-      </h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+          {article.title}
+        </h1>
 
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Avatar 
-            className="w-10 h-10 cursor-pointer" 
-            onClick={handleAuthorClick}
-          >
-            <AvatarImage src={article.author.avatar} alt={article.author.name} className="object-cover" />
-            <AvatarFallback>{article.author.name[0]}</AvatarFallback>
-          </Avatar>
-          <div>
-            <p 
-              className="font-semibold text-gray-900 cursor-pointer hover:text-gray-700"
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Avatar 
+              className="w-10 h-10 cursor-pointer" 
               onClick={handleAuthorClick}
             >
-              {article.author.name}
-            </p>
+              <AvatarImage src={article.author.avatar} alt={article.author.name} className="object-cover" />
+              <AvatarFallback>{article.author.name[0]}</AvatarFallback>
+            </Avatar>
+            <div>
+              <p 
+                className="font-semibold text-gray-900 cursor-pointer hover:text-gray-700"
+                onClick={handleAuthorClick}
+              >
+                {article.author.name}
+              </p>
+            </div>
           </div>
+          <FollowButton profileId={article.author.id} />
         </div>
-        <FollowButton profileId={article.author.id} />
       </div>
-    </div>
+    </>
   );
 };
