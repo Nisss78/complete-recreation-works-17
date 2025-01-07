@@ -45,7 +45,9 @@ const MyApp = () => {
         icon: data.icon_url,
         tags: data.product_tags?.map((t: any) => t.tag) || [],
         upvotes: 0,
-        comments: 0
+        comments: 0,
+        images: data.product_images?.map((img: any) => img.image_url) || [],
+        URL: data.URL
       } : null;
     },
     enabled: !!selectedProduct?.id,
@@ -90,6 +92,8 @@ const MyApp = () => {
                 tags: bookmark.product_tags?.map((t: any) => t.tag) || [],
                 upvotes: 0,
                 comments: 0,
+                images: bookmark.product_images?.map((img: any) => img.image_url) || [],
+                URL: bookmark.URL
               };
               return (
                 <ProductCard
