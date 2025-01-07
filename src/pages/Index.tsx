@@ -50,7 +50,7 @@ const fetchProductsWithImages = async () => {
         upvotes: count || 0,
         comments: 0,
         launchDate: new Date(product.created_at),
-        images: product.product_images?.map(img => img.image_url) || []
+        images: product.product_images?.map(img => img.image_url) || []  // 必ず配列を返すように
       };
     })
   );

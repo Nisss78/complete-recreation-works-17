@@ -19,7 +19,7 @@ interface ProductDialogProps {
     tags: string[];
     upvotes: number;
     comments: number;
-    images?: string[];
+    images: string[];  // オプショナルを削除
     URL?: string;
   } | null;
 }
