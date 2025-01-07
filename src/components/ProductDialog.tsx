@@ -60,6 +60,13 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
     ? mainImage 
     : `${window.location.origin}${mainImage}`;
 
+  // Ensure images is always an array, even if empty
+  const productWithImages = {
+    ...product,
+    images: product.images || [],
+    URL: undefined // Add URL property as undefined if not present
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <MetaTags 
@@ -72,7 +79,7 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
         <ScrollArea className="h-full">
           <div className="p-3 sm:p-6">
             <ProductDetails 
-              product={product}
+              product={productWithImages}
               isLoadingImages={false}
             />
             <div className="mt-6 sm:mt-8">
