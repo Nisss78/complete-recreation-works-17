@@ -46,8 +46,8 @@ export const ProductActions = ({
   };
 
   const handleShare = async () => {
-    const productSlug = productName.toLowerCase().replace(/\s+/g, '-');
-    const shareUrl = `${window.location.origin}/posts/${productSlug}`;
+    const slug = productName.toLowerCase().replace(/\s+/g, '-');
+    const shareUrl = `${window.location.origin}/products/${slug}`;
     
     try {
       await navigator.clipboard.writeText(shareUrl);

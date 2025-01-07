@@ -74,8 +74,9 @@ const Index = () => {
 
   const handleProductClick = (product: any) => {
     console.log('Product clicked:', product);
+    const slug = product.name.toLowerCase().replace(/\s+/g, '-');
     setSelectedProduct(product);
-    navigate(`/products/${product.id}`);
+    navigate(`/products/${slug}`);
   };
 
   const handleDialogClose = () => {
@@ -86,9 +87,14 @@ const Index = () => {
 
   useEffect(() => {
     if (productId && allProducts.length > 0) {
-      const product = allProducts.find(p => p.id === parseInt(productId));
-      if (product) {
-        setSelectedProduct(product);
+      const slug = window.location.pathname.split('/products/')[1];
+      if (slug) {
+        const product = allProducts.find(p => 
+          p.name.toLowerCase().replace(/\s+/g, '-') === slug
+        );
+        if (product) {
+          setSelectedProduct(product);
+        }
       }
     }
   }, [productId, allProducts]);
