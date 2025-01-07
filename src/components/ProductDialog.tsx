@@ -20,6 +20,7 @@ interface ProductDialogProps {
     upvotes: number;
     comments: number;
     images?: string[];
+    URL?: string;
   } | null;
 }
 
@@ -60,11 +61,11 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
     ? mainImage 
     : `${window.location.origin}${mainImage}`;
 
-  // Ensure images is always an array, even if empty
+  // Ensure images is always an array and preserve the URL if it exists
   const productWithImages = {
     ...product,
     images: product.images || [],
-    URL: undefined // Add URL property as undefined if not present
+    URL: product.URL // Keep the original URL if it exists
   };
 
   return (
