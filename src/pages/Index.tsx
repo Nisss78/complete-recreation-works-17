@@ -11,19 +11,27 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { ProductsList } from "@/components/home/ProductsList";
 import { RecentArticles } from "@/components/home/RecentArticles";
 
-const fetchProducts = async () => {
-  const { data: products, error } = await supabase
+// 製品データと画像を同時に取得する関数
+const fetchProductsWithImages = async () => {
+  console.log('Fetching products and images...');
+  
+  // 製品データを取得
+  const { data: products, error: productsError } = await supabase
     .from('products')
     .select(`
       *,
       product_tags (
         tag
+      ),
+      product_images (
+        image_url
       )
     `)
     .order('created_at', { ascending: false });
 
-  if (error) throw error;
+  if (productsError) throw productsError;
 
+  // いいね数を取得して製品データと結合
   const productsWithLikes = await Promise.all(
     products.map(async (product) => {
       const { count } = await supabase
@@ -42,10 +50,12 @@ const fetchProducts = async () => {
         upvotes: count || 0,
         comments: 0,
         launchDate: new Date(product.created_at),
+        images: product.product_images?.map(img => img.image_url) || []
       };
     })
   );
 
+  console.log('Fetched products with images:', productsWithLikes);
   return productsWithLikes;
 };
 
@@ -56,9 +66,10 @@ const Index = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
 
+  // 製品データと画像を同時に取得
   const { data: allProducts = [], isLoading, error } = useQuery({
-    queryKey: ['products'],
-    queryFn: fetchProducts,
+    queryKey: ['products-with-images'],
+    queryFn: fetchProductsWithImages,
   });
 
   const handleProductClick = (product: any) => {
@@ -73,7 +84,6 @@ const Index = () => {
     navigate('/', { replace: true });
   };
 
-  // Always call useEffect, but conditionally perform the action inside
   useEffect(() => {
     if (productId && allProducts.length > 0) {
       const product = allProducts.find(p => p.id === parseInt(productId));
@@ -83,6 +93,7 @@ const Index = () => {
     }
   }, [productId, allProducts]);
 
+  // ローディング状態の表示
   if (isLoading) {
     return (
       <div className="min-h-screen w-full flex flex-col bg-gray-50/50">
