@@ -62,7 +62,7 @@ const fetchProductsWithImages = async () => {
 const Index = () => {
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
   const [sortByLikes, setSortByLikes] = useState(false);
-  const { id: productId } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
   const { t } = useLanguage();
 
@@ -74,9 +74,9 @@ const Index = () => {
 
   const handleProductClick = (product: any) => {
     console.log('Product clicked:', product);
-    const slug = product.name.toLowerCase().replace(/\s+/g, '-');
+    const productSlug = product.name.toLowerCase().replace(/\s+/g, '-');
     setSelectedProduct(product);
-    navigate(`/products/${slug}`);
+    navigate(`/products/${productSlug}`);
   };
 
   const handleDialogClose = () => {
@@ -86,18 +86,20 @@ const Index = () => {
   };
 
   useEffect(() => {
-    if (productId && allProducts.length > 0) {
-      const slug = window.location.pathname.split('/products/')[1];
-      if (slug) {
-        const product = allProducts.find(p => 
-          p.name.toLowerCase().replace(/\s+/g, '-') === slug
-        );
-        if (product) {
-          setSelectedProduct(product);
-        }
+    if (slug && allProducts.length > 0) {
+      console.log('Looking for product with slug:', slug);
+      const product = allProducts.find(p => 
+        p.name.toLowerCase().replace(/\s+/g, '-') === slug
+      );
+      if (product) {
+        console.log('Found product:', product);
+        setSelectedProduct(product);
+      } else {
+        console.log('Product not found for slug:', slug);
+        navigate('/', { replace: true });
       }
     }
-  }, [productId, allProducts]);
+  }, [slug, allProducts, navigate]);
 
   // ローディング状態の表示
   if (isLoading) {
