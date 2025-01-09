@@ -49,12 +49,37 @@ export const ArticleCard = ({
     }
 
     try {
-      const { error } = await supabase
+      console.log('Deleting article:', id);
+
+      // First delete all bookmarks for this article
+      const { error: bookmarksError } = await supabase
+        .from('article_bookmarks')
+        .delete()
+        .eq('article_id', id);
+
+      if (bookmarksError) {
+        console.error('Error deleting article bookmarks:', bookmarksError);
+        throw bookmarksError;
+      }
+
+      // Then delete all likes for this article
+      const { error: likesError } = await supabase
+        .from('article_likes')
+        .delete()
+        .eq('article_id', id);
+
+      if (likesError) {
+        console.error('Error deleting article likes:', likesError);
+        throw likesError;
+      }
+
+      // Finally delete the article itself
+      const { error: articleError } = await supabase
         .from('articles')
         .delete()
         .eq('id', id);
 
-      if (error) throw error;
+      if (articleError) throw articleError;
 
       toast({
         title: "記事を削除しました",
