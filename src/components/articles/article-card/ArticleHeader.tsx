@@ -16,11 +16,11 @@ interface ArticleHeaderProps {
   likes: number;
   hasLiked: boolean;
   isBookmarked: boolean;
-  onLike: (e: React.MouseEvent) => void;
-  onBookmark: (e: React.MouseEvent) => void;
-  onAuthorClick: (e: React.MouseEvent) => void;
+  onLike: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onBookmark: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onAuthorClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
   showDeleteButton?: boolean;
-  onDelete?: (e: React.MouseEvent) => void;
+  onDelete?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export const ArticleHeader = ({ 
