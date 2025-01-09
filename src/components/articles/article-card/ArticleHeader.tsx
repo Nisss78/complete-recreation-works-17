@@ -19,6 +19,8 @@ interface ArticleHeaderProps {
   onLike: (e: React.MouseEvent) => void;
   onBookmark: (e: React.MouseEvent) => void;
   onAuthorClick: (e: React.MouseEvent) => void;
+  showDeleteButton?: boolean;
+  onDelete?: (e: React.MouseEvent) => void;
 }
 
 export const ArticleHeader = ({ 
@@ -32,7 +34,9 @@ export const ArticleHeader = ({
   isBookmarked,
   onLike,
   onBookmark,
-  onAuthorClick
+  onAuthorClick,
+  showDeleteButton,
+  onDelete
 }: ArticleHeaderProps) => {
   const defaultThumbnails = [
     'photo-1649972904349-6e44c42644a7',
@@ -109,6 +113,16 @@ export const ArticleHeader = ({
             >
               <Bookmark className={cn("w-4 h-4", isBookmarked && "fill-current")} />
             </button>
+            {showDeleteButton && (
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={onDelete}
+                className="ml-2"
+              >
+                削除
+              </Button>
+            )}
           </div>
         </div>
       </div>
