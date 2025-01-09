@@ -5,10 +5,19 @@ import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { ArticleCard } from "@/components/articles/ArticleCard";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { useEffect, useState } from "react";
 
 export const UserProfile = () => {
   const { userId } = useParams();
-  console.log("Viewing profile for user:", userId);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setCurrentUserId(session?.user?.id || null);
+    };
+    checkAuth();
+  }, []);
 
   const { data: profile, isLoading: profileLoading } = useQuery({
     queryKey: ["profile", userId],
@@ -27,7 +36,7 @@ export const UserProfile = () => {
     enabled: !!userId,
   });
 
-  const { data: articles, isLoading: articlesLoading } = useQuery({
+  const { data: articles, isLoading: articlesLoading, refetch: refetchArticles } = useQuery({
     queryKey: ["userArticles", userId],
     queryFn: async () => {
       if (!userId) return [];
@@ -71,6 +80,8 @@ export const UserProfile = () => {
     return `${diffInDays}日前`;
   };
 
+  const isOwnProfile = userId === currentUserId;
+
   if (profileLoading || articlesLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
@@ -95,7 +106,7 @@ export const UserProfile = () => {
       <Header />
       <main className="container max-w-4xl mx-auto py-8 px-4">
         <div className="space-y-8">
-          <ProfileHeader profile={profile} showFollowButton={true} />
+          <ProfileHeader profile={profile} showFollowButton={!isOwnProfile} />
           
           <div className="space-y-4">
             <h2 className="text-2xl font-bold text-gray-900">投稿した記事</h2>
@@ -114,6 +125,8 @@ export const UserProfile = () => {
                   likes={article.likes_count || 0}
                   postedAt={formatTimeAgo(article.created_at)}
                   thumbnail_url={article.thumbnail_url}
+                  showDeleteButton={isOwnProfile}
+                  onDelete={() => refetchArticles()}
                 />
               ))
             ) : (

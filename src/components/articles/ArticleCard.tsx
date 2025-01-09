@@ -106,6 +106,8 @@ export const ArticleCard = ({
             onLike={handleLikeClick}
             onBookmark={handleBookmark}
             onAuthorClick={handleAuthorClick}
+            showDeleteButton={showDeleteButton}
+            onDelete={handleDelete}
           />
         </div>
       </Card>
