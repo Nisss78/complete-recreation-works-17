@@ -21,7 +21,7 @@ export default function Articles() {
         .from('articles')
         .select(`
           *,
-          profile:profiles!articles_user_id_fkey (
+          profiles (
             id,
             username,
             avatar_url
@@ -54,9 +54,9 @@ export default function Articles() {
       return data.map(article => ({
         ...article,
         profiles: {
-          id: article.profile.id,
-          username: article.profile.username || "Unknown User",
-          avatar_url: article.profile.avatar_url || "/placeholder.svg"
+          id: article.profiles.id,
+          username: article.profiles.username || "Unknown User",
+          avatar_url: article.profiles.avatar_url || "/placeholder.svg"
         }
       }));
     },
@@ -115,7 +115,7 @@ export default function Articles() {
             </div>
           ) : articles && articles.length > 0 ? (
             <div className="space-y-2">
-              {articles.map((article: Article) => (
+              {articles.map((article) => (
                 <div key={article.id} className="px-0">
                   <ArticleCard
                     id={article.id}

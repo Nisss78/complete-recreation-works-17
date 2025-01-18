@@ -11,8 +11,10 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Coins } from "lucide-react";
 import { Profile } from "@/types/database";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const UserMenu = ({ userId }: { userId: string }) => {
+  const { t } = useLanguage();
   const { data: profile } = useQuery<Profile>({
     queryKey: ["profile", userId],
     queryFn: async () => {
@@ -35,13 +37,13 @@ export const UserMenu = ({ userId }: { userId: string }) => {
     <div className="flex items-center gap-4">
       <div className="flex items-center gap-2">
         <Coins className="h-5 w-5 text-yellow-500" />
-        <span className="font-semibold">{profile?.credits || 0}</span>
+        <span className="font-semibold">{profile?.credits || 0} クレジット</span>
       </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">
             <Avatar className="h-8 w-8">
-              <AvatarImage src={profile?.avatar_url || ''} alt="プロフィール画像" />
+              <AvatarImage src={profile?.avatar_url || ''} alt={t('profile.avatarPreview')} />
               <AvatarFallback>
                 {profile?.username?.[0]?.toUpperCase() || '?'}
               </AvatarFallback>
@@ -50,19 +52,19 @@ export const UserMenu = ({ userId }: { userId: string }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end" forceMount>
           <DropdownMenuItem asChild>
-            <Link to={`/profile/${userId}`}>プロフィール</Link>
+            <Link to={`/profile/${userId}`}>{t('nav.profile')}</Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link to="/settings">設定</Link>
+            <Link to="/settings">{t('nav.settings')}</Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link to="/bookmarks">ブックマーク</Link>
+            <Link to="/bookmarks">{t('nav.viewBookmarks')}</Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link to="/my-app">マイアプリ</Link>
+            <Link to="/my-app">{t('nav.myApp')}</Link>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleSignOut}>
-            ログアウト
+            {t('nav.logout')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
