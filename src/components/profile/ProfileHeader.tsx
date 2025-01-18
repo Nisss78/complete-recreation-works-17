@@ -114,7 +114,7 @@ export const ProfileHeader = ({
         <AvatarImage 
           src={profile.avatar_url || ''} 
           className="object-cover w-full h-full"
-          alt={profile.username || t('profile.avatarPreview')}
+          alt={profile.username || t('profile.noUsername')}
         />
         <AvatarFallback>
           {profile.username?.[0]?.toUpperCase() || '?'}
