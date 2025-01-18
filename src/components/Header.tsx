@@ -12,6 +12,7 @@ export const Header = () => {
   const [showSubmissionDialog, setShowSubmissionDialog] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const { t } = useLanguage();
@@ -20,6 +21,7 @@ export const Header = () => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setIsAuthenticated(!!session);
+      setUserId(session?.user?.id || null);
 
       if (session?.user?.id) {
         const { data: profile } = await supabase
@@ -36,6 +38,7 @@ export const Header = () => {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setIsAuthenticated(!!session);
+      setUserId(session?.user?.id || null);
       if (session?.user?.id) {
         supabase
           .from('profiles')
@@ -97,7 +100,7 @@ export const Header = () => {
                 </Button>
               )}
 
-              <UserMenu />
+              {userId && <UserMenu userId={userId} />}
             </>
           ) : (
             <Button 

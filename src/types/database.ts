@@ -2,7 +2,17 @@ export interface Profile {
   id: string;
   username: string | null;
   avatar_url: string | null;
-  credits?: number;
+  bio: string | null;
+  github_url: string | null;
+  instagram_url: string | null;
+  twitter_url: string | null;
+  other_url: string | null;
+  is_admin: boolean | null;
+  language_preference: string;
+  credits: number;
+  streak_count: number | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Article {
@@ -14,16 +24,6 @@ export interface Article {
   likes_count: number | null;
   created_at: string;
   updated_at: string;
-  profile?: {
-    id: string;
-    username: string | null;
-    avatar_url: string | null;
-    credits?: number;
-  };
-  profiles: {
-    id: string;
-    username: string;
-    avatar_url: string;
-    credits?: number;
-  };
+  profile?: Profile;
+  profiles: Profile;
 }
