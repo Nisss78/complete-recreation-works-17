@@ -364,6 +364,7 @@ export type Database = {
           avatar_url: string | null
           bio: string | null
           created_at: string
+          credits: number
           github_url: string | null
           id: string
           instagram_url: string | null
@@ -379,6 +380,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
+          credits?: number
           github_url?: string | null
           id: string
           instagram_url?: string | null
@@ -394,6 +396,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
+          credits?: number
           github_url?: string | null
           id?: string
           instagram_url?: string | null

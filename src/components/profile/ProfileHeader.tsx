@@ -136,10 +136,10 @@ export const ProfileHeader = ({
             <FollowButton profileId={profile.id} />
           )}
         </div>
-        <div className="flex items-center justify-center gap-2">
-          <Coins className="h-5 w-5 text-yellow-500" />
-          <span className="font-semibold">{profile.credits || 0} クレジット</span>
-          {isOwnProfile && (
+        {isOwnProfile && (
+          <div className="flex items-center justify-center gap-2">
+            <Coins className="h-5 w-5 text-yellow-500" />
+            <span className="font-semibold">{profile.credits || 0} クレジット</span>
             <Dialog>
               <DialogTrigger asChild>
                 <Button variant="outline" size="sm">
@@ -153,7 +153,7 @@ export const ProfileHeader = ({
                 <div className="p-4 space-y-4">
                   <div className="text-center space-y-2">
                     <h3 className="text-lg font-semibold">月額プラン</h3>
-                    <p className="text-gray-600">$10/月で10,000クレジット</p>
+                    <p className="text-gray-600">¥1,000/月で10,000クレジット</p>
                   </div>
                   <Button 
                     className="w-full" 
@@ -164,8 +164,8 @@ export const ProfileHeader = ({
                 </div>
               </DialogContent>
             </Dialog>
-          )}
-        </div>
+          </div>
+        )}
         {profile.bio && (
           <p className="text-gray-600 max-w-md">{profile.bio}</p>
         )}
