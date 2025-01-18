@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { FollowStats } from "./FollowStats";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ProfileHeaderProps {
   profile: {
@@ -33,11 +34,12 @@ export const ProfileHeader = ({
 }: ProfileHeaderProps) => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const handleBuyCredits = async () => {
     toast({
-      title: "準備中",
-      description: "クレジット購入機能は現在準備中です。",
+      title: t('credits.preparingPurchase'),
+      description: t('credits.preparingDesc'),
     });
   };
 
@@ -112,7 +114,7 @@ export const ProfileHeader = ({
         <AvatarImage 
           src={profile.avatar_url || ''} 
           className="object-cover w-full h-full"
-          alt={profile.username || 'プロフィール画像'}
+          alt={profile.username || t('profile.avatarPreview')}
         />
         <AvatarFallback>
           {profile.username?.[0]?.toUpperCase() || '?'}
@@ -120,14 +122,14 @@ export const ProfileHeader = ({
       </Avatar>
       <div className="text-center space-y-2">
         <div className="flex items-center justify-center gap-2">
-          <h1 className="text-2xl font-bold">{profile.username || "名前未設定"}</h1>
+          <h1 className="text-2xl font-bold">{profile.username || t('profile.noUsername')}</h1>
           {isOwnProfile && (
             <Button
               variant="ghost"
               size="icon"
               onClick={() => navigate("/settings")}
               className="hover:bg-gray-100"
-              title="プロフィールを編集"
+              title={t('profile.edit')}
             >
               <Pencil className="h-4 w-4" />
             </Button>
@@ -139,27 +141,29 @@ export const ProfileHeader = ({
         {isOwnProfile && (
           <div className="flex items-center justify-center gap-2">
             <Coins className="h-5 w-5 text-yellow-500" />
-            <span className="font-semibold">{profile.credits || 0} クレジット</span>
+            <span className="font-semibold">
+              {t('credits.amount', { amount: profile.credits || 0 })}
+            </span>
             <Dialog>
               <DialogTrigger asChild>
                 <Button variant="outline" size="sm">
-                  クレジットを購入
+                  {t('credits.buy')}
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>クレジットを購入</DialogTitle>
+                  <DialogTitle>{t('credits.buy')}</DialogTitle>
                 </DialogHeader>
                 <div className="p-4 space-y-4">
                   <div className="text-center space-y-2">
-                    <h3 className="text-lg font-semibold">月額プラン</h3>
-                    <p className="text-gray-600">¥1,000/月で10,000クレジット</p>
+                    <h3 className="text-lg font-semibold">{t('credits.monthlyPlan')}</h3>
+                    <p className="text-gray-600">{t('credits.monthlyAmount')}</p>
                   </div>
                   <Button 
                     className="w-full" 
                     onClick={handleBuyCredits}
                   >
-                    購入する
+                    {t('credits.purchase')}
                   </Button>
                 </div>
               </DialogContent>

@@ -55,10 +55,7 @@ export const jaTranslations = {
   'profile.instagramPlaceholder': 'https://instagram.com/yourusername',
   'profile.githubPlaceholder': 'https://github.com/yourusername',
   'profile.websitePlaceholder': 'https://yourwebsite.com',
-  'profile.followers': 'フォロワー',
-  'profile.following': 'フォロー中',
-  'profile.noFollowers': 'まだフォロワーがいません',
-  'profile.noFollowing': 'まだ誰もフォローしていません',
+  'profile.noUsername': '名前未設定',
 
   // Success messages
   'success.profileUpdated': 'プロフィールを更新しました',
@@ -127,6 +124,12 @@ export const jaTranslations = {
   'index.noProducts': 'まだ投稿されたプロダクトはありません。最初の投稿者になりませんか？',
   'index.noArticles': 'まだ記事がありません',
 
-  // Common
-  'common.loading': '読み込み中...',
+  // Credits
+  'credits.amount': '{amount} クレジット',
+  'credits.buy': 'クレジットを購入',
+  'credits.monthlyPlan': '月額プラン',
+  'credits.monthlyAmount': '月額1,000円で10,000クレジット',
+  'credits.purchase': '購入する',
+  'credits.preparingPurchase': '準備中',
+  'credits.preparingDesc': 'クレジット購入機能は現在準備中です',
 } as const;

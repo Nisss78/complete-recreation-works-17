@@ -147,4 +147,13 @@ export const enTranslations = {
   'index.unknownUser': 'Unknown User',
   'index.noProducts': 'No products have been posted yet. Would you like to be the first to post?',
   'index.noArticles': 'No articles yet',
+
+  // Credits
+  'credits.amount': '{amount} Credits',
+  'credits.buy': 'Buy Credits',
+  'credits.monthlyPlan': 'Monthly Plan',
+  'credits.monthlyAmount': '10,000 credits for $10/month',
+  'credits.purchase': 'Purchase',
+  'credits.preparingPurchase': 'Purchase feature coming soon',
+  'credits.preparingDesc': 'Credit purchase feature is currently in development',
 } as const;
