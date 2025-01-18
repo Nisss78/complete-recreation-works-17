@@ -10,9 +10,10 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Coins } from "lucide-react";
+import { Profile } from "@/types/database";
 
 export const UserMenu = ({ userId }: { userId: string }) => {
-  const { data: profile } = useQuery({
+  const { data: profile } = useQuery<Profile>({
     queryKey: ["profile", userId],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -53,6 +54,12 @@ export const UserMenu = ({ userId }: { userId: string }) => {
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link to="/settings">設定</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link to="/bookmarks">ブックマーク</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link to="/my-app">マイアプリ</Link>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleSignOut}>
             ログアウト

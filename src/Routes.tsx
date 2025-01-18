@@ -29,7 +29,6 @@ export const Routes = () => {
       <Route path="/settings" element={<Settings />} />
       <Route path="/bookmarks" element={<Bookmarks />} />
       <Route path="/my-app" element={<MyApp />} />
-      <Route path="/products/:slug" element={<Index />} />
     </RouterRoutes>
   );
 };
