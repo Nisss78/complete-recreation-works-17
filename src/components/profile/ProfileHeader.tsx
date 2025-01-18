@@ -2,10 +2,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { FollowButton } from "@/components/articles/FollowButton";
 import { Link, useNavigate } from "react-router-dom";
-import { Github, Twitter, Instagram, Globe, Pencil } from "lucide-react";
+import { Github, Twitter, Instagram, Globe, Pencil, Coins } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { FollowStats } from "./FollowStats";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 interface ProfileHeaderProps {
   profile: {
@@ -17,6 +18,7 @@ interface ProfileHeaderProps {
     instagram_url?: string | null;
     github_url?: string | null;
     other_url?: string | null;
+    credits?: number;
   } | null;
   isOwnProfile?: boolean;
   onAvatarUpdate?: (url: string) => void;
@@ -31,6 +33,13 @@ export const ProfileHeader = ({
 }: ProfileHeaderProps) => {
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  const handleBuyCredits = async () => {
+    toast({
+      title: "準備中",
+      description: "クレジット購入機能は現在準備中です。",
+    });
+  };
 
   const handleAvatarClick = async () => {
     if (!isOwnProfile || !profile) return;
@@ -125,6 +134,36 @@ export const ProfileHeader = ({
           )}
           {showFollowButton && (
             <FollowButton profileId={profile.id} />
+          )}
+        </div>
+        <div className="flex items-center justify-center gap-2">
+          <Coins className="h-5 w-5 text-yellow-500" />
+          <span className="font-semibold">{profile.credits || 0} クレジット</span>
+          {isOwnProfile && (
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="sm">
+                  クレジットを購入
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>クレジットを購入</DialogTitle>
+                </DialogHeader>
+                <div className="p-4 space-y-4">
+                  <div className="text-center space-y-2">
+                    <h3 className="text-lg font-semibold">月額プラン</h3>
+                    <p className="text-gray-600">$10/月で10,000クレジット</p>
+                  </div>
+                  <Button 
+                    className="w-full" 
+                    onClick={handleBuyCredits}
+                  >
+                    購入する
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
           )}
         </div>
         {profile.bio && (

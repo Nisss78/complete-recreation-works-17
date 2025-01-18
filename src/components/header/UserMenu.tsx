@@ -1,99 +1,64 @@
-import { User, Settings, LogOut, Bookmark, BookOpen } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Coins } from "lucide-react";
 
-export const UserMenu = () => {
-  const navigate = useNavigate();
-  const { toast } = useToast();
-  const { t } = useLanguage();
+export const UserMenu = ({ userId }: { userId: string }) => {
+  const { data: profile } = useQuery({
+    queryKey: ["profile", userId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .single();
 
-  const handleLogout = async () => {
-    console.log("Starting logout process...");
-    
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      console.log("Current session:", session);
+      if (error) throw error;
+      return data;
+    },
+  });
 
-      if (!session) {
-        console.log("No active session found, clearing local state only");
-        navigate("/auth");
-        return;
-      }
-
-      const { error } = await supabase.auth.signOut();
-      
-      if (error) {
-        console.error("Signout error:", error);
-        if (error.message.includes("session_not_found")) {
-          navigate("/auth");
-          return;
-        }
-        throw error;
-      }
-
-      toast({
-        title: t('success.loggedOut'),
-        description: t('success.logoutCompleted'),
-      });
-      navigate("/auth");
-      
-    } catch (error) {
-      console.error("Logout process error:", error);
-      
-      toast({
-        title: t('error.occurred'),
-        description: t('error.sessionCleared'),
-        variant: "destructive",
-      });
-      
-      navigate("/auth");
-    }
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="rounded-full">
-          <User className="w-5 h-5" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuLabel>{t('nav.account')}</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => navigate("/profile")}>
-          <User className="w-4 h-4 mr-2" />
-          {t('nav.profile')}
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => navigate("/settings")}>
-          <Settings className="w-4 h-4 mr-2" />
-          {t('nav.settings')}
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => navigate("/my-app")}>
-          <BookOpen className="w-4 h-4 mr-2" />
-          My App
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => navigate("/bookmarks")}>
-          <Bookmark className="w-4 h-4 mr-2" />
-          Bookmarks
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout}>
-          <LogOut className="w-4 h-4 mr-2" />
-          {t('nav.logout')}
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2">
+        <Coins className="h-5 w-5 text-yellow-500" />
+        <span className="font-semibold">{profile?.credits || 0}</span>
+      </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+            <Avatar className="h-8 w-8">
+              <AvatarImage src={profile?.avatar_url || ''} alt="プロフィール画像" />
+              <AvatarFallback>
+                {profile?.username?.[0]?.toUpperCase() || '?'}
+              </AvatarFallback>
+            </Avatar>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56" align="end" forceMount>
+          <DropdownMenuItem asChild>
+            <Link to={`/profile/${userId}`}>プロフィール</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link to="/settings">設定</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleSignOut}>
+            ログアウト
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 };

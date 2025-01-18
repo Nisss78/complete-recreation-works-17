@@ -2,6 +2,7 @@ export interface Profile {
   id: string;
   username: string | null;
   avatar_url: string | null;
+  credits?: number;
 }
 
 export interface Article {
@@ -17,10 +18,12 @@ export interface Article {
     id: string;
     username: string | null;
     avatar_url: string | null;
+    credits?: number;
   };
   profiles: {
     id: string;
     username: string;
     avatar_url: string;
+    credits?: number;
   };
 }
