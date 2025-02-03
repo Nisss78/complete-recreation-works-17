@@ -37,7 +37,7 @@ export const UserMenu = ({ userId }: { userId: string }) => {
     <div className="flex items-center gap-4">
       <div className="flex items-center gap-2">
         <Coins className="h-5 w-5 text-yellow-500" />
-        <span className="font-semibold">{t('credits.amount', { amount: profile?.credits || 0 })}</span>
+        <span className="font-semibold">{profile?.credits || 0}</span>
       </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
