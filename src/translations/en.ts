@@ -116,6 +116,22 @@ export const enTranslations = {
   'chat.send': 'Send',
   'chat.noMessages': 'No messages yet. Start a conversation!',
 
+  // Navigation
+  'nav.home': 'Home',
+  'nav.articles': 'Articles',
+  'nav.writeArticle': 'Write Article',
+  'nav.post': 'Post',
+  'nav.login': 'Login',
+  'nav.settings': 'Settings',
+  'nav.profile': 'Profile',
+  'nav.logout': 'Logout',
+  'nav.account': 'Account',
+  'nav.viewBookmarks': 'View Bookmarks',
+  'nav.recentBookmarks': 'Recent Bookmarks',
+  'nav.noBookmarks': 'No bookmarks yet',
+  'nav.myApp': 'My App',
+  'nav.chat': 'Chat',
+
   ...commentTranslations.en,
   ...productTranslations.en,
   ...followTranslations.en,
