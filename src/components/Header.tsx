@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Plus, BookOpen, FilePlus, User } from "lucide-react";
+import { Plus, BookOpen, FilePlus, User, MessageSquare } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ProductSubmissionDialog } from "./ProductSubmissionDialog";
 import { supabase } from "@/integrations/supabase/client";
@@ -73,7 +73,7 @@ export const Header = () => {
             onClick={() => navigate("/articles")}
           >
             <BookOpen className="h-5 w-5" />
-            {!isMobile && <span className="ml-2">{t('nav.articles')}</span>}
+            {!isMobile && <span className="ml-2">{t("nav.articles")}</span>}
           </Button>
           
           {isAuthenticated ? (
@@ -85,7 +85,17 @@ export const Header = () => {
                 onClick={() => navigate("/articles/new")}
               >
                 <FilePlus className="h-5 w-5" />
-                {!isMobile && <span className="ml-2">{t('nav.writeArticle')}</span>}
+                {!isMobile && <span className="ml-2">{t("nav.writeArticle")}</span>}
+              </Button>
+
+              <Button 
+                variant="ghost"
+                size={isMobile ? "icon" : "default"}
+                className="text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                onClick={() => navigate("/chat")}
+              >
+                <MessageSquare className="h-5 w-5" />
+                {!isMobile && <span className="ml-2">{t("nav.chat")}</span>}
               </Button>
 
               {isAdmin && (
@@ -96,7 +106,7 @@ export const Header = () => {
                   onClick={() => setShowSubmissionDialog(true)}
                 >
                   <Plus className="h-5 w-5" />
-                  {!isMobile && <span className="ml-2">{t('nav.post')}</span>}
+                  {!isMobile && <span className="ml-2">{t("nav.post")}</span>}
                 </Button>
               )}
 
@@ -115,7 +125,7 @@ export const Header = () => {
               {isMobile ? (
                 <User className="h-5 w-5" />
               ) : (
-                t('nav.login')
+                t("nav.login")
               )}
             </Button>
           )}

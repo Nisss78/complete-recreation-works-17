@@ -16,9 +16,9 @@ const ChatPage = () => {
     if (newMessage.trim()) {
       setMessages([...messages, { text: newMessage, isSent: true }]);
       setNewMessage("");
-      // Simulate response (replace with actual chat logic later)
+      // デモ用のレスポンス（後で実際のチャットロジックに置き換え）
       setTimeout(() => {
-        setMessages(prev => [...prev, { text: "This is a demo response.", isSent: false }]);
+        setMessages(prev => [...prev, { text: "これはデモ用の応答です。", isSent: false }]);
       }, 1000);
     }
   };
