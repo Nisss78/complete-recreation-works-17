@@ -78,14 +78,14 @@ export const ProfileHeader = ({
         onAvatarUpdate?.(publicUrl);
 
         toast({
-          title: "アバター画像を更新しました",
-          description: "プロフィール画像が正常に更新されました",
+          title: t('success.imageUploaded'),
+          description: t('success.completed'),
         });
       } catch (error) {
         console.error('Error uploading avatar:', error);
         toast({
-          title: "エラーが発生しました",
-          description: "画像のアップロードに失敗しました。もう一度お試しください。",
+          title: t('error.occurred'),
+          description: t('error.upload'),
           variant: "destructive",
         });
       }

@@ -15,7 +15,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 export const UserMenu = ({ userId }: { userId: string }) => {
   const { t } = useLanguage();
-  const { data: profile } = useQuery<Profile>({
+  const { data: profile } = useQuery({
     queryKey: ["profile", userId],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -37,9 +37,7 @@ export const UserMenu = ({ userId }: { userId: string }) => {
     <div className="flex items-center gap-4">
       <div className="flex items-center gap-2">
         <Coins className="h-5 w-5 text-yellow-500" />
-        <span className="font-semibold">
-          {t('credits.amount', { amount: profile?.credits || 0 })}
-        </span>
+        <span className="font-semibold">{t('credits.amount', { amount: profile?.credits || 0 })}</span>
       </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
