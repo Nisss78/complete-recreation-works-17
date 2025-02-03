@@ -5,7 +5,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Send, Menu, MessageSquare, Search, Code, Zap, LineChart, PenLine, MoreHorizontal } from "lucide-react";
 
 const ChatPage = () => {
   const { t } = useLanguage();
@@ -16,9 +17,9 @@ const ChatPage = () => {
     if (newMessage.trim()) {
       setMessages([...messages, { text: newMessage, isSent: true }]);
       setNewMessage("");
-      // デモ用のレスポンス（後で実際のチャットロジックに置き換え）
+      // デモ用のレスポンス
       setTimeout(() => {
-        setMessages(prev => [...prev, { text: "これはデモ用の応答です。", isSent: false }]);
+        setMessages(prev => [...prev, { text: "お手伝いできることはありますか？", isSent: false }]);
       }, 1000);
     }
   };
@@ -30,57 +31,134 @@ const ChatPage = () => {
     }
   };
 
+  const actionButtons = [
+    { icon: MessageSquare, label: "解決する" },
+    { icon: Code, label: "コード" },
+    { icon: Zap, label: "ブレーンストーミング" },
+    { icon: LineChart, label: "計画" },
+    { icon: PenLine, label: "ライティング支援" },
+    { icon: MoreHorizontal, label: "詳細" },
+  ];
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
-      <main className="flex-1 container max-w-4xl mx-auto py-6 px-4">
-        <h1 className="text-2xl font-bold mb-6">{t("chat.title")}</h1>
-        
-        <div className="bg-white rounded-lg shadow-md h-[600px] flex flex-col">
-          <ScrollArea className="flex-1 p-4">
-            {messages.length === 0 ? (
-              <p className="text-center text-muted-foreground py-4">
-                {t("chat.noMessages")}
-              </p>
-            ) : (
-              <div className="space-y-4">
-                {messages.map((message, index) => (
-                  <div
-                    key={index}
-                    className={`flex ${message.isSent ? "justify-end" : "justify-start"}`}
-                  >
-                    <div
-                      className={`max-w-[80%] rounded-lg px-4 py-2 ${
-                        message.isSent
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-muted"
-                      }`}
-                    >
-                      {message.text}
-                    </div>
-                  </div>
-                ))}
+      <main className="flex-1 flex">
+        {/* Sidebar - Hidden on mobile */}
+        <div className="w-64 border-r bg-sidebar-background hidden md:block">
+          <div className="p-4">
+            <Button variant="outline" className="w-full justify-start gap-2">
+              <MessageSquare className="h-4 w-4" />
+              新しいチャット
+            </Button>
+          </div>
+          <ScrollArea className="h-[calc(100vh-9rem)]">
+            <div className="p-4 space-y-2">
+              {/* Recent chats would go here */}
+              <div className="text-sm text-muted-foreground">
+                最近のチャット履歴がここに表示されます
               </div>
-            )}
+            </div>
+          </ScrollArea>
+        </div>
+
+        {/* Mobile sidebar trigger */}
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="md:hidden absolute left-4 top-20">
+              <Menu className="h-6 w-6" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-64 p-0">
+            <div className="p-4">
+              <Button variant="outline" className="w-full justify-start gap-2">
+                <MessageSquare className="h-4 w-4" />
+                新しいチャット
+              </Button>
+            </div>
+            <ScrollArea className="h-[calc(100vh-8rem)]">
+              <div className="p-4 space-y-2">
+                {/* Recent chats would go here */}
+                <div className="text-sm text-muted-foreground">
+                  最近のチャット履歴がここに表示されます
+                </div>
+              </div>
+            </ScrollArea>
+          </SheetContent>
+        </Sheet>
+
+        {/* Main chat area */}
+        <div className="flex-1 flex flex-col">
+          <ScrollArea className="flex-1 p-4">
+            <div className="max-w-3xl mx-auto">
+              {messages.length === 0 ? (
+                <div className="text-center py-8">
+                  <h2 className="text-2xl font-bold mb-4">お手伝いできることはありますか？</h2>
+                  <div className="grid grid-cols-2 gap-4 max-w-2xl mx-auto">
+                    {actionButtons.map((button, index) => (
+                      <Button
+                        key={index}
+                        variant="outline"
+                        className="h-auto py-4 px-6 flex flex-col items-center gap-2"
+                      >
+                        <button.icon className="h-6 w-6" />
+                        <span className="text-sm">{button.label}</span>
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {messages.map((message, index) => (
+                    <div
+                      key={index}
+                      className={`flex ${message.isSent ? "justify-end" : "justify-start"}`}
+                    >
+                      <div
+                        className={`max-w-[80%] rounded-lg px-4 py-2 ${
+                          message.isSent
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted"
+                        }`}
+                      >
+                        {message.text}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </ScrollArea>
           
-          <div className="p-4 border-t">
-            <div className="flex gap-2">
+          <div className="border-t p-4">
+            <div className="max-w-3xl mx-auto relative">
               <Input
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder={t("chat.placeholder")}
-                className="flex-1"
+                placeholder="ChatGPTにメッセージを送信する"
+                className="pr-24"
               />
-              <Button onClick={handleSend} size="icon">
-                <Send className="h-4 w-4" />
-              </Button>
+              <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-2">
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  className="h-8 w-8"
+                >
+                  <Search className="h-4 w-4" />
+                </Button>
+                <Button 
+                  onClick={handleSend} 
+                  size="icon"
+                  className="h-8 w-8"
+                >
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 };
