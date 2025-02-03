@@ -14,7 +14,8 @@ import {
   PenLine,
   MoreHorizontal,
   Plus,
-  Globe
+  Globe,
+  Timer
 } from "lucide-react";
 
 const ChatPage = () => {
@@ -40,7 +41,7 @@ const ChatPage = () => {
   };
 
   const actionButtons = [
-    { icon: MessageSquare, label: "解決する", color: "text-pink-500" },
+    { icon: Timer, label: "解決する", color: "text-pink-500" },
     { icon: Code, label: "コード", color: "text-blue-500" },
     { icon: Lightbulb, label: "ブレーンストーミング", color: "text-yellow-500" },
     { icon: ClipboardList, label: "計画", color: "text-yellow-500" },
@@ -105,7 +106,7 @@ const ChatPage = () => {
                       <Button
                         key={index}
                         variant="outline"
-                        className="h-auto py-3 px-4 flex flex-col items-center gap-2 bg-white hover:bg-gray-50"
+                        className="h-auto py-3 px-4 flex flex-col items-center gap-2 bg-white hover:bg-gray-50 border border-gray-200"
                       >
                         <button.icon className={`h-5 w-5 ${button.color}`} />
                         <span className="text-sm text-gray-700">{button.label}</span>
@@ -139,39 +140,34 @@ const ChatPage = () => {
           <div className="border-t p-4">
             <div className="max-w-3xl mx-auto relative">
               <div className="relative flex items-center">
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  className="absolute left-2 h-8 w-8 text-gray-500"
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  className="absolute left-12 h-8 w-8 text-gray-500"
-                >
-                  <Globe className="h-4 w-4" />
-                </Button>
+                <div className="absolute left-2 flex gap-2">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    className="h-8 w-8 text-gray-500 hover:bg-transparent"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    className="h-8 w-8 text-gray-500 hover:bg-transparent"
+                  >
+                    <Globe className="h-4 w-4" />
+                  </Button>
+                </div>
                 <Input
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="ChatGPTにメッセージを送信する"
-                  className="pl-24 pr-20"
+                  className="pl-20 pr-16 py-6 rounded-full bg-white border-gray-200"
                 />
-                <div className="absolute right-2 flex gap-2">
-                  <Button 
-                    variant="ghost" 
-                    size="icon"
-                    className="h-8 w-8 text-gray-500"
-                  >
-                    <Search className="h-4 w-4" />
-                  </Button>
+                <div className="absolute right-2">
                   <Button 
                     onClick={handleSend}
                     size="icon"
-                    className="h-8 w-8"
+                    className="h-8 w-8 rounded-full bg-black hover:bg-gray-800"
                   >
                     <MessageSquare className="h-4 w-4" />
                   </Button>
