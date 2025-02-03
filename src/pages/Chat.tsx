@@ -1,15 +1,23 @@
 import { useState } from "react";
 import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
-import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Send, Menu, MessageSquare, Search, Code, Zap, LineChart, PenLine, MoreHorizontal } from "lucide-react";
+import { 
+  Menu, 
+  MessageSquare, 
+  Search, 
+  Code, 
+  Lightbulb,
+  ClipboardList,
+  PenLine,
+  MoreHorizontal,
+  Plus,
+  Globe
+} from "lucide-react";
 
 const ChatPage = () => {
-  const { t } = useLanguage();
   const [messages, setMessages] = useState<Array<{ text: string; isSent: boolean }>>([]);
   const [newMessage, setNewMessage] = useState("");
 
@@ -32,12 +40,12 @@ const ChatPage = () => {
   };
 
   const actionButtons = [
-    { icon: MessageSquare, label: "解決する" },
-    { icon: Code, label: "コード" },
-    { icon: Zap, label: "ブレーンストーミング" },
-    { icon: LineChart, label: "計画" },
-    { icon: PenLine, label: "ライティング支援" },
-    { icon: MoreHorizontal, label: "詳細" },
+    { icon: MessageSquare, label: "解決する", color: "text-pink-500" },
+    { icon: Code, label: "コード", color: "text-blue-500" },
+    { icon: Lightbulb, label: "ブレーンストーミング", color: "text-yellow-500" },
+    { icon: ClipboardList, label: "計画", color: "text-yellow-500" },
+    { icon: PenLine, label: "ライティング支援", color: "text-pink-500" },
+    { icon: MoreHorizontal, label: "詳細", color: "text-gray-500" },
   ];
 
   return (
@@ -45,16 +53,15 @@ const ChatPage = () => {
       <Header />
       <main className="flex-1 flex">
         {/* Sidebar - Hidden on mobile */}
-        <div className="w-64 border-r bg-sidebar-background hidden md:block">
+        <div className="w-64 border-r bg-white hidden md:block">
           <div className="p-4">
             <Button variant="outline" className="w-full justify-start gap-2">
-              <MessageSquare className="h-4 w-4" />
+              <Plus className="h-4 w-4" />
               新しいチャット
             </Button>
           </div>
           <ScrollArea className="h-[calc(100vh-9rem)]">
             <div className="p-4 space-y-2">
-              {/* Recent chats would go here */}
               <div className="text-sm text-muted-foreground">
                 最近のチャット履歴がここに表示されます
               </div>
@@ -72,13 +79,12 @@ const ChatPage = () => {
           <SheetContent side="left" className="w-64 p-0">
             <div className="p-4">
               <Button variant="outline" className="w-full justify-start gap-2">
-                <MessageSquare className="h-4 w-4" />
+                <Plus className="h-4 w-4" />
                 新しいチャット
               </Button>
             </div>
             <ScrollArea className="h-[calc(100vh-8rem)]">
               <div className="p-4 space-y-2">
-                {/* Recent chats would go here */}
                 <div className="text-sm text-muted-foreground">
                   最近のチャット履歴がここに表示されます
                 </div>
@@ -93,16 +99,16 @@ const ChatPage = () => {
             <div className="max-w-3xl mx-auto">
               {messages.length === 0 ? (
                 <div className="text-center py-8">
-                  <h2 className="text-2xl font-bold mb-4">お手伝いできることはありますか？</h2>
-                  <div className="grid grid-cols-2 gap-4 max-w-2xl mx-auto">
+                  <h2 className="text-2xl font-bold mb-8">お手伝いできることはありますか？</h2>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-2xl mx-auto px-4">
                     {actionButtons.map((button, index) => (
                       <Button
                         key={index}
                         variant="outline"
-                        className="h-auto py-4 px-6 flex flex-col items-center gap-2"
+                        className="h-auto py-3 px-4 flex flex-col items-center gap-2 bg-white hover:bg-gray-50"
                       >
-                        <button.icon className="h-6 w-6" />
-                        <span className="text-sm">{button.label}</span>
+                        <button.icon className={`h-5 w-5 ${button.color}`} />
+                        <span className="text-sm text-gray-700">{button.label}</span>
                       </Button>
                     ))}
                   </div>
@@ -132,28 +138,44 @@ const ChatPage = () => {
           
           <div className="border-t p-4">
             <div className="max-w-3xl mx-auto relative">
-              <Input
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="ChatGPTにメッセージを送信する"
-                className="pr-24"
-              />
-              <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-2">
+              <div className="relative flex items-center">
                 <Button 
                   variant="ghost" 
                   size="icon"
-                  className="h-8 w-8"
+                  className="absolute left-2 h-8 w-8 text-gray-500"
                 >
-                  <Search className="h-4 w-4" />
+                  <Plus className="h-4 w-4" />
                 </Button>
                 <Button 
-                  onClick={handleSend} 
+                  variant="ghost" 
                   size="icon"
-                  className="h-8 w-8"
+                  className="absolute left-12 h-8 w-8 text-gray-500"
                 >
-                  <Send className="h-4 w-4" />
+                  <Globe className="h-4 w-4" />
                 </Button>
+                <Input
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="ChatGPTにメッセージを送信する"
+                  className="pl-24 pr-20"
+                />
+                <div className="absolute right-2 flex gap-2">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    className="h-8 w-8 text-gray-500"
+                  >
+                    <Search className="h-4 w-4" />
+                  </Button>
+                  <Button 
+                    onClick={handleSend}
+                    size="icon"
+                    className="h-8 w-8"
+                  >
+                    <MessageSquare className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
