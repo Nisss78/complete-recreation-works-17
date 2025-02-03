@@ -9,6 +9,7 @@ import Profile from "@/pages/Profile";
 import Settings from "@/pages/Settings";
 import Bookmarks from "@/pages/Bookmarks";
 import MyApp from "@/pages/MyApp";
+import Chat from "@/pages/Chat";
 
 export const Routes = () => {
   const location = useLocation();
@@ -29,6 +30,7 @@ export const Routes = () => {
       <Route path="/settings" element={<Settings />} />
       <Route path="/bookmarks" element={<Bookmarks />} />
       <Route path="/my-app" element={<MyApp />} />
+      <Route path="/chat" element={<Chat />} />
     </RouterRoutes>
   );
 };
