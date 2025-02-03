@@ -37,3 +37,12 @@ export function formatTimeAgo(dateString: string) {
   const diffInYears = Math.floor(diffInMonths / 12);
   return `${diffInYears}年前`;
 }
+
+export function getInitials(name: string): string {
+  return name
+    .split(' ')
+    .map(word => word.charAt(0))
+    .join('')
+    .toUpperCase()
+    .slice(0, 2);
+}

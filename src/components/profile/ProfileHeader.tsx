@@ -112,7 +112,7 @@ export const ProfileHeader = ({ profileId, isOwnProfile }: ProfileHeaderProps) =
 
       <ProfileStats userId={profileId} />
       
-      {(profile.twitter_username || profile.instagram_username || profile.github_username || profile.website_url) && (
+      {(profile.twitter_url || profile.instagram_url || profile.github_url || profile.other_url) && (
         <ProfileSocialLinks profile={profile} />
       )}
     </div>
