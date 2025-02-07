@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { FollowButton } from "@/components/profile/FollowButton";
@@ -14,9 +14,10 @@ import { getInitials } from "@/lib/utils";
 interface ProfileHeaderProps {
   profileId: string;
   isOwnProfile: boolean;
+  onAvatarUpdate?: (url: string) => void;
 }
 
-export const ProfileHeader = ({ profileId, isOwnProfile }: ProfileHeaderProps) => {
+export const ProfileHeader = ({ profileId, isOwnProfile, onAvatarUpdate }: ProfileHeaderProps) => {
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();

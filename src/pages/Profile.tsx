@@ -17,12 +17,6 @@ const ProfilePage = () => {
   const queryClient = useQueryClient();
   const { t } = useLanguage();
 
-  console.log('Profile Page - Params:', {
-    profileId,
-    currentUserId: userId,
-    isOwnProfile: profileId === userId
-  });
-
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -54,32 +48,17 @@ const ProfilePage = () => {
       const targetId = profileId || userId;
       if (!targetId) return null;
       
-      console.log('Profile Page - Fetching profile for:', targetId);
-      
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
         .eq("id", targetId)
         .maybeSingle();
 
-      if (error) {
-        toast({
-          title: "エラー",
-          description: "プロフィールの取得に失敗しました",
-          variant: "destructive",
-        });
-        throw error;
-      }
-
+      if (error) throw error;
       return data;
     },
     enabled: !!(profileId || userId),
   });
-
-  const handleAvatarUpdate = (newAvatarUrl: string) => {
-    // Invalidate the profile query to refetch the updated data
-    queryClient.invalidateQueries({ queryKey: ["profile", profileId || userId] });
-  };
 
   const { data: articles, isLoading: articlesLoading } = useQuery({
     queryKey: ["userArticles", profileId || userId],
@@ -100,24 +79,8 @@ const ProfilePage = () => {
         .eq('user_id', targetId)
         .order('created_at', { ascending: false });
 
-      if (error) {
-        console.error('Error fetching user articles:', error);
-        toast({
-          title: "エラー",
-          description: "記事の取得に失敗しました",
-          variant: "destructive",
-        });
-        throw error;
-      }
-
-      return data.map(article => ({
-        ...article,
-        profiles: {
-          id: article.profile?.id,
-          username: article.profile?.username || "Unknown User",
-          avatar_url: article.profile?.avatar_url || "/placeholder.svg"
-        }
-      }));
+      if (error) throw error;
+      return data;
     },
     enabled: !!(profileId || userId),
   });
@@ -138,6 +101,8 @@ const ProfilePage = () => {
     return `${diffInDays}日前`;
   };
 
+  const isOwnProfile = !profileId || profileId === userId;
+
   if (profileLoading || articlesLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
@@ -157,7 +122,8 @@ const ProfilePage = () => {
     );
   }
 
-  const isOwnProfile = !profileId || profileId === userId;
+  const targetId = profileId || userId;
+  if (!targetId || !profile) return null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
@@ -165,13 +131,12 @@ const ProfilePage = () => {
       <main className="container max-w-4xl mx-auto py-8 px-4">
         <div className="space-y-8">
           <ProfileHeader 
-            profile={profile} 
+            profileId={targetId}
             isOwnProfile={isOwnProfile}
-            onAvatarUpdate={handleAvatarUpdate}
           />
           
           <div className="space-y-4">
-            <h2 className="text-2xl font-bold text-gray-900">{t('articles.myPosts')}</h2>
+            <h2 className="text-2xl font-bold text-gray-900">{t("articles.myPosts")}</h2>
             {articles && articles.length > 0 ? (
               articles.map((article) => (
                 <ArticleCard 
@@ -180,20 +145,20 @@ const ProfilePage = () => {
                   date={formatDate(article.created_at)}
                   title={article.title}
                   author={{
-                    id: article.profiles.id,
-                    name: article.profiles.username,
-                    avatar: article.profiles.avatar_url
+                    id: article.profile.id,
+                    name: article.profile.username,
+                    avatar: article.profile.avatar_url
                   }}
                   likes={article.likes_count || 0}
                   postedAt={formatTimeAgo(article.created_at)}
+                  thumbnail_url={article.thumbnail_url}
                   showDeleteButton={isOwnProfile}
                   onDelete={handleArticleDelete}
-                  thumbnail_url={article.thumbnail_url}
                 />
               ))
             ) : (
               <div className="text-center py-12 text-gray-500">
-                {t('articles.noPosts')}
+                {t("articles.noPosts")}
               </div>
             )}
           </div>

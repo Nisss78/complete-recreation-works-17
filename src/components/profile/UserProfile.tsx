@@ -101,15 +101,20 @@ export const UserProfile = () => {
     );
   }
 
+  if (!userId || !profile) return null;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
       <Header />
       <main className="container max-w-4xl mx-auto py-8 px-4">
         <div className="space-y-8">
-          <ProfileHeader profile={profile} showFollowButton={!isOwnProfile} />
+          <ProfileHeader 
+            profileId={userId}
+            isOwnProfile={isOwnProfile}
+          />
           
           <div className="space-y-4">
-            <h2 className="text-2xl font-bold text-gray-900">投稿した記事</h2>
+            <h2 className="text-2xl font-bold text-gray-900">{t("articles.myPosts")}</h2>
             {articles && articles.length > 0 ? (
               articles.map((article) => (
                 <ArticleCard 
@@ -131,7 +136,7 @@ export const UserProfile = () => {
               ))
             ) : (
               <div className="text-center py-12 text-gray-500">
-                まだ記事を投稿していません
+                {t("articles.noPosts")}
               </div>
             )}
           </div>
