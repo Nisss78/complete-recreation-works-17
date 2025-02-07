@@ -10,6 +10,7 @@ import { MetaTags } from "@/components/MetaTags";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ProductsList } from "@/components/home/ProductsList";
 import { RecentArticles } from "@/components/home/RecentArticles";
+import { ArrowDownAZ, ArrowUpAZ } from "lucide-react";
 
 // 製品データと画像を同時に取得する関数
 const fetchProductsWithImages = async () => {
@@ -66,7 +67,6 @@ const Index = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
 
-  // 製品データと画像を同時に取得
   const { data: allProducts = [], isLoading, error } = useQuery({
     queryKey: ['products-with-images'],
     queryFn: fetchProductsWithImages,
@@ -152,18 +152,28 @@ const Index = () => {
       />
       <Header />
       <main className="flex-1">
-        <div className="max-w-7xl mx-auto py-4 sm:py-8 px-3 sm:px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="max-w-7xl mx-auto py-3 sm:py-6 px-3 sm:px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
             <div className="lg:col-span-2">
-              <div className="flex justify-between items-center mb-6 sm:mb-8">
-                <h1 className="text-xl sm:text-3xl font-bold text-gray-900">
+              <div className="flex justify-between items-center mb-4 sm:mb-6">
+                <h1 className="text-lg sm:text-2xl font-bold text-gray-900">
                   {t('index.productsTitle')}
                 </h1>
                 <button
                   onClick={() => setSortByLikes(!sortByLikes)}
-                  className="px-3 sm:px-4 py-1.5 sm:py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm"
+                  className="inline-flex items-center px-2.5 sm:px-3.5 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm gap-1.5"
                 >
-                  {sortByLikes ? t('products.sortByDate') : t('products.sortByLikes')}
+                  {sortByLikes ? (
+                    <>
+                      <ArrowDownAZ className="h-4 w-4" />
+                      {t('products.sortByDate')}
+                    </>
+                  ) : (
+                    <>
+                      <ArrowUpAZ className="h-4 w-4" />
+                      {t('products.sortByLikes')}
+                    </>
+                  )}
                 </button>
               </div>
               
@@ -174,7 +184,7 @@ const Index = () => {
               />
             </div>
 
-            <div className="lg:col-span-1">
+            <div className="lg:col-span-1 order-first lg:order-last mb-4 lg:mb-0">
               <RecentArticles />
             </div>
           </div>
