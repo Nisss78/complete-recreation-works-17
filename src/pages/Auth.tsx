@@ -1,3 +1,4 @@
+
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/integrations/supabase/client";
@@ -35,7 +36,7 @@ const AuthPage = () => {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-purple-50 to-indigo-50 flex items-center justify-center">
+    <div className="min-h-screen w-full bg-white flex items-center justify-center">
       <div className="w-full max-w-md px-4">
         <div className="text-center mb-8 relative">
           <Link 
@@ -51,7 +52,7 @@ const AuthPage = () => {
               {!isMobile && <span className="ml-1">Back to Home</span>}
             </Button>
           </Link>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900 text-blue-gradient">
             Protoduct
           </h1>
         </div>
@@ -63,8 +64,23 @@ const AuthPage = () => {
               variables: {
                 default: {
                   colors: {
-                    brand: '#9b87f5',
-                    brandAccent: '#7E69AB',
+                    brand: '#4f46e5',
+                    brandAccent: '#4338ca',
+                    inputBackground: 'white',
+                    inputBorder: '#e5e7eb',
+                    inputBorderFocus: '#4f46e5',
+                    inputBorderHover: '#d1d5db',
+                    inputLabelText: '#6b7280',
+                    inputText: '#374151',
+                  },
+                  borderWidths: {
+                    buttonBorderWidth: '1px',
+                    inputBorderWidth: '1px',
+                  },
+                  radii: {
+                    borderRadiusButton: '0.5rem',
+                    buttonBorderRadius: '0.5rem',
+                    inputBorderRadius: '0.5rem',
                   },
                 },
               },
@@ -72,6 +88,10 @@ const AuthPage = () => {
                 container: 'auth-container',
                 button: 'auth-button',
                 input: 'auth-input',
+                label: 'text-gray-600',
+                anchor: 'text-indigo-600 hover:text-indigo-500',
+                divider: 'my-4 border-t border-gray-200',
+                message: 'text-sm text-gray-600 mt-2',
               },
             }}
             providers={["google"]}
@@ -94,6 +114,21 @@ const AuthPage = () => {
                   loading_button_label: "登録中...",
                   email_input_placeholder: "メールアドレスを入力",
                   password_input_placeholder: "パスワードを入力",
+                },
+                forgotten_password: {
+                  email_label: 'メールアドレス',
+                  password_label: 'パスワード',
+                  button_label: 'パスワードを再設定',
+                  loading_button_label: "送信中...",
+                  link_text: "パスワードをお忘れですか？",
+                  confirmation_text: "パスワード再設定メールを確認してください",
+                },
+                magic_link: {
+                  email_input_label: 'メールアドレス',
+                  button_label: 'マジックリンクを送信',
+                  loading_button_label: "送信中...",
+                  link_text: "マジックリンクを送信",
+                  confirmation_text: "マジックリンクを確認してください",
                 },
               },
             }}
