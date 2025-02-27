@@ -31,6 +31,7 @@ export const profileTranslations = {
     'profile.avatarSize': 'Max file size: 5MB',
     'profile.noFollowers': 'No followers yet',
     'profile.noFollowing': 'Not following anyone yet',
+    'profile.noChanges': 'No changes made to profile'
   },
   ja: {
     'profile.edit': 'プロフィール編集',
@@ -63,5 +64,6 @@ export const profileTranslations = {
     'profile.avatarSize': '最大ファイルサイズ: 5MB',
     'profile.noFollowers': 'まだフォロワーがいません',
     'profile.noFollowing': 'まだ誰もフォローしていません',
+    'profile.noChanges': 'プロフィールに変更はありませんでした'
   }
 };

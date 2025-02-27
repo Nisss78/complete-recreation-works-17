@@ -1,3 +1,4 @@
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -13,13 +14,30 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { User } from "lucide-react";
 import { AvatarUpload } from "./AvatarUpload";
 import { useNavigate } from "react-router-dom";
 import { SocialLinksFields } from "./SocialLinksFields";
 import { formSchema, ProfileFormValues, ProfileData } from "./profileFormSchema";
 import { useQuery } from "@tanstack/react-query";
 import { useLanguage } from "@/contexts/LanguageContext";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getInitials } from "@/lib/utils";
+import { Separator } from "@/components/ui/separator";
+import { AlertCircle, User } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface ProfileFormProps {
   onSuccess?: () => void;
@@ -62,6 +80,15 @@ export const ProfileForm = ({ onSuccess }: ProfileFormProps) => {
       github_url: profile?.github_url || "",
       other_url: profile?.other_url || "",
     },
+    values: {
+      username: profile?.username || "",
+      bio: profile?.bio || "",
+      avatar_url: profile?.avatar_url || "",
+      twitter_url: profile?.twitter_url || "",
+      instagram_url: profile?.instagram_url || "",
+      github_url: profile?.github_url || "",
+      other_url: profile?.other_url || "",
+    }
   });
 
   const onSubmit = async (values: ProfileFormValues) => {
@@ -71,8 +98,8 @@ export const ProfileForm = ({ onSuccess }: ProfileFormProps) => {
     if (!userId) {
       console.error("User is not authenticated");
       toast({
-        title: "エラー",
-        description: "ログインが必要です",
+        title: t("error.occurred"),
+        description: t("error.unauthorized"),
         variant: "destructive",
       });
       return;
@@ -89,14 +116,12 @@ export const ProfileForm = ({ onSuccess }: ProfileFormProps) => {
 
       if (Object.keys(changedFields).length === 0) {
         toast({
-          title: "変更なし",
-          description: "プロフィールに変更はありませんでした",
+          title: t("common.warning"),
+          description: t("profile.noChanges"),
         });
         navigate("/profile");
         return;
       }
-
-      console.log("Updating fields:", changedFields);
 
       const { error } = await supabase
         .from("profiles")
@@ -111,8 +136,8 @@ export const ProfileForm = ({ onSuccess }: ProfileFormProps) => {
       }
 
       toast({
-        title: "更新完了",
-        description: "プロフィールを更新しました",
+        title: t("success.completed"),
+        description: t("success.profileUpdated"),
       });
 
       onSuccess?.();
@@ -120,15 +145,14 @@ export const ProfileForm = ({ onSuccess }: ProfileFormProps) => {
     } catch (error) {
       console.error("Error updating profile:", error);
       toast({
-        title: "エラー",
-        description: "プロフィールの更新に失敗しました",
+        title: t("error.occurred"),
+        description: t("error.occurred"),
         variant: "destructive",
       });
     }
   };
 
   const handleAvatarUpload = (url: string) => {
-    console.log("Avatar URL updated:", url);
     form.setValue("avatar_url", url);
   };
 
@@ -145,74 +169,109 @@ export const ProfileForm = ({ onSuccess }: ProfileFormProps) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="space-y-4 p-6 bg-card rounded-lg shadow-sm">
-          <div className="flex items-center gap-2 mb-4">
-            <User className="w-5 h-5" />
-            <h2 className="text-xl font-semibold">{t('settings.profileSettings')}</h2>
-          </div>
-          
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t('profile.username')}</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder={t('profile.usernamePlaceholder')} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="bio"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t('profile.bio')}</FormLabel>
-                <FormControl>
-                  <Textarea
-                    {...field}
-                    placeholder={t('profile.bioPlaceholder')}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="avatar_url"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t('profile.avatar')}</FormLabel>
-                <FormControl>
-                  <div className="space-y-4">
-                    <AvatarUpload onUpload={handleAvatarUpload} />
-                    {field.value && (
-                      <div className="mt-2">
-                        <img 
-                          src={field.value} 
-                          alt="アバタープレビュー" 
-                          className="w-24 h-24 rounded-full object-cover"
-                        />
+        <div className="flex flex-col md:flex-row gap-6">
+          <div className="md:w-1/3">
+            <Card>
+              <CardHeader>
+                <CardTitle>{t('profile.avatar')}</CardTitle>
+                <CardDescription>
+                  {t('profile.avatarSize')}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-col items-center">
+                <FormField
+                  control={form.control}
+                  name="avatar_url"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <div className="mb-4 flex justify-center">
+                        <Avatar className="h-24 w-24 border-2 border-primary/10">
+                          <AvatarImage src={field.value} alt={profile?.username || ""} />
+                          <AvatarFallback>
+                            {getInitials(profile?.username || "")}
+                          </AvatarFallback>
+                        </Avatar>
                       </div>
-                    )}
-                    <Input {...field} type="hidden" />
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+                      <FormControl>
+                        <AvatarUpload onUpload={handleAvatarUpload} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="md:w-2/3 space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>{t('settings.profileSettings')}</CardTitle>
+                <CardDescription>
+                  {t('profile.usernamePlaceholder')}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('profile.username')}</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder={t('profile.usernamePlaceholder')} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="bio"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('profile.bio')}</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          {...field}
+                          placeholder={t('profile.bioPlaceholder')}
+                          className="resize-none"
+                          rows={4}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
+
+            <Accordion type="single" collapsible defaultValue="social">
+              <AccordionItem value="social">
+                <AccordionTrigger>
+                  {t('profile.socialLinks')}
+                </AccordionTrigger>
+                <AccordionContent>
+                  <SocialLinksFields form={form} />
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+
+            {form.formState.errors && Object.keys(form.formState.errors).length > 0 && (
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>{t('error.occurred')}</AlertTitle>
+                <AlertDescription>
+                  {t('error.required')}
+                </AlertDescription>
+              </Alert>
             )}
-          />
 
-          <SocialLinksFields form={form} />
-
-          <Button type="submit" className="w-full">
-            {t('profile.save')}
-          </Button>
+            <Button type="submit" className="w-full">
+              {t('profile.save')}
+            </Button>
+          </div>
         </div>
       </form>
     </Form>
