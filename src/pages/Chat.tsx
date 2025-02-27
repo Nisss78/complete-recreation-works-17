@@ -18,8 +18,8 @@ import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
-// APIキー用の環境変数名
-const API_KEY_NAME = "GEMINI_API_KEY";
+// APIキーを直接設定
+const DEFAULT_API_KEY = "AIzaSyDDFVDO9twnoLpzPr7La9ecmX-PsgLWe7k";
 
 type Message = {
   id: string;
@@ -32,7 +32,7 @@ const ChatPage = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [apiKey, setApiKey] = useState<string | null>(localStorage.getItem(API_KEY_NAME));
+  const [apiKey] = useState<string>(DEFAULT_API_KEY);
   const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -65,16 +65,6 @@ const ChatPage = () => {
     }
   }, [inputValue, hasStartedChat]);
 
-  const saveApiKey = (key: string) => {
-    localStorage.setItem(API_KEY_NAME, key);
-    setApiKey(key);
-    setIsApiKeyModalOpen(false);
-    toast({
-      title: "APIキーを保存しました",
-      description: "Gemini APIキーが正常に保存されました。",
-    });
-  };
-
   const handleSendMessage = async () => {
     if (inputValue.trim() === "" || isLoading) return;
 
@@ -92,80 +82,67 @@ const ChatPage = () => {
     setHasStartedChat(true);
 
     try {
-      // Gemini API呼び出し (APIキーが設定されている場合)
-      if (apiKey) {
-        try {
-          const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=' + apiKey, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              contents: [
-                {
-                  parts: [
-                    {
-                      text: messages
-                        .map(msg => msg.isUser ? `User: ${msg.content}` : `AI: ${msg.content}`)
-                        .join('\n') + `\nUser: ${inputValue}`
-                    }
-                  ]
-                }
-              ],
-              generationConfig: {
-                temperature: 0.7,
-                topK: 40,
-                topP: 0.95,
-                maxOutputTokens: 1024,
+      // Gemini API呼び出し
+      try {
+        const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=' + apiKey, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [
+                  {
+                    text: messages
+                      .map(msg => msg.isUser ? `User: ${msg.content}` : `AI: ${msg.content}`)
+                      .join('\n') + `\nUser: ${inputValue}`
+                  }
+                ]
               }
-            })
-          });
+            ],
+            generationConfig: {
+              temperature: 0.7,
+              topK: 40,
+              topP: 0.95,
+              maxOutputTokens: 1024,
+            }
+          })
+        });
 
-          const data = await response.json();
+        const data = await response.json();
+        
+        // 応答を確認
+        if (data.candidates && data.candidates[0] && data.candidates[0].content) {
+          const aiResponse = data.candidates[0].content.parts[0].text;
           
-          // 応答を確認
-          if (data.candidates && data.candidates[0] && data.candidates[0].content) {
-            const aiResponse = data.candidates[0].content.parts[0].text;
-            
-            const aiMessage: Message = {
-              id: (Date.now() + 1).toString(),
-              content: aiResponse.replace(/^AI: /, ''),
-              isUser: false,
-              timestamp: new Date(),
-            };
-            
-            setMessages((prev) => [...prev, aiMessage]);
-          } else {
-            throw new Error('Invalid response from Gemini API');
-          }
-        } catch (error) {
-          console.error("API Error:", error);
-          toast({
-            title: "エラーが発生しました",
-            description: "Gemini APIからの応答に問題がありました。",
-            variant: "destructive",
-          });
-
-          // エラー時はデモ回答を表示
           const aiMessage: Message = {
             id: (Date.now() + 1).toString(),
-            content: "申し訳ありません、Gemini APIとの通信中にエラーが発生しました。APIキーが正しいことを確認するか、後でもう一度お試しください。",
+            content: aiResponse.replace(/^AI: /, ''),
             isUser: false,
             timestamp: new Date(),
           };
+          
           setMessages((prev) => [...prev, aiMessage]);
+        } else {
+          throw new Error('Invalid response from Gemini API');
         }
-      } else {
-        // APIキーが設定されていない場合はデモ回答を表示
-        setTimeout(() => {
-          const aiMessage: Message = {
-            id: (Date.now() + 1).toString(),
-            content: "Gemini APIキーが設定されていません。設定アイコンからAPIキーを設定してください。APIキーは https://ai.google.dev/ から取得できます。",
-            isUser: false,
-            timestamp: new Date(),
-          };
-          setMessages((prev) => [...prev, aiMessage]);
-        }, 1000);
+      } catch (error) {
+        console.error("API Error:", error);
+        toast({
+          title: "エラーが発生しました",
+          description: "Gemini APIからの応答に問題がありました。",
+          variant: "destructive",
+        });
+
+        // エラー時はデモ回答を表示
+        const aiMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          content: "申し訳ありません、Gemini APIとの通信中にエラーが発生しました。しばらくしてからもう一度お試しください。",
+          isUser: false,
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, aiMessage]);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -195,47 +172,6 @@ const ChatPage = () => {
     ));
   };
 
-  // APIキー設定モーダル
-  const ApiKeyModal = () => {
-    const [inputKey, setInputKey] = useState(apiKey || "");
-
-    return (
-      <div className={`fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center ${isApiKeyModalOpen ? "" : "hidden"}`}>
-        <div className="bg-white rounded-lg p-6 w-full max-w-md">
-          <h2 className="text-xl font-semibold mb-4">Gemini APIキーを設定</h2>
-          <p className="text-sm text-gray-600 mb-4">
-            Gemini APIを使用するには、APIキーが必要です。
-            <a href="https://ai.google.dev/" target="_blank" className="text-blue-500 underline ml-1">
-              Google AIスタジオ
-            </a>
-            でAPIキーを取得できます。
-          </p>
-          <input
-            type="text"
-            value={inputKey}
-            onChange={(e) => setInputKey(e.target.value)}
-            placeholder="APIキーを入力"
-            className="w-full border border-gray-300 rounded px-3 py-2 mb-4"
-          />
-          <div className="flex justify-end gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setIsApiKeyModalOpen(false)}
-            >
-              キャンセル
-            </Button>
-            <Button
-              onClick={() => saveApiKey(inputKey)}
-              disabled={!inputKey.trim()}
-            >
-              保存
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   // ウェルカム画面
   const WelcomeScreen = () => (
     <div className="flex flex-col h-full bg-white">
@@ -252,7 +188,6 @@ const ChatPage = () => {
             variant="ghost" 
             size="icon" 
             className="rounded-full"
-            onClick={() => setIsApiKeyModalOpen(true)}
           >
             <Settings className="h-5 w-5" />
           </Button>
@@ -275,13 +210,13 @@ const ChatPage = () => {
         {/* 入力エリア - クリップアイコンを削除、UI改善 */}
         <div className="w-full max-w-2xl mb-4">
           <div className="relative bg-gray-50 rounded-2xl shadow-sm">
-            <Textarea
-              ref={textareaRef}
+            <textarea
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyPress}
               placeholder="メッセージを入力..."
-              className="resize-none min-h-[60px] rounded-2xl pl-4 pr-14 py-4 focus-visible:ring-1 bg-gray-50 border-none"
+              className="w-full resize-none min-h-[60px] rounded-2xl pl-4 pr-14 py-4 focus:outline-none bg-gray-50 border-none"
+              style={{ height: inputValue ? Math.min(Math.max(60, inputValue.split('\n').length * 24), 140) + 'px' : '60px' }}
             />
             
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -341,7 +276,6 @@ const ChatPage = () => {
             variant="ghost" 
             size="icon" 
             className="rounded-lg"
-            onClick={() => setIsApiKeyModalOpen(true)}
           >
             <Settings className="h-5 w-5" />
           </Button>
@@ -395,13 +329,17 @@ const ChatPage = () => {
       {/* 入力エリア - クリップアイコンを削除、UI改善 */}
       <div className="border-t p-3">
         <div className="flex items-center max-w-3xl mx-auto bg-gray-50 rounded-xl px-4 py-2">
-          <Textarea
-            ref={textareaRef}
+          <textarea
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyPress}
             placeholder="メッセージを入力..."
-            className="resize-none border-none bg-transparent flex-1 py-2 px-0 focus-visible:ring-0 focus-visible:ring-offset-0 max-h-[140px] min-h-[40px]"
+            className="w-full resize-none border-none bg-transparent flex-1 py-2 px-0 focus:outline-none min-h-[40px]"
+            style={{ 
+              height: inputValue 
+                ? Math.min(Math.max(40, inputValue.split('\n').length * 24), 140) + 'px' 
+                : '40px' 
+            }}
           />
           
           <Button
@@ -447,9 +385,6 @@ const ChatPage = () => {
 
   return (
     <div className="flex flex-col h-screen bg-white">
-      {/* APIキー設定モーダル */}
-      <ApiKeyModal />
-      
       {/* チャットが始まっていない場合はウェルカム画面、そうでなければチャットUIを表示 */}
       {!hasStartedChat || messages.length === 0 ? <WelcomeScreen /> : <ChatUI />}
     </div>
