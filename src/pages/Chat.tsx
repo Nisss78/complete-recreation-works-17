@@ -10,7 +10,9 @@ import {
   Share,
   Info, 
   MoreHorizontal,
-  Paperclip
+  Paperclip,
+  ArrowUp,
+  RotateCcw
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -35,6 +37,7 @@ const ChatPage = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
+  const [hasStartedChat, setHasStartedChat] = useState(false);
 
   // 自動スクロール
   useEffect(() => {
@@ -54,18 +57,12 @@ const ChatPage = () => {
     }
   }, [inputValue]);
 
-  // コンポーネントマウント時にデモメッセージを設定
+  // 入力時にチャットモードに変更
   useEffect(() => {
-    if (messages.length === 0) {
-      const welcomeMessage: Message = {
-        id: Date.now().toString(),
-        content: "こんにちは！お手伝いできることがあれば、お気軽にお尋ねください。",
-        isUser: false,
-        timestamp: new Date(),
-      };
-      setMessages([welcomeMessage]);
+    if (inputValue.trim() !== "" && !hasStartedChat) {
+      setHasStartedChat(true);
     }
-  }, []);
+  }, [inputValue, hasStartedChat]);
 
   const handleSendMessage = async () => {
     if (inputValue.trim() === "" || isLoading) return;
@@ -81,6 +78,7 @@ const ChatPage = () => {
     setMessages((prev) => [...prev, userMessage]);
     setInputValue("");
     setIsLoading(true);
+    setHasStartedChat(true);
 
     try {
       // デモ回答（実際のAPI呼び出しはここに実装します）
@@ -180,122 +178,209 @@ const ChatPage = () => {
     ));
   };
 
-  return (
-    <div className="flex flex-col h-screen bg-background">
-      {/* チャットエリア */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* サブヘッダー */}
-        <div className="flex items-center justify-between py-2 px-4 border-b border-gray-200">
-          <div className="flex items-center gap-2">
-            <Link to="/">
-              <Button variant="ghost" size="icon" className="rounded-lg">
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-            </Link>
-            <h1 className="text-lg font-semibold">AIチャット</h1>
+  // ウェルカム画面
+  const WelcomeScreen = () => (
+    <div className="flex flex-col h-full">
+      {/* ヘッダー */}
+      <div className="flex justify-between items-center p-4">
+        <div className="flex items-center gap-2">
+          <div className="flex items-center">
+            <svg className="w-6 h-6 mr-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+              <path d="M7 12L17 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+            <span className="text-xs text-gray-500">グロック</span>
           </div>
-          <div className="flex items-center gap-1">
-            <Button variant="ghost" size="icon" className="rounded-lg">
-              <Settings className="h-5 w-5" />
-            </Button>
-            <Button variant="ghost" size="icon" className="rounded-lg">
-              <Share className="h-5 w-5" />
-            </Button>
-            <Button variant="ghost" size="icon" className="rounded-lg">
-              <Info className="h-5 w-5" />
-            </Button>
-          </div>
+          <h1 className="text-xl font-bold">Grok</h1>
         </div>
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="icon" className="rounded-full">
+            <Info className="h-5 w-5" />
+          </Button>
+          <Button variant="ghost" size="icon" className="rounded-full">
+            <Settings className="h-5 w-5" />
+          </Button>
+        </div>
+      </div>
+      
+      {/* メインコンテンツ */}
+      <div className="flex-1 flex flex-col items-center justify-center px-4">
+        <h2 className="text-2xl font-bold mb-2">Grokへようこそ。</h2>
+        <p className="text-lg text-center text-gray-600 mb-10">
+          今日はどのようにお手伝いしましょうか？
+        </p>
         
-        {/* メッセージエリア */}
-        <ScrollArea className="flex-1 p-4 overflow-y-auto">
-          <div className="space-y-6 max-w-3xl mx-auto">
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={cn(
-                  "flex",
-                  message.isUser ? "justify-end" : "justify-start"
-                )}
-              >
-                <div
-                  className={cn(
-                    "max-w-[80%] px-4 py-3 rounded-lg shadow-sm",
-                    message.isUser
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-secondary text-secondary-foreground"
-                  )}
-                >
-                  {renderMessageContent(message.content)}
-                </div>
-              </div>
-            ))}
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="max-w-[80%] px-4 py-3 rounded-lg bg-secondary text-secondary-foreground shadow-sm">
-                  <div className="flex space-x-2">
-                    <div className="w-2 h-2 rounded-full bg-gray-400 animate-pulse"></div>
-                    <div className="w-2 h-2 rounded-full bg-gray-400 animate-pulse delay-100"></div>
-                    <div className="w-2 h-2 rounded-full bg-gray-400 animate-pulse delay-200"></div>
-                  </div>
-                </div>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
-        </ScrollArea>
-
         {/* 入力エリア */}
-        <div className="border-t p-3">
-          <div className="flex items-end max-w-3xl mx-auto bg-secondary rounded-lg px-3 py-2">
-            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full flex-shrink-0">
-              <Paperclip className="h-5 w-5 text-muted-foreground" />
-            </Button>
-            
+        <div className="w-full max-w-2xl mb-4">
+          <div className="relative">
             <Textarea
               ref={textareaRef}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyPress}
-              placeholder="メッセージを入力..."
-              className="resize-none border-none bg-transparent flex-1 py-2 px-2 focus-visible:ring-0 focus-visible:ring-offset-0 max-h-[140px]"
-              style={{ minHeight: '40px' }}
+              placeholder="何を知りたいですか？"
+              className="resize-none min-h-[60px] rounded-2xl pl-10 pr-14 py-4 focus-visible:ring-1"
             />
-            
-            <Button
-              onClick={handleSendMessage}
-              disabled={inputValue.trim() === "" || isLoading}
-              variant="ghost"
-              size="icon"
-              className={cn(
-                "h-9 w-9 rounded-full flex-shrink-0",
-                inputValue.trim() ? "text-primary" : "text-muted-foreground"
-              )}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="absolute left-2 top-1/2 transform -translate-y-1/2"
             >
-              <SendHorizontal className="h-5 w-5" />
+              <Paperclip className="h-5 w-5 text-gray-400" />
             </Button>
+            
+            <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
+              <Button 
+                variant="ghost" 
+                size="icon"
+                className="rounded-full"
+              >
+                <RotateCcw className="h-5 w-5 text-gray-400" />
+              </Button>
+              <Button
+                onClick={handleSendMessage}
+                disabled={inputValue.trim() === ""}
+                variant="ghost"
+                size="icon"
+                className="rounded-full"
+              >
+                <ArrowUp className="h-5 w-5 text-gray-400" />
+              </Button>
+            </div>
           </div>
           
-          <div className="flex justify-between items-center max-w-3xl mx-auto px-3 mt-2">
+          <div className="flex justify-between items-center p-2">
             <div className="flex items-center gap-2">
-              <div className="flex gap-1 items-center text-xs text-muted-foreground">
-                <span>Gemini Pro</span>
-                <ChevronDown className="h-3 w-3" />
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <label className="flex items-center gap-1 cursor-pointer">
-                <input type="checkbox" className="w-3 h-3" />
-                <span className="text-xs text-muted-foreground">ウェブ検索</span>
-              </label>
-              <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full">
-                <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
-              </Button>
+              <span className="text-sm text-gray-500">Grok 3</span>
+              <ChevronDown className="h-4 w-4 text-gray-500" />
             </div>
           </div>
         </div>
       </div>
+    </div>
+  );
+
+  // チャットUI
+  const ChatUI = () => (
+    <div className="flex-1 flex flex-col overflow-hidden">
+      {/* サブヘッダー */}
+      <div className="flex items-center justify-between py-2 px-4 border-b border-gray-200">
+        <div className="flex items-center gap-2">
+          <Link to="/">
+            <Button variant="ghost" size="icon" className="rounded-lg">
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+          </Link>
+          <h1 className="text-lg font-semibold">AIチャット</h1>
+        </div>
+        <div className="flex items-center gap-1">
+          <Button variant="ghost" size="icon" className="rounded-lg">
+            <Settings className="h-5 w-5" />
+          </Button>
+          <Button variant="ghost" size="icon" className="rounded-lg">
+            <Share className="h-5 w-5" />
+          </Button>
+          <Button variant="ghost" size="icon" className="rounded-lg">
+            <Info className="h-5 w-5" />
+          </Button>
+        </div>
+      </div>
+      
+      {/* メッセージエリア */}
+      <ScrollArea className="flex-1 p-4 overflow-y-auto">
+        <div className="space-y-6 max-w-3xl mx-auto">
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              className={cn(
+                "flex",
+                message.isUser ? "justify-end" : "justify-start"
+              )}
+            >
+              <div
+                className={cn(
+                  "max-w-[80%] px-4 py-3 rounded-lg shadow-sm",
+                  message.isUser
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-secondary text-secondary-foreground"
+                )}
+              >
+                {renderMessageContent(message.content)}
+              </div>
+            </div>
+          ))}
+          {isLoading && (
+            <div className="flex justify-start">
+              <div className="max-w-[80%] px-4 py-3 rounded-lg bg-secondary text-secondary-foreground shadow-sm">
+                <div className="flex space-x-2">
+                  <div className="w-2 h-2 rounded-full bg-gray-400 animate-pulse"></div>
+                  <div className="w-2 h-2 rounded-full bg-gray-400 animate-pulse delay-100"></div>
+                  <div className="w-2 h-2 rounded-full bg-gray-400 animate-pulse delay-200"></div>
+                </div>
+              </div>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+      </ScrollArea>
+
+      {/* 入力エリア */}
+      <div className="border-t p-3">
+        <div className="flex items-end max-w-3xl mx-auto bg-secondary rounded-lg px-3 py-2">
+          <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full flex-shrink-0">
+            <Paperclip className="h-5 w-5 text-muted-foreground" />
+          </Button>
+          
+          <Textarea
+            ref={textareaRef}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={handleKeyPress}
+            placeholder="メッセージを入力..."
+            className="resize-none border-none bg-transparent flex-1 py-2 px-2 focus-visible:ring-0 focus-visible:ring-offset-0 max-h-[140px]"
+            style={{ minHeight: '40px' }}
+          />
+          
+          <Button
+            onClick={handleSendMessage}
+            disabled={inputValue.trim() === "" || isLoading}
+            variant="ghost"
+            size="icon"
+            className={cn(
+              "h-9 w-9 rounded-full flex-shrink-0",
+              inputValue.trim() ? "text-primary" : "text-muted-foreground"
+            )}
+          >
+            <SendHorizontal className="h-5 w-5" />
+          </Button>
+        </div>
+        
+        <div className="flex justify-between items-center max-w-3xl mx-auto px-3 mt-2">
+          <div className="flex items-center gap-2">
+            <div className="flex gap-1 items-center text-xs text-muted-foreground">
+              <span>Gemini Pro</span>
+              <ChevronDown className="h-3 w-3" />
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <label className="flex items-center gap-1 cursor-pointer">
+              <input type="checkbox" className="w-3 h-3" />
+              <span className="text-xs text-muted-foreground">ウェブ検索</span>
+            </label>
+            <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full">
+              <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="flex flex-col h-screen bg-background">
+      {/* チャットが始まっていない場合はウェルカム画面、そうでなければチャットUIを表示 */}
+      {!hasStartedChat || messages.length === 0 ? <WelcomeScreen /> : <ChatUI />}
     </div>
   );
 };
