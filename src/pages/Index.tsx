@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { Header } from "@/components/Header";
@@ -104,7 +105,7 @@ const Index = () => {
   // ローディング状態の表示
   if (isLoading) {
     return (
-      <div className="min-h-screen w-full flex flex-col bg-gray-50/50">
+      <div className="min-h-screen w-full flex flex-col bg-purple-50">
         <Header />
         <main className="flex-1 flex items-center justify-center">
           <div className="animate-pulse text-gray-500">{t('common.loading')}</div>
@@ -116,7 +117,7 @@ const Index = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen w-full flex flex-col bg-gray-50/50">
+      <div className="min-h-screen w-full flex flex-col bg-purple-50">
         <Header />
         <main className="flex-1 flex items-center justify-center">
           <div className="text-red-500">
@@ -144,7 +145,7 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen w-full flex flex-col bg-gray-50/50">
+    <div className="min-h-screen w-full flex flex-col bg-gradient-to-br from-purple-50 to-indigo-50">
       <MetaTags 
         title={t('index.title')}
         description={t('index.description')}
@@ -152,26 +153,26 @@ const Index = () => {
       />
       <Header />
       <main className="flex-1">
-        <div className="max-w-7xl mx-auto py-3 sm:py-6 px-3 sm:px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="max-w-7xl mx-auto py-6 sm:py-8 px-4 sm:px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
             <div className="lg:col-span-2">
               <div className="flex justify-between items-center mb-4 sm:mb-6">
-                <h1 className="text-lg sm:text-2xl font-bold text-gray-900">
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
                   {t('index.productsTitle')}
                 </h1>
                 <button
                   onClick={() => setSortByLikes(!sortByLikes)}
-                  className="inline-flex items-center px-2.5 sm:px-3.5 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm gap-1.5"
+                  className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm gap-2"
                 >
                   {sortByLikes ? (
                     <>
                       <ArrowDownAZ className="h-4 w-4" />
-                      {t('products.sortByDate')}
+                      <span className="whitespace-nowrap">{t('products.sortByDate')}</span>
                     </>
                   ) : (
                     <>
                       <ArrowUpAZ className="h-4 w-4" />
-                      {t('products.sortByLikes')}
+                      <span className="whitespace-nowrap">{t('products.sortByLikes')}</span>
                     </>
                   )}
                 </button>
@@ -184,7 +185,7 @@ const Index = () => {
               />
             </div>
 
-            <div className="lg:col-span-1 order-first lg:order-last mb-4 lg:mb-0">
+            <div className="lg:col-span-1 order-first lg:order-last mb-6 lg:mb-0">
               <RecentArticles />
             </div>
           </div>
