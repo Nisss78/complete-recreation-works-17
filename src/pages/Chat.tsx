@@ -249,6 +249,10 @@ const ChatPage = () => {
               <span className="text-sm text-gray-500">Gemini Pro</span>
               <ChevronDown className="h-4 w-4 text-gray-500" />
             </div>
+            
+            <Link to="/" className="text-sm text-blue-500 hover:underline">
+              ホームに戻る
+            </Link>
           </div>
         </div>
       </div>
