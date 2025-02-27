@@ -15,19 +15,19 @@ export const SocialLinksFields = ({ form }: SocialLinksFieldsProps) => {
   const { t } = useLanguage();
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <FormField
         control={form.control}
         name="twitter_url"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>{t('profile.twitter')}</FormLabel>
+            <FormLabel className="text-base font-medium text-center block w-full mb-2">{t('profile.twitter')}</FormLabel>
             <FormControl>
               <InputGroup>
                 <InputLeftElement>
-                  <Twitter className="h-4 w-4 text-blue-400" />
+                  <Twitter className="h-5 w-5 text-blue-400" />
                 </InputLeftElement>
-                <Input {...field} placeholder={t('profile.twitterPlaceholder')} />
+                <Input {...field} placeholder={t('profile.twitterPlaceholder')} className="pl-10 h-12 text-base" />
               </InputGroup>
             </FormControl>
             <FormMessage />
@@ -40,13 +40,13 @@ export const SocialLinksFields = ({ form }: SocialLinksFieldsProps) => {
         name="instagram_url"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>{t('profile.instagram')}</FormLabel>
+            <FormLabel className="text-base font-medium text-center block w-full mb-2">{t('profile.instagram')}</FormLabel>
             <FormControl>
               <InputGroup>
                 <InputLeftElement>
-                  <Instagram className="h-4 w-4 text-pink-500" />
+                  <Instagram className="h-5 w-5 text-pink-500" />
                 </InputLeftElement>
-                <Input {...field} placeholder={t('profile.instagramPlaceholder')} />
+                <Input {...field} placeholder={t('profile.instagramPlaceholder')} className="pl-10 h-12 text-base" />
               </InputGroup>
             </FormControl>
             <FormMessage />
@@ -59,13 +59,13 @@ export const SocialLinksFields = ({ form }: SocialLinksFieldsProps) => {
         name="github_url"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>{t('profile.github')}</FormLabel>
+            <FormLabel className="text-base font-medium text-center block w-full mb-2">{t('profile.github')}</FormLabel>
             <FormControl>
               <InputGroup>
                 <InputLeftElement>
-                  <Github className="h-4 w-4 text-gray-700" />
+                  <Github className="h-5 w-5 text-gray-700" />
                 </InputLeftElement>
-                <Input {...field} placeholder={t('profile.githubPlaceholder')} />
+                <Input {...field} placeholder={t('profile.githubPlaceholder')} className="pl-10 h-12 text-base" />
               </InputGroup>
             </FormControl>
             <FormMessage />
@@ -78,13 +78,13 @@ export const SocialLinksFields = ({ form }: SocialLinksFieldsProps) => {
         name="other_url"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>{t('profile.website')}</FormLabel>
+            <FormLabel className="text-base font-medium text-center block w-full mb-2">{t('profile.website')}</FormLabel>
             <FormControl>
               <InputGroup>
                 <InputLeftElement>
-                  <Globe className="h-4 w-4 text-purple-500" />
+                  <Globe className="h-5 w-5 text-purple-500" />
                 </InputLeftElement>
-                <Input {...field} placeholder={t('profile.websitePlaceholder')} />
+                <Input {...field} placeholder={t('profile.websitePlaceholder')} className="pl-10 h-12 text-base" />
               </InputGroup>
             </FormControl>
             <FormMessage />

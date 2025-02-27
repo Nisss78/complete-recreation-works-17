@@ -1,5 +1,4 @@
 
-import { useRouter } from "react-router-dom";
 import { ArrowUp, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
