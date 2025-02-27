@@ -1,3 +1,4 @@
+
 import { Badge } from "@/components/ui/badge";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -124,18 +125,18 @@ export function ProductCard({
             </Badge>
           ))}
         </div>
+        
+        <ProductActions
+          productId={id}
+          productName={name}
+          likes={totalLikes}
+          comments={comments}
+          hasLiked={hasLiked}
+          isAuthenticated={isAuthenticated}
+          onLike={handleLike}
+          isMobile={isMobile}
+        />
       </div>
-      
-      <ProductActions
-        productId={id}
-        productName={name}
-        likes={totalLikes}
-        comments={comments}
-        hasLiked={hasLiked}
-        isAuthenticated={isAuthenticated}
-        onLike={handleLike}
-        isMobile={isMobile}
-      />
     </div>
   );
 }
