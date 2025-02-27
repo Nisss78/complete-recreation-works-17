@@ -1,7 +1,7 @@
 
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Plus, BookOpen, FilePlus, MessageSquare, Menu, Heart, FileText, Home } from "lucide-react";
+import { Plus, BookOpen, FilePlus, MessageSquare, Menu, FileText, Home } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ProductSubmissionDialog } from "./ProductSubmissionDialog";
 import { supabase } from "@/integrations/supabase/client";
@@ -100,7 +100,7 @@ export const Header = () => {
         </SheetTrigger>
         <SheetContent side="right" className="bg-white">
           <SheetHeader className="mb-4">
-            <SheetTitle>メニュー</SheetTitle>
+            <SheetTitle>{t('nav.menu')}</SheetTitle>
           </SheetHeader>
           <div className="flex flex-col gap-1">
             <SheetClose asChild>
@@ -112,7 +112,7 @@ export const Header = () => {
                 )}
               >
                 <Home className="h-5 w-5" />
-                <span>ホーム</span>
+                <span>{t('nav.home')}</span>
               </Link>
             </SheetClose>
             
@@ -198,9 +198,8 @@ export const Header = () => {
             </Link>
             
             <nav className="hidden md:flex space-x-2">
-              <NavItem path="/" icon={<Home className="h-4 w-4" />} label="ホーム" />
+              <NavItem path="/" icon={<Home className="h-4 w-4" />} label={t('nav.home')} />
               <NavItem path="/articles" icon={<FileText className="h-4 w-4" />} label={t("nav.articles")} />
-              <NavItem path="/upvoted" icon={<Heart className="h-4 w-4" />} label="人気" />
               {isAuthenticated && (
                 <NavItem path="/chat" icon={<MessageSquare className="h-4 w-4" />} label={t("nav.chat")} />
               )}

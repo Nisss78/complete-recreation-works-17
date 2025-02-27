@@ -121,7 +121,7 @@ const Index = () => {
         <Header />
         <main className="flex-1 flex items-center justify-center">
           <div className="text-red-500">
-            Error loading products. Please try again later.
+            {t('error.loading')}
           </div>
         </main>
         <Footer />
