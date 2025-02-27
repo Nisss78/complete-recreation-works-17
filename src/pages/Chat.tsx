@@ -10,7 +10,6 @@ import {
   Share,
   Info, 
   MoreHorizontal,
-  Paperclip,
   ArrowUp,
   RotateCcw
 } from "lucide-react";
@@ -273,7 +272,7 @@ const ChatPage = () => {
           今日はどのようにお手伝いしましょうか？
         </p>
         
-        {/* 入力エリア - 画像に合わせて改善 */}
+        {/* 入力エリア - クリップアイコンを削除、UI改善 */}
         <div className="w-full max-w-2xl mb-4">
           <div className="relative bg-gray-50 rounded-2xl shadow-sm">
             <Textarea
@@ -282,15 +281,8 @@ const ChatPage = () => {
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyPress}
               placeholder="メッセージを入力..."
-              className="resize-none min-h-[60px] rounded-2xl pl-10 pr-14 py-4 focus-visible:ring-1 bg-gray-50 border-none"
+              className="resize-none min-h-[60px] rounded-2xl pl-4 pr-14 py-4 focus-visible:ring-1 bg-gray-50 border-none"
             />
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="absolute left-2 top-1/2 transform -translate-y-1/2"
-            >
-              <Paperclip className="h-5 w-5 text-gray-400" />
-            </Button>
             
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
               <Button
@@ -400,21 +392,16 @@ const ChatPage = () => {
         </div>
       </ScrollArea>
 
-      {/* 入力エリア */}
+      {/* 入力エリア - クリップアイコンを削除、UI改善 */}
       <div className="border-t p-3">
-        <div className="flex items-end max-w-3xl mx-auto bg-gray-50 rounded-xl px-3 py-2">
-          <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full flex-shrink-0">
-            <Paperclip className="h-5 w-5 text-muted-foreground" />
-          </Button>
-          
+        <div className="flex items-center max-w-3xl mx-auto bg-gray-50 rounded-xl px-4 py-2">
           <Textarea
             ref={textareaRef}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyPress}
             placeholder="メッセージを入力..."
-            className="resize-none border-none bg-transparent flex-1 py-2 px-2 focus-visible:ring-0 focus-visible:ring-offset-0 max-h-[140px]"
-            style={{ minHeight: '40px' }}
+            className="resize-none border-none bg-transparent flex-1 py-2 px-0 focus-visible:ring-0 focus-visible:ring-offset-0 max-h-[140px] min-h-[40px]"
           />
           
           <Button
@@ -423,7 +410,7 @@ const ChatPage = () => {
             variant="ghost"
             size="icon"
             className={cn(
-              "h-9 w-9 rounded-full flex-shrink-0",
+              "h-9 w-9 rounded-full flex-shrink-0 ml-2",
               inputValue.trim() ? "text-primary" : "text-muted-foreground"
             )}
           >
