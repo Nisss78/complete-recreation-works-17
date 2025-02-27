@@ -34,10 +34,12 @@ const ChatPage = () => {
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [apiKey, setApiKey] = useState<string | null>(localStorage.getItem(API_KEY_NAME));
+  const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
   const [hasStartedChat, setHasStartedChat] = useState(false);
+  const [useWebSearch, setUseWebSearch] = useState(false);
 
   // 自動スクロール
   useEffect(() => {
@@ -64,6 +66,16 @@ const ChatPage = () => {
     }
   }, [inputValue, hasStartedChat]);
 
+  const saveApiKey = (key: string) => {
+    localStorage.setItem(API_KEY_NAME, key);
+    setApiKey(key);
+    setIsApiKeyModalOpen(false);
+    toast({
+      title: "APIキーを保存しました",
+      description: "Gemini APIキーが正常に保存されました。",
+    });
+  };
+
   const handleSendMessage = async () => {
     if (inputValue.trim() === "" || isLoading) return;
 
@@ -81,19 +93,6 @@ const ChatPage = () => {
     setHasStartedChat(true);
 
     try {
-      // デモ回答（実際のAPI呼び出しはここに実装します）
-      setTimeout(() => {
-        const aiMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          content: "お手伝いできることがあれば、お気軽にお尋ねください。Gemini APIに接続すると、ここにGeminiからの実際の応答が表示されます。",
-          isUser: false,
-          timestamp: new Date(),
-        };
-        setMessages((prev) => [...prev, aiMessage]);
-        setIsLoading(false);
-      }, 1000);
-
-      /* 
       // Gemini API呼び出し (APIキーが設定されている場合)
       if (apiKey) {
         try {
@@ -147,9 +146,28 @@ const ChatPage = () => {
             description: "Gemini APIからの応答に問題がありました。",
             variant: "destructive",
           });
+
+          // エラー時はデモ回答を表示
+          const aiMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            content: "申し訳ありません、Gemini APIとの通信中にエラーが発生しました。APIキーが正しいことを確認するか、後でもう一度お試しください。",
+            isUser: false,
+            timestamp: new Date(),
+          };
+          setMessages((prev) => [...prev, aiMessage]);
         }
+      } else {
+        // APIキーが設定されていない場合はデモ回答を表示
+        setTimeout(() => {
+          const aiMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            content: "Gemini APIキーが設定されていません。設定アイコンからAPIキーを設定してください。APIキーは https://ai.google.dev/ から取得できます。",
+            isUser: false,
+            timestamp: new Date(),
+          };
+          setMessages((prev) => [...prev, aiMessage]);
+        }, 1000);
       }
-      */
     } catch (error) {
       console.error("Error:", error);
       toast({
@@ -178,6 +196,47 @@ const ChatPage = () => {
     ));
   };
 
+  // APIキー設定モーダル
+  const ApiKeyModal = () => {
+    const [inputKey, setInputKey] = useState(apiKey || "");
+
+    return (
+      <div className={`fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center ${isApiKeyModalOpen ? "" : "hidden"}`}>
+        <div className="bg-white rounded-lg p-6 w-full max-w-md">
+          <h2 className="text-xl font-semibold mb-4">Gemini APIキーを設定</h2>
+          <p className="text-sm text-gray-600 mb-4">
+            Gemini APIを使用するには、APIキーが必要です。
+            <a href="https://ai.google.dev/" target="_blank" className="text-blue-500 underline ml-1">
+              Google AIスタジオ
+            </a>
+            でAPIキーを取得できます。
+          </p>
+          <input
+            type="text"
+            value={inputKey}
+            onChange={(e) => setInputKey(e.target.value)}
+            placeholder="APIキーを入力"
+            className="w-full border border-gray-300 rounded px-3 py-2 mb-4"
+          />
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setIsApiKeyModalOpen(false)}
+            >
+              キャンセル
+            </Button>
+            <Button
+              onClick={() => saveApiKey(inputKey)}
+              disabled={!inputKey.trim()}
+            >
+              保存
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // ウェルカム画面
   const WelcomeScreen = () => (
     <div className="flex flex-col h-full bg-white">
@@ -190,10 +249,12 @@ const ChatPage = () => {
           </Link>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <Info className="h-5 w-5" />
-          </Button>
-          <Button variant="ghost" size="icon" className="rounded-full">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="rounded-full"
+            onClick={() => setIsApiKeyModalOpen(true)}
+          >
             <Settings className="h-5 w-5" />
           </Button>
         </div>
@@ -252,7 +313,12 @@ const ChatPage = () => {
             
             <div className="flex items-center gap-2">
               <label className="flex items-center gap-1 cursor-pointer">
-                <input type="checkbox" className="w-3 h-3" />
+                <input 
+                  type="checkbox" 
+                  className="w-3 h-3"
+                  checked={useWebSearch}
+                  onChange={(e) => setUseWebSearch(e.target.checked)}
+                />
                 <span className="text-xs text-gray-500">ウェブ検索</span>
               </label>
               <Button variant="ghost" size="icon" className="h-6 w-6 rounded-full p-0">
@@ -279,7 +345,12 @@ const ChatPage = () => {
           <h1 className="text-lg font-semibold">AIチャット</h1>
         </div>
         <div className="flex items-center gap-1">
-          <Button variant="ghost" size="icon" className="rounded-lg">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="rounded-lg"
+            onClick={() => setIsApiKeyModalOpen(true)}
+          >
             <Settings className="h-5 w-5" />
           </Button>
           <Button variant="ghost" size="icon" className="rounded-lg">
@@ -370,7 +441,12 @@ const ChatPage = () => {
           
           <div className="flex items-center gap-2">
             <label className="flex items-center gap-1 cursor-pointer">
-              <input type="checkbox" className="w-3 h-3" />
+              <input 
+                type="checkbox" 
+                className="w-3 h-3"
+                checked={useWebSearch}
+                onChange={(e) => setUseWebSearch(e.target.checked)}
+              />
               <span className="text-xs text-muted-foreground">ウェブ検索</span>
             </label>
             <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full">
@@ -384,6 +460,9 @@ const ChatPage = () => {
 
   return (
     <div className="flex flex-col h-screen bg-white">
+      {/* APIキー設定モーダル */}
+      <ApiKeyModal />
+      
       {/* チャットが始まっていない場合はウェルカム画面、そうでなければチャットUIを表示 */}
       {!hasStartedChat || messages.length === 0 ? <WelcomeScreen /> : <ChatUI />}
     </div>
