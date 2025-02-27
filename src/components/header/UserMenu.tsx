@@ -12,7 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Bookmark, Coins, CreditCard, LogOut, Settings, User } from "lucide-react";
+import { Bookmark, CreditCard, LogOut, Settings, User } from "lucide-react";
 import { Profile } from "@/types/database";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
@@ -40,7 +40,7 @@ export const UserMenu = ({ userId }: { userId: string }) => {
   return (
     <div className="flex items-center gap-4">
       <div className="hidden sm:flex items-center gap-2">
-        <Coins className="h-5 w-5 text-yellow-500" />
+        <CreditCard className="h-5 w-5 text-indigo-500" />
         <span className="font-semibold">{profile?.credits || 0}</span>
       </div>
       <DropdownMenu>
@@ -64,7 +64,7 @@ export const UserMenu = ({ userId }: { userId: string }) => {
               {profile?.username || t('profile.noUsername')}
             </p>
             <div className="flex items-center pt-2">
-              <Coins className="h-4 w-4 text-yellow-500 mr-1.5" />
+              <CreditCard className="h-4 w-4 text-indigo-500 mr-1.5" />
               <span className="text-xs text-gray-500">{profile?.credits || 0} クレジット</span>
             </div>
           </DropdownMenuLabel>
