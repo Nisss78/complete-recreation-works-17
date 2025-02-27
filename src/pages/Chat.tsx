@@ -184,8 +184,9 @@ const ChatPage = () => {
       {/* ヘッダー */}
       <div className="flex justify-between items-center p-4">
         <div className="flex items-center gap-2">
-          <Link to="/" className="font-medium text-2xl text-black hover:opacity-90 transition-colors">
-            <span className="text-blue-gradient">Protoduct</span>
+          <Link to="/" className="flex items-center gap-1 mb-1">
+            <ArrowLeft className="h-4 w-4 text-gray-500" />
+            <span className="text-sm text-gray-500">ホームに戻る</span>
           </Link>
         </div>
         <div className="flex items-center gap-3">
@@ -198,6 +199,12 @@ const ChatPage = () => {
         </div>
       </div>
       
+      <div className="mt-2 text-center">
+        <Link to="/" className="font-medium text-2xl text-black hover:opacity-90 transition-colors">
+          <span className="text-blue-gradient">Protoduct</span>
+        </Link>
+      </div>
+      
       {/* メインコンテンツ */}
       <div className="flex-1 flex flex-col items-center justify-center px-4">
         <h2 className="text-2xl font-bold mb-2">Protoductへようこそ</h2>
@@ -205,16 +212,16 @@ const ChatPage = () => {
           今日はどのようにお手伝いしましょうか？
         </p>
         
-        {/* 入力エリア */}
+        {/* 入力エリア - 画像に合わせて改善 */}
         <div className="w-full max-w-2xl mb-4">
-          <div className="relative">
+          <div className="relative bg-gray-50 rounded-2xl shadow-sm">
             <Textarea
               ref={textareaRef}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyPress}
-              placeholder="何を知りたいですか？"
-              className="resize-none min-h-[60px] rounded-2xl pl-10 pr-14 py-4 focus-visible:ring-1"
+              placeholder="メッセージを入力..."
+              className="resize-none min-h-[60px] rounded-2xl pl-10 pr-14 py-4 focus-visible:ring-1 bg-gray-50 border-none"
             />
             <Button 
               variant="ghost" 
@@ -224,35 +231,34 @@ const ChatPage = () => {
               <Paperclip className="h-5 w-5 text-gray-400" />
             </Button>
             
-            <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
-              <Button 
-                variant="ghost" 
-                size="icon"
-                className="rounded-full"
-              >
-                <RotateCcw className="h-5 w-5 text-gray-400" />
-              </Button>
+            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
               <Button
                 onClick={handleSendMessage}
                 disabled={inputValue.trim() === ""}
                 variant="ghost"
                 size="icon"
-                className="rounded-full"
+                className="rounded-full text-gray-400 hover:text-gray-600"
               >
-                <ArrowUp className="h-5 w-5 text-gray-400" />
+                <ArrowUp className="h-5 w-5" />
               </Button>
             </div>
           </div>
           
-          <div className="flex justify-between items-center p-2">
+          <div className="flex justify-between items-center px-2 pt-3">
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-500">Gemini Pro</span>
               <ChevronDown className="h-4 w-4 text-gray-500" />
             </div>
             
-            <Link to="/" className="text-sm text-blue-500 hover:underline">
-              ホームに戻る
-            </Link>
+            <div className="flex items-center gap-2">
+              <label className="flex items-center gap-1 cursor-pointer">
+                <input type="checkbox" className="w-3 h-3" />
+                <span className="text-xs text-gray-500">ウェブ検索</span>
+              </label>
+              <Button variant="ghost" size="icon" className="h-6 w-6 rounded-full p-0">
+                <MoreHorizontal className="h-4 w-4 text-gray-500" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -325,7 +331,7 @@ const ChatPage = () => {
 
       {/* 入力エリア */}
       <div className="border-t p-3">
-        <div className="flex items-end max-w-3xl mx-auto bg-secondary rounded-lg px-3 py-2">
+        <div className="flex items-end max-w-3xl mx-auto bg-gray-50 rounded-xl px-3 py-2">
           <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full flex-shrink-0">
             <Paperclip className="h-5 w-5 text-muted-foreground" />
           </Button>
