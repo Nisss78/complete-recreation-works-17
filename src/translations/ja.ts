@@ -1,63 +1,145 @@
-import { commentTranslations } from './sections/comments';
-import { productTranslations } from './sections/products';
-import { followTranslations } from './sections/follows';
-import { successTranslations } from './sections/success';
 
-export const jaTranslations = {
-  ...commentTranslations.ja,
-  ...productTranslations.ja,
-  ...followTranslations.ja,
-  ...successTranslations.ja,
-  
-  // Header
+import { productTranslations } from "./sections/products";
+import { commentTranslations } from "./sections/comments";
+import { followTranslations } from "./sections/follows";
+import { profileTranslations } from "./sections/profile";
+import { articleTranslations } from "./sections/articles";
+
+export const ja = {
+  // Common
+  'common.loading': 'ロード中...',
+  'common.error': 'エラーが発生しました',
+  'common.retry': '再試行',
+  'common.cancel': 'キャンセル',
+  'common.save': '保存',
+  'common.delete': '削除',
+  'common.edit': '編集',
+  'common.submit': '送信',
+  'common.confirm': '確認',
+  'common.search': '検索',
+  'common.filters': 'フィルター',
+  'common.reset': 'リセット',
+  'common.apply': '適用',
+  'common.more': 'もっと見る',
+  'common.less': '閉じる',
+  'common.or': 'または',
+  'common.warning': '警告',
+  'common.settings': '設定',
+  'common.profile': 'プロフィール',
+  'common.logout': 'ログアウト',
+  'common.login': 'ログイン',
+  'common.register': '新規登録',
+  'common.username': 'ユーザー名',
+  'common.email': 'メールアドレス',
+  'common.password': 'パスワード',
+  'common.passwordConfirm': 'パスワード（確認）',
+  'common.name': '名前',
+  'common.firstName': '名',
+  'common.lastName': '姓',
+  'common.home': 'ホーム',
+  'common.account': 'アカウント',
+  'common.privacyPolicy': 'プライバシーポリシー',
+  'common.termsOfService': '利用規約',
+  'common.next': '次へ',
+  'common.previous': '前へ',
+  'common.continue': '続ける',
+  'common.finish': '完了',
+  'common.notifications': '通知',
+  'common.messages': 'メッセージ',
+  'common.settings': '設定',
+  'common.help': 'ヘルプ',
+  'common.share': 'シェア',
+  'common.copy': 'コピー',
+  'common.back': '戻る',
+  'common.others': 'その他',
+  'common.show': '表示',
+  'common.hide': '非表示',
+  'common.all': 'すべて',
+  'common.none': 'なし',
+  'common.required': '必須',
+  'common.optional': '任意',
+  'common.empty': 'データなし',
+
+  // Navigation
   'nav.home': 'ホーム',
+  'nav.products': '製品',
+  'nav.submit': '提出する',
   'nav.articles': '記事',
-  'nav.writeArticle': '記事を書く',
-  'nav.post': '投稿',
-  'nav.login': 'ログイン',
-  'nav.settings': '設定',
+  'nav.bookmarks': 'ブックマーク',
   'nav.profile': 'プロフィール',
-  'nav.logout': 'ログアウト',
-  'nav.account': 'アカウント',
-  'nav.viewBookmarks': '全て表示',
-  'nav.recentBookmarks': '最近のブックマーク',
-  'nav.noBookmarks': 'ブックマークはありません',
+  'nav.settings': '設定',
+  'nav.viewBookmarks': 'ブックマークを見る',
   'nav.myApp': 'マイアプリ',
-  
-  // Profile
-  'profile.username': 'ユーザー名',
-  'profile.bio': '自己紹介',
-  'profile.avatar': 'アバター画像',
-  'profile.socialLinks': 'ソーシャルリンク',
-  'profile.save': '保存',
-  'profile.usernamePlaceholder': 'あなたの名前',
-  'profile.bioPlaceholder': 'あなたについて教えてください（160文字まで）',
-  'profile.twitter': 'X (Twitter)',
-  'profile.instagram': 'Instagram',
-  'profile.github': 'GitHub',
-  'profile.website': 'その他のリンク',
-  'profile.posts': '投稿',
-  'profile.noPosts': '投稿はありません',
-  'profile.follow': 'フォロー',
-  'profile.unfollow': 'フォロー解除',
-  'profile.avatarUpload': 'クリックまたはドラッグ&ドロップで画像をアップロード',
-  'profile.avatarSize': '2MB以下（PNG/JPG形式）',
-  'profile.noAvatarSelected': '選択されていません',
-  'profile.avatarPreview': 'アバタープレビュー',
-  'profile.uploading': 'アップロード中...',
-  'profile.twitterPlaceholder': 'https://twitter.com/yourusername',
-  'profile.instagramPlaceholder': 'https://instagram.com/yourusername',
-  'profile.githubPlaceholder': 'https://github.com/yourusername',
-  'profile.websitePlaceholder': 'https://yourwebsite.com',
-  'profile.noUsername': '名前未設定',
-  'profile.edit': 'プロフィールを編集',
+  'nav.logout': 'ログアウト',
+  'nav.login': 'ログイン',
+  'nav.register': '登録',
+  'nav.pricing': '料金',
+  'nav.chat': 'チャット',
 
-  // Credits
-  'credits.amount': '{amount}クレジット',
-  'credits.buy': 'クレジットを購入',
-  'credits.monthlyPlan': '月額プラン',
-  'credits.monthlyAmount': '月額1,000円で10,000クレジット',
-  'credits.purchase': '購入する',
-  'credits.preparingPurchase': '準備中',
-  'credits.preparingDesc': 'クレジット購入機能は現在準備中です',
-} as const;
+  // Auth
+  'auth.signUpSuccessTitle': '登録完了',
+  'auth.signUpSuccessMessage': 'アカウントが正常に作成されました。',
+  'auth.loginErrorTitle': 'ログインエラー',
+  'auth.loginErrorMessage': 'メールアドレスまたはパスワードが正しくありません。',
+  'auth.emailExists': 'このメールアドレスは既に使用されています。',
+  'auth.weakPassword': 'パスワードが弱すぎます。',
+  'auth.invalidEmail': '有効なメールアドレスを入力してください。',
+  'auth.passwordMismatch': 'パスワードが一致しません。',
+  'auth.forgotPassword': 'パスワードをお忘れですか？',
+  'auth.resetPassword': 'パスワードをリセット',
+  'auth.sendResetLink': 'リセットリンクを送信',
+  'auth.resetLinkSent': 'パスワードリセットリンクが送信されました。',
+  'auth.requiredField': 'このフィールドは必須です。',
+  'auth.or': 'または',
+  'auth.signInWith': '{provider}でログイン',
+  'auth.agreeToTerms': '登録することで、{terms}と{privacy}に同意したことになります。',
+  'auth.termsOfService': '利用規約',
+  'auth.privacyPolicy': 'プライバシーポリシー',
+  'auth.alreadyHaveAccount': 'すでにアカウントをお持ちですか？',
+  'auth.needAccount': 'アカウントが必要ですか？',
+  'auth.createAccount': 'アカウントを作成',
+  'auth.welcomeBack': 'おかえりなさい',
+  'auth.createYourAccount': 'アカウントを作成',
+  'auth.fillDetails': '詳細を入力してください',
+
+  // Index
+  'index.title': 'プロダクトハント - 最新のプロダクト発見プラットフォーム',
+  'index.description': '最新の製品、アプリ、ウェブサイトを発見しましょう。毎日新しい製品が登場します。',
+  'index.productsTitle': '今日の製品',
+  'index.recentArticles': '最新の記事',
+  'index.viewMore': 'もっと見る',
+  'index.noProducts': '製品が見つかりませんでした',
+  'index.noArticles': '記事が見つかりませんでした',
+  'index.unknownUser': '不明なユーザー',
+
+  // Products
+  ...productTranslations.ja,
+
+  // Comments
+  ...commentTranslations.ja,
+
+  // Follows
+  ...followTranslations.ja,
+
+  // Profile
+  ...profileTranslations.ja,
+
+  // Articles
+  ...articleTranslations.ja,
+
+  // Success messages
+  'success.completed': '完了しました',
+  'success.loggedOut': 'ログアウトしました',
+  'success.logoutCompleted': 'ログアウトしました',
+  'success.productPosted': '製品が投稿されました',
+  'success.imageUploaded': '画像がアップロードされました',
+  'success.profileUpdated': 'プロフィールが更新されました',
+  'success.languageUpdated': '言語が更新されました',
+
+  // Error messages
+  'error.productSubmission': '製品の提出中にエラーが発生しました',
+  'error.productImageUpload': '製品画像のアップロード中にエラーが発生しました',
+  'error.fetchProfile': 'プロフィールの取得中にエラーが発生しました',
+  'error.unauthorized': '認証されていません',
+  'error.imageUpload': '画像のアップロード中にエラーが発生しました',
+};

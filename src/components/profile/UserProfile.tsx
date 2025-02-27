@@ -1,3 +1,4 @@
+
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -6,10 +7,12 @@ import { ArticleCard } from "@/components/articles/ArticleCard";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const UserProfile = () => {
   const { userId } = useParams();
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const checkAuth = async () => {

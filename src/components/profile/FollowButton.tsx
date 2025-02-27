@@ -1,49 +1,96 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-interface FollowButtonProps {
-  targetUserId: string;
-}
-
-export const FollowButton = ({ targetUserId }: FollowButtonProps) => {
+export const FollowButton = ({ targetUserId }: { targetUserId: string }) => {
   const [isFollowing, setIsFollowing] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [userId, setUserId] = useState<string | null>(null);
   const { toast } = useToast();
   const { t } = useLanguage();
 
-  const handleFollow = async () => {
-    try {
-      setIsLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
+  useEffect(() => {
+    const checkAuthAndFollowStatus = async () => {
+      // ログインステータスの確認
+      const { data: { session } } = await supabase.auth.getSession();
+      const currentUserId = session?.user?.id;
+      setUserId(currentUserId);
+
+      if (!currentUserId) {
+        setIsLoading(false);
+        return;
+      }
+
+      // フォロー状態の確認
+      try {
+        const { data, error } = await supabase
+          .from('follows')
+          .select('*')
+          .eq('follower_id', currentUserId)
+          .eq('following_id', targetUserId)
+          .maybeSingle();
+
+        if (error) throw error;
+        setIsFollowing(!!data);
+      } catch (error) {
+        console.error('Error checking follow status:', error);
         toast({
           title: t("error.unauthorized"),
           variant: "destructive",
         });
-        return;
+      } finally {
+        setIsLoading(false);
       }
+    };
 
+    checkAuthAndFollowStatus();
+  }, [targetUserId, toast, t]);
+
+  const handleFollowToggle = async () => {
+    if (!userId) {
+      toast({
+        title: t("follow.loginRequired"),
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
       if (isFollowing) {
-        await supabase
+        // フォロー解除
+        const { error } = await supabase
           .from('follows')
           .delete()
-          .match({ follower_id: user.id, following_id: targetUserId });
-      } else {
-        await supabase
-          .from('follows')
-          .insert({ follower_id: user.id, following_id: targetUserId });
-      }
+          .eq('follower_id', userId)
+          .eq('following_id', targetUserId);
 
-      setIsFollowing(!isFollowing);
-      toast({
-        title: isFollowing ? t("success.unfollowed") : t("success.followed"),
-      });
+        if (error) throw error;
+        setIsFollowing(false);
+        toast({
+          title: t("success.unfollowed"),
+        });
+      } else {
+        // フォロー
+        const { error } = await supabase
+          .from('follows')
+          .insert({
+            follower_id: userId,
+            following_id: targetUserId,
+          });
+
+        if (error) throw error;
+        setIsFollowing(true);
+        toast({
+          title: t("success.followed"),
+        });
+      }
     } catch (error) {
-      console.error('Follow error:', error);
+      console.error('Error following/unfollowing user:', error);
       toast({
         title: t("error.followAction"),
         variant: "destructive",
@@ -55,11 +102,11 @@ export const FollowButton = ({ targetUserId }: FollowButtonProps) => {
 
   return (
     <Button
-      variant={isFollowing ? "outline" : "default"}
-      onClick={handleFollow}
+      onClick={handleFollowToggle}
       disabled={isLoading}
+      variant={isFollowing ? "outline" : "default"}
     >
-      {isFollowing ? t("profile.unfollow") : t("profile.follow")}
+      {isFollowing ? t("follow.following") : t("follow.button")}
     </Button>
   );
 };

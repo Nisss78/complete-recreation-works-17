@@ -1,139 +1,145 @@
-import { commentTranslations } from './sections/comments';
-import { productTranslations } from './sections/products';
-import { followTranslations } from './sections/follows';
-import { successTranslations } from './sections/success';
 
-export const enTranslations = {
+import { productTranslations } from "./sections/products";
+import { commentTranslations } from "./sections/comments";
+import { followTranslations } from "./sections/follows";
+import { profileTranslations } from "./sections/profile";
+import { articleTranslations } from "./sections/articles";
+
+export const en = {
   // Common
   'common.loading': 'Loading...',
-
-  // Error messages
-  'error.occurred': 'An error occurred',
-  'error.tryAgain': 'Please try again',
-  'error.upload': 'Failed to upload file',
-  'error.required': 'Required fields are missing',
-  'error.post': 'Failed to post',
-  'error.adminRequired': 'Admin privileges required',
-  'error.fetchProfile': 'Failed to fetch profile',
-  'error.updateLanguage': 'Failed to update language preference',
-
-  // Settings
-  'settings.title': 'Settings',
-  'settings.language': 'Language',
-  'settings.selectLanguage': 'Select language',
-  'settings.profile': 'Profile',
-  'settings.profileSettings': 'Profile Settings',
-
-  // Profile
-  'profile.username': 'Username',
-  'profile.bio': 'Bio',
-  'profile.avatar': 'Avatar',
-  'profile.socialLinks': 'Social Links',
-  'profile.save': 'Save',
-  'profile.usernamePlaceholder': 'Enter your username',
-  'profile.bioPlaceholder': 'Tell us about yourself (max 160 characters)',
-  'profile.twitter': 'Twitter',
-  'profile.instagram': 'Instagram',
-  'profile.github': 'GitHub',
-  'profile.website': 'Website',
-  'profile.twitterPlaceholder': 'https://twitter.com/yourusername',
-  'profile.instagramPlaceholder': 'https://instagram.com/yourusername',
-  'profile.githubPlaceholder': 'https://github.com/yourusername',
-  'profile.websitePlaceholder': 'https://yourwebsite.com',
-  'profile.noUsername': 'No username set',
-  'profile.edit': 'Edit Profile',
-  'profile.followers': 'Followers',
-  'profile.following': 'Following',
-  'profile.noFollowers': 'No followers yet',
-  'profile.noFollowing': 'Not following anyone',
-  'profile.avatarUpload': 'Click or drag & drop to upload',
-  'profile.avatarSize': 'Max 2MB (PNG/JPG)',
-  'profile.uploading': 'Uploading...',
-
-  // Credits
-  'credits.amount': '{amount} Credits',
-  'credits.buy': 'Buy Credits',
-  'credits.monthlyPlan': 'Monthly Plan',
-  'credits.monthlyAmount': '10,000 credits for $10/month',
-  'credits.purchase': 'Purchase',
-  'credits.preparingPurchase': 'Preparing Purchase',
-  'credits.preparingDesc': 'Credit purchase feature is coming soon',
-
-  // Articles
-  'articles.title': 'Articles',
-  'articles.all': 'All',
-  'articles.following': 'Following',
-  'articles.myPosts': 'My Posts',
-  'articles.noPosts': 'No posts yet',
-  'articles.noArticles': 'No articles found',
-  'articles.noFollowingArticles': 'No articles from people you follow',
-  'articles.new.cancel': 'Cancel',
-  'articles.new.post': 'Post',
-  'articles.new.posting': 'Posting...',
-  'articles.new.titlePlaceholder': 'Enter article title',
-  'articles.new.thumbnailTitle': 'Thumbnail',
-  'articles.new.thumbnailDescription': 'Add a cover image to your article',
-  'articles.new.thumbnailSize': 'Max size: 2MB',
-
-  // Article Details
-  'article.details.back': 'Back',
-  'article.details.postedOn': 'Posted on',
-  'article.details.share': 'Share',
-
-  // Products
-  'products.sortByDate': 'Latest',
-  'products.sortByLikes': 'Most Liked',
-
-  // Product Details
-  'product.details.loginRequired': 'Login Required',
-  'product.details.loginRequiredDesc': 'Please login to continue',
-  'product.details.like': 'Like',
-  'product.details.bookmarkRemoved': 'Bookmark Removed',
-  'product.details.bookmarkAdded': 'Bookmark Added',
-  'product.details.bookmarkRemovedDesc': 'Product removed from bookmarks',
-  'product.details.bookmarkAddedDesc': 'Product added to bookmarks',
-  'product.details.linkCopied': 'Link Copied',
-  'product.details.linkCopiedDesc': 'Product link copied to clipboard',
-  'product.details.visit': 'Visit',
-
-  // Index
-  'index.title': 'Welcome to Protoduct',
-  'index.description': 'Discover and share amazing products',
-  'index.productsTitle': 'Featured Products',
-  'index.noProducts': 'No products found',
-  'index.recentArticles': 'Recent Articles',
-  'index.viewMore': 'View More',
-  'index.unknownUser': 'Unknown User',
-  'index.noArticles': 'No articles yet',
-
-  // Bookmarks
-  'bookmarks.title': 'Bookmarks',
-  'bookmarks.empty': 'No bookmarks yet',
-
-  // Chat
-  'chat.title': 'Chat',
-  'chat.placeholder': 'Type your message...',
-  'chat.send': 'Send',
-  'chat.noMessages': 'No messages yet. Start a conversation!',
+  'common.error': 'An error occurred',
+  'common.retry': 'Retry',
+  'common.cancel': 'Cancel',
+  'common.save': 'Save',
+  'common.delete': 'Delete',
+  'common.edit': 'Edit',
+  'common.submit': 'Submit',
+  'common.confirm': 'Confirm',
+  'common.search': 'Search',
+  'common.filters': 'Filters',
+  'common.reset': 'Reset',
+  'common.apply': 'Apply',
+  'common.more': 'More',
+  'common.less': 'Less',
+  'common.or': 'or',
+  'common.warning': 'Warning',
+  'common.settings': 'Settings',
+  'common.profile': 'Profile',
+  'common.logout': 'Logout',
+  'common.login': 'Login',
+  'common.register': 'Register',
+  'common.username': 'Username',
+  'common.email': 'Email',
+  'common.password': 'Password',
+  'common.passwordConfirm': 'Confirm Password',
+  'common.name': 'Name',
+  'common.firstName': 'First Name',
+  'common.lastName': 'Last Name',
+  'common.home': 'Home',
+  'common.account': 'Account',
+  'common.privacyPolicy': 'Privacy Policy',
+  'common.termsOfService': 'Terms of Service',
+  'common.next': 'Next',
+  'common.previous': 'Previous',
+  'common.continue': 'Continue',
+  'common.finish': 'Finish',
+  'common.notifications': 'Notifications',
+  'common.messages': 'Messages',
+  'common.settings': 'Settings',
+  'common.help': 'Help',
+  'common.share': 'Share',
+  'common.copy': 'Copy',
+  'common.back': 'Back',
+  'common.others': 'Others',
+  'common.show': 'Show',
+  'common.hide': 'Hide',
+  'common.all': 'All',
+  'common.none': 'None',
+  'common.required': 'Required',
+  'common.optional': 'Optional',
+  'common.empty': 'No data',
 
   // Navigation
   'nav.home': 'Home',
+  'nav.products': 'Products',
+  'nav.submit': 'Submit',
   'nav.articles': 'Articles',
-  'nav.writeArticle': 'Write Article',
-  'nav.post': 'Post',
-  'nav.login': 'Login',
-  'nav.settings': 'Settings',
+  'nav.bookmarks': 'Bookmarks',
   'nav.profile': 'Profile',
-  'nav.logout': 'Logout',
-  'nav.account': 'Account',
+  'nav.settings': 'Settings',
   'nav.viewBookmarks': 'View Bookmarks',
-  'nav.recentBookmarks': 'Recent Bookmarks',
-  'nav.noBookmarks': 'No bookmarks yet',
   'nav.myApp': 'My App',
+  'nav.logout': 'Logout',
+  'nav.login': 'Login',
+  'nav.register': 'Register',
+  'nav.pricing': 'Pricing',
   'nav.chat': 'Chat',
 
-  ...commentTranslations.en,
+  // Auth
+  'auth.signUpSuccessTitle': 'Registration Complete',
+  'auth.signUpSuccessMessage': 'Your account has been successfully created.',
+  'auth.loginErrorTitle': 'Login Error',
+  'auth.loginErrorMessage': 'Incorrect email or password.',
+  'auth.emailExists': 'This email is already in use.',
+  'auth.weakPassword': 'Password is too weak.',
+  'auth.invalidEmail': 'Please enter a valid email address.',
+  'auth.passwordMismatch': 'Passwords do not match.',
+  'auth.forgotPassword': 'Forgot password?',
+  'auth.resetPassword': 'Reset Password',
+  'auth.sendResetLink': 'Send Reset Link',
+  'auth.resetLinkSent': 'Password reset link has been sent.',
+  'auth.requiredField': 'This field is required.',
+  'auth.or': 'or',
+  'auth.signInWith': 'Sign in with {provider}',
+  'auth.agreeToTerms': 'By signing up, you agree to our {terms} and {privacy}.',
+  'auth.termsOfService': 'Terms of Service',
+  'auth.privacyPolicy': 'Privacy Policy',
+  'auth.alreadyHaveAccount': 'Already have an account?',
+  'auth.needAccount': 'Need an account?',
+  'auth.createAccount': 'Create Account',
+  'auth.welcomeBack': 'Welcome Back',
+  'auth.createYourAccount': 'Create Your Account',
+  'auth.fillDetails': 'Please fill in the details below',
+
+  // Index
+  'index.title': 'Product Hunt - The best new products in tech',
+  'index.description': 'Discover the latest products, apps, and websites. New products launched every day.',
+  'index.productsTitle': 'Today\'s Products',
+  'index.recentArticles': 'Recent Articles',
+  'index.viewMore': 'View More',
+  'index.noProducts': 'No products found',
+  'index.noArticles': 'No articles found',
+  'index.unknownUser': 'Unknown User',
+
+  // Products
   ...productTranslations.en,
+
+  // Comments
+  ...commentTranslations.en,
+
+  // Follows
   ...followTranslations.en,
-  ...successTranslations.en,
-} as const;
+
+  // Profile
+  ...profileTranslations.en,
+
+  // Articles
+  ...articleTranslations.en,
+
+  // Success messages
+  'success.completed': 'Completed successfully',
+  'success.loggedOut': 'Logged out successfully',
+  'success.logoutCompleted': 'Logged out successfully',
+  'success.productPosted': 'Product posted successfully',
+  'success.imageUploaded': 'Image uploaded successfully',
+  'success.profileUpdated': 'Profile updated successfully',
+  'success.languageUpdated': 'Language updated successfully',
+
+  // Error messages
+  'error.productSubmission': 'Error submitting product',
+  'error.productImageUpload': 'Error uploading product image',
+  'error.fetchProfile': 'Error fetching profile',
+  'error.unauthorized': 'You are not authorized',
+  'error.imageUpload': 'Error uploading image',
+};
