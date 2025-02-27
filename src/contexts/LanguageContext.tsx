@@ -1,66 +1,67 @@
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { en } from "@/translations/en";
-import { ja } from "@/translations/ja";
-import { supabase } from "@/integrations/supabase/client";
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { en } from '@/translations/en';
+import { ja } from '@/translations/ja';
 
-type Language = "en" | "ja";
-type Translations = typeof en | typeof ja;
+export type Language = 'en' | 'ja';
+type TranslationKey = keyof typeof en;
 
-interface LanguageContextType {
+type LanguageContextType = {
   language: Language;
-  setLanguage: (lang: Language) => void;
-  t: (key: keyof typeof en | string) => string;
-}
+  setLanguage: (lang: Language) => Promise<void>;
+  t: (key: TranslationKey) => string;
+};
+
+const translations = {
+  en,
+  ja,
+} as const;
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>("en");
-  const [translations, setTranslations] = useState<Translations>(en);
+export const LanguageProvider = ({ children }: { children: React.ReactNode }) => {
+  const [language, setLanguageState] = useState<Language>('en');
 
   useEffect(() => {
-    // Try to get language preference from localStorage first
-    const savedLanguage = localStorage.getItem("language") as Language | null;
-    
-    // If there's a saved preference, use it
-    if (savedLanguage && (savedLanguage === "en" || savedLanguage === "ja")) {
-      setLanguageState(savedLanguage);
-      setTranslations(savedLanguage === "ja" ? ja : en);
-    } else {
-      // If no saved preference, check if user is logged in
-      const checkUserPreference = async () => {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user?.id) {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('language_preference')
-            .eq('id', session.user.id)
-            .single();
-          
-          if (profile?.language_preference && 
-              (profile.language_preference === "en" || profile.language_preference === "ja")) {
-            setLanguageState(profile.language_preference);
-            setTranslations(profile.language_preference === "ja" ? ja : en);
-            localStorage.setItem("language", profile.language_preference);
-          }
+    const fetchLanguagePreference = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user?.id) {
+        const { data } = await supabase
+          .from('profiles')
+          .select('language_preference')
+          .eq('id', session.user.id)
+          .single();
+        
+        if (data?.language_preference) {
+          setLanguageState(data.language_preference as Language);
         }
-      };
-      
-      checkUserPreference();
-    }
+      }
+    };
+
+    fetchLanguagePreference();
   }, []);
 
-  const setLanguage = (lang: Language) => {
-    setLanguageState(lang);
-    setTranslations(lang === "ja" ? ja : en);
-    localStorage.setItem("language", lang);
+  const setLanguage = async (lang: Language) => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user?.id) {
+        const { error } = await supabase
+          .from('profiles')
+          .update({ language_preference: lang })
+          .eq('id', session.user.id);
+
+        if (error) throw error;
+      }
+      setLanguageState(lang);
+    } catch (error) {
+      console.error('Error updating language preference:', error);
+      throw error;
+    }
   };
 
-  const t = (key: keyof typeof en | string) => {
-    // Type assertion to allow string indexing
-    const translationsObj = translations as Record<string, string>;
-    return translationsObj[key] || key;
+  const t = (key: TranslationKey): string => {
+    return translations[language][key] as string;
   };
 
   return (
@@ -68,12 +69,12 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       {children}
     </LanguageContext.Provider>
   );
-}
+};
 
-export function useLanguage() {
+export const useLanguage = () => {
   const context = useContext(LanguageContext);
   if (context === undefined) {
-    throw new Error("useLanguage must be used within a LanguageProvider");
+    throw new Error('useLanguage must be used within a LanguageProvider');
   }
   return context;
-}
+};

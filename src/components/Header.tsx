@@ -81,8 +81,8 @@ export const Header = () => {
       className={cn(
         "inline-flex items-center px-3 py-2 text-sm font-medium border-b-2 transition-colors",
         isActive(path) 
-          ? "border-luxury-gold text-luxury-navy"
-          : "border-transparent text-gray-500 hover:text-luxury-navy hover:border-gray-300"
+          ? "border-blue-600 text-blue-600"
+          : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
       )}
     >
       <span className="mr-2">{icon}</span>
@@ -100,7 +100,7 @@ export const Header = () => {
         </SheetTrigger>
         <SheetContent side="right" className="bg-white">
           <SheetHeader className="mb-4">
-            <SheetTitle>メニュー</SheetTitle>
+            <SheetTitle>{t('nav.menu')}</SheetTitle>
           </SheetHeader>
           <div className="flex flex-col gap-1">
             <SheetClose asChild>
@@ -108,11 +108,11 @@ export const Header = () => {
                 to="/"
                 className={cn(
                   "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
-                  isActive("/") ? "bg-luxury-cream text-luxury-navy" : "hover:bg-gray-100"
+                  isActive("/") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
                 )}
               >
                 <Home className="h-5 w-5" />
-                <span>ホーム</span>
+                <span>{t('nav.home')}</span>
               </Link>
             </SheetClose>
             
@@ -121,11 +121,11 @@ export const Header = () => {
                 to="/articles"
                 className={cn(
                   "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
-                  isActive("/articles") ? "bg-luxury-cream text-luxury-navy" : "hover:bg-gray-100"
+                  isActive("/articles") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
                 )}
               >
                 <FileText className="h-5 w-5" />
-                <span>記事</span>
+                <span>{t("nav.articles")}</span>
               </Link>
             </SheetClose>
             
@@ -136,11 +136,11 @@ export const Header = () => {
                     to="/articles/new"
                     className={cn(
                       "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
-                      isActive("/articles/new") ? "bg-luxury-cream text-luxury-navy" : "hover:bg-gray-100"
+                      isActive("/articles/new") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
                     )}
                   >
                     <FilePlus className="h-5 w-5" />
-                    <span>記事を書く</span>
+                    <span>{t("nav.writeArticle")}</span>
                   </Link>
                 </SheetClose>
                 
@@ -149,11 +149,11 @@ export const Header = () => {
                     to="/chat"
                     className={cn(
                       "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
-                      isActive("/chat") ? "bg-luxury-cream text-luxury-navy" : "hover:bg-gray-100"
+                      isActive("/chat") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
                     )}
                   >
                     <MessageSquare className="h-5 w-5" />
-                    <span>チャット</span>
+                    <span>{t("nav.chat")}</span>
                   </Link>
                 </SheetClose>
                 
@@ -164,7 +164,7 @@ export const Header = () => {
                       className="flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium hover:bg-gray-100 text-left w-full"
                     >
                       <Plus className="h-5 w-5" />
-                      <span>製品を投稿</span>
+                      <span>{t("nav.post")}</span>
                     </button>
                   </SheetClose>
                 )}
@@ -178,7 +178,7 @@ export const Header = () => {
                   className="flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium hover:bg-gray-100"
                 >
                   <Plus className="h-5 w-5" />
-                  <span>ログイン</span>
+                  <span>{t("nav.login")}</span>
                 </Link>
               </SheetClose>
             )}
@@ -189,12 +189,12 @@ export const Header = () => {
   };
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-luxury">
+    <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <Link to="/" className="font-serif font-bold text-2xl text-luxury-navy hover:text-luxury-navy/80 transition-colors mr-8">
-              <span className="text-gradient">Protoduct</span>
+            <Link to="/" className="font-bold text-2xl text-gray-900 hover:text-gray-700 transition-colors mr-8">
+              Protoduct
             </Link>
             
             <nav className="hidden md:flex space-x-2">
@@ -211,13 +211,13 @@ export const Header = () => {
               <>
                 {isAdmin && (
                   <Button 
-                    variant="luxury-outline"
+                    variant="outline"
                     size={isMobile ? "icon" : "default"}
                     className="gap-2 hidden md:flex"
                     onClick={() => setShowSubmissionDialog(true)}
                   >
                     <Plus className="h-4 w-4" />
-                    {!isMobile && <span>製品を投稿</span>}
+                    {!isMobile && <span>{t("nav.post")}</span>}
                   </Button>
                 )}
 
@@ -225,11 +225,11 @@ export const Header = () => {
               </>
             ) : (
               <Button 
-                variant="luxury-gold"
+                variant="default"
                 onClick={() => navigate("/auth")}
-                className="gap-2 hidden md:flex"
+                className="gap-2 hidden md:flex bg-blue-600 hover:bg-blue-700"
               >
-                <span>ログイン</span>
+                <span>{t("nav.login")}</span>
               </Button>
             )}
             
