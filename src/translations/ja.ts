@@ -24,7 +24,6 @@ export const ja = {
   'common.less': '閉じる',
   'common.or': 'または',
   'common.warning': '警告',
-  'common.settings': '設定',
   'common.profile': 'プロフィール',
   'common.logout': 'ログアウト',
   'common.login': 'ログイン',

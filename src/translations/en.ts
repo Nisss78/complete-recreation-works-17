@@ -46,7 +46,6 @@ export const en = {
   'common.finish': 'Finish',
   'common.notifications': 'Notifications',
   'common.messages': 'Messages',
-  'common.settings': 'Settings',
   'common.help': 'Help',
   'common.share': 'Share',
   'common.copy': 'Copy',

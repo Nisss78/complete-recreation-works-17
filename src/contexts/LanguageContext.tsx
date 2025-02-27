@@ -1,10 +1,11 @@
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { enTranslations } from '@/translations/en';
-import { jaTranslations } from '@/translations/ja';
+import { en } from '@/translations/en';
+import { ja } from '@/translations/ja';
 
 export type Language = 'en' | 'ja';
-type TranslationKey = keyof typeof enTranslations;
+type TranslationKey = keyof typeof en;
 
 type LanguageContextType = {
   language: Language;
@@ -13,8 +14,8 @@ type LanguageContextType = {
 };
 
 const translations = {
-  en: enTranslations,
-  ja: jaTranslations,
+  en,
+  ja,
 } as const;
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);

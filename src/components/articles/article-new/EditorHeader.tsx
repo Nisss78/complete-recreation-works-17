@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft } from "lucide-react";
@@ -33,20 +34,20 @@ export const EditorHeader = ({ title, setTitle, onSubmit, isSubmitting }: Editor
               onClick={() => navigate(-1)}
               disabled={isSubmitting}
             >
-              {t('articles.new.cancel')}
+              {t('common.cancel')}
             </Button>
             <Button 
               onClick={onSubmit}
               disabled={isSubmitting || !title.trim()}
             >
-              {isSubmitting ? t('articles.new.posting') : t('articles.new.post')}
+              {isSubmitting ? t('common.loading') : t('articles.publish')}
             </Button>
           </div>
         </div>
         <Input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder={t('articles.new.titlePlaceholder')}
+          placeholder={t('articles.titlePlaceholder')}
           className="w-full text-2xl font-medium border-none bg-transparent placeholder:text-gray-400 focus-visible:ring-0 px-0"
         />
       </div>
