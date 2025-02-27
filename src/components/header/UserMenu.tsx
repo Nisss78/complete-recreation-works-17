@@ -12,7 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Coins, CreditCard, LogOut, Settings, User } from "lucide-react";
+import { Bookmark, Coins, CreditCard, LogOut, Settings, User } from "lucide-react";
 import { Profile } from "@/types/database";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
@@ -29,7 +29,7 @@ export const UserMenu = ({ userId }: { userId: string }) => {
         .single();
 
       if (error) throw error;
-      return data;
+      return data as Profile;
     },
   });
 
@@ -58,43 +58,46 @@ export const UserMenu = ({ userId }: { userId: string }) => {
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56" align="end" forceMount>
-          <DropdownMenuLabel className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">
+        <DropdownMenuContent className="w-56 bg-white rounded-lg shadow-lg p-1 border border-gray-100" align="end" forceMount>
+          <DropdownMenuLabel className="flex flex-col space-y-1 px-3 py-2">
+            <p className="text-sm font-medium leading-none text-gray-900">
               {profile?.username || t('profile.noUsername')}
             </p>
             <div className="flex items-center pt-2">
               <Coins className="h-4 w-4 text-yellow-500 mr-1.5" />
-              <span className="text-xs text-muted-foreground">{profile?.credits || 0} クレジット</span>
+              <span className="text-xs text-gray-500">{profile?.credits || 0} クレジット</span>
             </div>
           </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem asChild className="cursor-pointer">
+          <DropdownMenuSeparator className="bg-gray-100" />
+          <DropdownMenuItem asChild className="cursor-pointer px-3 py-2 mx-1 my-0.5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-md">
             <Link to={`/profile/${userId}`} className="flex items-center">
               <User className="mr-2 h-4 w-4" />
               <span>{t('nav.profile')}</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild className="cursor-pointer">
+          <DropdownMenuItem asChild className="cursor-pointer px-3 py-2 mx-1 my-0.5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-md">
             <Link to="/settings" className="flex items-center">
               <Settings className="mr-2 h-4 w-4" />
               <span>{t('nav.settings')}</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild className="cursor-pointer">
+          <DropdownMenuItem asChild className="cursor-pointer px-3 py-2 mx-1 my-0.5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-md">
             <Link to="/bookmarks" className="flex items-center">
-              <CreditCard className="mr-2 h-4 w-4" />
+              <Bookmark className="mr-2 h-4 w-4" />
               <span>{t('nav.viewBookmarks')}</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild className="cursor-pointer">
+          <DropdownMenuItem asChild className="cursor-pointer px-3 py-2 mx-1 my-0.5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-md">
             <Link to="/my-app" className="flex items-center">
               <CreditCard className="mr-2 h-4 w-4" />
               <span>{t('nav.myApp')}</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-red-600 focus:text-red-600">
+          <DropdownMenuSeparator className="bg-gray-100" />
+          <DropdownMenuItem 
+            onClick={handleSignOut} 
+            className="cursor-pointer px-3 py-2 mx-1 my-0.5 text-red-600 hover:bg-red-50 hover:text-red-700 rounded-md"
+          >
             <LogOut className="mr-2 h-4 w-4" />
             <span>{t('nav.logout')}</span>
           </DropdownMenuItem>

@@ -1,3 +1,4 @@
+
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ArticleCard } from "@/components/articles/ArticleCard";
@@ -79,7 +80,7 @@ export default function Articles() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
+    <div className="min-h-screen bg-white">
       <Header />
       <main className="mx-auto py-4 sm:container sm:px-4">
         <div className="space-y-3 sm:space-y-4 px-0">

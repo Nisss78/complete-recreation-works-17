@@ -105,7 +105,7 @@ const Index = () => {
   // ローディング状態の表示
   if (isLoading) {
     return (
-      <div className="min-h-screen w-full flex flex-col bg-purple-50">
+      <div className="min-h-screen w-full flex flex-col bg-white">
         <Header />
         <main className="flex-1 flex items-center justify-center">
           <div className="animate-pulse text-gray-500">{t('common.loading')}</div>
@@ -117,7 +117,7 @@ const Index = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen w-full flex flex-col bg-purple-50">
+      <div className="min-h-screen w-full flex flex-col bg-white">
         <Header />
         <main className="flex-1 flex items-center justify-center">
           <div className="text-red-500">
@@ -145,7 +145,7 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen w-full flex flex-col bg-gradient-to-br from-purple-50 to-indigo-50">
+    <div className="min-h-screen w-full flex flex-col bg-white">
       <MetaTags 
         title={t('index.title')}
         description={t('index.description')}

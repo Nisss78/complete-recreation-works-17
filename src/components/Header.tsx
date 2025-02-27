@@ -1,22 +1,13 @@
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Plus, BookOpen, FilePlus, User, MessageSquare, Menu, X } from "lucide-react";
+import { Plus, BookOpen, FilePlus, MessageSquare, Menu, Heart, FileText, Home } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ProductSubmissionDialog } from "./ProductSubmissionDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { UserMenu } from "./header/UserMenu";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLanguage } from "@/contexts/LanguageContext";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
 import {
   Sheet,
   SheetContent,
@@ -26,17 +17,16 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export const Header = () => {
   const [showSubmissionDialog, setShowSubmissionDialog] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
-  const [profile, setProfile] = useState<any>(null);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const { t } = useLanguage();
+  const location = useLocation();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -47,12 +37,11 @@ export const Header = () => {
       if (session?.user?.id) {
         const { data: profileData } = await supabase
           .from('profiles')
-          .select('is_admin, username, avatar_url')
+          .select('is_admin')
           .eq('id', session.user.id)
           .single();
         
         setIsAdmin(profileData?.is_admin || false);
-        setProfile(profileData);
       }
     };
 
@@ -64,16 +53,14 @@ export const Header = () => {
       if (session?.user?.id) {
         supabase
           .from('profiles')
-          .select('is_admin, username, avatar_url')
+          .select('is_admin')
           .eq('id', session.user.id)
           .single()
           .then(({ data: profileData }) => {
             setIsAdmin(profileData?.is_admin || false);
-            setProfile(profileData);
           });
       } else {
         setIsAdmin(false);
-        setProfile(null);
       }
     });
 
@@ -82,73 +69,26 @@ export const Header = () => {
     };
   }, []);
 
-  const NavigationMenuDemo = () => {
-    return (
-      <NavigationMenu>
-        <NavigationMenuList>
-          <NavigationMenuItem>
-            <NavigationMenuTrigger>コンテンツ</NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="grid gap-3 p-4 w-[220px]">
-                <li>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      to="/articles"
-                      className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                    >
-                      <div className="flex items-center gap-2">
-                        <BookOpen className="h-4 w-4" />
-                        <div className="text-sm font-medium">{t("nav.articles")}</div>
-                      </div>
-                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                        最新の記事やチュートリアルを読む
-                      </p>
-                    </Link>
-                  </NavigationMenuLink>
-                </li>
-                {isAuthenticated && (
-                  <li>
-                    <NavigationMenuLink asChild>
-                      <Link
-                        to="/articles/new"
-                        className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                      >
-                        <div className="flex items-center gap-2">
-                          <FilePlus className="h-4 w-4" />
-                          <div className="text-sm font-medium">{t("nav.writeArticle")}</div>
-                        </div>
-                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                          新しい記事を作成する
-                        </p>
-                      </Link>
-                    </NavigationMenuLink>
-                  </li>
-                )}
-                {isAuthenticated && (
-                  <li>
-                    <NavigationMenuLink asChild>
-                      <Link
-                        to="/chat"
-                        className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                      >
-                        <div className="flex items-center gap-2">
-                          <MessageSquare className="h-4 w-4" />
-                          <div className="text-sm font-medium">{t("nav.chat")}</div>
-                        </div>
-                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                          他のユーザーとチャットする
-                        </p>
-                      </Link>
-                    </NavigationMenuLink>
-                  </li>
-                )}
-              </ul>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
-    );
+  const isActive = (path: string) => {
+    if (path === '/' && location.pathname === '/') return true;
+    if (path !== '/' && location.pathname.startsWith(path)) return true;
+    return false;
   };
+
+  const NavItem = ({ path, icon, label }: { path: string; icon: React.ReactNode; label: string }) => (
+    <Link 
+      to={path} 
+      className={cn(
+        "inline-flex items-center px-3 py-2 text-sm font-medium border-b-2 transition-colors",
+        isActive(path) 
+          ? "border-blue-600 text-blue-600"
+          : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+      )}
+    >
+      <span className="mr-2">{icon}</span>
+      <span>{label}</span>
+    </Link>
+  );
 
   const MobileMenu = () => {
     return (
@@ -158,17 +98,33 @@ export const Header = () => {
             <Menu className="h-5 w-5" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="right">
+        <SheetContent side="right" className="bg-white">
           <SheetHeader className="mb-4">
             <SheetTitle>メニュー</SheetTitle>
           </SheetHeader>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1">
+            <SheetClose asChild>
+              <Link
+                to="/"
+                className={cn(
+                  "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
+                  isActive("/") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                )}
+              >
+                <Home className="h-5 w-5" />
+                <span>ホーム</span>
+              </Link>
+            </SheetClose>
+            
             <SheetClose asChild>
               <Link
                 to="/articles"
-                className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-accent"
+                className={cn(
+                  "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
+                  isActive("/articles") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                )}
               >
-                <BookOpen className="h-5 w-5" />
+                <FileText className="h-5 w-5" />
                 <span>{t("nav.articles")}</span>
               </Link>
             </SheetClose>
@@ -178,7 +134,10 @@ export const Header = () => {
                 <SheetClose asChild>
                   <Link
                     to="/articles/new"
-                    className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-accent"
+                    className={cn(
+                      "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
+                      isActive("/articles/new") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                    )}
                   >
                     <FilePlus className="h-5 w-5" />
                     <span>{t("nav.writeArticle")}</span>
@@ -188,7 +147,10 @@ export const Header = () => {
                 <SheetClose asChild>
                   <Link
                     to="/chat"
-                    className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-accent"
+                    className={cn(
+                      "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
+                      isActive("/chat") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                    )}
                   >
                     <MessageSquare className="h-5 w-5" />
                     <span>{t("nav.chat")}</span>
@@ -199,43 +161,13 @@ export const Header = () => {
                   <SheetClose asChild>
                     <button
                       onClick={() => setShowSubmissionDialog(true)}
-                      className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-accent text-left w-full"
+                      className="flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium hover:bg-gray-100 text-left w-full"
                     >
                       <Plus className="h-5 w-5" />
                       <span>{t("nav.post")}</span>
                     </button>
                   </SheetClose>
                 )}
-                
-                <SheetClose asChild>
-                  <Link
-                    to={`/profile/${userId}`}
-                    className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-accent"
-                  >
-                    <User className="h-5 w-5" />
-                    <span>{t("nav.profile")}</span>
-                  </Link>
-                </SheetClose>
-                
-                <SheetClose asChild>
-                  <Link
-                    to="/settings"
-                    className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-accent"
-                  >
-                    <User className="h-5 w-5" />
-                    <span>{t("nav.settings")}</span>
-                  </Link>
-                </SheetClose>
-                
-                <SheetClose asChild>
-                  <button
-                    onClick={async () => await supabase.auth.signOut()}
-                    className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-accent text-left w-full"
-                  >
-                    <User className="h-5 w-5" />
-                    <span>{t("nav.logout")}</span>
-                  </button>
-                </SheetClose>
               </>
             )}
             
@@ -243,9 +175,9 @@ export const Header = () => {
               <SheetClose asChild>
                 <Link
                   to="/auth"
-                  className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-accent"
+                  className="flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium hover:bg-gray-100"
                 >
-                  <User className="h-5 w-5" />
+                  <Plus className="h-5 w-5" />
                   <span>{t("nav.login")}</span>
                 </Link>
               </SheetClose>
@@ -257,45 +189,55 @@ export const Header = () => {
   };
 
   return (
-    <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-        <Link to="/" className="font-bold text-2xl text-gray-900 hover:text-gray-700 transition-colors">
-          Protoduct
-        </Link>
-        
-        <div className="hidden md:flex items-center gap-2 sm:gap-4">
-          <NavigationMenuDemo />
-          
-          {isAuthenticated ? (
-            <>
-              {isAdmin && (
-                <Button 
-                  variant="outline"
-                  size={isMobile ? "icon" : "default"}
-                  className="gap-2"
-                  onClick={() => setShowSubmissionDialog(true)}
-                >
-                  <Plus className="h-4 w-4" />
-                  {!isMobile && <span>{t("nav.post")}</span>}
-                </Button>
+    <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="flex justify-between items-center h-16">
+          <div className="flex items-center">
+            <Link to="/" className="font-bold text-2xl text-gray-900 hover:text-gray-700 transition-colors mr-8">
+              Protoduct
+            </Link>
+            
+            <nav className="hidden md:flex space-x-2">
+              <NavItem path="/" icon={<Home className="h-4 w-4" />} label="ホーム" />
+              <NavItem path="/articles" icon={<FileText className="h-4 w-4" />} label={t("nav.articles")} />
+              <NavItem path="/upvoted" icon={<Heart className="h-4 w-4" />} label="人気" />
+              {isAuthenticated && (
+                <NavItem path="/chat" icon={<MessageSquare className="h-4 w-4" />} label={t("nav.chat")} />
               )}
+            </nav>
+          </div>
+          
+          <div className="flex items-center gap-2 sm:gap-4">
+            {isAuthenticated ? (
+              <>
+                {isAdmin && (
+                  <Button 
+                    variant="outline"
+                    size={isMobile ? "icon" : "default"}
+                    className="gap-2 hidden md:flex"
+                    onClick={() => setShowSubmissionDialog(true)}
+                  >
+                    <Plus className="h-4 w-4" />
+                    {!isMobile && <span>{t("nav.post")}</span>}
+                  </Button>
+                )}
 
-              {userId && <UserMenu userId={userId} />}
-            </>
-          ) : (
-            <Button 
-              variant="outline"
-              onClick={() => navigate("/auth")}
-              className="gap-2"
-            >
-              <User className="h-4 w-4" />
-              {t("nav.login")}
-            </Button>
-          )}
-        </div>
-        
-        <div className="md:hidden">
-          <MobileMenu />
+                {userId && <UserMenu userId={userId} />}
+              </>
+            ) : (
+              <Button 
+                variant="default"
+                onClick={() => navigate("/auth")}
+                className="gap-2 hidden md:flex bg-blue-600 hover:bg-blue-700"
+              >
+                <span>{t("nav.login")}</span>
+              </Button>
+            )}
+            
+            <div className="md:hidden">
+              <MobileMenu />
+            </div>
+          </div>
         </div>
       </div>
 
