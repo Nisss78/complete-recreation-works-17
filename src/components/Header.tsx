@@ -1,7 +1,7 @@
 
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Plus, BookOpen, FilePlus, MessageSquare, Menu, FileText, Home } from "lucide-react";
+import { Plus, FileText, MessageSquare, Menu, Home } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ProductSubmissionDialog } from "./ProductSubmissionDialog";
 import { supabase } from "@/integrations/supabase/client";
@@ -81,8 +81,8 @@ export const Header = () => {
       className={cn(
         "inline-flex items-center px-3 py-2 text-sm font-medium border-b-2 transition-colors",
         isActive(path) 
-          ? "border-blue-600 text-blue-600"
-          : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+          ? "border-blue-500 text-blue-600"
+          : "border-transparent text-gray-600 hover:text-blue-600 hover:border-blue-300"
       )}
     >
       <span className="mr-2">{icon}</span>
@@ -100,7 +100,7 @@ export const Header = () => {
         </SheetTrigger>
         <SheetContent side="right" className="bg-white">
           <SheetHeader className="mb-4">
-            <SheetTitle>{t('nav.menu')}</SheetTitle>
+            <SheetTitle>メニュー</SheetTitle>
           </SheetHeader>
           <div className="flex flex-col gap-1">
             <SheetClose asChild>
@@ -112,7 +112,7 @@ export const Header = () => {
                 )}
               >
                 <Home className="h-5 w-5" />
-                <span>{t('nav.home')}</span>
+                <span>ホーム</span>
               </Link>
             </SheetClose>
             
@@ -125,7 +125,7 @@ export const Header = () => {
                 )}
               >
                 <FileText className="h-5 w-5" />
-                <span>{t("nav.articles")}</span>
+                <span>記事</span>
               </Link>
             </SheetClose>
             
@@ -139,8 +139,8 @@ export const Header = () => {
                       isActive("/articles/new") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
                     )}
                   >
-                    <FilePlus className="h-5 w-5" />
-                    <span>{t("nav.writeArticle")}</span>
+                    <Plus className="h-5 w-5" />
+                    <span>記事を書く</span>
                   </Link>
                 </SheetClose>
                 
@@ -153,7 +153,7 @@ export const Header = () => {
                     )}
                   >
                     <MessageSquare className="h-5 w-5" />
-                    <span>{t("nav.chat")}</span>
+                    <span>チャット</span>
                   </Link>
                 </SheetClose>
                 
@@ -164,7 +164,7 @@ export const Header = () => {
                       className="flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium hover:bg-gray-100 text-left w-full"
                     >
                       <Plus className="h-5 w-5" />
-                      <span>{t("nav.post")}</span>
+                      <span>製品を投稿</span>
                     </button>
                   </SheetClose>
                 )}
@@ -178,7 +178,7 @@ export const Header = () => {
                   className="flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium hover:bg-gray-100"
                 >
                   <Plus className="h-5 w-5" />
-                  <span>{t("nav.login")}</span>
+                  <span>ログイン</span>
                 </Link>
               </SheetClose>
             )}
@@ -189,12 +189,12 @@ export const Header = () => {
   };
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+    <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-blue">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <Link to="/" className="font-bold text-2xl text-gray-900 hover:text-gray-700 transition-colors mr-8">
-              Protoduct
+            <Link to="/" className="font-medium text-2xl text-black hover:opacity-90 transition-colors mr-8">
+              <span className="text-blue-gradient">Protoduct</span>
             </Link>
             
             <nav className="hidden md:flex space-x-2">
@@ -217,7 +217,7 @@ export const Header = () => {
                     onClick={() => setShowSubmissionDialog(true)}
                   >
                     <Plus className="h-4 w-4" />
-                    {!isMobile && <span>{t("nav.post")}</span>}
+                    {!isMobile && <span>製品を投稿</span>}
                   </Button>
                 )}
 
@@ -225,11 +225,10 @@ export const Header = () => {
               </>
             ) : (
               <Button 
-                variant="default"
+                className="gap-2 hidden md:flex btn-gradient"
                 onClick={() => navigate("/auth")}
-                className="gap-2 hidden md:flex bg-blue-600 hover:bg-blue-700"
               >
-                <span>{t("nav.login")}</span>
+                <span>ログイン</span>
               </Button>
             )}
             

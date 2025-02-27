@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -13,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 212 100% 47%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -42,6 +43,13 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* 未来的なデザインの青系カラー */
+    --blue-primary: 212 100% 47%;
+    --blue-secondary: 200 100% 60%;
+    --blue-accent: 190 100% 50%;
+    --blue-light: 210 100% 97%;
+    --blue-dark: 220 100% 20%;
   }
 
   .dark {
@@ -81,6 +89,13 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* 未来的なデザインの青系カラー（ダークモード） */
+    --blue-primary: 210 100% 60%;
+    --blue-secondary: 200 100% 70%;
+    --blue-accent: 190 100% 60%;
+    --blue-light: 210 20% 20%;
+    --blue-dark: 220 50% 95%;
   }
 }
 
@@ -89,7 +104,34 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-medium tracking-tight;
+  }
+}
+
+@layer components {
+  .btn-gradient {
+    @apply bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 text-white;
+  }
+  
+  .card-hover {
+    @apply transition-all duration-300 hover:translate-y-[-5px] hover:shadow-lg;
+  }
+  
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400;
+  }
+  
+  .border-gradient {
+    @apply relative;
+  }
+  
+  .border-gradient::before {
+    content: "";
+    @apply absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-400 rounded-md -z-10 blur opacity-30;
   }
 }
 
@@ -101,4 +143,59 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+  
+  /* 未来的な青系のグラデーションシャドウ */
+  .shadow-blue {
+    box-shadow: 0 4px 14px 0 rgba(0, 118, 255, 0.15);
+  }
+  
+  /* 洗練されたフォーカス効果 */
+  .focus-blue {
+    @apply focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 focus:outline-none;
+  }
+  
+  /* 未来的な背景グラデーション */
+  .bg-blue-gradient {
+    background: linear-gradient(135deg, hsl(var(--blue-primary)) 0%, hsl(var(--blue-secondary)) 100%);
+  }
+  
+  /* テキストグラデーション */
+  .text-blue-gradient {
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-image: linear-gradient(90deg, #0070F3 0%, #00A8FF 100%);
+  }
+}
+
+/* アニメーション */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes pulse {
+  0%, 100% { 
+    transform: scale(1);
+    opacity: 1; 
+  }
+  50% { 
+    transform: scale(1.05);
+    opacity: 0.8; 
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s infinite ease-in-out;
+}
+
+/* 未来的なデザインのためのグローバルフォント設定 */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+body {
+  font-family: 'Inter', sans-serif;
 }

@@ -5,18 +5,15 @@ import { en } from '@/translations/en';
 import { ja } from '@/translations/ja';
 
 export type Language = 'en' | 'ja';
+
+// TranslationKeyは全ての翻訳キーの型
 type TranslationKey = keyof typeof en;
 
 type LanguageContextType = {
   language: Language;
   setLanguage: (lang: Language) => Promise<void>;
-  t: (key: TranslationKey) => string;
+  t: (key: string) => string;
 };
-
-const translations = {
-  en,
-  ja,
-} as const;
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
@@ -33,8 +30,9 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
           .eq('id', session.user.id)
           .single();
         
-        if (data?.language_preference) {
-          setLanguageState(data.language_preference as Language);
+        if (data?.language_preference && 
+            (data.language_preference === 'en' || data.language_preference === 'ja')) {
+          setLanguageState(data.language_preference);
         }
       }
     };
@@ -54,18 +52,18 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
         if (error) throw error;
       }
       setLanguageState(lang);
+      return Promise.resolve();
     } catch (error) {
       console.error('Error updating language preference:', error);
-      throw error;
+      return Promise.reject(error);
     }
   };
 
-  const t = (key: TranslationKey): string => {
-    if (language === 'en') {
-      return en[key] || key;
-    } else {
-      return ja[key] || en[key] || key;
-    }
+  const t = (key: string): string => {
+    const translations = language === 'en' ? en : ja;
+    // @ts-ignore - we use string index access
+    const translated = translations[key];
+    return translated || en[key as keyof typeof en] || key;
   };
 
   return (

@@ -1,303 +1,124 @@
 
-import { Upload, Move } from "lucide-react";
-import { useState, useRef } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { 
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import {
-  Slider
-} from "@/components/ui/slider";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Upload, X } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { getInitials } from "@/lib/utils";
 
 interface AvatarUploadProps {
+  currentImageUrl: string | null;
   onUpload: (url: string) => void;
-  onPositionChange?: (position: string) => void;
-  currentUrl?: string;
-  currentPosition?: string;
-  username?: string;
+  onUploadStart?: () => void;
+  onUploadFinish?: () => void;
 }
 
 export const AvatarUpload = ({ 
-  onUpload, 
-  onPositionChange,
-  currentUrl = "", 
-  currentPosition = "center",
-  username = "" 
+  currentImageUrl, 
+  onUpload,
+  onUploadStart,
+  onUploadFinish
 }: AvatarUploadProps) => {
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [showDialog, setShowDialog] = useState(false);
-  const [showPositionEditor, setShowPositionEditor] = useState(false);
-  const [positionX, setPositionX] = useState(() => {
-    if (currentPosition === "center") return 50;
-    if (currentPosition.includes("left")) return 25;
-    if (currentPosition.includes("right")) return 75;
-    return 50;
-  });
-  const [positionY, setPositionY] = useState(() => {
-    if (currentPosition === "center") return 50;
-    if (currentPosition.includes("top")) return 25;
-    if (currentPosition.includes("bottom")) return 75;
-    return 50;
-  });
+  const [uploading, setUploading] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(currentImageUrl);
   const { toast } = useToast();
   const { t } = useLanguage();
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const simulateProgress = () => {
-    setUploadProgress(0);
-    const interval = setInterval(() => {
-      setUploadProgress((prev) => {
-        if (prev >= 95) {
-          clearInterval(interval);
-          return prev;
-        }
-        return prev + 5;
-      });
-    }, 100);
-    return interval;
-  };
-
-  const handleUpload = async (file: File) => {
-    if (!file) return;
-
-    setIsUploading(true);
-    const progressInterval = simulateProgress();
-    
+  const uploadAvatar = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${crypto.randomUUID()}.${fileExt}`;
-      const filePath = `avatars/${fileName}`;
+      setUploading(true);
+      onUploadStart?.();
 
-      const { data, error } = await supabase.storage
-        .from('profile-images')
-        .upload(filePath, file, {
-          contentType: file.type,
-          upsert: false
-        });
-
-      if (error) {
-        throw error;
+      if (!event.target.files || event.target.files.length === 0) {
+        throw new Error('You must select an image to upload.');
       }
 
+      const file = event.target.files[0];
+      const fileExt = file.name.split('.').pop();
+      const filePath = `avatars/${Math.random()}.${fileExt}`;
+
+      // Check file size - limit to 2MB
+      if (file.size > 2 * 1024 * 1024) {
+        throw new Error('File size must be less than 2MB');
+      }
+
+      // Check file type - only allow images
+      if (!file.type.startsWith('image/')) {
+        throw new Error('Only image files are allowed');
+      }
+
+      const { error: uploadError, data } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      // Get public URL
       const { data: { publicUrl } } = supabase.storage
-        .from('profile-images')
+        .from('avatars')
         .getPublicUrl(filePath);
 
-      setUploadProgress(100);
+      setAvatarUrl(publicUrl);
       onUpload(publicUrl);
-      
-      toast({
-        title: t('success.imageUploaded'),
-        description: t('success.profileUpdated'),
-      });
     } catch (error) {
-      console.error('Upload error:', error);
+      console.error('Error uploading avatar:', error);
       toast({
-        title: t('error.occurred'),
-        description: t('error.upload'),
+        title: "エラーが発生しました",
+        description: "画像のアップロード中にエラーが発生しました",
         variant: "destructive",
       });
     } finally {
-      clearInterval(progressInterval);
-      setTimeout(() => {
-        setIsUploading(false);
-        setUploadProgress(0);
-        setShowDialog(false);
-      }, 500);
+      setUploading(false);
+      onUploadFinish?.();
     }
   };
 
-  const handlePositionChange = () => {
-    let position = "";
-    
-    // Vertical position
-    if (positionY < 33) {
-      position += "top ";
-    } else if (positionY > 66) {
-      position += "bottom ";
-    }
-    
-    // Horizontal position
-    if (positionX < 33) {
-      position += "left";
-    } else if (positionX > 66) {
-      position += "right";
-    }
-    
-    // If it's in the middle
-    if (position === "") {
-      position = "center";
-    } else {
-      position = position.trim();
-    }
-    
-    if (onPositionChange) {
-      onPositionChange(position);
-    }
-    
-    setShowPositionEditor(false);
+  const removeAvatar = () => {
+    setAvatarUrl(null);
+    onUpload('');
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-center">
-        <Avatar className="h-24 w-24 border-2 border-primary/10">
-          <AvatarImage 
-            src={currentUrl} 
-            alt={username} 
-            objectPosition={`${positionX}% ${positionY}%`}
+    <div className="flex flex-col items-center gap-4">
+      <Avatar className="h-24 w-24 cursor-pointer hover:opacity-90 transition-opacity">
+        <AvatarImage src={avatarUrl || undefined} />
+        <AvatarFallback className="bg-blue-100 text-blue-800 text-xl">
+          {getInitials("User")}
+        </AvatarFallback>
+      </Avatar>
+
+      <div className="flex gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          className="relative focus-blue"
+          disabled={uploading}
+        >
+          {uploading ? 'アップロード中...' : 'アバターを変更'}
+          <input
+            type="file"
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            accept="image/*"
+            onChange={uploadAvatar}
+            disabled={uploading}
           />
-          <AvatarFallback>{getInitials(username)}</AvatarFallback>
-        </Avatar>
-      </div>
-      
-      <div className="flex justify-center gap-2">
-        <AlertDialog open={showDialog} onOpenChange={setShowDialog}>
-          <AlertDialogTrigger asChild>
-            <Button
-              variant="outline"
-              type="button"
-              className="flex-1"
-            >
-              <Upload className="mr-2 h-4 w-4" />
-              {t('profile.updateAvatar')}
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>{t('profile.updateAvatar')}</AlertDialogTitle>
-              <AlertDialogDescription>
-                {t('profile.avatarUpload')}
-                <br />
-                {t('profile.avatarSize')}
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            
-            {isUploading ? (
-              <div className="space-y-4 py-4">
-                <div className="flex items-center justify-center">
-                  <span className="text-sm text-gray-500">{t('profile.uploading')}</span>
-                </div>
-                <Progress value={uploadProgress} className="h-2" />
-              </div>
-            ) : (
-              <div className="border-2 border-dashed border-muted rounded-lg p-6 text-center bg-muted/5 relative">
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) handleUpload(file);
-                  }}
-                  accept="image/*"
-                  disabled={isUploading}
-                />
-                <div className="flex flex-col items-center">
-                  <Upload className="w-8 h-8 text-muted-foreground mb-2" />
-                  <p className="text-sm text-muted-foreground">
-                    {t('profile.avatarUpload')}
-                  </p>
-                </div>
-              </div>
-            )}
-            
-            <AlertDialogFooter>
-              <AlertDialogCancel disabled={isUploading}>
-                {t('common.cancel')}
-              </AlertDialogCancel>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+          <Upload className="ml-2 h-4 w-4" />
+        </Button>
         
-        {currentUrl && onPositionChange && (
-          <AlertDialog open={showPositionEditor} onOpenChange={setShowPositionEditor}>
-            <AlertDialogTrigger asChild>
-              <Button
-                variant="outline"
-                type="button"
-                className="flex-1"
-              >
-                <Move className="mr-2 h-4 w-4" />
-                調整
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>画像の位置を調整</AlertDialogTitle>
-                <AlertDialogDescription>
-                  スライダーを動かして画像の表示位置を調整できます
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              
-              <div className="space-y-6 py-4">
-                <div className="flex justify-center mb-6">
-                  <Avatar className="h-32 w-32 border-2 border-primary/10">
-                    <AvatarImage 
-                      src={currentUrl} 
-                      alt={username} 
-                      objectPosition={`${positionX}% ${positionY}%`}
-                    />
-                    <AvatarFallback>{getInitials(username)}</AvatarFallback>
-                  </Avatar>
-                </div>
-                
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <label className="text-sm font-medium">横方向の位置:</label>
-                      <span className="text-xs">{positionX < 33 ? "左" : positionX > 66 ? "右" : "中央"}</span>
-                    </div>
-                    <Slider
-                      value={[positionX]}
-                      min={0}
-                      max={100}
-                      step={1}
-                      onValueChange={(value) => setPositionX(value[0])}
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <label className="text-sm font-medium">縦方向の位置:</label>
-                      <span className="text-xs">{positionY < 33 ? "上" : positionY > 66 ? "下" : "中央"}</span>
-                    </div>
-                    <Slider
-                      value={[positionY]}
-                      min={0}
-                      max={100}
-                      step={1}
-                      onValueChange={(value) => setPositionY(value[0])}
-                    />
-                  </div>
-                </div>
-              </div>
-              
-              <AlertDialogFooter>
-                <AlertDialogCancel>
-                  {t('common.cancel')}
-                </AlertDialogCancel>
-                <AlertDialogAction onClick={handlePositionChange}>
-                  適用
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+        {avatarUrl && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={removeAvatar}
+            className="text-red-500 hover:text-red-700 hover:bg-red-50"
+          >
+            削除
+            <X className="ml-2 h-4 w-4" />
+          </Button>
         )}
       </div>
     </div>

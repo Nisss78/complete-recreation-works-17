@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { X, Link as LinkIcon } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -20,12 +21,12 @@ export const Footer = () => {
             <h3 className="font-bold mb-3 sm:mb-4 text-gray-900">Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/terms" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                <Link to="/terms" className="text-sm text-gray-600 hover:text-blue-600 transition-colors">
                   Terms of Service
                 </Link>
               </li>
               <li>
-                <Link to="/privacy" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                <Link to="/privacy" className="text-sm text-gray-600 hover:text-blue-600 transition-colors">
                   Privacy Policy
                 </Link>
               </li>
@@ -39,7 +40,7 @@ export const Footer = () => {
                 href="https://twitter.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-600 hover:text-gray-900 transition-colors p-2 rounded-full hover:bg-gray-100"
+                className="text-gray-600 hover:text-blue-600 transition-colors p-2 rounded-full hover:bg-gray-100"
               >
                 <X className="w-5 h-5" />
               </a>
@@ -47,7 +48,7 @@ export const Footer = () => {
                 href="https://website.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-600 hover:text-gray-900 transition-colors p-2 rounded-full hover:bg-gray-100"
+                className="text-gray-600 hover:text-blue-600 transition-colors p-2 rounded-full hover:bg-gray-100"
               >
                 <LinkIcon className="w-5 h-5" />
               </a>
@@ -56,8 +57,8 @@ export const Footer = () => {
           
           {!isMobile && (
             <div>
-              <Link to="/" className="font-bold text-xl block mb-4 text-gray-900">
-                Protoduct
+              <Link to="/" className="font-bold text-xl block mb-4">
+                <span className="text-blue-gradient">Protoduct</span>
               </Link>
             </div>
           )}

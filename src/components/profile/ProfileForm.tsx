@@ -12,6 +12,24 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { SocialLinksFields } from "./SocialLinksFields";
 
+interface SocialLinkProps {
+  twitterUrl: string;
+  setTwitterUrl: (url: string) => void;
+  instagramUrl: string;
+  setInstagramUrl: (url: string) => void;
+  githubUrl: string;
+  setGithubUrl: (url: string) => void;
+  otherUrl: string;
+  setOtherUrl: (url: string) => void;
+}
+
+interface AvatarProps {
+  currentAvatarUrl: string | null;
+  onUploadComplete: (url: string) => void;
+  onUploadStart: () => void;
+  onUploadEnd: () => void;
+}
+
 export const ProfileForm = () => {
   const { toast } = useToast();
   const { t } = useLanguage();
@@ -64,7 +82,7 @@ export const ProfileForm = () => {
       } catch (error) {
         console.error("Error fetching profile:", error);
         toast({
-          title: t("error.fetchProfile"),
+          title: "プロフィールの取得中にエラーが発生しました",
           variant: "destructive",
         });
       } finally {
@@ -75,7 +93,7 @@ export const ProfileForm = () => {
     if (userId) {
       fetchUserProfile();
     }
-  }, [userId, toast, t]);
+  }, [userId, toast]);
 
   const handleSave = async () => {
     if (!userId) return;
@@ -92,7 +110,7 @@ export const ProfileForm = () => {
           instagram_url: instagramUrl || null,
           github_url: githubUrl || null,
           other_url: otherUrl || null,
-          updated_at: new Date(),
+          updated_at: new Date().toISOString()
         })
         .eq("id", userId);
 
@@ -109,7 +127,7 @@ export const ProfileForm = () => {
     } catch (error) {
       console.error("Error updating profile:", error);
       toast({
-        title: t("error.occurred"),
+        title: "エラーが発生しました",
         variant: "destructive",
       });
     } finally {
@@ -161,22 +179,22 @@ export const ProfileForm = () => {
           <div className="flex flex-col gap-2 items-start">
             <Label htmlFor="avatar">{t("profile.avatar")}</Label>
             <AvatarUpload
-              onUploadComplete={handleAvatarUpload}
-              currentAvatarUrl={avatarUrl}
+              currentImageUrl={avatarUrl}
+              onUpload={handleAvatarUpload}
               onUploadStart={() => setIsUploading(true)}
-              onUploadEnd={() => setIsUploading(false)}
+              onUploadFinish={() => setIsUploading(false)}
             />
           </div>
 
           {/* Social links section */}
           <SocialLinksFields
             twitterUrl={twitterUrl}
-            instagramUrl={instagramUrl}
-            githubUrl={githubUrl}
-            otherUrl={otherUrl}
             setTwitterUrl={setTwitterUrl}
+            instagramUrl={instagramUrl}
             setInstagramUrl={setInstagramUrl}
+            githubUrl={githubUrl}
             setGithubUrl={setGithubUrl}
+            otherUrl={otherUrl}
             setOtherUrl={setOtherUrl}
           />
         </div>
@@ -186,6 +204,7 @@ export const ProfileForm = () => {
             type="button"
             onClick={handleSave}
             disabled={isSaving || isUploading}
+            className="bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500"
           >
             {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {t("profile.save")}

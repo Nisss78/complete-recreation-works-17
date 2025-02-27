@@ -1,96 +1,98 @@
 
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Twitter, Instagram, Github, Globe } from "lucide-react";
-import { UseFormReturn } from "react-hook-form";
-import { ProfileFormValues } from "./profileFormSchema";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { InputGroup, InputLeftElement } from "@/components/ui/input-group";
+import { Label } from "@/components/ui/label";
+import { BrandTwitter, BrandInstagram, BrandGithub, Globe } from "tabler-icons-react";
 
 interface SocialLinksFieldsProps {
-  form: UseFormReturn<ProfileFormValues>;
+  twitterUrl: string;
+  setTwitterUrl: (url: string) => void;
+  instagramUrl: string;
+  setInstagramUrl: (url: string) => void;
+  githubUrl: string;
+  setGithubUrl: (url: string) => void;
+  otherUrl: string;
+  setOtherUrl: (url: string) => void;
 }
 
-export const SocialLinksFields = ({ form }: SocialLinksFieldsProps) => {
-  const { t } = useLanguage();
-
+export const SocialLinksFields = ({
+  twitterUrl,
+  setTwitterUrl,
+  instagramUrl,
+  setInstagramUrl,
+  githubUrl,
+  setGithubUrl,
+  otherUrl,
+  setOtherUrl,
+}: SocialLinksFieldsProps) => {
   return (
-    <div className="space-y-6">
-      <FormField
-        control={form.control}
-        name="twitter_url"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel className="block w-full text-center font-medium text-base mb-2">Twitter</FormLabel>
-            <FormControl>
-              <InputGroup>
-                <InputLeftElement>
-                  <Twitter className="h-5 w-5 text-blue-400" />
-                </InputLeftElement>
-                <Input {...field} placeholder={t('profile.twitterPlaceholder')} className="pl-10" />
-              </InputGroup>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={form.control}
-        name="instagram_url"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel className="block w-full text-center font-medium text-base mb-2">Instagram</FormLabel>
-            <FormControl>
-              <InputGroup>
-                <InputLeftElement>
-                  <Instagram className="h-5 w-5 text-pink-500" />
-                </InputLeftElement>
-                <Input {...field} placeholder={t('profile.instagramPlaceholder')} className="pl-10" />
-              </InputGroup>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={form.control}
-        name="github_url"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel className="block w-full text-center font-medium text-base mb-2">GitHub</FormLabel>
-            <FormControl>
-              <InputGroup>
-                <InputLeftElement>
-                  <Github className="h-5 w-5 text-gray-700" />
-                </InputLeftElement>
-                <Input {...field} placeholder={t('profile.githubPlaceholder')} className="pl-10" />
-              </InputGroup>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={form.control}
-        name="other_url"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel className="block w-full text-center font-medium text-base mb-2">ウェブサイト</FormLabel>
-            <FormControl>
-              <InputGroup>
-                <InputLeftElement>
-                  <Globe className="h-5 w-5 text-purple-500" />
-                </InputLeftElement>
-                <Input {...field} placeholder={t('profile.websitePlaceholder')} className="pl-10" />
-              </InputGroup>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+    <div className="space-y-4">
+      <h3 className="text-lg font-medium">SNSリンク</h3>
+      
+      <div className="grid gap-3">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 flex items-center justify-center bg-blue-50 text-blue-500 rounded-md">
+            <BrandTwitter size={20} />
+          </div>
+          <div className="flex-1">
+            <Label htmlFor="twitter" className="sr-only">Twitter</Label>
+            <Input
+              id="twitter"
+              placeholder="Twitter URL"
+              value={twitterUrl}
+              onChange={(e) => setTwitterUrl(e.target.value)}
+              className="focus-blue"
+            />
+          </div>
+        </div>
+        
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 flex items-center justify-center bg-pink-50 text-pink-500 rounded-md">
+            <BrandInstagram size={20} />
+          </div>
+          <div className="flex-1">
+            <Label htmlFor="instagram" className="sr-only">Instagram</Label>
+            <Input
+              id="instagram"
+              placeholder="Instagram URL"
+              value={instagramUrl}
+              onChange={(e) => setInstagramUrl(e.target.value)}
+              className="focus-blue"
+            />
+          </div>
+        </div>
+        
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 flex items-center justify-center bg-gray-100 text-gray-700 rounded-md">
+            <BrandGithub size={20} />
+          </div>
+          <div className="flex-1">
+            <Label htmlFor="github" className="sr-only">GitHub</Label>
+            <Input
+              id="github"
+              placeholder="GitHub URL"
+              value={githubUrl}
+              onChange={(e) => setGithubUrl(e.target.value)}
+              className="focus-blue"
+            />
+          </div>
+        </div>
+        
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 flex items-center justify-center bg-teal-50 text-teal-500 rounded-md">
+            <Globe size={20} />
+          </div>
+          <div className="flex-1">
+            <Label htmlFor="other" className="sr-only">その他</Label>
+            <Input
+              id="other"
+              placeholder="その他のURL"
+              value={otherUrl}
+              onChange={(e) => setOtherUrl(e.target.value)}
+              className="focus-blue"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

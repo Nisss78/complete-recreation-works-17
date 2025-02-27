@@ -37,16 +37,7 @@ export const ProductsList = ({ groupedProducts, onProductClick, sortByLikes }: P
             {products.map((product: Product) => (
               <ProductCard 
                 key={`${product.id}-${date}`}
-                id={product.id}
-                name={product.name}
-                tagline={product.tagline}
-                description={product.description}
-                icon={product.icon}
-                URL={product.URL}
-                tags={product.tags}
-                upvotes={product.upvotes}
-                comments={product.comments}
-                launchDate={product.launchDate}
+                product={product}
                 onClick={() => onProductClick(product)}
               />
             ))}
