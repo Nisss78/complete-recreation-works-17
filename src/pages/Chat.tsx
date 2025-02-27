@@ -1,6 +1,5 @@
 
 import { useState, useRef, useEffect } from "react";
-import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   ArrowLeft,
@@ -10,8 +9,7 @@ import {
   Share,
   Info, 
   MoreHorizontal,
-  ArrowUp,
-  RotateCcw
+  ArrowUp
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -33,9 +31,7 @@ const ChatPage = () => {
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [apiKey] = useState<string>(DEFAULT_API_KEY);
-  const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
   const [hasStartedChat, setHasStartedChat] = useState(false);
   const [useWebSearch, setUseWebSearch] = useState(false);
@@ -44,19 +40,6 @@ const ChatPage = () => {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
-  // テキストエリアの高さを自動調整
-  useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      if (inputValue) {
-        textareaRef.current.style.height = Math.min(
-          textareaRef.current.scrollHeight,
-          140
-        ) + "px";
-      }
-    }
-  }, [inputValue]);
 
   // 入力時にチャットモードに変更
   useEffect(() => {
@@ -207,22 +190,34 @@ const ChatPage = () => {
           今日はどのようにお手伝いしましょうか？
         </p>
         
-        {/* 入力エリア - クリップアイコンを削除、UI改善 */}
+        {/* 入力エリア - 修正済み */}
         <div className="w-full max-w-2xl mb-4">
           <div className="relative bg-gray-50 rounded-2xl shadow-sm">
-            <textarea
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={handleKeyPress}
-              placeholder="メッセージを入力..."
-              className="w-full resize-none min-h-[60px] rounded-2xl pl-4 pr-14 py-4 focus:outline-none bg-gray-50 border-none"
-              style={{ height: inputValue ? Math.min(Math.max(60, inputValue.split('\n').length * 24), 140) + 'px' : '60px' }}
-            />
+            <div className="relative">
+              <div 
+                contentEditable={true}
+                className="w-full min-h-[60px] rounded-2xl pl-4 pr-14 py-4 focus:outline-none bg-gray-50 border-none overflow-auto max-h-[140px]"
+                onInput={(e) => setInputValue(e.currentTarget.textContent || "")}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSendMessage();
+                  }
+                }}
+                placeholder="メッセージを入力..."
+                style={{ wordWrap: 'break-word' }}
+              ></div>
+              {!inputValue && (
+                <div className="absolute top-4 left-4 pointer-events-none text-gray-400">
+                  メッセージを入力...
+                </div>
+              )}
+            </div>
             
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
               <Button
                 onClick={handleSendMessage}
-                disabled={inputValue.trim() === ""}
+                disabled={!inputValue.trim()}
                 variant="ghost"
                 size="icon"
                 className="rounded-full text-gray-400 hover:text-gray-600"
@@ -326,25 +321,27 @@ const ChatPage = () => {
         </div>
       </ScrollArea>
 
-      {/* 入力エリア - クリップアイコンを削除、UI改善 */}
+      {/* 入力エリア - 修正済み */}
       <div className="border-t p-3">
         <div className="flex items-center max-w-3xl mx-auto bg-gray-50 rounded-xl px-4 py-2">
-          <textarea
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyDown={handleKeyPress}
-            placeholder="メッセージを入力..."
-            className="w-full resize-none border-none bg-transparent flex-1 py-2 px-0 focus:outline-none min-h-[40px]"
-            style={{ 
-              height: inputValue 
-                ? Math.min(Math.max(40, inputValue.split('\n').length * 24), 140) + 'px' 
-                : '40px' 
-            }}
-          />
+          <div className="relative w-full">
+            <div 
+              contentEditable={true}
+              className="w-full min-h-[40px] py-2 px-0 focus:outline-none bg-transparent overflow-auto max-h-[140px]"
+              onInput={(e) => setInputValue(e.currentTarget.textContent || "")}
+              onKeyDown={handleKeyPress}
+              style={{ wordWrap: 'break-word' }}
+            ></div>
+            {!inputValue && (
+              <div className="absolute top-2 left-0 pointer-events-none text-gray-400">
+                メッセージを入力...
+              </div>
+            )}
+          </div>
           
           <Button
             onClick={handleSendMessage}
-            disabled={inputValue.trim() === "" || isLoading}
+            disabled={!inputValue.trim() || isLoading}
             variant="ghost"
             size="icon"
             className={cn(
