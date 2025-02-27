@@ -168,11 +168,12 @@ const ChatPage = () => {
         </div>
         <div className="flex items-center gap-3">
           <Button 
-            variant="ghost" 
-            size="icon" 
-            className="rounded-full"
+            variant="outline"
+            size="sm"
+            className="rounded-md text-gray-600 border-gray-300 hover:bg-gray-50 hover:border-gray-300 gap-2"
           >
-            <Settings className="h-5 w-5" />
+            <Settings className="h-4 w-4" />
+            <span className="text-sm">設定</span>
           </Button>
         </div>
       </div>
@@ -204,7 +205,6 @@ const ChatPage = () => {
                     handleSendMessage();
                   }
                 }}
-                placeholder="メッセージを入力..."
                 style={{ wordWrap: 'break-word' }}
               ></div>
               {!inputValue && (
@@ -268,17 +268,20 @@ const ChatPage = () => {
         </div>
         <div className="flex items-center gap-1">
           <Button 
-            variant="ghost" 
-            size="icon" 
-            className="rounded-lg"
+            variant="outline"
+            size="sm"
+            className="rounded-md text-gray-600 border-gray-300 hover:bg-gray-50 hover:border-gray-300 gap-2"
           >
-            <Settings className="h-5 w-5" />
+            <Settings className="h-4 w-4" />
+            <span className="text-sm">設定</span>
           </Button>
-          <Button variant="ghost" size="icon" className="rounded-lg">
-            <Share className="h-5 w-5" />
-          </Button>
-          <Button variant="ghost" size="icon" className="rounded-lg">
-            <Info className="h-5 w-5" />
+          <Button 
+            variant="outline"
+            size="sm"
+            className="rounded-md text-gray-600 border-gray-300 hover:bg-gray-50 hover:border-gray-300 gap-2 ml-2"
+          >
+            <Share className="h-4 w-4" />
+            <span className="text-sm">共有</span>
           </Button>
         </div>
       </div>
