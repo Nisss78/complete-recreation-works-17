@@ -1,7 +1,7 @@
 
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Plus, FileText, MessageSquare, Menu, Home } from "lucide-react";
+import { Plus, FileText, MessageSquare, Menu, Home, PenLine } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ProductSubmissionDialog } from "./ProductSubmissionDialog";
 import { supabase } from "@/integrations/supabase/client";
@@ -139,7 +139,7 @@ export const Header = () => {
                       isActive("/articles/new") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
                     )}
                   >
-                    <Plus className="h-5 w-5" />
+                    <PenLine className="h-5 w-5" />
                     <span>記事を書く</span>
                   </Link>
                 </SheetClose>
@@ -209,6 +209,14 @@ export const Header = () => {
           <div className="flex items-center gap-2 sm:gap-4">
             {isAuthenticated ? (
               <>
+                <Button 
+                  onClick={() => navigate('/articles/new')}
+                  className="bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 text-white hidden md:flex items-center gap-2"
+                >
+                  <PenLine className="h-4 w-4" />
+                  <span>記事を投稿</span>
+                </Button>
+                
                 {isAdmin && (
                   <Button 
                     variant="outline"
