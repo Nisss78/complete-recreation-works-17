@@ -1,283 +1,197 @@
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { AvatarUpload } from "./AvatarUpload";
-import { useNavigate } from "react-router-dom";
-import { SocialLinksFields } from "./SocialLinksFields";
-import { formSchema, ProfileFormValues } from "./profileFormSchema";
-import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input"; 
+import { Textarea } from "@/components/ui/textarea";
+import { AvatarUpload } from "@/components/profile/AvatarUpload";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Profile } from "@/types/database";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getInitials } from "@/lib/utils";
-import { AlertCircle } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useParams, useNavigate } from "react-router-dom";
+import { Loader2 } from "lucide-react";
+import { SocialLinksFields } from "./SocialLinksFields";
 
-interface ProfileFormProps {
-  onSuccess?: () => void;
-}
-
-export const ProfileForm = ({ onSuccess }: ProfileFormProps) => {
+export const ProfileForm = () => {
   const { toast } = useToast();
-  const navigate = useNavigate();
   const { t } = useLanguage();
+  const navigate = useNavigate();
+  const { id: profileId } = useParams();
+  const [userId, setUserId] = useState<string | null>(null);
+  const [username, setUsername] = useState("");
+  const [bio, setBio] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [twitterUrl, setTwitterUrl] = useState("");
+  const [instagramUrl, setInstagramUrl] = useState("");
+  const [githubUrl, setGithubUrl] = useState("");
+  const [otherUrl, setOtherUrl] = useState("");
 
-  const { data: profile, isLoading } = useQuery({
-    queryKey: ["profile"],
-    queryFn: async () => {
-      const session = await supabase.auth.getSession();
-      const userId = session.data.session?.user.id;
-      
-      if (!userId) {
-        throw new Error("Not authenticated");
-      }
+  // Get the current user ID
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUserId(session?.user?.id || null);
+    };
 
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userId)
-        .single();
+    getCurrentUser();
+  }, []);
 
-      if (error) throw error;
-      return data as Profile;
-    },
-  });
+  // If we're on a profile page (not settings), fetch the profile
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      setIsLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", userId)
+          .single();
 
-  const form = useForm<ProfileFormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: profile?.username || "",
-      bio: profile?.bio || "",
-      avatar_url: profile?.avatar_url || "",
-      avatar_position: profile?.avatar_position || "center",
-      twitter_url: profile?.twitter_url || "",
-      instagram_url: profile?.instagram_url || "",
-      github_url: profile?.github_url || "",
-      other_url: profile?.other_url || "",
-    },
-    values: {
-      username: profile?.username || "",
-      bio: profile?.bio || "",
-      avatar_url: profile?.avatar_url || "",
-      avatar_position: profile?.avatar_position || "center",
-      twitter_url: profile?.twitter_url || "",
-      instagram_url: profile?.instagram_url || "",
-      github_url: profile?.github_url || "",
-      other_url: profile?.other_url || "",
-    }
-  });
-
-  const onSubmit = async (values: ProfileFormValues) => {
-    const session = await supabase.auth.getSession();
-    const userId = session.data.session?.user.id;
-
-    if (!userId) {
-      console.error("User is not authenticated");
-      toast({
-        title: t("error.occurred"),
-        description: t("error.unauthorized"),
-        variant: "destructive",
-      });
-      return;
-    }
-
-    try {
-      const changedFields = Object.entries(values).reduce((acc, [key, value]) => {
-        const originalValue = profile?.[key as keyof typeof profile];
-        if (value !== originalValue) {
-          acc[key] = value;
+        if (error) {
+          throw error;
         }
-        return acc;
-      }, {} as Record<string, any>);
 
-      if (Object.keys(changedFields).length === 0) {
+        setUsername(data.username || "");
+        setBio(data.bio || "");
+        setAvatarUrl(data.avatar_url);
+        setTwitterUrl(data.twitter_url || "");
+        setInstagramUrl(data.instagram_url || "");
+        setGithubUrl(data.github_url || "");
+        setOtherUrl(data.other_url || "");
+      } catch (error) {
+        console.error("Error fetching profile:", error);
         toast({
-          title: t("common.warning"),
-          description: t("profile.noChanges"),
+          title: t("error.fetchProfile"),
+          variant: "destructive",
         });
-        navigate("/profile");
-        return;
+      } finally {
+        setIsLoading(false);
       }
+    };
 
+    if (userId) {
+      fetchUserProfile();
+    }
+  }, [userId, toast, t]);
+
+  const handleSave = async () => {
+    if (!userId) return;
+
+    setIsSaving(true);
+    try {
       const { error } = await supabase
         .from("profiles")
         .update({
-          ...changedFields,
-          updated_at: new Date().toISOString(),
+          username,
+          bio,
+          avatar_url: avatarUrl,
+          twitter_url: twitterUrl || null,
+          instagram_url: instagramUrl || null,
+          github_url: githubUrl || null,
+          other_url: otherUrl || null,
+          updated_at: new Date(),
         })
         .eq("id", userId);
 
-      if (error) {
-        throw error;
-      }
+      if (error) throw error;
 
       toast({
-        title: t("success.completed"),
-        description: t("success.profileUpdated"),
+        title: t("success.profileUpdated"),
       });
 
-      onSuccess?.();
-      navigate("/profile");
+      // Redirect to profile page after saving from settings
+      if (!profileId) {
+        navigate(`/profile`);
+      }
     } catch (error) {
       console.error("Error updating profile:", error);
       toast({
         title: t("error.occurred"),
-        description: t("error.occurred"),
         variant: "destructive",
       });
+    } finally {
+      setIsSaving(false);
     }
   };
 
   const handleAvatarUpload = (url: string) => {
-    form.setValue("avatar_url", url);
-  };
-
-  const handlePositionChange = (position: string) => {
-    form.setValue("avatar_position", position);
+    setAvatarUrl(url);
   };
 
   if (isLoading) {
     return (
-      <div className="animate-pulse space-y-4">
-        <div className="h-12 bg-gray-200 rounded" />
-        <div className="h-32 bg-gray-200 rounded" />
-        <div className="h-24 bg-gray-200 rounded" />
+      <div className="text-center py-8">
+        <Loader2 className="h-8 w-8 animate-spin mx-auto text-gray-500" />
       </div>
     );
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="flex flex-col md:flex-row gap-6">
-          <div className="md:w-1/3">
-            <Card>
-              <CardHeader>
-                <CardTitle>{t('profile.avatar')}</CardTitle>
-                <CardDescription>
-                  {t('profile.avatarSize')}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="flex flex-col items-center">
-                <FormField
-                  control={form.control}
-                  name="avatar_url"
-                  render={({ field }) => (
-                    <FormItem className="w-full">
-                      <FormControl>
-                        <AvatarUpload 
-                          onUpload={handleAvatarUpload} 
-                          onPositionChange={handlePositionChange}
-                          currentUrl={field.value}
-                          currentPosition={form.getValues("avatar_position")}
-                          username={profile?.username || ""}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">{t("profile.edit")}</h2>
+      </div>
+
+      <div className="space-y-8">
+        <div className="flex flex-col gap-6">
+          <div className="grid gap-2">
+            <Label htmlFor="username">{t("profile.username")}</Label>
+            <Input
+              id="username"
+              placeholder={t("profile.usernamePlaceholder")}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
           </div>
 
-          <div className="md:w-2/3 space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>{t('settings.profileSettings')}</CardTitle>
-                <CardDescription>
-                  {t('profile.usernamePlaceholder')}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="username"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t('profile.username')}</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder={t('profile.usernamePlaceholder')} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="bio"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t('profile.bio')}</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          {...field}
-                          placeholder={t('profile.bioPlaceholder')}
-                          className="resize-none"
-                          rows={4}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
-
-            <Accordion type="single" collapsible defaultValue="social">
-              <AccordionItem value="social">
-                <AccordionTrigger>
-                  {t('profile.socialLinks')}
-                </AccordionTrigger>
-                <AccordionContent>
-                  <SocialLinksFields form={form} />
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-
-            {form.formState.errors && Object.keys(form.formState.errors).length > 0 && (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>{t('error.occurred')}</AlertTitle>
-                <AlertDescription>
-                  {t('error.required')}
-                </AlertDescription>
-              </Alert>
-            )}
-
-            <Button type="submit" className="w-full">
-              {t('profile.save')}
-            </Button>
+          <div className="grid gap-2">
+            <Label htmlFor="bio">{t("profile.bio")}</Label>
+            <Textarea
+              id="bio"
+              placeholder={t("profile.bioPlaceholder")}
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              rows={4}
+            />
           </div>
+
+          <div className="flex flex-col gap-2 items-start">
+            <Label htmlFor="avatar">{t("profile.avatar")}</Label>
+            <AvatarUpload
+              onUploadComplete={handleAvatarUpload}
+              currentAvatarUrl={avatarUrl}
+              onUploadStart={() => setIsUploading(true)}
+              onUploadEnd={() => setIsUploading(false)}
+            />
+          </div>
+
+          {/* Social links section */}
+          <SocialLinksFields
+            twitterUrl={twitterUrl}
+            instagramUrl={instagramUrl}
+            githubUrl={githubUrl}
+            otherUrl={otherUrl}
+            setTwitterUrl={setTwitterUrl}
+            setInstagramUrl={setInstagramUrl}
+            setGithubUrl={setGithubUrl}
+            setOtherUrl={setOtherUrl}
+          />
         </div>
-      </form>
-    </Form>
+
+        <div className="flex justify-end">
+          <Button
+            type="button"
+            onClick={handleSave}
+            disabled={isSaving || isUploading}
+          >
+            {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {t("profile.save")}
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 };

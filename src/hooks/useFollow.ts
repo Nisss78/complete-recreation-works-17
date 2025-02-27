@@ -1,102 +1,96 @@
+
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
-import { useLanguage } from "@/contexts/LanguageContext";
 
-export const useFollow = (profileId: string) => {
-  const [isFollowing, setIsFollowing] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const { toast } = useToast();
-  const { t } = useLanguage();
+export const useFollow = (targetUserId: string) => {
+  const [isFollowing, setIsFollowing] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   useEffect(() => {
-    const checkFollowStatus = async () => {
-      try {
-        if (!profileId) {
+    const getCurrentUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      const userId = session?.user?.id;
+      setCurrentUserId(userId);
+
+      if (userId) {
+        try {
+          // Check if 'follows' table exists
+          const { count, error } = await supabase
+            .from('follows')
+            .select('*', { count: 'exact', head: true })
+            .eq('follower_id', userId)
+            .eq('following_id', targetUserId);
+
+          if (error) {
+            console.error('Error checking follow status:', error);
+            setIsFollowing(false);
+          } else {
+            setIsFollowing(count !== null && count > 0);
+          }
+        } catch (error) {
+          console.error('Error checking follow status:', error);
+          setIsFollowing(false);
+        } finally {
           setIsLoading(false);
-          return;
         }
-
-        const { data: session } = await supabase.auth.getSession();
-        if (!session.session) {
-          setIsLoading(false);
-          return;
-        }
-
-        const { data: follow } = await supabase
-          .from('follows')
-          .select('*')
-          .eq('follower_id', session.session.user.id)
-          .eq('following_id', profileId)
-          .maybeSingle();
-
-        setIsFollowing(!!follow);
-      } catch (error) {
-        console.error('Error checking follow status:', error);
-      } finally {
+      } else {
         setIsLoading(false);
       }
     };
 
-    checkFollowStatus();
-  }, [profileId]);
+    getCurrentUser();
+  }, [targetUserId]);
 
   const toggleFollow = async () => {
-    try {
-      if (!profileId) {
-        console.error('Profile ID is undefined');
-        return;
-      }
+    if (!currentUserId) {
+      throw new Error('User not authenticated');
+    }
 
-      const { data: session } = await supabase.auth.getSession();
-      if (!session.session) {
-        toast({
-          title: t('error.occurred'),
-          description: t('follow.loginRequired'),
-          variant: "destructive",
-        });
+    setIsLoading(true);
+
+    try {
+      // Check if follows table exists
+      const { error: checkError } = await supabase
+        .from('follows')
+        .select('id', { count: 'exact', head: true });
+
+      if (checkError) {
+        console.error('Follows table might not exist:', checkError);
+        // Table doesn't exist, so we can't follow/unfollow
+        setIsLoading(false);
         return;
       }
 
       if (isFollowing) {
+        // Unfollow
         const { error } = await supabase
           .from('follows')
           .delete()
-          .eq('follower_id', session.session.user.id)
-          .eq('following_id', profileId);
-
+          .eq('follower_id', currentUserId)
+          .eq('following_id', targetUserId);
+        
         if (error) throw error;
-
         setIsFollowing(false);
-        toast({
-          title: t('success.completed'),
-          description: t('follow.unfollowed'),
-        });
       } else {
+        // Follow
         const { error } = await supabase
           .from('follows')
           .insert({
-            follower_id: session.session.user.id,
-            following_id: profileId,
+            follower_id: currentUserId,
+            following_id: targetUserId,
           });
-
+        
         if (error) throw error;
-
         setIsFollowing(true);
-        toast({
-          title: t('success.completed'),
-          description: t('follow.success'),
-        });
       }
     } catch (error) {
       console.error('Error toggling follow:', error);
-      toast({
-        title: t('error.occurred'),
-        description: t('error.tryAgain'),
-        variant: "destructive",
-      });
+      throw error;
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  return { isFollowing, isLoading, toggleFollow };
+  return { isFollowing, toggleFollow, isLoading };
 };

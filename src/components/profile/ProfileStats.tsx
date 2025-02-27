@@ -22,45 +22,78 @@ export const ProfileStats = ({ userId }: ProfileStatsProps) => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        // フォロワー取得
-        const { data: followersData, error: followersError } = await supabase
-          .from('follows')
-          .select(`
-            follower:profiles!follows_follower_id_fkey (
-              id,
-              username,
-              avatar_url
-            )
-          `)
-          .eq('following_id', userId);
-
-        if (followersError) throw followersError;
-
-        // フォロー中取得
-        const { data: followingData, error: followingError } = await supabase
-          .from('follows')
-          .select(`
-            following:profiles!follows_following_id_fkey (
-              id,
-              username,
-              avatar_url
-            )
-          `)
-          .eq('follower_id', userId);
-
-        if (followingError) throw followingError;
-
-        // 投稿数取得
+        // 記事数を取得
         const { count, error: postsError } = await supabase
           .from('articles')
           .select('*', { count: 'exact' })
           .eq('user_id', userId);
 
         if (postsError) throw postsError;
-
-        setFollowers(followersData.map(item => item.follower));
-        setFollowing(followingData.map(item => item.following));
         setPosts(count || 0);
+
+        // フォロワーとフォロー中の関連テーブルが存在しない場合を考慮
+        const checkFollowsTable = async () => {
+          try {
+            // followsテーブルが存在するか確認
+            const { error: followsError } = await supabase
+              .from('follows')
+              .select('id')
+              .limit(1);
+
+            if (followsError) {
+              console.log("Follows table might not exist or is not accessible:", followsError);
+              setFollowers([]);
+              setFollowing([]);
+              return false;
+            }
+            return true;
+          } catch (error) {
+            console.error("Error checking follows table:", error);
+            return false;
+          }
+        };
+
+        const followsTableExists = await checkFollowsTable();
+        
+        if (followsTableExists) {
+          // フォロワー取得
+          const { data: followersData } = await supabase
+            .from('follows')
+            .select('follower_id')
+            .eq('following_id', userId);
+
+          // フォロワーのプロフィール情報を取得
+          if (followersData && followersData.length > 0) {
+            const followerIds = followersData.map(item => item.follower_id);
+            const { data: followerProfiles } = await supabase
+              .from('profiles')
+              .select('id, username, avatar_url')
+              .in('id', followerIds);
+              
+            setFollowers(followerProfiles || []);
+          } else {
+            setFollowers([]);
+          }
+
+          // フォロー中取得
+          const { data: followingData } = await supabase
+            .from('follows')
+            .select('following_id')
+            .eq('follower_id', userId);
+
+          // フォロー中のプロフィール情報を取得
+          if (followingData && followingData.length > 0) {
+            const followingIds = followingData.map(item => item.following_id);
+            const { data: followingProfiles } = await supabase
+              .from('profiles')
+              .select('id, username, avatar_url')
+              .in('id', followingIds);
+              
+            setFollowing(followingProfiles || []);
+          } else {
+            setFollowing([]);
+          }
+        }
       } catch (error) {
         console.error('Error fetching profile stats:', error);
         toast({
@@ -72,7 +105,9 @@ export const ProfileStats = ({ userId }: ProfileStatsProps) => {
       }
     };
 
-    fetchStats();
+    if (userId) {
+      fetchStats();
+    }
   }, [userId, toast, t]);
 
   if (loading) {
@@ -113,7 +148,7 @@ export const ProfileStats = ({ userId }: ProfileStatsProps) => {
           <div className="space-y-2">
             <h4 className="font-medium text-sm">{t("profile.followers")}</h4>
             {followers.length === 0 ? (
-              <p className="text-sm text-gray-500">まだフォロワーがいません</p>
+              <p className="text-sm text-gray-500">{t("profile.noFollowers")}</p>
             ) : (
               <div className="space-y-2">
                 {followers.map((follower) => (
@@ -142,7 +177,7 @@ export const ProfileStats = ({ userId }: ProfileStatsProps) => {
           <div className="space-y-2">
             <h4 className="font-medium text-sm">{t("profile.following")}</h4>
             {following.length === 0 ? (
-              <p className="text-sm text-gray-500">まだ誰もフォローしていません</p>
+              <p className="text-sm text-gray-500">{t("profile.noFollowing")}</p>
             ) : (
               <div className="space-y-2">
                 {following.map((followed) => (

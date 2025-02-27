@@ -1,8 +1,14 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { 
+  Tabs, 
+  TabsContent, 
+  TabsList, 
+  TabsTrigger 
+} from "@/components/ui/tabs";
 import { ProfileForm } from "@/components/profile/ProfileForm";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -44,14 +50,7 @@ const SettingsPage = () => {
 
   const handleLanguageChange = async (value: string) => {
     try {
-      if (userId) {
-        await supabase
-          .from('profiles')
-          .update({ preferred_language: value })
-          .eq('id', userId);
-      }
-      
-      setLanguage(value as 'en' | 'ja');
+      await setLanguage(value as 'en' | 'ja');
       toast({
         title: t('success.languageUpdated'),
       });
@@ -112,7 +111,7 @@ const SettingsPage = () => {
             </TabsList>
             <TabsContent value="profile" className="p-0">
               <div className="p-4 sm:p-6 bg-white border border-gray-200 rounded-xl shadow-sm">
-                <ProfileForm userId={userId} />
+                <ProfileForm />
               </div>
             </TabsContent>
             <TabsContent value="account" className="p-0">
@@ -120,6 +119,7 @@ const SettingsPage = () => {
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('settings.accountSettings')}</h2>
                 <p className="text-gray-500">{t('settings.accountDescription')}</p>
                 
+                {/* アカウント設定項目をここに追加 */}
                 <div className="mt-4">
                   <p className="text-sm text-gray-500 italic">{t('settings.comingSoon')}</p>
                 </div>

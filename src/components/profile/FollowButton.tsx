@@ -2,111 +2,82 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { useFollow } from "@/hooks/useFollow";
 import { supabase } from "@/integrations/supabase/client";
+import { Loader2 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-export const FollowButton = ({ targetUserId }: { targetUserId: string }) => {
-  const [isFollowing, setIsFollowing] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [userId, setUserId] = useState<string | null>(null);
+interface FollowButtonProps {
+  targetUserId: string;
+}
+
+export const FollowButton = ({ targetUserId }: FollowButtonProps) => {
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const { isFollowing, toggleFollow, isLoading } = useFollow(targetUserId);
   const { toast } = useToast();
   const { t } = useLanguage();
 
   useEffect(() => {
-    const checkAuthAndFollowStatus = async () => {
-      // ログインステータスの確認
+    const getCurrentUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      const currentUserId = session?.user?.id;
-      setUserId(currentUserId);
-
-      if (!currentUserId) {
-        setIsLoading(false);
-        return;
-      }
-
-      // フォロー状態の確認
-      try {
-        const { data, error } = await supabase
-          .from('follows')
-          .select('*')
-          .eq('follower_id', currentUserId)
-          .eq('following_id', targetUserId)
-          .maybeSingle();
-
-        if (error) throw error;
-        setIsFollowing(!!data);
-      } catch (error) {
-        console.error('Error checking follow status:', error);
-        toast({
-          title: t("error.unauthorized"),
-          variant: "destructive",
-        });
-      } finally {
-        setIsLoading(false);
-      }
+      setCurrentUserId(session?.user?.id || null);
     };
 
-    checkAuthAndFollowStatus();
-  }, [targetUserId, toast, t]);
+    getCurrentUser();
+  }, []);
 
-  const handleFollowToggle = async () => {
-    if (!userId) {
-      toast({
-        title: t("follow.loginRequired"),
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsLoading(true);
-
+  const handleFollow = async () => {
     try {
-      if (isFollowing) {
-        // フォロー解除
-        const { error } = await supabase
-          .from('follows')
-          .delete()
-          .eq('follower_id', userId)
-          .eq('following_id', targetUserId);
-
-        if (error) throw error;
-        setIsFollowing(false);
-        toast({
-          title: t("success.unfollowed"),
-        });
-      } else {
-        // フォロー
-        const { error } = await supabase
-          .from('follows')
-          .insert({
-            follower_id: userId,
-            following_id: targetUserId,
-          });
-
-        if (error) throw error;
-        setIsFollowing(true);
+      await toggleFollow();
+      if (!isFollowing) {
         toast({
           title: t("success.followed"),
         });
+      } else {
+        toast({
+          title: t("success.unfollowed"),
+        });
       }
     } catch (error) {
-      console.error('Error following/unfollowing user:', error);
+      console.error('Error toggling follow:', error);
       toast({
-        title: t("error.followAction"),
+        title: t("error.occurred"),
         variant: "destructive",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
+  // 自分自身のプロフィールの場合はボタンを表示しない
+  if (currentUserId === targetUserId) {
+    return null;
+  }
+
+  // ログインしていない場合はボタンを無効化
+  if (!currentUserId) {
+    return (
+      <Button 
+        variant="outline" 
+        disabled 
+        onClick={() => {}}
+      >
+        {t("profile.follow")}
+      </Button>
+    );
+  }
+
   return (
     <Button
-      onClick={handleFollowToggle}
-      disabled={isLoading}
       variant={isFollowing ? "outline" : "default"}
+      onClick={handleFollow}
+      disabled={isLoading}
     >
-      {isFollowing ? t("follow.following") : t("follow.button")}
+      {isLoading ? (
+        <Loader2 className="h-4 w-4 animate-spin" />
+      ) : isFollowing ? (
+        t("profile.unfollow")
+      ) : (
+        t("profile.follow")
+      )}
     </Button>
   );
 };
