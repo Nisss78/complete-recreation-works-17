@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Header } from "@/components/Header";
@@ -105,14 +106,14 @@ const ProfilePage = () => {
 
   if (profileLoading || articlesLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
+      <div className="min-h-screen bg-white">
         <Header />
-        <main className="container max-w-4xl mx-auto py-8 px-4">
+        <main className="container max-w-4xl mx-auto py-4 sm:py-8 px-4 sm:px-6">
           <div className="animate-pulse space-y-4">
-            <div className="h-32 bg-white/50 rounded-xl" />
+            <div className="h-32 bg-gray-100 rounded-xl" />
             <div className="space-y-4">
               {[...Array(3)].map((_, i) => (
-                <div key={i} className="h-32 bg-white/50 rounded-xl" />
+                <div key={i} className="h-32 bg-gray-100 rounded-xl" />
               ))}
             </div>
           </div>
@@ -126,38 +127,40 @@ const ProfilePage = () => {
   if (!targetId || !profile) return null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
+    <div className="min-h-screen bg-white">
       <Header />
-      <main className="container max-w-4xl mx-auto py-8 px-4">
-        <div className="space-y-8">
+      <main className="container max-w-4xl mx-auto py-4 sm:py-8 px-4 sm:px-6">
+        <div className="space-y-6 sm:space-y-8">
           <ProfileHeader 
             profileId={targetId}
             isOwnProfile={isOwnProfile}
           />
           
           <div className="space-y-4">
-            <h2 className="text-2xl font-bold text-gray-900">{t("articles.myPosts")}</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">{t("articles.myPosts")}</h2>
             {articles && articles.length > 0 ? (
-              articles.map((article) => (
-                <ArticleCard 
-                  key={article.id}
-                  id={article.id}
-                  date={formatDate(article.created_at)}
-                  title={article.title}
-                  author={{
-                    id: article.profile.id,
-                    name: article.profile.username,
-                    avatar: article.profile.avatar_url
-                  }}
-                  likes={article.likes_count || 0}
-                  postedAt={formatTimeAgo(article.created_at)}
-                  thumbnail_url={article.thumbnail_url}
-                  showDeleteButton={isOwnProfile}
-                  onDelete={handleArticleDelete}
-                />
-              ))
+              <div className="space-y-4">
+                {articles.map((article) => (
+                  <ArticleCard 
+                    key={article.id}
+                    id={article.id}
+                    date={formatDate(article.created_at)}
+                    title={article.title}
+                    author={{
+                      id: article.profile.id,
+                      name: article.profile.username,
+                      avatar: article.profile.avatar_url
+                    }}
+                    likes={article.likes_count || 0}
+                    postedAt={formatTimeAgo(article.created_at)}
+                    thumbnail_url={article.thumbnail_url}
+                    showDeleteButton={isOwnProfile}
+                    onDelete={handleArticleDelete}
+                  />
+                ))}
+              </div>
             ) : (
-              <div className="text-center py-12 text-gray-500">
+              <div className="text-center py-10 sm:py-12 text-gray-500 bg-gray-50 rounded-xl">
                 {t("articles.noPosts")}
               </div>
             )}

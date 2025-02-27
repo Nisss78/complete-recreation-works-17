@@ -1,47 +1,21 @@
-
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProfileForm } from "@/components/profile/ProfileForm";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { useQuery } from "@tanstack/react-query";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from "@/components/ui/select";
-import { 
-  Tabs, 
-  TabsContent, 
-  TabsList, 
-  TabsTrigger 
-} from "@/components/ui/tabs";
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle 
-} from "@/components/ui/card";
-import { 
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Globe, User } from "lucide-react";
-import type { Language } from "@/contexts/LanguageContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const SettingsPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [userId, setUserId] = useState<string | null>(null);
   const { language, setLanguage, t } = useLanguage();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -68,39 +42,21 @@ const SettingsPage = () => {
     };
   }, [navigate]);
 
-  const { data: profile, isLoading, error, refetch } = useQuery({
-    queryKey: ["profile", userId],
-    queryFn: async () => {
-      if (!userId) return null;
-      
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userId)
-        .maybeSingle();
-
-      if (error) {
-        toast({
-          title: t('error.occurred'),
-          description: t('error.fetchProfile'),
-          variant: "destructive",
-        });
-        throw error;
-      }
-
-      return data;
-    },
-    enabled: !!userId,
-  });
-
-  const handleLanguageChange = async (newLanguage: Language) => {
+  const handleLanguageChange = async (value: string) => {
     try {
-      await setLanguage(newLanguage);
+      if (userId) {
+        await supabase
+          .from('profiles')
+          .update({ preferred_language: value })
+          .eq('id', userId);
+      }
+      
+      setLanguage(value as 'en' | 'ja');
       toast({
         title: t('success.languageUpdated'),
-        description: t('success.languageUpdated'),
       });
     } catch (error) {
+      console.error('Error updating language preference:', error);
       toast({
         title: t('error.occurred'),
         description: t('error.updateLanguage'),
@@ -109,13 +65,13 @@ const SettingsPage = () => {
     }
   };
 
-  if (isLoading) {
+  if (!userId) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
+      <div className="min-h-screen bg-white">
         <Header />
         <main className="container max-w-4xl mx-auto py-8 px-4">
-          <div className="animate-pulse space-y-4">
-            <div className="h-64 bg-white/50 rounded-xl" />
+          <div className="flex items-center justify-center h-32">
+            <div className="animate-pulse text-gray-500">{t('common.loading')}</div>
           </div>
         </main>
         <Footer />
@@ -124,81 +80,50 @@ const SettingsPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
+    <div className="min-h-screen bg-white">
       <Header />
-      <main className="container max-w-4xl mx-auto py-8 px-4">
-        <div className="space-y-8">
-          <h1 className="text-2xl font-bold">{t('settings.title')}</h1>
-          
+      <main className="container max-w-4xl mx-auto py-4 sm:py-8 px-4 sm:px-6">
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">{t('common.settings')}</h1>
+            <p className="text-gray-500 mt-1">{t('settings.description')}</p>
+          </div>
+
+          <div className="p-4 sm:p-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-2">{t('settings.language')}</h2>
+              <p className="text-gray-500 mb-4">{t('settings.languageDescription')}</p>
+              <Select value={language} onValueChange={handleLanguageChange}>
+                <SelectTrigger className="w-full sm:w-[280px]">
+                  <SelectValue placeholder={t('settings.selectLanguage')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="en">English</SelectItem>
+                  <SelectItem value="ja">日本語</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
           <Tabs defaultValue="profile" className="w-full">
-            <TabsList className="grid grid-cols-2 mb-6">
-              <TabsTrigger value="profile" className="flex items-center gap-2">
-                <User className="h-4 w-4" />
-                {t('settings.profile')}
-              </TabsTrigger>
-              <TabsTrigger value="preferences" className="flex items-center gap-2">
-                <Globe className="h-4 w-4" />
-                {t('settings.language')}
-              </TabsTrigger>
+            <TabsList className="grid grid-cols-2 sm:w-[400px] mb-4">
+              <TabsTrigger value="profile">{t('common.profile')}</TabsTrigger>
+              <TabsTrigger value="account">{t('common.account')}</TabsTrigger>
             </TabsList>
-            
-            <TabsContent value="profile">
-              <Card>
-                <CardHeader>
-                  <CardTitle>{t('settings.profile')}</CardTitle>
-                  <CardDescription>
-                    {t('settings.profileSettings')}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ProfileForm onSuccess={() => refetch()} />
-                </CardContent>
-              </Card>
+            <TabsContent value="profile" className="p-0">
+              <div className="p-4 sm:p-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+                <ProfileForm userId={userId} />
+              </div>
             </TabsContent>
-            
-            <TabsContent value="preferences">
-              <Card>
-                <CardHeader>
-                  <CardTitle>{t('settings.language')}</CardTitle>
-                  <CardDescription>
-                    {t('settings.selectLanguage')}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="mb-4">
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div className="w-fit">
-                            <Select value={language} onValueChange={handleLanguageChange}>
-                              <SelectTrigger className="w-[180px]">
-                                <SelectValue placeholder={t('settings.selectLanguage')} />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="en">
-                                  <div className="flex items-center gap-2">
-                                    <span>🇺🇸</span>
-                                    <span>English</span>
-                                  </div>
-                                </SelectItem>
-                                <SelectItem value="ja">
-                                  <div className="flex items-center gap-2">
-                                    <span>🇯🇵</span>
-                                    <span>日本語</span>
-                                  </div>
-                                </SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>{t('settings.selectLanguage')}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                </CardContent>
-              </Card>
+            <TabsContent value="account" className="p-0">
+              <div className="p-4 sm:p-6 bg-white border border-gray-200 rounded-xl shadow-sm">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('settings.accountSettings')}</h2>
+                <p className="text-gray-500">{t('settings.accountDescription')}</p>
+                
+                <div className="mt-4">
+                  <p className="text-sm text-gray-500 italic">{t('settings.comingSoon')}</p>
+                </div>
+              </div>
             </TabsContent>
           </Tabs>
         </div>

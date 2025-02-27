@@ -28,6 +28,7 @@ import {
   CollapsibleTrigger 
 } from "@/components/ui/collapsible";
 import { ChevronDown, LogOut, Settings, User } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ProfileHeaderProps {
   profileId: string;
@@ -42,6 +43,7 @@ export const ProfileHeader = ({ profileId, isOwnProfile, onAvatarUpdate }: Profi
   const navigate = useNavigate();
   const { toast } = useToast();
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const fetchProfile = async () => {
