@@ -180,18 +180,13 @@ const ChatPage = () => {
 
   // ウェルカム画面
   const WelcomeScreen = () => (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-white">
       {/* ヘッダー */}
       <div className="flex justify-between items-center p-4">
         <div className="flex items-center gap-2">
-          <div className="flex items-center">
-            <svg className="w-6 h-6 mr-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-              <path d="M7 12L17 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
-            <span className="text-xs text-gray-500">グロック</span>
-          </div>
-          <h1 className="text-xl font-bold">Grok</h1>
+          <Link to="/" className="font-medium text-2xl text-black hover:opacity-90 transition-colors">
+            <span className="text-blue-gradient">Protoduct</span>
+          </Link>
         </div>
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" className="rounded-full">
@@ -205,7 +200,7 @@ const ChatPage = () => {
       
       {/* メインコンテンツ */}
       <div className="flex-1 flex flex-col items-center justify-center px-4">
-        <h2 className="text-2xl font-bold mb-2">Grokへようこそ。</h2>
+        <h2 className="text-2xl font-bold mb-2">Protoductへようこそ</h2>
         <p className="text-lg text-center text-gray-600 mb-10">
           今日はどのようにお手伝いしましょうか？
         </p>
@@ -251,7 +246,7 @@ const ChatPage = () => {
           
           <div className="flex justify-between items-center p-2">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500">Grok 3</span>
+              <span className="text-sm text-gray-500">Gemini Pro</span>
               <ChevronDown className="h-4 w-4 text-gray-500" />
             </div>
           </div>
@@ -262,7 +257,7 @@ const ChatPage = () => {
 
   // チャットUI
   const ChatUI = () => (
-    <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex-1 flex flex-col overflow-hidden bg-white">
       {/* サブヘッダー */}
       <div className="flex items-center justify-between py-2 px-4 border-b border-gray-200">
         <div className="flex items-center gap-2">
@@ -378,7 +373,7 @@ const ChatPage = () => {
   );
 
   return (
-    <div className="flex flex-col h-screen bg-background">
+    <div className="flex flex-col h-screen bg-white">
       {/* チャットが始まっていない場合はウェルカム画面、そうでなければチャットUIを表示 */}
       {!hasStartedChat || messages.length === 0 ? <WelcomeScreen /> : <ChatUI />}
     </div>
