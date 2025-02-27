@@ -1,14 +1,15 @@
-import type { Config } from "tailwindcss";
+
+import { type Config } from "tailwindcss";
+import { fontFamily } from "tailwindcss/defaultTheme";
 
 export default {
   darkMode: ["class"],
   content: [
-    "./pages/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-    "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "./index.html",
+    "./src/components/**/*.{js,ts,jsx,tsx}",
+    "./src/pages/**/*.{js,ts,jsx,tsx}",
   ],
-  prefix: "",
   theme: {
     container: {
       center: true,
@@ -18,8 +19,11 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["Inter var", ...fontFamily.sans],
+        serif: ["Playfair Display", ...fontFamily.serif],
+      },
       colors: {
-        upvote: "#ff6154",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -53,6 +57,18 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        luxury: {
+          navy: "hsl(var(--luxury-navy))",
+          gold: "hsl(var(--luxury-gold))",
+          cream: "hsl(var(--luxury-cream))",
+          charcoal: "hsl(var(--luxury-charcoal))",
+          accent: "hsl(var(--luxury-accent))",
+        },
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
         "accordion-down": {
@@ -63,40 +79,30 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        "fade-in": {
-          "0%": { opacity: "0", transform: "translateY(10px)" },
-          "100%": { opacity: "1", transform: "translateY(0)" },
+        fadeIn: {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '-1000px 0' },
+          '100%': { backgroundPosition: '1000px 0' },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in": "fade-in 0.3s ease-out",
+        fadeIn: 'fadeIn 0.5s ease-out forwards',
+        shimmer: 'shimmer 2s infinite linear',
       },
-      typography: {
-        DEFAULT: {
-          css: {
-            maxWidth: 'none',
-            color: 'inherit',
-            a: {
-              color: '#3182ce',
-              '&:hover': {
-                color: '#2c5282',
-              },
-            },
-            strong: {
-              color: 'inherit',
-            },
-            code: {
-              color: 'inherit',
-              backgroundColor: '#f0f0f0',
-              padding: '0.2em 0.4em',
-              borderRadius: '0.25rem',
-            },
-          },
-        },
+      boxShadow: {
+        luxury: '0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02)',
+        'luxury-hover': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+      },
+      backgroundImage: {
+        'gradient-luxury': 'linear-gradient(135deg, hsl(var(--luxury-navy)) 0%, hsl(var(--luxury-charcoal)) 100%)',
+        'gradient-gold': 'linear-gradient(135deg, hsl(var(--luxury-gold)) 0%, hsl(38, 90%, 45%) 100%)',
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+  plugins: [require("tailwindcss-animate")],
 } satisfies Config;

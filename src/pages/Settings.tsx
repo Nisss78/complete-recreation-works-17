@@ -1,8 +1,14 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { 
+  Tabs, 
+  TabsContent, 
+  TabsList, 
+  TabsTrigger 
+} from "@/components/ui/tabs";
 import { ProfileForm } from "@/components/profile/ProfileForm";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -47,19 +53,19 @@ const SettingsPage = () => {
       if (userId) {
         await supabase
           .from('profiles')
-          .update({ preferred_language: value })
+          .update({ language_preference: value })
           .eq('id', userId);
       }
       
       setLanguage(value as 'en' | 'ja');
       toast({
-        title: t('success.languageUpdated'),
+        title: "言語が更新されました",
       });
     } catch (error) {
       console.error('Error updating language preference:', error);
       toast({
-        title: t('error.occurred'),
-        description: t('error.updateLanguage'),
+        title: "エラーが発生しました",
+        description: "言語の更新中にエラーが発生しました",
         variant: "destructive",
       });
     }
@@ -71,7 +77,7 @@ const SettingsPage = () => {
         <Header />
         <main className="container max-w-4xl mx-auto py-8 px-4">
           <div className="flex items-center justify-center h-32">
-            <div className="animate-pulse text-gray-500">{t('common.loading')}</div>
+            <div className="animate-pulse text-gray-500">読み込み中...</div>
           </div>
         </main>
         <Footer />
@@ -86,16 +92,16 @@ const SettingsPage = () => {
         <div className="space-y-6">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">{t('common.settings')}</h1>
-            <p className="text-gray-500 mt-1">{t('settings.description')}</p>
+            <p className="text-gray-500 mt-1">アカウント設定とプロフィール情報を管理します</p>
           </div>
 
           <div className="p-4 sm:p-6 bg-white border border-gray-200 rounded-xl shadow-sm">
             <div className="mb-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-2">{t('settings.language')}</h2>
-              <p className="text-gray-500 mb-4">{t('settings.languageDescription')}</p>
+              <p className="text-gray-500 mb-4">アプリケーションの表示言語を選択してください</p>
               <Select value={language} onValueChange={handleLanguageChange}>
                 <SelectTrigger className="w-full sm:w-[280px]">
-                  <SelectValue placeholder={t('settings.selectLanguage')} />
+                  <SelectValue placeholder={"言語を選択"} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="en">English</SelectItem>
@@ -112,16 +118,17 @@ const SettingsPage = () => {
             </TabsList>
             <TabsContent value="profile" className="p-0">
               <div className="p-4 sm:p-6 bg-white border border-gray-200 rounded-xl shadow-sm">
-                <ProfileForm userId={userId} />
+                {userId && <ProfileForm userId={userId} />}
               </div>
             </TabsContent>
             <TabsContent value="account" className="p-0">
               <div className="p-4 sm:p-6 bg-white border border-gray-200 rounded-xl shadow-sm">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('settings.accountSettings')}</h2>
-                <p className="text-gray-500">{t('settings.accountDescription')}</p>
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">アカウント設定</h2>
+                <p className="text-gray-500">アカウントのセキュリティと通知設定を管理します</p>
                 
+                {/* アカウント設定項目をここに追加 */}
                 <div className="mt-4">
-                  <p className="text-sm text-gray-500 italic">{t('settings.comingSoon')}</p>
+                  <p className="text-sm text-gray-500 italic">近日公開予定</p>
                 </div>
               </div>
             </TabsContent>
