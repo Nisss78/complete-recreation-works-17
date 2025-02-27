@@ -4,10 +4,10 @@ import { commentTranslations } from "./sections/comments";
 import { followTranslations } from "./sections/follows";
 import { profileTranslations } from "./sections/profile";
 import { articleTranslations } from "./sections/articles";
-import { errorTranslations } from "./sections/error";
+import { error as errorTranslations } from "./sections/error";
 import { settingsTranslations } from "./sections/settings";
 import { bookmarksTranslations } from "./sections/bookmarks";
-import { navTranslations } from "./sections/nav";
+import { nav as navTranslations } from "./sections/nav";
 
 export const en = {
   // Common
@@ -78,7 +78,7 @@ export const en = {
   'nav.register': 'Register',
   'nav.pricing': 'Pricing',
   'nav.chat': 'Chat',
-  ...navTranslations.en,
+  ...navTranslations,
 
   // Auth
   'auth.signUpSuccessTitle': 'Registration Complete',
