@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
@@ -11,7 +10,6 @@ import {
   BarChart2, 
   ExternalLink,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 interface ProductActionsProps {
   productId: number;
@@ -78,19 +76,14 @@ export const ProductActions = ({
         <ExternalLink className="w-4 h-4" />
         {t('product.details.visit')}
       </Button>
-      
       <Button 
-        variant={hasLiked ? "default" : "outline"}
-        className={cn(
-          "flex-1 sm:flex-none gap-2 h-9 px-3 sm:px-4",
-          hasLiked && "bg-red-500 hover:bg-red-600 text-white border-red-500"
-        )}
+        variant="outline" 
+        className="flex-1 sm:flex-none gap-2 h-9 px-3 sm:px-4"
         onClick={onLike}
       >
-        <ArrowUp className="w-4 h-4" />
+        <ArrowUp className={`w-4 h-4 ${hasLiked ? 'text-blue-500' : ''}`} />
         {totalLikes}
       </Button>
-      
       <Button 
         variant="outline" 
         className="flex-1 sm:flex-none gap-2 h-9 px-3 sm:px-4"
@@ -98,19 +91,14 @@ export const ProductActions = ({
         <MessageCircle className="w-4 h-4" />
         {commentCount}
       </Button>
-      
       <Button 
-        variant={isBookmarked ? "default" : "outline"}
+        variant="outline" 
         size="icon"
         onClick={onBookmark}
-        className={cn(
-          "h-9 w-9",
-          isBookmarked && "bg-blue-500 hover:bg-blue-600 text-white border-blue-500"
-        )}
+        className={`h-9 w-9 ${isBookmarked ? 'text-blue-500 border-blue-500' : ''}`}
       >
         <Bookmark className="w-4 h-4" />
       </Button>
-      
       <Button 
         variant="outline" 
         size="icon"
@@ -119,7 +107,6 @@ export const ProductActions = ({
       >
         <Share2 className="w-4 h-4" />
       </Button>
-      
       {!isMobile && (
         <Button 
           variant="outline" 
