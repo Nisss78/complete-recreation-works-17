@@ -20,7 +20,7 @@ interface Author {
 }
 
 interface ContentCardProps {
-  id: string;
+  id: number;
   title: string;
   description?: string;
   thumbnail_url?: string | null;

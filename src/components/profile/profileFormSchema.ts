@@ -1,23 +1,17 @@
-import * as z from "zod";
 
-export const urlSchema = z.string().url({ message: "有効なURLを入力してください" }).optional().or(z.literal(""));
+import { z } from "zod";
 
 export const formSchema = z.object({
   username: z.string().min(2, {
-    message: "ユーザー名は2文字以上で入力してください",
-  }).max(50, {
-    message: "ユーザー名は50文字以下で入力してください",
+    message: "Username must be at least 2 characters.",
   }),
-  bio: z.string().max(160, {
-    message: "自己紹介は160文字以下で入力してください",
-  }).optional(),
-  avatar_url: z.string().url({
-    message: "有効なURLを入力してください",
-  }).optional().or(z.literal("")),
-  twitter_url: urlSchema,
-  instagram_url: urlSchema,
-  github_url: urlSchema,
-  other_url: urlSchema,
+  bio: z.string().optional(),
+  avatar_url: z.string().optional(),
+  avatar_position: z.string().optional(),
+  twitter_url: z.string().url().optional().or(z.literal("")),
+  instagram_url: z.string().url().optional().or(z.literal("")),
+  github_url: z.string().url().optional().or(z.literal("")),
+  other_url: z.string().url().optional().or(z.literal(""))
 });
 
 export type ProfileFormValues = z.infer<typeof formSchema>;
@@ -27,8 +21,13 @@ export interface ProfileData {
   username: string;
   bio: string | null;
   avatar_url: string | null;
+  avatar_position: string | null;
   twitter_url: string | null;
   instagram_url: string | null;
   github_url: string | null;
   other_url: string | null;
+  credits: number;
+  created_at: string;
+  updated_at: string;
+  is_admin: boolean;
 }

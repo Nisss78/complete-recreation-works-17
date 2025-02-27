@@ -1,9 +1,11 @@
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 
 interface CommentHeaderProps {
   username: string;
   avatarUrl?: string;
+  avatarPosition?: string;
   isMaker?: boolean;
   isVerified?: boolean;
 }
@@ -11,13 +13,18 @@ interface CommentHeaderProps {
 export const CommentHeader = ({ 
   username, 
   avatarUrl, 
+  avatarPosition = "center",
   isMaker, 
   isVerified 
 }: CommentHeaderProps) => {
   return (
     <div className="flex items-center gap-2">
       <Avatar className="w-8 h-8">
-        <AvatarImage src={avatarUrl} className="object-cover" />
+        <AvatarImage 
+          src={avatarUrl} 
+          objectPosition={avatarPosition}
+          className="object-cover" 
+        />
         <AvatarFallback>{username[0]?.toUpperCase()}</AvatarFallback>
       </Avatar>
       <div className="flex items-center gap-2">

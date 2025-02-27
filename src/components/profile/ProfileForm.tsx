@@ -75,6 +75,7 @@ export const ProfileForm = ({ onSuccess }: ProfileFormProps) => {
       username: profile?.username || "",
       bio: profile?.bio || "",
       avatar_url: profile?.avatar_url || "",
+      avatar_position: profile?.avatar_position || "center",
       twitter_url: profile?.twitter_url || "",
       instagram_url: profile?.instagram_url || "",
       github_url: profile?.github_url || "",
@@ -84,6 +85,7 @@ export const ProfileForm = ({ onSuccess }: ProfileFormProps) => {
       username: profile?.username || "",
       bio: profile?.bio || "",
       avatar_url: profile?.avatar_url || "",
+      avatar_position: profile?.avatar_position || "center",
       twitter_url: profile?.twitter_url || "",
       instagram_url: profile?.instagram_url || "",
       github_url: profile?.github_url || "",
@@ -156,6 +158,10 @@ export const ProfileForm = ({ onSuccess }: ProfileFormProps) => {
     form.setValue("avatar_url", url);
   };
 
+  const handlePositionChange = (position: string) => {
+    form.setValue("avatar_position", position);
+  };
+
   if (isLoading) {
     return (
       <div className="animate-pulse space-y-4">
@@ -184,16 +190,14 @@ export const ProfileForm = ({ onSuccess }: ProfileFormProps) => {
                   name="avatar_url"
                   render={({ field }) => (
                     <FormItem className="w-full">
-                      <div className="mb-4 flex justify-center">
-                        <Avatar className="h-24 w-24 border-2 border-primary/10">
-                          <AvatarImage src={field.value} alt={profile?.username || ""} />
-                          <AvatarFallback>
-                            {getInitials(profile?.username || "")}
-                          </AvatarFallback>
-                        </Avatar>
-                      </div>
                       <FormControl>
-                        <AvatarUpload onUpload={handleAvatarUpload} />
+                        <AvatarUpload 
+                          onUpload={handleAvatarUpload} 
+                          onPositionChange={handlePositionChange}
+                          currentUrl={field.value}
+                          currentPosition={form.getValues("avatar_position")}
+                          username={profile?.username || ""}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
