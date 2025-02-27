@@ -4,6 +4,10 @@ import { commentTranslations } from "./sections/comments";
 import { followTranslations } from "./sections/follows";
 import { profileTranslations } from "./sections/profile";
 import { articleTranslations } from "./sections/articles";
+import { errorTranslations } from "./sections/error";
+import { settingsTranslations } from "./sections/settings";
+import { bookmarksTranslations } from "./sections/bookmarks";
+import { navTranslations } from "./sections/nav";
 
 export const en = {
   // Common
@@ -74,6 +78,7 @@ export const en = {
   'nav.register': 'Register',
   'nav.pricing': 'Pricing',
   'nav.chat': 'Chat',
+  ...navTranslations.en,
 
   // Auth
   'auth.signUpSuccessTitle': 'Registration Complete',
@@ -126,6 +131,15 @@ export const en = {
   // Articles
   ...articleTranslations.en,
 
+  // Settings
+  ...settingsTranslations.en,
+
+  // Bookmarks
+  ...bookmarksTranslations.en,
+
+  // Errors
+  ...errorTranslations.en,
+
   // Success messages
   'success.completed': 'Completed successfully',
   'success.loggedOut': 'Logged out successfully',
@@ -134,6 +148,8 @@ export const en = {
   'success.imageUploaded': 'Image uploaded successfully',
   'success.profileUpdated': 'Profile updated successfully',
   'success.languageUpdated': 'Language updated successfully',
+  'success.followed': 'Successfully followed user',
+  'success.unfollowed': 'Successfully unfollowed user',
 
   // Error messages
   'error.productSubmission': 'Error submitting product',

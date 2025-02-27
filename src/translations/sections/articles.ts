@@ -17,7 +17,17 @@ export const articleTranslations = {
     'articles.contentPlaceholder': 'Content',
     'articles.uploadThumbnail': 'Upload Thumbnail',
     'articles.confirmDelete': 'Delete Article?',
-    'articles.confirmDeleteDesc': 'This action cannot be undone. The article will be permanently deleted.'
+    'articles.confirmDeleteDesc': 'This action cannot be undone. The article will be permanently deleted.',
+    'articles.all': 'All Articles',
+    'articles.following': 'Following',
+    'articles.noFollowingArticles': 'No articles from people you follow',
+    'articles.noArticles': 'No articles found',
+    'article.details.back': 'Back to articles',
+    'article.details.postedOn': 'Posted on',
+    'article.details.share': 'Share',
+    'articles.new.thumbnailTitle': 'Thumbnail',
+    'articles.new.thumbnailDescription': 'Upload a thumbnail image for your article',
+    'articles.new.thumbnailSize': 'Recommended size: 1200x630 pixels',
   },
   ja: {
     'articles.title': '記事',
@@ -36,6 +46,16 @@ export const articleTranslations = {
     'articles.contentPlaceholder': '内容',
     'articles.uploadThumbnail': 'サムネイルをアップロード',
     'articles.confirmDelete': '記事を削除しますか？',
-    'articles.confirmDeleteDesc': 'この操作は元に戻せません。記事は完全に削除されます。'
+    'articles.confirmDeleteDesc': 'この操作は元に戻せません。記事は完全に削除されます。',
+    'articles.all': '全ての記事',
+    'articles.following': 'フォロー中',
+    'articles.noFollowingArticles': 'フォローしているユーザーの記事はありません',
+    'articles.noArticles': '記事が見つかりませんでした',
+    'article.details.back': '記事一覧に戻る',
+    'article.details.postedOn': '投稿日',
+    'article.details.share': '共有',
+    'articles.new.thumbnailTitle': 'サムネイル',
+    'articles.new.thumbnailDescription': '記事のサムネイル画像をアップロードしてください',
+    'articles.new.thumbnailSize': '推奨サイズ: 1200x630ピクセル',
   }
-} as const;
+};

@@ -4,6 +4,10 @@ import { commentTranslations } from "./sections/comments";
 import { followTranslations } from "./sections/follows";
 import { profileTranslations } from "./sections/profile";
 import { articleTranslations } from "./sections/articles";
+import { errorTranslations } from "./sections/error";
+import { settingsTranslations } from "./sections/settings";
+import { bookmarksTranslations } from "./sections/bookmarks";
+import { navTranslations } from "./sections/nav";
 
 export const ja = {
   // Common
@@ -24,6 +28,7 @@ export const ja = {
   'common.less': '閉じる',
   'common.or': 'または',
   'common.warning': '警告',
+  'common.settings': '設定',
   'common.profile': 'プロフィール',
   'common.logout': 'ログアウト',
   'common.login': 'ログイン',
@@ -45,7 +50,6 @@ export const ja = {
   'common.finish': '完了',
   'common.notifications': '通知',
   'common.messages': 'メッセージ',
-  'common.settings': '設定',
   'common.help': 'ヘルプ',
   'common.share': 'シェア',
   'common.copy': 'コピー',
@@ -74,6 +78,7 @@ export const ja = {
   'nav.register': '登録',
   'nav.pricing': '料金',
   'nav.chat': 'チャット',
+  ...navTranslations.ja,
 
   // Auth
   'auth.signUpSuccessTitle': '登録完了',
@@ -126,6 +131,15 @@ export const ja = {
   // Articles
   ...articleTranslations.ja,
 
+  // Settings
+  ...settingsTranslations.ja,
+
+  // Bookmarks
+  ...bookmarksTranslations.ja,
+
+  // Errors
+  ...errorTranslations.ja,
+
   // Success messages
   'success.completed': '完了しました',
   'success.loggedOut': 'ログアウトしました',
@@ -134,6 +148,8 @@ export const ja = {
   'success.imageUploaded': '画像がアップロードされました',
   'success.profileUpdated': 'プロフィールが更新されました',
   'success.languageUpdated': '言語が更新されました',
+  'success.followed': 'フォローしました',
+  'success.unfollowed': 'フォロー解除しました',
 
   // Error messages
   'error.productSubmission': '製品の提出中にエラーが発生しました',
