@@ -1,6 +1,5 @@
 
 import { useState, useRef, useEffect } from "react";
-import { Header } from "@/components/Header";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
@@ -211,8 +210,6 @@ const ChatPage = () => {
 
   return (
     <div className="flex flex-col h-screen bg-background">
-      <Header />
-
       {/* チャットエリア */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* サブヘッダー */}
