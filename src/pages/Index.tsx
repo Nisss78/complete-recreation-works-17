@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { Header } from "@/components/Header";
@@ -6,7 +5,7 @@ import { Footer } from "@/components/Footer";
 import { ProductDialog } from "@/components/ProductDialog";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { MetaTags } from "@/components/MetaTags";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ProductsList } from "@/components/home/ProductsList";
@@ -52,7 +51,7 @@ const fetchProductsWithImages = async () => {
         upvotes: count || 0,
         comments: 0,
         launchDate: new Date(product.created_at),
-        images: product.product_images?.map(img => img.image_url) || []  // 必ず配列を返すように
+        images: product.product_images?.map(img => img.image_url) || []
       };
     })
   );
@@ -64,8 +63,8 @@ const fetchProductsWithImages = async () => {
 const Index = () => {
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
   const [sortByLikes, setSortByLikes] = useState(false);
-  const { slug } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useLanguage();
 
   const { data: allProducts = [], isLoading, error } = useQuery({
@@ -77,7 +76,7 @@ const Index = () => {
     console.log('Product clicked:', product);
     const productSlug = product.name.toLowerCase().replace(/\s+/g, '-');
     setSelectedProduct(product);
-    navigate(`/products/${productSlug}`);
+    navigate(`/products/${productSlug}`, { replace: true });
   };
 
   const handleDialogClose = () => {
@@ -87,20 +86,22 @@ const Index = () => {
   };
 
   useEffect(() => {
-    if (slug && allProducts.length > 0) {
-      console.log('Looking for product with slug:', slug);
+    // Check for product parameter in URL query
+    const searchParams = new URLSearchParams(location.search);
+    const productSlug = searchParams.get('product');
+    
+    if (productSlug && allProducts.length > 0) {
+      console.log('Looking for product with slug from query param:', productSlug);
       const product = allProducts.find(p => 
-        p.name.toLowerCase().replace(/\s+/g, '-') === slug
+        p.name.toLowerCase().replace(/\s+/g, '-') === productSlug
       );
+      
       if (product) {
-        console.log('Found product:', product);
+        console.log('Found product from query param:', product);
         setSelectedProduct(product);
-      } else {
-        console.log('Product not found for slug:', slug);
-        navigate('/', { replace: true });
       }
     }
-  }, [slug, allProducts, navigate]);
+  }, [location.search, allProducts]);
 
   // ローディング状態の表示
   if (isLoading) {

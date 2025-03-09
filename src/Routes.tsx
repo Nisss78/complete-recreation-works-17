@@ -1,3 +1,4 @@
+
 import { Routes as RouterRoutes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import Articles from "@/pages/Articles";
@@ -10,6 +11,7 @@ import Settings from "@/pages/Settings";
 import Bookmarks from "@/pages/Bookmarks";
 import MyApp from "@/pages/MyApp";
 import Chat from "@/pages/Chat";
+import ProductPage from "@/pages/ProductPage";
 
 export const Routes = () => {
   const location = useLocation();
@@ -31,6 +33,7 @@ export const Routes = () => {
       <Route path="/bookmarks" element={<Bookmarks />} />
       <Route path="/my-app" element={<MyApp />} />
       <Route path="/chat" element={<Chat />} />
+      <Route path="/products/:slug" element={<Index />} />
     </RouterRoutes>
   );
 };
