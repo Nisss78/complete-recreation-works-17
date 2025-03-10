@@ -12,6 +12,8 @@ import Bookmarks from "@/pages/Bookmarks";
 import MyApp from "@/pages/MyApp";
 import Chat from "@/pages/Chat";
 import ProductPage from "@/pages/ProductPage";
+import TermsOfService from "@/pages/TermsOfService";
+import PrivacyPolicy from "@/pages/PrivacyPolicy";
 
 export const Routes = () => {
   const location = useLocation();
@@ -33,7 +35,9 @@ export const Routes = () => {
       <Route path="/bookmarks" element={<Bookmarks />} />
       <Route path="/my-app" element={<MyApp />} />
       <Route path="/chat" element={<Chat />} />
-      <Route path="/products/:slug" element={<Index />} />
+      <Route path="/products/:slug" element={<ProductPage />} />
+      <Route path="/terms" element={<TermsOfService />} />
+      <Route path="/privacy" element={<PrivacyPolicy />} />
     </RouterRoutes>
   );
 };
