@@ -38,7 +38,7 @@ export const ProductActions = ({
 }: ProductActionsProps) => {
   const { toast } = useToast();
   const { t } = useLanguage();
-
+  
   const handleVisit = () => {
     if (productUrl) {
       window.open(productUrl, '_blank');
