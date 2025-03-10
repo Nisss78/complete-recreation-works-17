@@ -12,7 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Bookmark, CreditCard, LogOut, Settings, User } from "lucide-react";
+import { Bookmark, CreditCard, LogOut, MessageSquare, Settings, User } from "lucide-react";
 import { Profile } from "@/types/database";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
@@ -87,6 +87,14 @@ export const UserMenu = ({ userId }: { userId: string }) => {
               <span>{t('nav.viewBookmarks')}</span>
             </Link>
           </DropdownMenuItem>
+          {profile?.is_admin && (
+            <DropdownMenuItem asChild className="cursor-pointer px-3 py-2 mx-1 my-0.5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-md">
+              <Link to="/chat" className="flex items-center">
+                <MessageSquare className="mr-2 h-4 w-4" />
+                <span>AIチャット</span>
+              </Link>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem asChild className="cursor-pointer px-3 py-2 mx-1 my-0.5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-md">
             <Link to="/my-app" className="flex items-center">
               <CreditCard className="mr-2 h-4 w-4" />

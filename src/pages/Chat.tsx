@@ -7,14 +7,13 @@ import {
   SendHorizontal,
   Settings,
   Share,
-  Info, 
-  MoreHorizontal,
   ArrowUp
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 // APIキーを直接設定
 const DEFAULT_API_KEY = "AIzaSyDDFVDO9twnoLpzPr7La9ecmX-PsgLWe7k";
@@ -35,6 +34,56 @@ const ChatPage = () => {
   const { toast } = useToast();
   const [hasStartedChat, setHasStartedChat] = useState(false);
   const [useWebSearch, setUseWebSearch] = useState(false);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [isCheckingAdmin, setIsCheckingAdmin] = useState(true);
+  const navigate = useNavigate();
+
+  // 管理者権限チェック
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      setIsCheckingAdmin(true);
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        navigate("/auth");
+        return;
+      }
+      
+      const { data: profileData, error } = await supabase
+        .from('profiles')
+        .select('is_admin')
+        .eq('id', session.user.id)
+        .single();
+      
+      if (error) {
+        console.error("Error checking admin status:", error);
+        toast({
+          title: "エラーが発生しました",
+          description: "管理者権限の確認に失敗しました。",
+          variant: "destructive",
+        });
+        navigate("/");
+        return;
+      }
+      
+      setIsAdmin(profileData?.is_admin || false);
+      
+      // 管理者でない場合はホームページにリダイレクト
+      if (!profileData?.is_admin) {
+        toast({
+          title: "アクセス権限がありません",
+          description: "このページは管理者のみアクセスできます。",
+          variant: "destructive",
+        });
+        navigate("/");
+        return;
+      }
+      
+      setIsCheckingAdmin(false);
+    };
+
+    checkAdminStatus();
+  }, [navigate, toast]);
 
   // 自動スクロール
   useEffect(() => {
@@ -155,6 +204,25 @@ const ChatPage = () => {
     ));
   };
 
+  // 管理者権限チェック中のローディング表示
+  if (isCheckingAdmin) {
+    return (
+      <div className="flex flex-col h-screen justify-center items-center bg-white">
+        <div className="flex space-x-2 mb-4">
+          <div className="w-3 h-3 rounded-full bg-blue-400 animate-pulse"></div>
+          <div className="w-3 h-3 rounded-full bg-blue-400 animate-pulse delay-100"></div>
+          <div className="w-3 h-3 rounded-full bg-blue-400 animate-pulse delay-200"></div>
+        </div>
+        <p className="text-gray-600">ロード中...</p>
+      </div>
+    );
+  }
+
+  // 管理者でない場合のレンダリングはuseEffectでリダイレクトするので行わない
+  if (!isAdmin) {
+    return null;
+  }
+
   // ウェルカム画面
   const WelcomeScreen = () => (
     <div className="flex flex-col h-full bg-white">
@@ -244,7 +312,7 @@ const ChatPage = () => {
                 <span className="text-xs text-gray-500">ウェブ検索</span>
               </label>
               <Button variant="ghost" size="icon" className="h-6 w-6 rounded-full p-0">
-                <MoreHorizontal className="h-4 w-4 text-gray-500" />
+                <ChevronDown className="h-4 w-4 text-gray-500" />
               </Button>
             </div>
           </div>
@@ -375,7 +443,7 @@ const ChatPage = () => {
               <span className="text-xs text-muted-foreground">ウェブ検索</span>
             </label>
             <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full">
-              <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
+              <ChevronDown className="h-4 w-4 text-muted-foreground" />
             </Button>
           </div>
         </div>

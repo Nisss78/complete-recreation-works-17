@@ -144,18 +144,20 @@ export const Header = () => {
                   </Link>
                 </SheetClose>
                 
-                <SheetClose asChild>
-                  <Link
-                    to="/chat"
-                    className={cn(
-                      "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
-                      isActive("/chat") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
-                    )}
-                  >
-                    <MessageSquare className="h-5 w-5" />
-                    <span>チャット</span>
-                  </Link>
-                </SheetClose>
+                {isAdmin && (
+                  <SheetClose asChild>
+                    <Link
+                      to="/chat"
+                      className={cn(
+                        "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
+                        isActive("/chat") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                      )}
+                    >
+                      <MessageSquare className="h-5 w-5" />
+                      <span>チャット</span>
+                    </Link>
+                  </SheetClose>
+                )}
                 
                 {isAdmin && (
                   <SheetClose asChild>
@@ -200,7 +202,7 @@ export const Header = () => {
             <nav className="hidden md:flex space-x-2">
               <NavItem path="/" icon={<Home className="h-4 w-4" />} label={t('nav.home')} />
               <NavItem path="/articles" icon={<FileText className="h-4 w-4" />} label={t("nav.articles")} />
-              {isAuthenticated && (
+              {isAuthenticated && isAdmin && (
                 <NavItem path="/chat" icon={<MessageSquare className="h-4 w-4" />} label={t("nav.chat")} />
               )}
             </nav>
