@@ -1,4 +1,3 @@
-
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/integrations/supabase/client";
@@ -41,16 +40,10 @@ const AuthPage = () => {
         <div className="text-center mb-8 relative">
           <Link 
             to="/" 
-            className={`absolute left-0 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-900 ${isMobile ? 'p-2' : ''}`}
+            className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center text-gray-600 hover:text-gray-900 hover:underline"
           >
-            <Button 
-              variant="ghost" 
-              size={isMobile ? "icon" : "sm"}
-              className={isMobile ? "w-8 h-8 p-0" : ""}
-            >
-              <ChevronLeft className="w-4 h-4" />
-              {!isMobile && <span className="ml-1">Back to Home</span>}
-            </Button>
+            <ChevronLeft className="w-5 h-5 mr-1" />
+            <span className="text-sm font-medium">Back to Home</span>
           </Link>
           <h1 className="text-3xl font-bold tracking-tight text-gray-900 text-blue-gradient">
             Protoduct
