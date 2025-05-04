@@ -1,0 +1,53 @@
+
+/* スパークルエフェクト用のスタイル */
+.sparkle-effect {
+  position: relative;
+  overflow: visible;
+}
+
+.sparkle-effect::before,
+.sparkle-effect::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background-color: #FDE1D3;
+  opacity: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.sparkle-effect:active::before {
+  transform: translate(-150%, -150%) scale(0);
+  animation: sparkle 0.6s ease-in-out;
+}
+
+.sparkle-effect:active::after {
+  transform: translate(50%, -50%) scale(0);
+  animation: sparkle 0.6s ease-in-out 0.1s;
+}
+
+.sparkle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background-color: #FDE1D3;
+  opacity: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

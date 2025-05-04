@@ -1,9 +1,10 @@
 
-import { ThumbsUp } from "lucide-react";
+import { Star } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
+import { SparkleEffect } from "@/components/ui/sparkle-effect";
 
 interface LikeButtonProps {
   totalLikes: number;
@@ -40,18 +41,20 @@ export const LikeButton = ({ totalLikes, hasLiked, onLike }: LikeButtonProps) =>
   };
 
   return (
-    <Button 
-      variant={hasLiked ? "like-button" : "ghost"}
-      size="sm"
-      className={`h-auto py-1 px-2 ${
-        hasLiked 
-          ? 'text-white' 
-          : 'text-gray-500 hover:text-gray-900 dark:hover:text-gray-100'
-      }`}
-      onClick={handleLike}
-    >
-      <ThumbsUp className="w-4 h-4 mr-1" />
-      <span>{t('comments.likeCount').replace('{count}', String(totalLikes))}</span>
-    </Button>
+    <SparkleEffect>
+      <Button 
+        variant={hasLiked ? "like-button" : "ghost"}
+        size="sm"
+        className={`h-auto py-1 px-2 ${
+          hasLiked 
+            ? 'text-white' 
+            : 'text-gray-500 hover:text-gray-900 dark:hover:text-gray-100'
+        }`}
+        onClick={handleLike}
+      >
+        <Star className="w-4 h-4 mr-1" />
+        <span>{t('comments.likeCount').replace('{count}', String(totalLikes))}</span>
+      </Button>
+    </SparkleEffect>
   );
 };

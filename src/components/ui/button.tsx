@@ -20,7 +20,7 @@ const buttonVariants = cva(
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         "back-link": "text-gray-600 hover:text-gray-900 hover:underline bg-white/80 z-20 relative",
-        "like-button": "bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 text-white font-medium shadow-sm hover:shadow transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0",
+        "like-button": "bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 text-white font-medium shadow-sm hover:shadow transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 sparkle-effect",
         "like-button-outline": "border border-pink-500 text-pink-500 hover:bg-pink-50 hover:text-pink-600 hover:border-pink-600 transition-all duration-200",
       },
       size: {

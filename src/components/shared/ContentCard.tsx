@@ -6,12 +6,13 @@ import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Heart, MessageSquare, MoreVertical, Trash2 } from "lucide-react";
+import { Star, MessageSquare, MoreVertical, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getInitials } from "@/lib/utils";
+import { SparkleEffect } from "@/components/ui/sparkle-effect";
 
 interface Author {
   id: string;
@@ -138,14 +139,16 @@ export function ContentCard({
       
       <CardFooter className="px-4 py-2 border-t flex justify-between">
         <div className="flex items-center gap-4">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="flex items-center gap-1 px-2 py-1 h-auto text-gray-600 hover:text-pink-500"
-          >
-            <Heart className="h-4 w-4" />
-            <span className="text-xs">{likes}</span>
-          </Button>
+          <SparkleEffect>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="flex items-center gap-1 px-2 py-1 h-auto text-gray-600 hover:text-pink-500"
+            >
+              <Star className="h-4 w-4" />
+              <span className="text-xs">{likes}</span>
+            </Button>
+          </SparkleEffect>
           
           <Button 
             variant="ghost" 

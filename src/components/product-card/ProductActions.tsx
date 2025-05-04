@@ -1,9 +1,10 @@
 
-import { MessageCircle, ArrowUp, Share2, Bookmark, BarChart2 } from "lucide-react";
+import { MessageCircle, Star, Share2, Bookmark, BarChart2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { Button } from "@/components/ui/button";
+import { SparkleEffect } from "@/components/ui/sparkle-effect";
 
 interface ProductActionsProps {
   productId: number;
@@ -94,15 +95,17 @@ export function ProductActions({
 
   return (
     <div className="flex items-center gap-1.5 sm:gap-3">
-      <Button 
-        variant={hasLiked ? "like-button" : "like-button-outline"}
-        size="sm"
-        onClick={handleLike}
-        className="flex items-center gap-1 sm:gap-2 rounded-full px-3 sm:px-4"
-      >
-        <ArrowUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-        <span className="text-sm sm:text-base font-medium">{likes}</span>
-      </Button>
+      <SparkleEffect>
+        <Button 
+          variant={hasLiked ? "like-button" : "like-button-outline"}
+          size="sm"
+          onClick={handleLike}
+          className="flex items-center gap-1 sm:gap-2 rounded-full px-3 sm:px-4"
+        >
+          <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          <span className="text-sm sm:text-base font-medium">{likes}</span>
+        </Button>
+      </SparkleEffect>
       
       <Button 
         variant="outline"

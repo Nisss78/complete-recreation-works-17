@@ -1,6 +1,7 @@
 
-import { Heart, Share2 } from "lucide-react";
+import { Star, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SparkleEffect } from "@/components/ui/sparkle-effect";
 
 interface ArticleActionsProps {
   article: {
@@ -34,15 +35,18 @@ export const ArticleActions = ({
           <Share2 className="w-4 h-4 sm:w-5 sm:h-5 mr-1" />
           シェア
         </Button>
-        <Button
-          onClick={onLike}
-          variant={hasLiked ? "like-button" : "like-button-outline"}
-          size="sm"
-          className="rounded-full"
-        >
-          <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${hasLiked ? "fill-current" : ""} mr-1`} />
-          {likesCount}
-        </Button>
+        
+        <SparkleEffect>
+          <Button
+            onClick={onLike}
+            variant={hasLiked ? "like-button" : "like-button-outline"}
+            size="sm"
+            className="rounded-full"
+          >
+            <Star className={`w-4 h-4 sm:w-5 sm:h-5 ${hasLiked ? "fill-current" : ""} mr-1`} />
+            {likesCount}
+          </Button>
+        </SparkleEffect>
       </div>
     </div>
   );

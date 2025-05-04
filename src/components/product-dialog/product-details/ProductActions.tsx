@@ -4,13 +4,14 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { 
-  ArrowUp, 
+  Star, 
   MessageCircle, 
   Share2, 
   Bookmark, 
   BarChart2, 
   ExternalLink,
 } from "lucide-react";
+import { SparkleEffect } from "@/components/ui/sparkle-effect";
 
 interface ProductActionsProps {
   productId: number;
@@ -78,14 +79,16 @@ export const ProductActions = ({
         {t('product.details.visit')}
       </Button>
       
-      <Button 
-        variant={hasLiked ? "like-button" : "like-button-outline"}
-        className="flex-1 sm:flex-none gap-2 h-9 px-3 sm:px-4 rounded-full"
-        onClick={onLike}
-      >
-        <ArrowUp className="w-4 h-4" />
-        {totalLikes}
-      </Button>
+      <SparkleEffect>
+        <Button 
+          variant={hasLiked ? "like-button" : "like-button-outline"}
+          className="flex-1 sm:flex-none gap-2 h-9 px-3 sm:px-4 rounded-full"
+          onClick={onLike}
+        >
+          <Star className="w-4 h-4" />
+          {totalLikes}
+        </Button>
+      </SparkleEffect>
       
       <Button 
         variant="outline" 
