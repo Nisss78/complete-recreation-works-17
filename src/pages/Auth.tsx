@@ -1,3 +1,4 @@
+
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/integrations/supabase/client";
@@ -36,11 +37,16 @@ const AuthPage = () => {
 
   return (
     <div className="min-h-screen w-full bg-white flex items-center justify-center">
-      <div className="w-full max-w-md px-4">
+      <div className="w-full max-w-md px-4 relative">
         <div className="text-center mb-8 relative">
           <Link 
             to="/" 
-            className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center text-gray-600 hover:text-gray-900 hover:underline"
+            className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center text-gray-600 hover:text-gray-900 hover:underline bg-white/80 backdrop-blur-sm rounded-md px-2 py-1 z-10"
+            style={{ 
+              zIndex: 20,
+              position: 'relative',
+              display: 'inline-flex'
+            }}
           >
             <ChevronLeft className="w-5 h-5 mr-1" />
             <span className="text-sm font-medium">Back to Home</span>
