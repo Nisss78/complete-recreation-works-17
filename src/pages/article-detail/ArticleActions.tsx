@@ -1,4 +1,6 @@
+
 import { Heart, Share2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface ArticleActionsProps {
   article: {
@@ -23,22 +25,24 @@ export const ArticleActions = ({
         {new Date(article.created_at).toLocaleDateString('ja-JP')}
       </time>
       <div className="flex items-center gap-4 ml-auto">
-        <button
+        <Button
           onClick={onShare}
-          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 text-sm sm:text-base"
+          variant="ghost"
+          size="sm"
+          className="text-gray-600 hover:text-gray-900 text-sm sm:text-base"
         >
-          <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
+          <Share2 className="w-4 h-4 sm:w-5 sm:h-5 mr-1" />
           シェア
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={onLike}
-          className={`flex items-center gap-2 text-sm sm:text-base ${
-            hasLiked ? "text-pink-500" : "text-gray-600 hover:text-gray-900"
-          }`}
+          variant={hasLiked ? "like-button" : "like-button-outline"}
+          size="sm"
+          className="rounded-full"
         >
-          <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${hasLiked ? "fill-current" : ""}`} />
+          <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${hasLiked ? "fill-current" : ""} mr-1`} />
           {likesCount}
-        </button>
+        </Button>
       </div>
     </div>
   );

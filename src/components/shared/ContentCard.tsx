@@ -138,15 +138,23 @@ export function ContentCard({
       
       <CardFooter className="px-4 py-2 border-t flex justify-between">
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1 text-gray-600">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="flex items-center gap-1 px-2 py-1 h-auto text-gray-600 hover:text-pink-500"
+          >
             <Heart className="h-4 w-4" />
             <span className="text-xs">{likes}</span>
-          </div>
+          </Button>
           
-          <div className="flex items-center gap-1 text-gray-600">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="flex items-center gap-1 px-2 py-1 h-auto text-gray-600 hover:text-blue-500"
+          >
             <MessageSquare className="h-4 w-4" />
             <span className="text-xs">{comments}</span>
-          </div>
+          </Button>
         </div>
         
         {showDeleteButton && (

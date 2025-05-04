@@ -1,7 +1,9 @@
+
 import { MessageCircle, ArrowUp, Share2, Bookmark, BarChart2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useBookmarks } from "@/hooks/useBookmarks";
+import { Button } from "@/components/ui/button";
 
 interface ProductActionsProps {
   productId: number;
@@ -92,52 +94,56 @@ export function ProductActions({
 
   return (
     <div className="flex items-center gap-1.5 sm:gap-3">
-      <button 
-        className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 rounded-full border transition-colors ${
-          hasLiked 
-            ? "text-upvote border-upvote" 
-            : "text-gray-700 hover:text-upvote border-gray-200 hover:border-upvote"
-        }`}
+      <Button 
+        variant={hasLiked ? "like-button" : "like-button-outline"}
+        size="sm"
         onClick={handleLike}
+        className="flex items-center gap-1 sm:gap-2 rounded-full px-3 sm:px-4"
       >
         <ArrowUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
         <span className="text-sm sm:text-base font-medium">{likes}</span>
-      </button>
+      </Button>
       
-      <button 
-        className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 text-gray-700 hover:text-gray-900 rounded-full border border-gray-200 hover:border-gray-400 transition-colors"
+      <Button 
+        variant="outline"
+        size="sm"
         onClick={(e) => handleInteraction(e, 'comment')}
+        className="flex items-center gap-1 sm:gap-2 rounded-full"
       >
         <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
         <span className="text-sm sm:text-base font-medium">{comments}</span>
-      </button>
+      </Button>
 
       {!isMobile && (
         <>
-          <button 
-            className={`p-1.5 sm:p-2 rounded-full border transition-colors ${
-              isBookmarked
-                ? "text-blue-500 border-blue-500"
-                : "text-gray-700 hover:text-gray-900 border-gray-200 hover:border-gray-400"
-            }`}
+          <Button 
+            variant={isBookmarked ? "secondary" : "outline"}
+            size="icon"
             onClick={handleBookmark}
+            className={`p-1.5 sm:p-2 rounded-full h-9 w-9 ${
+              isBookmarked ? "text-blue-500 border-blue-500" : ""
+            }`}
           >
             <Bookmark className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-          </button>
+          </Button>
 
-          <button 
-            className="p-1.5 sm:p-2 text-gray-700 hover:text-gray-900 rounded-full border border-gray-200 hover:border-gray-400 transition-colors"
+          <Button 
+            variant="outline"
+            size="icon"
             onClick={handleShare}
+            className="p-1.5 sm:p-2 rounded-full h-9 w-9"
           >
             <Share2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-          </button>
+          </Button>
 
-          <button 
-            className="p-1.5 sm:p-2 text-gray-700 hover:text-gray-900 rounded-full border border-gray-200 hover:border-gray-400 transition-colors"
+          <Button 
+            variant="outline"
+            size="icon"
             onClick={(e) => handleInteraction(e, 'stats')}
+            className="p-1.5 sm:p-2 rounded-full h-9 w-9"
           >
             <BarChart2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-          </button>
+          </Button>
         </>
       )}
     </div>

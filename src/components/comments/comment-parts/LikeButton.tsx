@@ -1,7 +1,9 @@
+
 import { ThumbsUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Button } from "@/components/ui/button";
 
 interface LikeButtonProps {
   totalLikes: number;
@@ -38,16 +40,18 @@ export const LikeButton = ({ totalLikes, hasLiked, onLike }: LikeButtonProps) =>
   };
 
   return (
-    <button 
-      className={`flex items-center gap-1 transition-colors ${
+    <Button 
+      variant={hasLiked ? "like-button" : "ghost"}
+      size="sm"
+      className={`h-auto py-1 px-2 ${
         hasLiked 
-          ? 'text-blue-500 hover:text-blue-600' 
+          ? 'text-white' 
           : 'text-gray-500 hover:text-gray-900 dark:hover:text-gray-100'
       }`}
       onClick={handleLike}
     >
-      <ThumbsUp className="w-4 h-4" />
+      <ThumbsUp className="w-4 h-4 mr-1" />
       <span>{t('comments.likeCount').replace('{count}', String(totalLikes))}</span>
-    </button>
+    </Button>
   );
 };

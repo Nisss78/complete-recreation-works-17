@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
@@ -69,49 +70,54 @@ export const ProductActions = ({
     <div className="flex flex-wrap gap-2 justify-start">
       <Button 
         variant="outline" 
-        className="flex-1 sm:flex-none gap-2 h-9 px-3 sm:px-4"
+        className="flex-1 sm:flex-none gap-2 h-9 px-3 sm:px-4 rounded-full"
         onClick={handleVisit}
         disabled={!productUrl}
       >
         <ExternalLink className="w-4 h-4" />
         {t('product.details.visit')}
       </Button>
+      
       <Button 
-        variant="outline" 
-        className="flex-1 sm:flex-none gap-2 h-9 px-3 sm:px-4"
+        variant={hasLiked ? "like-button" : "like-button-outline"}
+        className="flex-1 sm:flex-none gap-2 h-9 px-3 sm:px-4 rounded-full"
         onClick={onLike}
       >
-        <ArrowUp className={`w-4 h-4 ${hasLiked ? 'text-blue-500' : ''}`} />
+        <ArrowUp className="w-4 h-4" />
         {totalLikes}
       </Button>
+      
       <Button 
         variant="outline" 
-        className="flex-1 sm:flex-none gap-2 h-9 px-3 sm:px-4"
+        className="flex-1 sm:flex-none gap-2 h-9 px-3 sm:px-4 rounded-full"
       >
         <MessageCircle className="w-4 h-4" />
         {commentCount}
       </Button>
+      
       <Button 
-        variant="outline" 
+        variant={isBookmarked ? "secondary" : "outline"}
         size="icon"
         onClick={onBookmark}
-        className={`h-9 w-9 ${isBookmarked ? 'text-blue-500 border-blue-500' : ''}`}
+        className={`h-9 w-9 rounded-full ${isBookmarked ? "text-blue-500 border-blue-500" : ""}`}
       >
         <Bookmark className="w-4 h-4" />
       </Button>
+      
       <Button 
         variant="outline" 
         size="icon"
         onClick={handleShare}
-        className="h-9 w-9"
+        className="h-9 w-9 rounded-full"
       >
         <Share2 className="w-4 h-4" />
       </Button>
+      
       {!isMobile && (
         <Button 
           variant="outline" 
           size="icon"
-          className="h-9 w-9"
+          className="h-9 w-9 rounded-full"
         >
           <BarChart2 className="w-4 h-4" />
         </Button>
