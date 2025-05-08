@@ -1,165 +1,138 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
+import { CommentHeader } from "./comment-parts/CommentHeader";
+import { Button } from "@/components/ui/button";
+import { MessageSquare, ChevronUp, ChevronDown } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { LikeButton } from "./comment-parts/LikeButton";
+import { ReplyForm } from "./ReplyForm";
+import { CommentReplies } from "./CommentReplies";
 import { useCommentLikes } from "@/hooks/useCommentLikes";
 import { supabase } from "@/integrations/supabase/client";
-import { ReplyForm } from "./ReplyForm";
-import { ReplyList } from "./comment-replies/ReplyList";
 import { useQuery } from "@tanstack/react-query";
-import { CommentHeader } from "./comment-parts/CommentHeader";
-import { LikeButton } from "./comment-parts/LikeButton";
-import { useLanguage } from "@/contexts/LanguageContext";
 
-interface CommentItemProps {
-  comment: {
-    id: number;
-    author: string;
-    username: string;
-    avatar: string;
-    content: string;
-    timestamp: string;
-    upvotes: number;
-    isMaker: boolean;
-    isVerified: boolean;
-    reply_count?: number;
-    user_id?: string;
-  };
-  onCommentAdded: () => void;
-  level?: number;
+interface Comment {
+  id: number;
+  author: string;
+  username: string;
+  avatar: string;
+  content: string;
+  timestamp: string;
+  upvotes: number;
+  isMaker: boolean;
+  isVerified: boolean;
+  reply_count?: number;
+  user_id?: string;
 }
 
-export const CommentItem = ({ comment, onCommentAdded, level = 0 }: CommentItemProps) => {
-  const [showReplyForm, setShowReplyForm] = useState(false);
-  const [replies, setReplies] = useState<any[]>([]);
+interface CommentItemProps {
+  comment: Comment;
+  onCommentAdded: () => void;
+}
+
+export const CommentItem = ({ comment, onCommentAdded }: CommentItemProps) => {
+  const [isReplyFormVisible, setIsReplyFormVisible] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
-  const [isLoadingReplies, setIsLoadingReplies] = useState(false);
-  const { totalLikes, hasLiked, toggleLike } = useCommentLikes(comment.id);
   const { t } = useLanguage();
+  const { totalLikes, hasLiked, toggleLike } = useCommentLikes(comment.id);
 
-  const { data: userProfile } = useQuery({
-    queryKey: ["profile", comment.user_id],
+  // 製品IDを取得するクエリ
+  const { data: productId } = useQuery({
+    queryKey: ['comment-product-id', comment.id],
     queryFn: async () => {
-      if (!comment.user_id) return null;
-      
-      console.log('Fetching profile for comment user:', comment.user_id);
       const { data, error } = await supabase
-        .from("profiles")
-        .select("avatar_url, username")
-        .eq("id", comment.user_id)
-        .maybeSingle();
-
+        .from('product_comments')
+        .select('product_id')
+        .eq('id', comment.id)
+        .single();
+      
       if (error) {
-        console.error('Error fetching user profile:', error);
+        console.error('Error fetching product ID for comment:', error);
         return null;
       }
-
-      console.log('Fetched comment user profile:', data);
-      return data;
-    },
-    enabled: !!comment.user_id
+      
+      return data.product_id;
+    }
   });
 
-  const loadReplies = async () => {
-    try {
-      setIsLoadingReplies(true);
-      const { data: repliesData, error } = await supabase
-        .from('product_comments')
-        .select(`
-          id,
-          content,
-          created_at,
-          user_id
-        `)
-        .eq('parent_id', comment.id)
-        .order('created_at', { ascending: true });
-
-      if (error) throw error;
-
-      const formattedReplies = repliesData.map(reply => ({
-        id: reply.id,
-        author: "ユーザー",
-        username: "@user",
-        avatar: "https://github.com/shadcn.png",
-        content: reply.content,
-        timestamp: new Date(reply.created_at).toLocaleString(),
-        upvotes: 0,
-        isMaker: false,
-        isVerified: false,
-        user_id: reply.user_id
-      }));
-
-      setReplies(formattedReplies);
-    } catch (error) {
-      console.error('Error loading replies:', error);
-    } finally {
-      setIsLoadingReplies(false);
-    }
-  };
-
-  const handleToggleReplies = async () => {
-    if (!showReplies && comment.reply_count && comment.reply_count > 0) {
-      await loadReplies();
-    }
-    setShowReplies(!showReplies);
-  };
-
   const handleReplyAdded = () => {
-    loadReplies();
+    setIsReplyFormVisible(false);
     onCommentAdded();
   };
 
   return (
-    <div className="space-y-2">
-      <div className={`bg-gray-50 dark:bg-gray-800/50 p-6 rounded-lg ${level > 0 ? 'ml-8' : ''}`}>
-        <div className="flex flex-col gap-4">
-          <CommentHeader 
-            username={userProfile?.username || "ユーザー"}
-            avatarUrl={userProfile?.avatar_url}
-            isMaker={comment.isMaker}
-            isVerified={comment.isVerified}
-          />
-          
-          <p className="text-gray-700 dark:text-gray-300">{comment.content}</p>
-          
-          <div className="flex items-center gap-6 text-sm">
-            <LikeButton 
-              totalLikes={totalLikes}
-              hasLiked={hasLiked}
-              onLike={toggleLike}
-            />
-            <button 
-              className="text-gray-500 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
-              onClick={() => setShowReplyForm(!showReplyForm)}
-            >
-              {t('comments.replyButton')}
-            </button>
-            {comment.reply_count > 0 && (
-              <button
-                className="text-gray-500 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
-                onClick={handleToggleReplies}
-              >
-                {showReplies ? t('comment.replies.hide') : t('comment.replies.show').replace('{count}', String(comment.reply_count))}
-              </button>
-            )}
-            <span className="text-gray-400">{comment.timestamp}</span>
-          </div>
-        </div>
+    <div className="space-y-3 pb-4 border-b border-gray-100 last:border-b-0">
+      <div className="flex justify-between items-start">
+        <CommentHeader 
+          username={comment.author} 
+          avatarUrl={comment.avatar}
+          isMaker={comment.isMaker}
+          isVerified={comment.isVerified}
+        />
+        <span className="text-gray-500 text-xs">
+          {comment.timestamp}
+        </span>
       </div>
-
-      {showReplyForm && (
-        <div className="ml-8">
+      
+      <div className="text-gray-800">
+        {comment.content}
+      </div>
+      
+      <div className="flex items-center space-x-4">
+        <LikeButton 
+          hasLiked={hasLiked}
+          totalLikes={totalLikes}
+          toggleLike={toggleLike}
+        />
+        
+        <Button 
+          variant="ghost" 
+          size="sm"
+          className="h-8 px-2 text-gray-500 hover:text-gray-900"
+          onClick={() => setIsReplyFormVisible(!isReplyFormVisible)}
+        >
+          <MessageSquare className="w-4 h-4 mr-1" />
+          {t('comments.reply')}
+        </Button>
+        
+        {comment.reply_count && comment.reply_count > 0 && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 px-2 text-gray-500 hover:text-gray-900"
+            onClick={() => setShowReplies(!showReplies)}
+          >
+            {showReplies ? (
+              <>
+                <ChevronUp className="w-4 h-4 mr-1" />
+                {t('comment.replies.hide')}
+              </>
+            ) : (
+              <>
+                <ChevronDown className="w-4 h-4 mr-1" />
+                {t('comment.replies.show').replace('{count}', String(comment.reply_count))}
+              </>
+            )}
+          </Button>
+        )}
+      </div>
+      
+      {isReplyFormVisible && (
+        <div className="mt-2 pl-4 border-l-2 border-gray-100">
           <ReplyForm 
             parentId={comment.id}
-            onReplyAdded={() => {
-              handleReplyAdded();
-              setShowReplyForm(false);
-            }}
+            productId={productId || 0} // 製品IDを渡す
+            onReplyAdded={handleReplyAdded} 
           />
         </div>
       )}
-
-      <ReplyList 
-        replies={replies}
-        isLoading={isLoadingReplies}
-      />
+      
+      {showReplies && comment.reply_count && comment.reply_count > 0 && (
+        <CommentReplies 
+          parentId={comment.id} 
+          onCommentAdded={onCommentAdded} 
+        />
+      )}
     </div>
   );
 };

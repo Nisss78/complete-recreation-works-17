@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,16 +7,43 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ReplyFormProps {
   parentId: number;
+  productId: number; // Add productId prop
   onReplyAdded: () => void;
 }
 
-export const ReplyForm = ({ parentId, onReplyAdded }: ReplyFormProps) => {
+export const ReplyForm = ({ parentId, productId, onReplyAdded }: ReplyFormProps) => {
   const [replyContent, setReplyContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { toast } = useToast();
+  const { t } = useLanguage();
+
+  // Check if user is authenticated
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsAuthenticated(!!session);
+    };
+
+    checkAuth();
+
+    // Listen for authentication state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_IN') {
+        setIsAuthenticated(true);
+      } else if (event === 'SIGNED_OUT') {
+        setIsAuthenticated(false);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   // Fetch current user's profile
   const { data: userProfile } = useQuery({
@@ -36,7 +64,8 @@ export const ReplyForm = ({ parentId, onReplyAdded }: ReplyFormProps) => {
       }
 
       return data;
-    }
+    },
+    enabled: isAuthenticated
   });
 
   const handleSubmit = async () => {
@@ -47,8 +76,8 @@ export const ReplyForm = ({ parentId, onReplyAdded }: ReplyFormProps) => {
 
     if (!session) {
       toast({
-        title: "ログインが必要です",
-        description: "返信を投稿するにはログインしてください",
+        title: t('comment.loginRequired'),
+        description: t('comment.loginRequired.description'),
         variant: "destructive",
       });
       setIsSubmitting(false);
@@ -59,7 +88,8 @@ export const ReplyForm = ({ parentId, onReplyAdded }: ReplyFormProps) => {
       console.log('Submitting reply:', {
         parent_id: parentId,
         user_id: session.user.id,
-        content: replyContent
+        content: replyContent,
+        product_id: productId
       });
 
       const { error } = await supabase
@@ -68,7 +98,7 @@ export const ReplyForm = ({ parentId, onReplyAdded }: ReplyFormProps) => {
           parent_id: parentId,
           user_id: session.user.id,
           content: replyContent,
-          product_id: null // 返信の場合はproduct_idは不要
+          product_id: productId // Include product_id in the reply
         });
 
       if (error) throw error;
@@ -76,14 +106,14 @@ export const ReplyForm = ({ parentId, onReplyAdded }: ReplyFormProps) => {
       setReplyContent("");
       onReplyAdded();
       toast({
-        title: "返信を投稿しました",
-        description: "あなたの返信が追加されました",
+        title: t('comment.posted'),
+        description: t('comment.posted.description'),
       });
     } catch (error) {
       console.error('Error posting reply:', error);
       toast({
-        title: "エラー",
-        description: "返信の投稿に失敗しました",
+        title: t('comment.failed'),
+        description: t('comment.failed.description'),
         variant: "destructive",
       });
     } finally {
@@ -101,18 +131,33 @@ export const ReplyForm = ({ parentId, onReplyAdded }: ReplyFormProps) => {
       </Avatar>
       <div className="flex-1">
         <Input
-          placeholder="返信を投稿..."
+          placeholder={isAuthenticated ? t('comments.postPlaceholder') : t('comment.loginRequired')}
           value={replyContent}
           onChange={(e) => setReplyContent(e.target.value)}
           className="w-full"
+          disabled={!isAuthenticated}
         />
       </div>
-      <Button 
-        onClick={handleSubmit}
-        disabled={!replyContent.trim() || isSubmitting}
-      >
-        {isSubmitting ? "投稿中..." : "返信"}
-      </Button>
+      {isAuthenticated ? (
+        <Button 
+          onClick={handleSubmit}
+          disabled={!replyContent.trim() || isSubmitting}
+        >
+          {t('comments.replyButton')}
+        </Button>
+      ) : (
+        <Button 
+          variant="outline"
+          onClick={() => {
+            toast({
+              title: t('comment.loginRequired'),
+              description: t('comment.loginRequired.description')
+            });
+          }}
+        >
+          {t('comment.loginRequired')}
+        </Button>
+      )}
     </div>
   );
 };

@@ -1,3 +1,4 @@
+
 export const commentTranslations = {
   en: {
     'comments.title': 'Comments',
@@ -37,7 +38,7 @@ export const commentTranslations = {
     'comment.replies.hide': '返信を隠す',
     'comment.replies.show': '{count}件の返信を表示',
     'comment.loginRequired': 'ログインが必要です',
-    'comment.loginRequired.description': '続行するにはログインしてください',
+    'comment.loginRequired.description': 'コメントを投稿するにはログインしてください',
     'comment.posted': '投稿完了',
     'comment.posted.description': 'コメントを投稿しました',
     'comment.failed': 'エラー',

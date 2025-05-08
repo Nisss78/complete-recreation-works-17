@@ -41,6 +41,7 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
     }
   }, [open]);
 
+  // コメントデータを取得し、ユーザー情報も合わせて取得する
   const { data: comments = [], refetch } = useQuery({
     queryKey: ['product-comments', product?.id],
     queryFn: async () => {
@@ -65,20 +66,33 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
         return [];
       }
 
-      // コメントデータを整形
-      return data.map(comment => ({
-        id: comment.id,
-        author: "ユーザー", // プロフィールから後で取得
-        username: "@user",  // プロフィールから後で取得
-        avatar: "",         // プロフィールから後で取得
-        content: comment.content,
-        timestamp: new Date(comment.created_at).toLocaleString(),
-        upvotes: 0,
-        isMaker: false,
-        isVerified: false,
-        reply_count: comment.reply_count || 0,
-        user_id: comment.user_id
-      }));
+      // ユーザープロフィール情報を取得
+      const commentsWithUserInfo = await Promise.all(
+        data.map(async (comment) => {
+          // ユーザープロフィールを取得
+          const { data: userProfile } = await supabase
+            .from('profiles')
+            .select('username, avatar_url')
+            .eq('id', comment.user_id)
+            .maybeSingle();
+
+          return {
+            id: comment.id,
+            author: userProfile?.username || "ユーザー", 
+            username: userProfile?.username || "@user",
+            avatar: userProfile?.avatar_url || "",
+            content: comment.content,
+            timestamp: format(new Date(comment.created_at), 'yyyy/MM/dd HH:mm'),
+            upvotes: 0,
+            isMaker: false,
+            isVerified: false,
+            reply_count: comment.reply_count || 0,
+            user_id: comment.user_id
+          };
+        })
+      );
+
+      return commentsWithUserInfo;
     },
     enabled: !!product?.id && open,
   });

@@ -33,8 +33,32 @@ interface CommentSectionProps {
 export const CommentSection = ({ productId, comments, onCommentAdded }: CommentSectionProps) => {
   const [newComment, setNewComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { toast } = useToast();
   const { t } = useLanguage();
+
+  // Check if user is authenticated
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsAuthenticated(!!session);
+    };
+
+    checkAuth();
+
+    // Listen for authentication state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_IN') {
+        setIsAuthenticated(true);
+      } else if (event === 'SIGNED_OUT') {
+        setIsAuthenticated(false);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   const { data: userProfile } = useQuery({
     queryKey: ["currentUserProfile"],
@@ -125,18 +149,33 @@ export const CommentSection = ({ productId, comments, onCommentAdded }: CommentS
         </Avatar>
         <div className="flex-1">
           <Input
-            placeholder={t('comments.postPlaceholder')}
+            placeholder={isAuthenticated ? t('comments.postPlaceholder') : t('comment.loginRequired')}
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             className="w-full"
+            disabled={!isAuthenticated}
           />
         </div>
-        <Button 
-          onClick={handleCommentSubmit}
-          disabled={!newComment.trim() || isSubmitting}
-        >
-          {t('comments.postButton')}
-        </Button>
+        {isAuthenticated ? (
+          <Button 
+            onClick={handleCommentSubmit}
+            disabled={!newComment.trim() || isSubmitting}
+          >
+            {t('comments.postButton')}
+          </Button>
+        ) : (
+          <Button 
+            variant="outline"
+            onClick={() => {
+              toast({
+                title: t('comment.loginRequired'),
+                description: t('comment.loginRequired.description')
+              });
+            }}
+          >
+            {t('comment.loginRequired')}
+          </Button>
+        )}
       </div>
 
       <div className="space-y-6">
