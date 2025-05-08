@@ -9,10 +9,10 @@ import { SparkleEffect } from "@/components/ui/sparkle-effect";
 interface LikeButtonProps {
   totalLikes: number;
   hasLiked: boolean;
-  onLike: () => Promise<boolean>;
+  toggleLike: () => Promise<boolean>;
 }
 
-export const LikeButton = ({ totalLikes, hasLiked, onLike }: LikeButtonProps) => {
+export const LikeButton = ({ totalLikes, hasLiked, toggleLike }: LikeButtonProps) => {
   const { toast } = useToast();
   const { t } = useLanguage();
 
@@ -29,7 +29,7 @@ export const LikeButton = ({ totalLikes, hasLiked, onLike }: LikeButtonProps) =>
       return;
     }
 
-    const success = await onLike();
+    const success = await toggleLike();
     if (success) {
       toast({
         title: hasLiked ? t('comment.like.unliked') : t('comment.like.liked'),

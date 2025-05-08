@@ -1,3 +1,4 @@
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 
@@ -50,10 +51,11 @@ const ReplyItem = ({ reply }: ReplyItemProps) => {
 
 interface ReplyListProps {
   replies: ReplyItemProps["reply"][];
-  isLoading: boolean;
+  isLoading?: boolean;
+  onCommentAdded?: () => void; // Added this prop to match the usage
 }
 
-export const ReplyList = ({ replies, isLoading }: ReplyListProps) => {
+export const ReplyList = ({ replies, isLoading, onCommentAdded }: ReplyListProps) => {
   if (isLoading) {
     return (
       <div className="ml-8 text-gray-500 text-sm py-2">
