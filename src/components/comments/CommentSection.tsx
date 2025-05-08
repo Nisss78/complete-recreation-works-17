@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -75,16 +76,24 @@ export const CommentSection = ({ productId, comments, onCommentAdded }: CommentS
     }
 
     try {
-      const { error } = await supabase
+      console.log('Submitting comment:', {
+        product_id: productId,
+        user_id: session.user.id,
+        content: newComment
+      });
+
+      const { error, data } = await supabase
         .from('product_comments')
         .insert({
           product_id: productId,
           user_id: session.user.id,
           content: newComment
-        });
+        })
+        .select();
 
       if (error) throw error;
 
+      console.log('Comment posted successfully:', data);
       setNewComment("");
       onCommentAdded();
       toast({

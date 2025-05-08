@@ -1,8 +1,9 @@
+
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductDialog } from "@/components/ProductDialog";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,7 +14,7 @@ const MyApp = () => {
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
   const { t } = useLanguage();
 
-  const { data: productDetails } = useQuery({
+  const { data: productDetails, refetch: refetchProductDetails } = useQuery({
     queryKey: ['product', selectedProduct?.id],
     queryFn: async () => {
       if (!selectedProduct?.id) return null;
@@ -37,6 +38,12 @@ const MyApp = () => {
         throw error;
       }
 
+      // コメント数を取得
+      const { count: commentsCount } = await supabase
+        .from('product_comments')
+        .select('*', { count: 'exact' })
+        .eq('product_id', selectedProduct.id);
+
       return data ? {
         id: data.id,
         name: data.name,
@@ -45,7 +52,7 @@ const MyApp = () => {
         icon: data.icon_url,
         tags: data.product_tags?.map((t: any) => t.tag) || [],
         upvotes: 0,
-        comments: 0,
+        comments: commentsCount || 0,
         images: data.product_images?.map((img: any) => img.image_url) || [],
         URL: data.URL
       } : null;
@@ -60,6 +67,13 @@ const MyApp = () => {
 
   const handleDialogClose = () => {
     setSelectedProduct(null);
+    localStorage.removeItem('showCommentSection');
+  };
+
+  const handleCommentClick = (product: any) => {
+    console.log('Comment clicked for product:', product);
+    setSelectedProduct(product);
+    localStorage.setItem('showCommentSection', 'true');
   };
 
   if (isLoading) {
@@ -83,6 +97,7 @@ const MyApp = () => {
           
           <div className="grid grid-cols-1 gap-4">
             {bookmarks?.map((bookmark) => {
+              // コメント数を取得して表示（実際のアプリでは、APIからコメント数を取得する）
               const product = {
                 id: bookmark.id,
                 name: bookmark.name,
@@ -91,7 +106,7 @@ const MyApp = () => {
                 icon: bookmark.icon_url,
                 tags: bookmark.product_tags?.map((t: any) => t.tag) || [],
                 upvotes: 0,
-                comments: 0,
+                comments: bookmark.comments_count || 0,
                 images: bookmark.product_images?.map((img: any) => img.image_url) || [],
                 URL: bookmark.URL
               };

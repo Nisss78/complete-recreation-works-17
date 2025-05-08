@@ -1,11 +1,13 @@
+
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { memo } from "react";
+import { memo, useEffect, useRef } from "react";
 import { ProductDetails } from "./product-dialog/ProductDetails";
 import { CommentSection } from "./comments/CommentSection";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { MetaTags } from "./MetaTags";
+import { useQuery } from "@tanstack/react-query";
 
 interface ProductDialogProps {
   open: boolean;
@@ -19,13 +21,71 @@ interface ProductDialogProps {
     tags: string[];
     upvotes: number;
     comments: number;
-    images: string[];  // オプショナルを削除
+    images: string[];
     URL?: string;
   } | null;
 }
 
 const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps) => {
   console.log('ProductDialog rendered with product:', product);
+  const commentSectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // ダイアログが開かれたときにlocalStorageをチェック
+    const showComments = localStorage.getItem('showCommentSection');
+    if (showComments === 'true' && commentSectionRef.current) {
+      setTimeout(() => {
+        commentSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+        localStorage.removeItem('showCommentSection');
+      }, 300);
+    }
+  }, [open]);
+
+  const { data: comments = [], refetch } = useQuery({
+    queryKey: ['product-comments', product?.id],
+    queryFn: async () => {
+      if (!product) return [];
+      
+      const { data, error } = await supabase
+        .from('product_comments')
+        .select(`
+          id,
+          content,
+          created_at,
+          user_id,
+          parent_id,
+          reply_count
+        `)
+        .eq('product_id', product.id)
+        .is('parent_id', null)
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        console.error('Error fetching comments:', error);
+        return [];
+      }
+
+      // コメントデータを整形
+      return data.map(comment => ({
+        id: comment.id,
+        author: "ユーザー", // プロフィールから後で取得
+        username: "@user",  // プロフィールから後で取得
+        avatar: "",         // プロフィールから後で取得
+        content: comment.content,
+        timestamp: new Date(comment.created_at).toLocaleString(),
+        upvotes: 0,
+        isMaker: false,
+        isVerified: false,
+        reply_count: comment.reply_count || 0,
+        user_id: comment.user_id
+      }));
+    },
+    enabled: !!product?.id && open,
+  });
+
+  const handleCommentAdded = () => {
+    refetch();
+  };
 
   if (!product) return null;
 
@@ -53,11 +113,11 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
               product={product}
               isLoadingImages={false}
             />
-            <div className="mt-6 sm:mt-8">
+            <div className="mt-6 sm:mt-8" ref={commentSectionRef}>
               <CommentSection 
                 productId={product.id}
-                comments={[]}
-                onCommentAdded={() => {}}
+                comments={comments}
+                onCommentAdded={handleCommentAdded}
               />
             </div>
           </div>

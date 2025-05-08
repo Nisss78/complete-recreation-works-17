@@ -15,6 +15,7 @@ interface ProductActionsProps {
   isAuthenticated: boolean;
   onLike: () => Promise<void>;
   isMobile: boolean;
+  onCommentClick: () => void;
 }
 
 export function ProductActions({
@@ -25,7 +26,8 @@ export function ProductActions({
   hasLiked,
   isAuthenticated,
   onLike,
-  isMobile
+  isMobile,
+  onCommentClick
 }: ProductActionsProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -72,6 +74,11 @@ export function ProductActions({
     }
   };
 
+  const handleCommentClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onCommentClick();
+  };
+
   const handleShare = async (e: React.MouseEvent) => {
     e.stopPropagation();
     const slug = productName.toLowerCase().replace(/\s+/g, '-');
@@ -110,7 +117,7 @@ export function ProductActions({
       <Button 
         variant="outline"
         size="sm"
-        onClick={(e) => handleInteraction(e, 'comment')}
+        onClick={handleCommentClick}
         className="flex items-center gap-1 sm:gap-2 rounded-full"
       >
         <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />

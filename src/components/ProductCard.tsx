@@ -1,3 +1,4 @@
+
 import { Badge } from "@/components/ui/badge";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -94,6 +95,13 @@ export function ProductCard({
     }
   };
 
+  const handleCommentClick = () => {
+    // 製品ダイアログを開いてコメントセクションにフォーカスするためのフラグを渡す
+    onClick();
+    // localStorageにコメントセクションを表示するフラグを設定
+    localStorage.setItem('showCommentSection', 'true');
+  };
+
   return (
     <div 
       className="flex items-start gap-3 p-3 sm:p-4 hover:bg-gray-50 transition-colors rounded-lg animate-fade-in cursor-pointer relative" 
@@ -135,6 +143,7 @@ export function ProductCard({
         isAuthenticated={isAuthenticated}
         onLike={handleLike}
         isMobile={isMobile}
+        onCommentClick={handleCommentClick}
       />
     </div>
   );

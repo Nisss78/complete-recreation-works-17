@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { Header } from "@/components/Header";
@@ -32,11 +33,18 @@ const fetchProductsWithImages = async () => {
 
   if (productsError) throw productsError;
 
-  // いいね数を取得して製品データと結合
-  const productsWithLikes = await Promise.all(
+  // いいね数とコメント数を取得して製品データと結合
+  const productsWithData = await Promise.all(
     products.map(async (product) => {
-      const { count } = await supabase
+      // いいね数を取得
+      const { count: likesCount } = await supabase
         .from('product_likes')
+        .select('*', { count: 'exact' })
+        .eq('product_id', product.id);
+      
+      // コメント数を取得
+      const { count: commentsCount } = await supabase
+        .from('product_comments')
         .select('*', { count: 'exact' })
         .eq('product_id', product.id);
 
@@ -48,16 +56,16 @@ const fetchProductsWithImages = async () => {
         icon: product.icon_url,
         URL: product.URL,
         tags: product.product_tags?.map(t => t.tag) || [],
-        upvotes: count || 0,
-        comments: 0,
+        upvotes: likesCount || 0,
+        comments: commentsCount || 0,
         launchDate: new Date(product.created_at),
         images: product.product_images?.map(img => img.image_url) || []
       };
     })
   );
 
-  console.log('Fetched products with images:', productsWithLikes);
-  return productsWithLikes;
+  console.log('Fetched products with data:', productsWithData);
+  return productsWithData;
 };
 
 const Index = () => {

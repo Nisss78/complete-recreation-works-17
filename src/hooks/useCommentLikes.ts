@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -41,7 +42,7 @@ export const useCommentLikes = (commentId: number) => {
 
     // リアルタイムでいいねの更新を監視
     const channel = supabase
-      .channel('comment-likes')
+      .channel(`comment-likes-${commentId}`)
       .on(
         'postgres_changes',
         {
