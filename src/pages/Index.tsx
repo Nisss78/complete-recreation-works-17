@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { Header } from "@/components/Header";
@@ -7,7 +6,6 @@ import { ProductDialog } from "@/components/ProductDialog";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate, useLocation } from "react-router-dom";
-import { MetaTags } from "@/components/MetaTags";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ProductsList } from "@/components/home/ProductsList";
 import { RecentArticles } from "@/components/home/RecentArticles";
@@ -155,11 +153,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen w-full flex flex-col bg-white">
-      <MetaTags 
-        title={t('index.title')}
-        description={t('index.description')}
-        image="og-image.png"
-      />
       <Header />
       <main className="flex-1">
         <div className="max-w-7xl mx-auto py-6 sm:py-8 px-4 sm:px-6">

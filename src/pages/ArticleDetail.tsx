@@ -8,7 +8,6 @@ import { Share2, Heart, ArrowLeft, Bookmark } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useArticleLikes } from "@/hooks/useArticleLikes";
 import { useArticleBookmarks } from "@/hooks/useArticleBookmarks";
-import { MetaTags } from "@/components/MetaTags";
 import { Button } from "@/components/ui/button";
 import { ArticleContent } from "./article-detail/ArticleContent";
 import { ArticleHeader } from "./article-detail/ArticleHeader";
@@ -135,15 +134,6 @@ export default function ArticleDetail() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
-      {article && (
-        <MetaTags 
-          title={article.title}
-          description={article.content.substring(0, 160)}
-          image={article.thumbnail_url || undefined}
-          type="article"
-          author={article.author.name}
-        />
-      )}
       <Header />
       <main className="container max-w-4xl mx-auto py-4 sm:py-8 px-4">
         <Button
@@ -155,6 +145,19 @@ export default function ArticleDetail() {
           <ArrowLeft className="w-4 h-4 mr-2" />
           {t('article.details.back')}
         </Button>
+
+        {/* SNSシェアボタン */}
+        <div className="flex gap-3 mb-4">
+          {/* X（Twitter） */}
+          <a
+            href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(import.meta.env.VITE_SUPABASE_URL + '/functions/v1/ogp-article?id=' + article.id)}&text=${encodeURIComponent(article.title)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center px-3 py-1.5 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 text-sm"
+          >
+            Xでシェア
+          </a>
+        </div>
 
         <article className="bg-white rounded-lg shadow-sm p-4 sm:p-8">
           <ArticleHeader article={article} />

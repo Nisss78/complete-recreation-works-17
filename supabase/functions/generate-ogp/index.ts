@@ -1,84 +1,68 @@
+// @ts-nocheck
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { createCanvas, loadImage } from 'https://deno.land/x/canvas@v1.4.1/mod.ts'
+import { createCanvas, registerFont } from 'https://deno.land/x/canvas@v1.4.1/mod.ts'
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
+// 日本語フォント（Noto Sans JPなど）を使いたい場合はここでregisterFontする
+// registerFont('/path/to/NotoSansJP-Regular.otf', { family: 'Noto Sans JP' })
+
+const WIDTH = 1200;
+const HEIGHT = 630;
+const SERVICE_NAME = "Protoduct";
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders })
+    return new Response(null, { headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    } })
   }
 
-  try {
-    const { type, data } = await req.json()
-    const canvas = createCanvas(1200, 630)
-    const ctx = canvas.getContext('2d')
+  const { searchParams } = new URL(req.url);
+  const type = searchParams.get('type');
+  const service = searchParams.get('service') || SERVICE_NAME;
 
-    // 背景を白に設定
-    ctx.fillStyle = '#ffffff'
-    ctx.fillRect(0, 0, 1200, 630)
-
-    if (type === 'product') {
-      const { name, imageUrl } = data
-      
-      // 商品画像を読み込んで描画
-      if (imageUrl) {
-        const image = await loadImage(imageUrl)
-        ctx.drawImage(image, 60, 60, 500, 500)
-      }
-
-      // 商品名を描画
-      ctx.font = 'bold 48px sans-serif'
-      ctx.fillStyle = '#000000'
-      ctx.fillText(name, 600, 120, 540)
-
-      // サービスロゴを描画
-      const logo = await loadImage('https://example.com/logo.png') // ロゴのURLを設定
-      ctx.drawImage(logo, 600, 480, 200, 100)
-    } 
-    else if (type === 'article') {
-      const { title, authorName, authorIcon } = data
-
-      // タイトルを描画
-      ctx.font = 'bold 48px sans-serif'
-      ctx.fillStyle = '#000000'
-      ctx.fillText(title, 60, 120, 1080)
-
-      // 投稿者アイコンを読み込んで描画
-      if (authorIcon) {
-        const icon = await loadImage(authorIcon)
-        ctx.save()
-        ctx.beginPath()
-        ctx.arc(60, 500, 40, 0, Math.PI * 2)
-        ctx.clip()
-        ctx.drawImage(icon, 20, 460, 80, 80)
-        ctx.restore()
-      }
-
-      // 投稿者名を描画
-      ctx.font = '32px sans-serif'
-      ctx.fillStyle = '#666666'
-      ctx.fillText(authorName, 160, 500)
-    }
-
-    const buffer = canvas.toBuffer()
-    
-    return new Response(buffer, { 
-      headers: { 
-        ...corsHeaders,
-        'Content-Type': 'image/png'
-      } 
-    })
-  } catch (error) {
-    console.error('Error:', error)
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 500 
-      }
-    )
+  // テキスト取得
+  let mainText = '';
+  if (type === 'article') {
+    mainText = searchParams.get('title') || '';
+  } else if (type === 'product') {
+    mainText = searchParams.get('name') || '';
+  } else {
+    mainText = 'OGPカード';
   }
-})
+
+  // canvas初期化
+  const canvas = createCanvas(WIDTH, HEIGHT);
+  const ctx = canvas.getContext('2d');
+
+  // グラデーション背景
+  const grad = ctx.createLinearGradient(0, 0, WIDTH, HEIGHT);
+  grad.addColorStop(0, '#0070F3');
+  grad.addColorStop(1, '#00A8FF');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+  // メインテキスト（中央）
+  ctx.font = 'bold 64px "Noto Sans JP", sans-serif';
+  ctx.fillStyle = '#fff';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  // 長い場合は省略
+  let displayText = mainText.length > 32 ? mainText.slice(0, 32) + '…' : mainText;
+  ctx.fillText(displayText, WIDTH / 2, HEIGHT / 2, WIDTH - 160);
+
+  // サービス名（下部）
+  ctx.font = 'bold 36px "Noto Sans JP", sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.textAlign = 'right';
+  ctx.fillText(service, WIDTH - 60, HEIGHT - 60);
+
+  // PNGバッファを返す
+  const buffer = canvas.toBuffer();
+  return new Response(buffer, {
+    headers: {
+      'Content-Type': 'image/png',
+      'Cache-Control': 'public, max-age=86400',
+    },
+  });
+});

@@ -1,7 +1,5 @@
-
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { MetaTags } from "@/components/MetaTags";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const TermsOfService = () => {
@@ -9,10 +7,6 @@ const TermsOfService = () => {
 
   return (
     <div className="min-h-screen w-full flex flex-col bg-white">
-      <MetaTags 
-        title={language === 'en' ? "Terms of Service - Protoduct" : "利用規約 - Protoduct"}
-        description={language === 'en' ? "Terms of Service for Protoduct" : "Protoductの利用規約"}
-      />
       <Header />
       <main className="flex-1">
         <div className="max-w-3xl mx-auto py-8 px-4 sm:px-6">

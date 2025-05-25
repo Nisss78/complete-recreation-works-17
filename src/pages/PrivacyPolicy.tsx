@@ -1,7 +1,5 @@
-
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { MetaTags } from "@/components/MetaTags";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const PrivacyPolicy = () => {
@@ -9,10 +7,6 @@ const PrivacyPolicy = () => {
 
   return (
     <div className="min-h-screen w-full flex flex-col bg-white">
-      <MetaTags 
-        title={language === 'en' ? "Privacy Policy - Protoduct" : "プライバシーポリシー - Protoduct"}
-        description={language === 'en' ? "Privacy Policy for Protoduct" : "Protoductのプライバシーポリシー"}
-      />
       <Header />
       <main className="flex-1">
         <div className="max-w-3xl mx-auto py-8 px-4 sm:px-6">

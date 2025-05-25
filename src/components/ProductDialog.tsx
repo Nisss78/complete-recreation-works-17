@@ -1,4 +1,3 @@
-
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { memo, useEffect, useRef } from "react";
@@ -6,7 +5,6 @@ import { ProductDetails } from "./product-dialog/ProductDetails";
 import { CommentSection } from "./comments/CommentSection";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
-import { MetaTags } from "./MetaTags";
 import { useQuery } from "@tanstack/react-query";
 
 interface ProductDialogProps {
@@ -104,25 +102,27 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
   if (!product) return null;
 
   // OGP画像のURLを生成
-  const ogpImageUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-ogp?type=product&data=${encodeURIComponent(
-    JSON.stringify({
-      name: product.name,
-      imageUrl: product.icon
-    })
-  )}`;
+  const ogpImageUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-ogp?type=product&name=${encodeURIComponent(product.name)}&tags=${encodeURIComponent(product.tags.join(','))}&service=Protoduct`;
+  const shareUrl = product.URL || window.location.href;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTitle className="sr-only">{product.name}</DialogTitle>
-      <MetaTags 
-        title={product.name}
-        description={product.tagline}
-        image={ogpImageUrl}
-        type="product"
-      />
       <DialogContent className="max-w-4xl h-[95vh] sm:h-[90vh] p-0 overflow-hidden bg-white dark:bg-gray-900 mx-2 sm:mx-4">
         <ScrollArea className="h-full">
           <div className="p-3 sm:p-6">
+            {/* SNSシェアボタン */}
+            <div className="flex gap-3 mb-4">
+              {/* X（Twitter） */}
+              <a
+                href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(import.meta.env.VITE_SUPABASE_URL + '/functions/v1/ogp-product?id=' + product.id)}&text=${encodeURIComponent(product.name)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center px-3 py-1.5 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 text-sm"
+              >
+                Xでシェア
+              </a>
+            </div>
             <ProductDetails 
               product={product}
               isLoadingImages={false}

@@ -1,69 +1,154 @@
-# Welcome to your Lovable project
+# Protoduct（プロトダクト）サービス概要
 
-## Project info
+## サービス概要
 
-**URL**: https://lovable.dev/projects/6711d7ca-9a5a-41d2-8602-03a049aa4410
+Protoductは、開発者が自作のプロトタイプアプリケーションをアップロードし、他のユーザーと共有できるプラットフォームです。製品の情報や画像を登録し、ユーザー同士で閲覧・評価・コメント・ブックマーク・フォローなどのインタラクションが可能です。シンプルかつ未来感のあるUIを採用し、AIを活用したSaaSアプリケーションのような洗練された体験を提供します。
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 主要機能
 
-**Use Lovable**
+1. **ユーザー認証**
+   - ログイン／サインアップ
+   - プロフィール編集
+   - 言語設定（日本語／英語）
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/6711d7ca-9a5a-41d2-8602-03a049aa4410) and start prompting.
+2. **製品管理**
+   - 製品登録（管理者のみ）
+   - 製品詳細表示
+   - 製品リスト表示（新着順／いいね数順）
 
-Changes made via Lovable will be committed automatically to this repo.
+3. **記事機能**
+   - 記事投稿
+   - 記事一覧表示
+   - 記事詳細表示
 
-**Use your preferred IDE**
+4. **インタラクション**
+   - 製品へのいいね
+   - 製品へのコメント
+   - 記事へのいいね
+   - ユーザーフォロー
+   - ブックマーク機能
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+5. **チャット機能**
+   - ユーザー間のメッセージ送信
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+---
 
-Follow these steps:
+## 画面構成
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+- **ホーム画面**：最新の製品・記事一覧を表示
+- **製品詳細画面**：製品情報、画像カルーセル、コメント欄
+- **記事一覧画面**：記事カード表示
+- **記事詳細画面**：記事本文、関連情報
+- **プロフィール画面**：ユーザー情報、投稿記事一覧
+- **設定画面**：プロフィール編集、言語設定
+- **ブックマーク画面**：ブックマークした製品・記事の一覧
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+---
 
-# Step 3: Install the necessary dependencies.
-npm i
+## UI/UXデザイン方針
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+- シンプルで未来的なデザイン
+- 青を基調としたグラデーションカラー
+- 余白を活かした読みやすいレイアウト
+- スムーズなアニメーションとトランジション
+- レスポンシブ対応（モバイル・タブレット・デスクトップ）
+- ダークモード対応
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## デザイン要素
 
-**Use GitHub Codespaces**
+- **カラーパレット**  
+  - プライマリー：青系グラデーション (#0070F3 → #00A8FF)
+  - セカンダリー：ライトグレー (#F5F5F5)
+  - アクセント：ティール (#00D8C8)
+  - テキスト：ダークグレー (#333333)
+  - バックグラウンド：ホワイト (#FFFFFF)
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- **タイポグラフィ**  
+  - ヘッドライン・本文：Inter (sans-serif)
+  - ロゴ：Playfair Display (serif)
 
-## What technologies are used for this project?
+- **コンポーネント**  
+  - シャドウ付きカード
+  - 角丸ボタン
+  - 微細なホバーエフェクト
+  - カスタムアイコン
 
-This project is built with .
+---
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 技術スタック
 
-## How can I deploy this project?
+- **フロントエンド**
+  - React（React Router, React Query）
+  - TypeScript
+  - Tailwind CSS
+  - shadcn/ui コンポーネント
+  - lucide-react（アイコン）
+  - date-fns（日付処理）
+  - recharts（グラフ描画）
 
-Simply open [Lovable](https://lovable.dev/projects/6711d7ca-9a5a-41d2-8602-03a049aa4410) and click on Share -> Publish.
+- **バックエンド**
+  - Supabase（認証、データベース、ストレージ）
 
-## I want to use a custom domain - is that possible?
+- **デプロイ**
+  - Vercel
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+---
+
+## データベースモデル
+
+- **users**：Supabase認証ユーザー
+- **profiles**：ユーザー情報（ID、ユーザー名、アバター、自己紹介、SNSリンク、管理者フラグ、言語設定）
+- **products**：製品情報（ID、名前、キャッチコピー、説明、アイコン、URL、作成日時）
+- **product_images**：製品画像
+- **product_tags**：製品タグ
+- **product_likes**：製品へのいいね
+- **product_comments**：製品へのコメント（親子コメント、返信数、作成日時）
+- **comment_likes**：コメントへのいいね
+- **product_bookmarks**：製品のブックマーク
+- **articles**：記事（ID、ユーザーID、タイトル、内容、サムネイル、いいね数、作成日時）
+- **article_likes**：記事へのいいね
+- **article_bookmarks**：記事のブックマーク
+- **follows**：ユーザーフォロー関係
+
+---
+
+## 環境変数
+
+- SUPABASE_URL
+- SUPABASE_ANON_KEY
+- SUPABASE_SERVICE_ROLE_KEY
+- SUPABASE_DB_URL
+
+---
+
+## ディレクトリ構成
+
+- **src/components/**：再利用可能なUIコンポーネント
+- **src/contexts/**：認証や言語などのコンテキスト
+- **src/hooks/**：カスタムフック
+- **src/integrations/**：外部サービス連携
+- **src/lib/**：ユーティリティ関数
+- **src/pages/**：各ページコンポーネント
+- **src/translations/**：多言語対応用ファイル
+- **src/types/**：TypeScript型定義
+
+---
+
+## 現在の進捗状況
+
+- 基本UI、認証、製品・記事一覧/詳細、いいね・ブックマーク・コメント、多言語対応、プロフィール編集など主要機能は実装済み
+
+---
+
+## 今後の実装予定
+
+- UI/UXのさらなる改善
+- 検索機能の強化
+- 通知機能
+- 管理者ダッシュボード
+- パフォーマンス最適化
+- アクセシビリティ向上

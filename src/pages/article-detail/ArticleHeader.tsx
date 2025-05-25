@@ -1,7 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FollowButton } from "@/components/articles/FollowButton";
 import { useNavigate } from "react-router-dom";
-import { MetaTags } from "@/components/MetaTags";
 
 interface ArticleHeaderProps {
   article: {
@@ -34,13 +33,6 @@ export const ArticleHeader = ({ article }: ArticleHeaderProps) => {
 
   return (
     <>
-      <MetaTags 
-        title={article.title}
-        description=""
-        image={ogpImageUrl}
-        type="article"
-        author={article.author.name}
-      />
       <div className="space-y-4 sm:space-y-6 mb-6">
         {article.thumbnail_url && (
           <div className="mb-4 sm:mb-6">
