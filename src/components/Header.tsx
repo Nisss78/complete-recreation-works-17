@@ -1,5 +1,6 @@
 
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Plus, FileText, MessageSquare, Menu, Home, PenLine } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -91,6 +92,11 @@ export const Header = () => {
   );
 
   const MobileMenu = () => {
+    const itemVariants = {
+      hidden: { opacity: 0, x: 20 },
+      visible: { opacity: 1, x: 0 },
+    };
+
     return (
       <Sheet>
         <SheetTrigger asChild>
@@ -98,94 +104,142 @@ export const Header = () => {
             <Menu className="h-5 w-5" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="right" className="bg-white">
-          <SheetHeader className="mb-4">
-            <SheetTitle>メニュー</SheetTitle>
-          </SheetHeader>
-          <div className="flex flex-col gap-1">
-            <SheetClose asChild>
-              <Link
-                to="/"
-                className={cn(
-                  "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
-                  isActive("/") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
-                )}
+        <motion.div
+          initial={{ x: "100%" }}
+          animate={{ x: 0 }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        >
+          <SheetContent side="right" className="bg-white">
+            <SheetHeader className="mb-4">
+              <SheetTitle>メニュー</SheetTitle>
+            </SheetHeader>
+            <div className="flex flex-col gap-1">
+              <motion.div
+                variants={itemVariants}
+                initial="hidden"
+                animate="visible"
+                transition={{ delay: 0.1 }}
               >
-                <Home className="h-5 w-5" />
-                <span>ホーム</span>
-              </Link>
-            </SheetClose>
-            
-            <SheetClose asChild>
-              <Link
-                to="/articles"
-                className={cn(
-                  "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
-                  isActive("/articles") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
-                )}
-              >
-                <FileText className="h-5 w-5" />
-                <span>記事</span>
-              </Link>
-            </SheetClose>
-            
-            {isAuthenticated && (
-              <>
                 <SheetClose asChild>
                   <Link
-                    to="/articles/new"
+                    to="/"
                     className={cn(
                       "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
-                      isActive("/articles/new") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                      isActive("/") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
                     )}
                   >
-                    <PenLine className="h-5 w-5" />
-                    <span>記事を書く</span>
+                    <Home className="h-5 w-5" />
+                    <span>ホーム</span>
                   </Link>
                 </SheetClose>
-                
-                {isAdmin && (
+              </motion.div>
+
+              <motion.div
+                variants={itemVariants}
+                initial="hidden"
+                animate="visible"
+                transition={{ delay: 0.2 }}
+              >
+                <SheetClose asChild>
+                  <Link
+                    to="/articles"
+                    className={cn(
+                      "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
+                      isActive("/articles") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                    )}
+                  >
+                    <FileText className="h-5 w-5" />
+                    <span>記事</span>
+                  </Link>
+                </SheetClose>
+              </motion.div>
+
+              {isAuthenticated && (
+                <>
+                  <motion.div
+                    variants={itemVariants}
+                    initial="hidden"
+                    animate="visible"
+                    transition={{ delay: 0.3 }}
+                  >
+                    <SheetClose asChild>
+                      <Link
+                        to="/articles/new"
+                        className={cn(
+                          "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
+                          isActive("/articles/new") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                        )}
+                      >
+                        <PenLine className="h-5 w-5" />
+                        <span>記事を書く</span>
+                      </Link>
+                    </SheetClose>
+                  </motion.div>
+
+                  {isAdmin && (
+                    <motion.div
+                      variants={itemVariants}
+                      initial="hidden"
+                      animate="visible"
+                      transition={{ delay: 0.4 }}
+                    >
+                      <SheetClose asChild>
+                        <Link
+                          to="/chat"
+                          className={cn(
+                            "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
+                            isActive("/chat") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                          )}
+                        >
+                          <MessageSquare className="h-5 w-5" />
+                          <span>チャット</span>
+                        </Link>
+                      </SheetClose>
+                    </motion.div>
+                  )}
+
+                  {isAdmin && (
+                    <motion.div
+                      variants={itemVariants}
+                      initial="hidden"
+                      animate="visible"
+                      transition={{ delay: 0.5 }}
+                    >
+                      <SheetClose asChild>
+                        <button
+                          onClick={() => setShowSubmissionDialog(true)}
+                          className="flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium hover:bg-gray-100 text-left w-full"
+                        >
+                          <Plus className="h-5 w-5" />
+                          <span>製品を投稿</span>
+                        </button>
+                      </SheetClose>
+                    </motion.div>
+                  )}
+                </>
+              )}
+
+              {!isAuthenticated && (
+                <motion.div
+                  variants={itemVariants}
+                  initial="hidden"
+                  animate="visible"
+                  transition={{ delay: 0.6 }}
+                >
                   <SheetClose asChild>
                     <Link
-                      to="/chat"
-                      className={cn(
-                        "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
-                        isActive("/chat") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
-                      )}
-                    >
-                      <MessageSquare className="h-5 w-5" />
-                      <span>チャット</span>
-                    </Link>
-                  </SheetClose>
-                )}
-                
-                {isAdmin && (
-                  <SheetClose asChild>
-                    <button
-                      onClick={() => setShowSubmissionDialog(true)}
-                      className="flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium hover:bg-gray-100 text-left w-full"
+                      to="/auth"
+                      className="flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium hover:bg-gray-100"
                     >
                       <Plus className="h-5 w-5" />
-                      <span>製品を投稿</span>
-                    </button>
+                      <span>ログイン</span>
+                    </Link>
                   </SheetClose>
-                )}
-              </>
-            )}
-            
-            {!isAuthenticated && (
-              <SheetClose asChild>
-                <Link
-                  to="/auth"
-                  className="flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium hover:bg-gray-100"
-                >
-                  <Plus className="h-5 w-5" />
-                  <span>ログイン</span>
-                </Link>
-              </SheetClose>
-            )}
-          </div>
-        </SheetContent>
+                </motion.div>
+              )}
+            </div>
+          </SheetContent>
+        </motion.div>
       </Sheet>
     );
   };
