@@ -115,7 +115,7 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
             <div className="flex gap-3 mb-4">
               {/* X（Twitter） */}
               <a
-                href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(import.meta.env.VITE_SUPABASE_URL + '/functions/v1/ogp-product?id=' + product.id)}&text=${encodeURIComponent(product.name)}`}
+                href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(`${window.location.origin}/product/${product.name.toLowerCase().replace(/\s+/g, '-')}`)}&text=${encodeURIComponent(`${product.name} | Protoduct`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center px-3 py-1.5 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 text-sm"

@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { Helmet } from "react-helmet";
 import { supabase } from "@/integrations/supabase/client";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -132,8 +133,36 @@ export default function ArticleDetail() {
     );
   }
 
+  // OGP画像とメタタグの設定
+  const ogpImageUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-ogp?type=article&title=${encodeURIComponent(article.title)}&author=${encodeURIComponent(article.author.name)}`;
+  const articleUrl = window.location.href;
+  const description = article.content.substring(0, 150).replace(/[#*]/g, '') + '...';
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
+      <Helmet>
+        <title>{`${article.title} | Protoduct`}</title>
+        <meta name="description" content={description} />
+        
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={articleUrl} />
+        <meta property="og:title" content={article.title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={ogpImageUrl} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:site_name" content="Protoduct" />
+        <meta property="article:author" content={article.author.name} />
+        <meta property="article:published_time" content={article.created_at} />
+        
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content={articleUrl} />
+        <meta name="twitter:title" content={article.title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={ogpImageUrl} />
+      </Helmet>
       <Header />
       <main className="container max-w-4xl mx-auto py-4 sm:py-8 px-4">
         <Button
@@ -150,7 +179,7 @@ export default function ArticleDetail() {
         <div className="flex gap-3 mb-4">
           {/* X（Twitter） */}
           <a
-            href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(import.meta.env.VITE_SUPABASE_URL + '/functions/v1/ogp-article?id=' + article.id)}&text=${encodeURIComponent(article.title)}`}
+            href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(articleUrl)}&text=${encodeURIComponent(`${article.title} | Protoduct`)}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center px-3 py-1.5 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 text-sm"

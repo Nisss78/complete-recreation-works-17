@@ -47,26 +47,49 @@ serve(async (req) => {
   <meta charset="utf-8">
   <title>${name} - ${SERVICE_NAME}</title>
   <meta name="description" content="${description}">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="product">
+  <meta property="og:url" content="${canonicalUrl}">
   <meta property="og:title" content="${name} - ${SERVICE_NAME}">
   <meta property="og:description" content="${description}">
   <meta property="og:image" content="${ogImageUrl}">
-  <meta property="og:type" content="product">
-  <meta property="og:url" content="${canonicalUrl}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:site_name" content="${SERVICE_NAME}">
+  
+  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="${canonicalUrl}">
   <meta name="twitter:title" content="${name} - ${SERVICE_NAME}">
   <meta name="twitter:description" content="${description}">
   <meta name="twitter:image" content="${ogImageUrl}">
+  <meta name="twitter:image:width" content="1200">
+  <meta name="twitter:image:height" content="630">
+  <meta name="twitter:site" content="@protoduct">
+  <meta name="twitter:creator" content="@protoduct">
+  
+  <!-- Additional meta tags -->
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="${canonicalUrl}">
+  
   <meta http-equiv="refresh" content="0;url=${canonicalUrl}">
 </head>
 <body>
   <p>リダイレクト中...</p>
+  <script>
+    // フォールバック用のJavaScriptリダイレクト
+    window.location.href = "${canonicalUrl}";
+  </script>
 </body>
 </html>`;
 
   return new Response(html, {
     headers: {
       "Content-Type": "text/html; charset=utf-8",
-      "Cache-Control": "public, max-age=600"
+      "Cache-Control": "public, max-age=600, s-maxage=600",
+      "X-Content-Type-Options": "nosniff",
     }
   });
 }); 
