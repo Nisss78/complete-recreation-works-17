@@ -128,7 +128,7 @@ const ProductPage = () => {
   }
 
   // OGP画像とメタタグの設定
-  const ogpImageUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-ogp?type=product&name=${encodeURIComponent(product.name)}&tags=${encodeURIComponent(product.tags.join(','))}`;
+  const ogpImageUrl = `https://viaxlwsbhrzwheekrycv.supabase.co/functions/v1/generate-ogp?type=product&name=${encodeURIComponent(product.name)}&tags=${encodeURIComponent(product.tags.join(','))}`;
   const productUrl = window.location.href;
   const description = product.description.substring(0, 150) + '...';
 

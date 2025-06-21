@@ -134,7 +134,7 @@ export default function ArticleDetail() {
   }
 
   // OGP画像とメタタグの設定
-  const ogpImageUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-ogp?type=article&title=${encodeURIComponent(article.title)}&author=${encodeURIComponent(article.author.name)}`;
+  const ogpImageUrl = `https://viaxlwsbhrzwheekrycv.supabase.co/functions/v1/generate-ogp?type=article&title=${encodeURIComponent(article.title)}&author=${encodeURIComponent(article.author.name)}`;
   const articleUrl = window.location.href;
   const description = article.content.substring(0, 150).replace(/[#*]/g, '') + '...';
 
