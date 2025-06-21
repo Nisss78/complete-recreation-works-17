@@ -19,13 +19,16 @@ const HEIGHT = 630;
 const SERVICE_NAME = "Protoduct";
 
 serve(async (req) => {
+  // CORS設定（認証不要）
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Methods': 'GET, OPTIONS',
+  };
+
   try {
     if (req.method === 'OPTIONS') {
-      return new Response(null, { headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-        'Access-Control-Allow-Methods': 'GET, OPTIONS',
-      } })
+      return new Response(null, { headers: corsHeaders })
     }
 
     const { searchParams } = new URL(req.url);
@@ -94,9 +97,9 @@ serve(async (req) => {
     return new Response(buffer, {
       status: 200,
       headers: {
+        ...corsHeaders,
         'Content-Type': 'image/png',
         'Cache-Control': 'public, max-age=86400, s-maxage=86400',
-        'Access-Control-Allow-Origin': '*',
         'Content-Length': buffer.length.toString(),
         'X-Content-Type-Options': 'nosniff',
         'Accept-Ranges': 'bytes',
@@ -126,6 +129,7 @@ serve(async (req) => {
     return new Response(fallbackBuffer, {
       status: 200,
       headers: {
+        ...corsHeaders,
         'Content-Type': 'image/png',
         'Cache-Control': 'public, max-age=3600',
       },
