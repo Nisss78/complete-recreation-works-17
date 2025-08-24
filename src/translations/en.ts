@@ -7,7 +7,6 @@ import { articleTranslations } from "./sections/articles";
 import { error as errorTranslations } from "./sections/error";
 import { settingsTranslations } from "./sections/settings";
 import { bookmarksTranslations } from "./sections/bookmarks";
-import { nav as navTranslations } from "./sections/nav";
 
 export const en = {
   // Common
@@ -64,21 +63,22 @@ export const en = {
   'common.empty': 'No data',
 
   // Navigation
-  'nav.home': 'Home',
-  'nav.products': 'Products',
-  'nav.submit': 'Submit',
-  'nav.articles': 'Articles',
-  'nav.bookmarks': 'Bookmarks',
-  'nav.profile': 'Profile',
-  'nav.settings': 'Settings',
-  'nav.viewBookmarks': 'View Bookmarks',
-  'nav.myApp': 'My App',
-  'nav.logout': 'Logout',
-  'nav.login': 'Login',
-  'nav.register': 'Register',
-  'nav.pricing': 'Pricing',
-  'nav.chat': 'Chat',
-  ...navTranslations,
+  'home': 'Product',
+  'homeLink': 'Home',
+  'articles': 'Articles',
+  'writeArticle': 'Write Article',
+  'chat': 'Chat',
+  'post': 'Post Product',
+  'menu': 'Menu',
+  'about': 'About',
+  'contact': 'Contact',
+  'news': 'News',
+  'careers': 'Careers',
+  'bookmarks': 'Bookmarks',
+  'profile': 'Profile',
+  'settings': 'Settings',
+  'logout': 'Logout',
+  'login': 'Login',
 
   // Auth
   'auth.signUpSuccessTitle': 'Registration Complete',

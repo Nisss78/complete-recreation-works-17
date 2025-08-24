@@ -1,7 +1,8 @@
 
 export const nav = {
   en: {
-    home: "Home",
+    home: "Product",
+    homeLink: "Home",
     articles: "Articles",
     writeArticle: "Write Article",
     chat: "Chat",
@@ -10,13 +11,16 @@ export const nav = {
     menu: "Menu",
     about: "About",
     contact: "Contact",
+    news: "News",
+    careers: "Careers",
     settings: "Settings",
     profile: "Profile",
     logout: "Logout",
     bookmarks: "Bookmarks",
   },
   ja: {
-    home: "ホーム",
+    home: "プロダクト",
+    homeLink: "ホーム",
     articles: "記事",
     writeArticle: "記事を書く",
     chat: "チャット",
@@ -25,6 +29,8 @@ export const nav = {
     menu: "メニュー",
     about: "企業情報",
     contact: "お問い合わせ",
+    news: "ニュース",
+    careers: "採用情報",
     settings: "設定",
     profile: "プロフィール",
     logout: "ログアウト",

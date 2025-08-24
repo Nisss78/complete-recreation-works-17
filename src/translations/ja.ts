@@ -7,7 +7,6 @@ import { articleTranslations } from "./sections/articles";
 import { error as errorTranslations } from "./sections/error";
 import { settingsTranslations } from "./sections/settings";
 import { bookmarksTranslations } from "./sections/bookmarks";
-import { nav as navTranslations } from "./sections/nav";
 
 export const ja = {
   // Common
@@ -64,21 +63,22 @@ export const ja = {
   'common.empty': 'データなし',
 
   // Navigation
-  'nav.home': 'ホーム',
-  'nav.products': '製品',
-  'nav.submit': '提出する',
-  'nav.articles': '記事',
-  'nav.bookmarks': 'ブックマーク',
-  'nav.profile': 'プロフィール',
-  'nav.settings': '設定',
-  'nav.viewBookmarks': 'ブックマークを見る',
-  'nav.myApp': 'マイアプリ',
-  'nav.logout': 'ログアウト',
-  'nav.login': 'ログイン',
-  'nav.register': '登録',
-  'nav.pricing': '料金',
-  'nav.chat': 'チャット',
-  ...navTranslations,
+  'home': 'プロダクト',
+  'homeLink': 'ホーム',
+  'articles': '記事',
+  'writeArticle': '記事を書く',
+  'chat': 'チャット',
+  'post': '製品を投稿',
+  'menu': 'メニュー',
+  'about': '会社概要',
+  'contact': 'お問い合わせ',
+  'news': 'ニュース',
+  'careers': '採用情報',
+  'bookmarks': 'ブックマーク',
+  'profile': 'プロフィール',
+  'settings': '設定',
+  'logout': 'ログアウト',
+  'login': 'ログイン',
 
   // Auth
   'auth.signUpSuccessTitle': '登録完了',

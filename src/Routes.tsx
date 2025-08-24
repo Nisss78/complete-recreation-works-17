@@ -6,6 +6,7 @@ import ArticleDetail from "@/pages/ArticleDetail";
 import ArticleNew from "@/pages/ArticleNew";
 import Auth from "@/pages/Auth";
 import Index from "@/pages/Index";
+import Home from "@/pages/Home";
 import Profile from "@/pages/Profile";
 import Settings from "@/pages/Settings";
 import Bookmarks from "@/pages/Bookmarks";
@@ -14,6 +15,10 @@ import Chat from "@/pages/Chat";
 import ProductPage from "@/pages/ProductPage";
 import TermsOfService from "@/pages/TermsOfService";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
+import News from "@/pages/News";
+import Careers from "@/pages/Careers";
+import Contact from "@/pages/Contact";
+import About from "@/pages/About";
 
 export const Routes = () => {
   const location = useLocation();
@@ -25,6 +30,7 @@ export const Routes = () => {
   return (
     <RouterRoutes>
       <Route path="/" element={<Index />} />
+      <Route path="/home" element={<Home />} />
       <Route path="/articles" element={<Articles />} />
       <Route path="/articles/:id" element={<ArticleDetail />} />
       <Route path="/articles/new" element={<ArticleNew />} />
@@ -39,6 +45,10 @@ export const Routes = () => {
       <Route path="/products/:slug" element={<ProductPage />} />
       <Route path="/terms" element={<TermsOfService />} />
       <Route path="/privacy" element={<PrivacyPolicy />} />
+      <Route path="/news" element={<News />} />
+      <Route path="/careers" element={<Careers />} />
+      <Route path="/contact" element={<Contact />} />
+      <Route path="/about" element={<About />} />
     </RouterRoutes>
   );
 };

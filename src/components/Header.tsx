@@ -1,7 +1,7 @@
 
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Plus, FileText, MessageSquare, Menu, Home, PenLine } from "lucide-react";
+import { Plus, FileText, MessageSquare, Menu, Home, PenLine, Package, Newspaper, Briefcase, Mail, Building2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ProductSubmissionDialog } from "./ProductSubmissionDialog";
 import { supabase } from "@/integrations/supabase/client";
@@ -100,9 +100,22 @@ export const Header = () => {
         </SheetTrigger>
         <SheetContent side="right" className="bg-white">
           <SheetHeader className="mb-4">
-            <SheetTitle>メニュー</SheetTitle>
+            <SheetTitle>{t('menu')}</SheetTitle>
           </SheetHeader>
           <div className="flex flex-col gap-1">
+            <SheetClose asChild>
+              <Link
+                to="/home"
+                className={cn(
+                  "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
+                  isActive("/home") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                )}
+              >
+                <Home className="h-5 w-5" />
+                <span>{t('homeLink') || 'Home'}</span>
+              </Link>
+            </SheetClose>
+            
             <SheetClose asChild>
               <Link
                 to="/"
@@ -111,8 +124,8 @@ export const Header = () => {
                   isActive("/") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
                 )}
               >
-                <Home className="h-5 w-5" />
-                <span>ホーム</span>
+                <Package className="h-5 w-5" />
+                <span>{t('home')}</span>
               </Link>
             </SheetClose>
             
@@ -125,7 +138,59 @@ export const Header = () => {
                 )}
               >
                 <FileText className="h-5 w-5" />
-                <span>記事</span>
+                <span>{t('articles')}</span>
+              </Link>
+            </SheetClose>
+            
+            <SheetClose asChild>
+              <Link
+                to="/about"
+                className={cn(
+                  "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
+                  isActive("/about") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                )}
+              >
+                <Building2 className="h-5 w-5" />
+                <span>{t('about')}</span>
+              </Link>
+            </SheetClose>
+            
+            <SheetClose asChild>
+              <Link
+                to="/news"
+                className={cn(
+                  "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
+                  isActive("/news") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                )}
+              >
+                <Newspaper className="h-5 w-5" />
+                <span>{t('news')}</span>
+              </Link>
+            </SheetClose>
+            
+            <SheetClose asChild>
+              <Link
+                to="/careers"
+                className={cn(
+                  "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
+                  isActive("/careers") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                )}
+              >
+                <Briefcase className="h-5 w-5" />
+                <span>{t('careers')}</span>
+              </Link>
+            </SheetClose>
+            
+            <SheetClose asChild>
+              <Link
+                to="/contact"
+                className={cn(
+                  "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
+                  isActive("/contact") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                )}
+              >
+                <Mail className="h-5 w-5" />
+                <span>{t('contact')}</span>
               </Link>
             </SheetClose>
             
@@ -140,7 +205,7 @@ export const Header = () => {
                     )}
                   >
                     <PenLine className="h-5 w-5" />
-                    <span>記事を書く</span>
+                    <span>{t('writeArticle')}</span>
                   </Link>
                 </SheetClose>
                 
@@ -154,7 +219,7 @@ export const Header = () => {
                       )}
                     >
                       <MessageSquare className="h-5 w-5" />
-                      <span>チャット</span>
+                      <span>{t('chat')}</span>
                     </Link>
                   </SheetClose>
                 )}
@@ -166,7 +231,7 @@ export const Header = () => {
                       className="flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium hover:bg-gray-100 text-left w-full"
                     >
                       <Plus className="h-5 w-5" />
-                      <span>製品を投稿</span>
+                      <span>{t('post')}</span>
                     </button>
                   </SheetClose>
                 )}
@@ -188,16 +253,33 @@ export const Header = () => {
               <span className="text-blue-gradient">Protoduct</span>
             </Link>
             
-            <nav className="hidden md:flex space-x-2">
-              <NavItem path="/" icon={<Home className="h-4 w-4" />} label={t('nav.home')} />
-              <NavItem path="/articles" icon={<FileText className="h-4 w-4" />} label={t("nav.articles")} />
+            <nav className="hidden md:flex items-center space-x-2 flex-1">
+              <NavItem path="/home" icon={<Home className="h-4 w-4" />} label="Home" />
+              <NavItem path="/" icon={<Package className="h-4 w-4" />} label={t('home')} />
+              <NavItem path="/articles" icon={<FileText className="h-4 w-4" />} label={t("articles")} />
+              <NavItem path="/about" icon={<Building2 className="h-4 w-4" />} label={t("about")} />
+              <NavItem path="/news" icon={<Newspaper className="h-4 w-4" />} label={t("news")} />
+              <NavItem path="/careers" icon={<Briefcase className="h-4 w-4" />} label={t("careers")} />
               {isAuthenticated && isAdmin && (
-                <NavItem path="/chat" icon={<MessageSquare className="h-4 w-4" />} label={t("nav.chat")} />
+                <NavItem path="/chat" icon={<MessageSquare className="h-4 w-4" />} label={t("chat")} />
               )}
             </nav>
           </div>
           
           <div className="flex items-center gap-2 sm:gap-4">
+            <Link 
+              to="/contact" 
+              className={cn(
+                "hidden md:inline-flex items-center px-4 py-2 text-sm font-bold border-b-2 transition-colors mr-4",
+                isActive("/contact") 
+                  ? "border-blue-500 text-blue-600"
+                  : "border-transparent text-gray-800 hover:text-blue-600 hover:border-blue-300"
+              )}
+            >
+              <Mail className="h-4 w-4 mr-2" />
+              <span>{t("contact")}</span>
+            </Link>
+            
             {isAuthenticated ? (
               <>
                 <Button 
@@ -205,7 +287,7 @@ export const Header = () => {
                   className="bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 text-white hidden md:flex items-center gap-2"
                 >
                   <PenLine className="h-4 w-4" />
-                  <span>記事を投稿</span>
+                  <span>{t('writeArticle')}</span>
                 </Button>
                 
                 {isAdmin && (
