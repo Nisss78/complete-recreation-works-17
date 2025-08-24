@@ -88,7 +88,7 @@ export default function Contact() {
                     <Mail className="h-5 w-5 text-gray-500 mt-0.5" />
                     <div>
                       <p className="font-medium">{isJapanese ? "メール" : "Email"}</p>
-                      <p className="text-gray-600">support@protoduct.com</p>
+                      <p className="text-gray-600">support@protoductai.com</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -104,8 +104,8 @@ export default function Contact() {
                       <p className="font-medium">{isJapanese ? "住所" : "Address"}</p>
                       <p className="text-gray-600">
                         {isJapanese 
-                          ? "〒100-0001\n東京都千代田区千代田1-1-1" 
-                          : "1-1-1 Chiyoda, Chiyoda-ku\nTokyo 100-0001, Japan"}
+                          ? "〒605-0074\n京都市東山区祇園町南側582" 
+                          : "582 Gion-machi Minamigawa\nHigashiyama-ku, Kyoto 605-0074, Japan"}
                       </p>
                     </div>
                   </div>

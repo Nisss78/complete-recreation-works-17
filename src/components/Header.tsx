@@ -2,6 +2,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Plus, FileText, MessageSquare, Menu, Home, PenLine, Package, Newspaper, Briefcase, Mail, Building2 } from "lucide-react";
+import logoImage from "@/assets/logo.png";
 import { useState, useEffect } from "react";
 import { ProductSubmissionDialog } from "./ProductSubmissionDialog";
 import { supabase } from "@/integrations/supabase/client";
@@ -247,10 +248,10 @@ export const Header = () => {
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-blue">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-24">
           <div className="flex items-center">
-            <Link to="/" className="font-medium text-2xl text-black hover:opacity-90 transition-colors mr-8">
-              <span className="text-blue-gradient">Protoduct</span>
+            <Link to="/" className="flex items-center hover:opacity-90 transition-opacity mr-8">
+              <img src={logoImage} alt="Protoduct" className="h-20 w-auto" />
             </Link>
             
             <nav className="hidden md:flex items-center space-x-2 flex-1">

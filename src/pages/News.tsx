@@ -1,122 +1,162 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-
-interface NewsItem {
-  id: number;
-  date: string;
-  titleJa: string;
-  titleEn: string;
-  descriptionJa: string;
-  descriptionEn: string;
-  category: "update" | "release" | "event" | "press";
-}
-
-const newsItems: NewsItem[] = [
-  {
-    id: 1,
-    date: "2024-01-15",
-    titleJa: "Protoduct バージョン2.0をリリースしました",
-    titleEn: "Protoduct Version 2.0 Released",
-    descriptionJa: "新しいUIデザインと改善されたパフォーマンスを含む大規模アップデートをリリースしました。",
-    descriptionEn: "Major update released with new UI design and improved performance.",
-    category: "release"
-  },
-  {
-    id: 2,
-    date: "2024-01-10",
-    titleJa: "月間アクティブユーザー10万人突破",
-    titleEn: "100,000 Monthly Active Users Achieved",
-    descriptionJa: "おかげさまで月間アクティブユーザー数が10万人を突破しました。",
-    descriptionEn: "Thanks to our community, we've reached 100,000 monthly active users.",
-    category: "press"
-  },
-  {
-    id: 3,
-    date: "2024-01-05",
-    titleJa: "開発者向けオンラインイベント開催のお知らせ",
-    titleEn: "Online Developer Event Announcement",
-    descriptionJa: "2月1日に開発者向けのオンラインイベントを開催します。参加登録受付中です。",
-    descriptionEn: "We'll be hosting an online developer event on February 1st. Registration is now open.",
-    category: "event"
-  },
-  {
-    id: 4,
-    date: "2023-12-20",
-    titleJa: "新機能：AIによるプロダクト推薦システム",
-    titleEn: "New Feature: AI-Powered Product Recommendations",
-    descriptionJa: "機械学習を活用した新しい推薦システムを導入しました。",
-    descriptionEn: "Introduced a new recommendation system powered by machine learning.",
-    category: "update"
-  }
-];
-
-const categoryColors = {
-  update: "bg-blue-100 text-blue-800",
-  release: "bg-green-100 text-green-800",
-  event: "bg-purple-100 text-purple-800",
-  press: "bg-orange-100 text-orange-800"
-};
-
-const categoryLabels = {
-  update: { ja: "アップデート", en: "Update" },
-  release: { ja: "リリース", en: "Release" },
-  event: { ja: "イベント", en: "Event" },
-  press: { ja: "プレス", en: "Press" }
-};
+import { useNews } from "@/hooks/useNews";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { NewsForm } from "@/components/news/NewsForm";
+import { supabase } from "@/integrations/supabase/client";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 export default function News() {
   const { language } = useLanguage();
   const isJapanese = language === 'ja';
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [showNewsForm, setShowNewsForm] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  
+  const { data: newsItems, isLoading } = useNews(selectedCategory);
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user?.id) {
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('is_admin')
+          .eq('id', session.user.id)
+          .single();
+        
+        setIsAdmin(profileData?.is_admin || false);
+      }
+    };
+    checkAdmin();
+  }, []);
+
+  const categories = [
+    { value: "all", labelJa: "すべての記事", labelEn: "All Articles" },
+    { value: "announcement", labelJa: "お知らせ", labelEn: "Announcements" },
+    { value: "event", labelJa: "イベント", labelEn: "Events" },
+    { value: "media", labelJa: "メディア", labelEn: "Media" },
+  ];
+
+  const categoryBadges = {
+    announcement: { ja: "お知らせ", en: "Announcement", color: "bg-blue-500 text-white" },
+    event: { ja: "イベント", en: "Event", color: "bg-purple-500 text-white" },
+    media: { ja: "メディア", en: "Media", color: "bg-green-500 text-white" },
+    other: { ja: "その他", en: "Other", color: "bg-gray-500 text-white" },
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
       <main className="flex-1">
-        <div className="bg-white border-b">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              {isJapanese ? "ニュース" : "News"}
+        {/* Hero Section */}
+        <div className="bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+            <h1 className="text-6xl font-bold text-[#0066FF] mb-4">
+              NEWS
             </h1>
-            <p className="text-xl text-gray-600">
-              {isJapanese 
-                ? "Protoductの最新情報をお届けします" 
-                : "Stay updated with the latest from Protoduct"}
+            <p className="text-xl text-gray-700">
+              {isJapanese ? "お知らせ" : "Announcements"}
             </p>
           </div>
         </div>
 
+        {/* Admin Add Button */}
+        {isAdmin && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <Button 
+              onClick={() => setShowNewsForm(true)}
+              className="bg-[#0066FF] hover:bg-[#0052CC] text-white"
+            >
+              <Plus className="h-5 w-5 mr-2" />
+              {isJapanese ? "ニュース追加" : "Add News"}
+            </Button>
+          </div>
+        )}
+
+        {/* Category Tabs */}
+        <div className="bg-white border-b">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex space-x-8">
+              {categories.map((category) => (
+                <button
+                  key={category.value}
+                  onClick={() => setSelectedCategory(category.value)}
+                  className={cn(
+                    "py-4 px-2 border-b-2 font-medium text-sm transition-colors",
+                    selectedCategory === category.value
+                      ? "border-[#0066FF] text-[#0066FF]"
+                      : "border-transparent text-gray-500 hover:text-gray-700"
+                  )}
+                >
+                  {isJapanese ? category.labelJa : category.labelEn}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* News List */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid gap-6">
-            {newsItems.map((item) => (
-              <Card key={item.id} className="hover:shadow-lg transition-shadow cursor-pointer">
-                <CardHeader>
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-3">
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${categoryColors[item.category]}`}>
-                        {isJapanese ? categoryLabels[item.category].ja : categoryLabels[item.category].en}
-                      </span>
-                      <div className="flex items-center text-gray-500 text-sm">
-                        <Calendar className="h-4 w-4 mr-1" />
-                        {item.date}
+          {isLoading ? (
+            <div className="text-center py-12">
+              <p className="text-gray-500">Loading...</p>
+            </div>
+          ) : newsItems && newsItems.length > 0 ? (
+            <div className="space-y-6">
+              {newsItems.map((item) => (
+                <Link
+                  key={item.id}
+                  to={`/news/${item.id}`}
+                  className="block hover:opacity-90 transition-opacity"
+                >
+                  <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+                    <div className="flex">
+                      {/* Thumbnail */}
+                      {item.thumbnail_url && (
+                        <div className="w-48 h-32 flex-shrink-0">
+                          <img 
+                            src={item.thumbnail_url} 
+                            alt={isJapanese ? item.title_ja : (item.title_en || item.title_ja)}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
+                      
+                      {/* Content */}
+                      <div className={cn("flex-1 p-6", item.thumbnail_url ? "" : "")}>
+                        <div className="flex items-start gap-4">
+                          <span className={cn(
+                            "inline-block px-3 py-1 rounded-full text-sm font-medium",
+                            categoryBadges[item.category].color
+                          )}>
+                            {isJapanese 
+                              ? categoryBadges[item.category].ja 
+                              : categoryBadges[item.category].en}
+                          </span>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-4 mb-2">
+                              <span className="text-gray-500 text-sm">
+                                {format(new Date(item.date), 'yyyy.M.d')}
+                              </span>
+                            </div>
+                            <h3 className="text-xl font-medium text-gray-900 line-clamp-2">
+                              {isJapanese ? item.title_ja : (item.title_en || item.title_ja)}
+                            </h3>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <ArrowRight className="h-5 w-5 text-gray-400" />
                   </div>
-                  <CardTitle className="text-2xl">
-                    {isJapanese ? item.titleJa : item.titleEn}
-                  </CardTitle>
-                  <CardDescription className="text-base mt-2">
-                    {isJapanese ? item.descriptionJa : item.descriptionEn}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            ))}
-          </div>
-
-          {newsItems.length === 0 && (
+                </Link>
+              ))}
+            </div>
+          ) : (
             <div className="text-center py-12">
               <p className="text-gray-500 text-lg">
                 {isJapanese ? "ニュースはまだありません" : "No news available yet"}
@@ -126,6 +166,14 @@ export default function News() {
         </div>
       </main>
       <Footer />
+      
+      {/* News Form Dialog */}
+      {showNewsForm && (
+        <NewsForm 
+          open={showNewsForm} 
+          onOpenChange={setShowNewsForm}
+        />
+      )}
     </div>
   );
 }

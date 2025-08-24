@@ -2,7 +2,9 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building2, Users, Globe, Award, Target, TrendingUp, Calendar, MapPin } from "lucide-react";
+import { X } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import unoImage from "@/assets/uno.jpg";
 
 export default function About() {
   const { language } = useLanguage();
@@ -10,66 +12,39 @@ export default function About() {
 
   const milestones = [
     {
-      year: "2020",
+      year: "2025",
       titleJa: "会社設立",
       titleEn: "Company Founded",
-      descriptionJa: "Protoduct株式会社を設立",
-      descriptionEn: "Protoduct Inc. established"
+      descriptionJa: "ProtoductAI株式会社を設立",
+      descriptionEn: "ProtoductAI Inc. established"
     },
     {
-      year: "2021",
-      titleJa: "サービス開始",
-      titleEn: "Service Launch",
-      descriptionJa: "プロダクト共有プラットフォームを正式リリース",
-      descriptionEn: "Official launch of product sharing platform"
+      year: "2025",
+      titleJa: "AI開発本格化",
+      titleEn: "AI Development Launch",
+      descriptionJa: "AIソフトウェア開発事業を本格開始",
+      descriptionEn: "Full-scale launch of AI software development"
     },
     {
-      year: "2022",
-      titleJa: "10万ユーザー突破",
-      titleEn: "100K Users",
-      descriptionJa: "登録ユーザー数が10万人を突破",
-      descriptionEn: "Reached 100,000 registered users"
+      year: "2025",
+      titleJa: "プラットフォーム開発",
+      titleEn: "Platform Development",
+      descriptionJa: "Protoductプラットフォームの開発開始",
+      descriptionEn: "Started development of Protoduct platform"
     },
     {
-      year: "2023",
-      titleJa: "グローバル展開",
-      titleEn: "Global Expansion",
-      descriptionJa: "多言語対応を開始し、世界中のユーザーへ",
-      descriptionEn: "Started multi-language support for global users"
+      year: "2025",
+      titleJa: "AI研修事業開始",
+      titleEn: "AI Training Launch",
+      descriptionJa: "企業向けAI研修プログラムを提供開始",
+      descriptionEn: "Started providing AI training programs for enterprises"
     },
     {
-      year: "2024",
-      titleJa: "AI機能追加",
-      titleEn: "AI Features",
-      descriptionJa: "AIによる推薦システムを導入",
-      descriptionEn: "Introduced AI-powered recommendation system"
-    }
-  ];
-
-  const stats = [
-    {
-      valueJa: "100万+",
-      valueEn: "1M+",
-      labelJa: "月間アクティブユーザー",
-      labelEn: "Monthly Active Users"
-    },
-    {
-      valueJa: "50,000+",
-      valueEn: "50,000+",
-      labelJa: "登録プロダクト",
-      labelEn: "Registered Products"
-    },
-    {
-      valueJa: "150+",
-      valueEn: "150+",
-      labelJa: "対応国",
-      labelEn: "Countries Served"
-    },
-    {
-      valueJa: "99.9%",
-      valueEn: "99.9%",
-      labelJa: "稼働率",
-      labelEn: "Uptime"
+      year: "2025",
+      titleJa: "受託開発事業",
+      titleEn: "Contract Development",
+      descriptionJa: "AI関連の受託開発事業を展開",
+      descriptionEn: "Expanded AI-related contract development business"
     }
   ];
 
@@ -101,68 +76,62 @@ export default function About() {
                 </h2>
                 <p className="text-gray-600 mb-4">
                   {isJapanese 
-                    ? "Protoductは、開発者が自分のプロダクトやアイデアを世界中の人々と共有できるプラットフォームです。私たちは、イノベーションを促進し、開発者コミュニティの成長を支援することを使命としています。"
-                    : "Protoduct is a platform where developers can share their products and ideas with people around the world. Our mission is to foster innovation and support the growth of the developer community."}
+                    ? "ProtoductAIは、最先端のAI技術を活用したソフトウェア開発と、開発者向けプラットフォームの提供を行う企業です。私たちは、AIの力で開発プロセスを革新し、より多くの人々がテクノロジーの恩恵を受けられる社会の実現を目指しています。"
+                    : "ProtoductAI is a company that provides cutting-edge AI software development and developer platforms. We aim to revolutionize the development process with the power of AI and create a society where more people can benefit from technology."}
                 </p>
                 <p className="text-gray-600 mb-4">
                   {isJapanese 
-                    ? "2020年の設立以来、私たちは継続的にプラットフォームを改善し、開発者にとって最高の体験を提供することに注力してきました。"
-                    : "Since our founding in 2020, we have continuously improved our platform and focused on providing the best experience for developers."}
+                    ? "2025年の設立以来、私たちはAIソフトウェア開発、AI研修、受託開発の3つの事業を軸に、お客様のデジタルトランスフォーメーションを支援しています。"
+                    : "Since our founding in 2025, we have been supporting our customers' digital transformation through three main businesses: AI software development, AI training, and contract development."}
                 </p>
               </div>
               <div className="space-y-6">
-                <Card>
-                  <CardHeader className="pb-4">
-                    <CardTitle className="text-xl">{isJapanese ? "企業情報" : "Company Information"}</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="flex items-start gap-3">
-                      <Building2 className="h-5 w-5 text-gray-500 mt-0.5" />
-                      <div>
-                        <p className="font-medium">{isJapanese ? "会社名" : "Company Name"}</p>
-                        <p className="text-gray-600">
-                          {isJapanese ? "Protoduct株式会社" : "Protoduct Inc."}
-                        </p>
-                      </div>
+                <div>
+                  <div className="mb-8">
+                    <h3 className="text-3xl font-bold text-blue-600 mb-2">COMPANY</h3>
+                    <div>
+                      <span className="text-2xl font-medium">会社概要</span>
                     </div>
-                    <div className="flex items-start gap-3">
-                      <Calendar className="h-5 w-5 text-gray-500 mt-0.5" />
-                      <div>
-                        <p className="font-medium">{isJapanese ? "設立" : "Founded"}</p>
-                        <p className="text-gray-600">2020{isJapanese ? "年4月" : " April"}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <Users className="h-5 w-5 text-gray-500 mt-0.5" />
-                      <div>
-                        <p className="font-medium">{isJapanese ? "代表取締役" : "CEO"}</p>
-                        <p className="text-gray-600">{isJapanese ? "山田太郎" : "Taro Yamada"}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <MapPin className="h-5 w-5 text-gray-500 mt-0.5" />
-                      <div>
-                        <p className="font-medium">{isJapanese ? "本社所在地" : "Headquarters"}</p>
-                        <p className="text-gray-600">
-                          {isJapanese 
-                            ? "〒100-0001 東京都千代田区千代田1-1-1" 
-                            : "1-1-1 Chiyoda, Chiyoda-ku, Tokyo 100-0001"}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <Globe className="h-5 w-5 text-gray-500 mt-0.5" />
-                      <div>
-                        <p className="font-medium">{isJapanese ? "事業内容" : "Business"}</p>
-                        <p className="text-gray-600">
-                          {isJapanese 
-                            ? "プロダクト共有プラットフォームの開発・運営" 
-                            : "Development and operation of product sharing platform"}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                  
+                  <div className="bg-white rounded-lg p-6">
+                    <table className="w-full">
+                      <tbody>
+                        <tr className="border-b border-gray-300">
+                          <td className="py-4 pr-8 font-medium text-gray-900 w-32 align-top">会社名</td>
+                          <td className="py-4 text-gray-700">ProtoductAI株式会社</td>
+                        </tr>
+                        <tr className="border-b border-gray-300">
+                          <td className="py-4 pr-8 font-medium text-gray-900 w-32 align-top">住所</td>
+                          <td className="py-4 text-gray-700">
+                            〒605-0074<br />
+                            京都市東山区祇園町南側582
+                          </td>
+                        </tr>
+                        <tr className="border-b border-gray-300">
+                          <td className="py-4 pr-8 font-medium text-gray-900 w-32 align-top">代表者</td>
+                          <td className="py-4 text-gray-700">代表取締役 CEO</td>
+                        </tr>
+                        <tr className="border-b border-gray-300">
+                          <td className="py-4 pr-8 font-medium text-gray-900 w-32 align-top">設立</td>
+                          <td className="py-4 text-gray-700">2025年3月7日</td>
+                        </tr>
+                        <tr className="border-b border-gray-300">
+                          <td className="py-4 pr-8 font-medium text-gray-900 w-32 align-top">事業内容</td>
+                          <td className="py-4 text-gray-700">
+                            AIソフトウェア開発<br />
+                            AI研修・コンサルティング<br />
+                            受託開発
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="py-4 pr-8 font-medium text-gray-900 w-32 align-top">従業員数</td>
+                          <td className="py-4 text-gray-700">6人（業務委託含む）</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -215,23 +184,126 @@ export default function About() {
           </div>
         </section>
 
-        {/* Stats */}
-        <section className="py-16 bg-white">
+        {/* Team Members */}
+        <section className="py-20 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-bold text-center mb-12">
-              {isJapanese ? "数字で見るProtoduct" : "Protoduct by Numbers"}
+            <h2 className="text-3xl font-bold text-center mb-16 text-gray-900">
+              {isJapanese ? "メンバー紹介" : "Our Team"}
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {stats.map((stat, index) => (
-                <div key={index} className="text-center">
-                  <p className="text-4xl font-bold text-blue-600 mb-2">
-                    {isJapanese ? stat.valueJa : stat.valueEn}
-                  </p>
-                  <p className="text-gray-600">
-                    {isJapanese ? stat.labelJa : stat.labelEn}
-                  </p>
+            {/* First row - 2 members */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto mb-6">
+              {/* 宇野慎一郎 */}
+              <div className="relative group">
+                <div className="relative rounded-2xl bg-white border border-gray-200 shadow-lg p-5 w-full h-80 flex items-end">
+                  {/* Image - vertical rectangle, positioned at bottom-left with margin */}
+                  <div className="absolute bottom-5 left-5 w-3/5 h-5/6 rounded-lg overflow-hidden">
+                    <img 
+                      src={unoImage} 
+                      alt="宇野慎一郎" 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  
+                  {/* X Icon - aligned with top of image */}
+                  <a 
+                    href="https://x.com/protoduct_ai" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="absolute top-[18%] right-6 w-12 h-12 rounded-xl border border-gray-300 bg-white shadow-md flex items-center justify-center hover:shadow-lg transition-shadow"
+                  >
+                    <X className="w-6 h-6 text-gray-700" />
+                  </a>
+                  
+                  {/* Name and title - bottom right */}
+                  <div className="absolute bottom-6 right-6 text-right">
+                    <h3 className="text-gray-900 font-semibold text-base">宇野慎一郎</h3>
+                    <p className="text-gray-600 text-sm mt-1">Founder</p>
+                  </div>
                 </div>
-              ))}
+              </div>
+
+              {/* イギョンウク */}
+              <div className="relative group">
+                <div className="relative rounded-2xl bg-white border border-gray-200 shadow-lg p-5 w-full h-80 flex items-end">
+                  {/* Image - vertical rectangle, positioned at bottom-left with margin */}
+                  <div className="absolute bottom-5 left-5 w-3/5 h-5/6 rounded-lg overflow-hidden bg-gray-200">
+                  </div>
+                  
+                  {/* X Icon - aligned with top of image */}
+                  <div className="absolute top-[18%] right-6 w-12 h-12 rounded-xl border border-gray-300 bg-white shadow-md flex items-center justify-center">
+                    <X className="w-6 h-6 text-gray-700" />
+                  </div>
+                  
+                  {/* Name and title - bottom right */}
+                  <div className="absolute bottom-6 right-6 text-right">
+                    <h3 className="text-gray-900 font-semibold text-base">イギョンウク</h3>
+                    <p className="text-gray-600 text-sm mt-1">Co-founder</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Second row - 3 members */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+              {/* 山内泰嘉 */}
+              <div className="relative group">
+                <div className="relative rounded-2xl bg-white border border-gray-200 shadow-lg p-5 w-full h-80 flex items-end">
+                  {/* Image - vertical rectangle, positioned at bottom-left with margin */}
+                  <div className="absolute bottom-5 left-5 w-3/5 h-5/6 rounded-lg overflow-hidden bg-gray-200">
+                  </div>
+                  
+                  {/* X Icon - aligned with top of image */}
+                  <div className="absolute top-[18%] right-6 w-12 h-12 rounded-xl border border-gray-300 bg-white shadow-md flex items-center justify-center">
+                    <X className="w-6 h-6 text-gray-700" />
+                  </div>
+                  
+                  {/* Name and title - bottom right */}
+                  <div className="absolute bottom-6 right-6 text-right">
+                    <h3 className="text-gray-900 font-semibold text-base">山内泰嘉</h3>
+                    <p className="text-gray-600 text-sm mt-1">Co-founder</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* 奥谷大地 */}
+              <div className="relative group">
+                <div className="relative rounded-2xl bg-white border border-gray-200 shadow-lg p-5 w-full h-80 flex items-end">
+                  {/* Image - vertical rectangle, positioned at bottom-left with margin */}
+                  <div className="absolute bottom-5 left-5 w-3/5 h-5/6 rounded-lg overflow-hidden bg-gray-200">
+                  </div>
+                  
+                  {/* X Icon - aligned with top of image */}
+                  <div className="absolute top-[18%] right-6 w-12 h-12 rounded-xl border border-gray-300 bg-white shadow-md flex items-center justify-center">
+                    <X className="w-6 h-6 text-gray-700" />
+                  </div>
+                  
+                  {/* Name and title - bottom right */}
+                  <div className="absolute bottom-6 right-6 text-right">
+                    <h3 className="text-gray-900 font-semibold text-base">奥谷大地</h3>
+                    <p className="text-gray-600 text-sm mt-1">Co-founder</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* 中塚一晃 */}
+              <div className="relative group">
+                <div className="relative rounded-2xl bg-white border border-gray-200 shadow-lg p-5 w-full h-80 flex items-end">
+                  {/* Image - vertical rectangle, positioned at bottom-left with margin */}
+                  <div className="absolute bottom-5 left-5 w-3/5 h-5/6 rounded-lg overflow-hidden bg-gray-200">
+                  </div>
+                  
+                  {/* X Icon - aligned with top of image */}
+                  <div className="absolute top-[18%] right-6 w-12 h-12 rounded-xl border border-gray-300 bg-white shadow-md flex items-center justify-center">
+                    <X className="w-6 h-6 text-gray-700" />
+                  </div>
+                  
+                  {/* Name and title - bottom right */}
+                  <div className="absolute bottom-6 right-6 text-right">
+                    <h3 className="text-gray-900 font-semibold text-base">中塚一晃</h3>
+                    <p className="text-gray-600 text-sm mt-1">Co-founder</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>

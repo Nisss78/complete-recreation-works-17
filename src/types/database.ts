@@ -36,3 +36,18 @@ export interface Article {
   thumbnail_url?: string | null;
   likes_count?: number;
 }
+
+export interface News {
+  id: string;
+  date: string;
+  title_ja: string;
+  title_en?: string;
+  content_ja: string;
+  content_en?: string;
+  thumbnail_url?: string;
+  category: 'announcement' | 'event' | 'media' | 'other';
+  logo_type?: 'old' | 'new';
+  created_at: string;
+  updated_at: string;
+  created_by?: string;
+}

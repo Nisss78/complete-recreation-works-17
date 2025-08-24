@@ -16,6 +16,7 @@ import ProductPage from "@/pages/ProductPage";
 import TermsOfService from "@/pages/TermsOfService";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
 import News from "@/pages/News";
+import NewsDetail from "@/pages/NewsDetail";
 import Careers from "@/pages/Careers";
 import Contact from "@/pages/Contact";
 import About from "@/pages/About";
@@ -46,6 +47,7 @@ export const Routes = () => {
       <Route path="/terms" element={<TermsOfService />} />
       <Route path="/privacy" element={<PrivacyPolicy />} />
       <Route path="/news" element={<News />} />
+      <Route path="/news/:id" element={<NewsDetail />} />
       <Route path="/careers" element={<Careers />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/about" element={<About />} />
