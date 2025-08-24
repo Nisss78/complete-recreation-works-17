@@ -173,17 +173,6 @@ export const Header = () => {
               </>
             )}
             
-            {!isAuthenticated && (
-              <SheetClose asChild>
-                <Link
-                  to="/auth"
-                  className="flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium hover:bg-gray-100"
-                >
-                  <Plus className="h-5 w-5" />
-                  <span>ログイン</span>
-                </Link>
-              </SheetClose>
-            )}
           </div>
         </SheetContent>
       </Sheet>
@@ -233,14 +222,7 @@ export const Header = () => {
 
                 {userId && <UserMenu userId={userId} />}
               </>
-            ) : (
-              <Button 
-                className="gap-2 hidden md:flex btn-gradient"
-                onClick={() => navigate("/auth")}
-              >
-                <span>ログイン</span>
-              </Button>
-            )}
+            ) : null}
             
             <div className="md:hidden">
               <MobileMenu />

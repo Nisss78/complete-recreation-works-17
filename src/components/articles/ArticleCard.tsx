@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../../integrations/supabase/client";
 import { useToast } from "../../hooks/use-toast";
 import { ArticleHeader } from "./article-card/ArticleHeader";
-import { useArticleBookmarks } from "../../hooks/useArticleBookmarks";
 import { useArticleLikes } from "../../hooks/useArticleLikes";
 
 interface Author {
@@ -37,7 +36,6 @@ export const ArticleCard = ({
 }: ArticleCardProps) => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { isBookmarked, toggleBookmark } = useArticleBookmarks(id);
   const { hasLiked, likesCount, handleLike } = useArticleLikes(id, initialLikes);
 
   const handleDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -103,11 +101,6 @@ export const ArticleCard = ({
     navigate(`/profile/${author.id}`);
   };
 
-  const handleBookmark = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    await toggleBookmark();
-  };
 
   const handleLikeClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -127,9 +120,9 @@ export const ArticleCard = ({
             postedAt={postedAt}
             likes={likesCount}
             hasLiked={hasLiked}
-            isBookmarked={isBookmarked}
+            isBookmarked={false}
             onLike={handleLikeClick}
-            onBookmark={handleBookmark}
+            onBookmark={() => {}}
             onAuthorClick={handleAuthorClick}
             showDeleteButton={showDeleteButton}
             onDelete={handleDelete}

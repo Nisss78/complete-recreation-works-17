@@ -1,5 +1,4 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { FollowButton } from "@/components/articles/FollowButton";
 import { useNavigate } from "react-router-dom";
 
 interface ArticleHeaderProps {
@@ -48,7 +47,7 @@ export const ArticleHeader = ({ article }: ArticleHeaderProps) => {
           {article.title}
         </h1>
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center">
           <div className="flex items-center gap-3">
             <Avatar 
               className="w-10 h-10 cursor-pointer" 
@@ -66,7 +65,6 @@ export const ArticleHeader = ({ article }: ArticleHeaderProps) => {
               </p>
             </div>
           </div>
-          <FollowButton profileId={article.author.id} />
         </div>
       </div>
     </>

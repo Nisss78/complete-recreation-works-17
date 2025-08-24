@@ -7,8 +7,6 @@ import {
   Star, 
   MessageCircle, 
   Share2, 
-  Bookmark, 
-  BarChart2, 
   ExternalLink,
 } from "lucide-react";
 import { SparkleEffect } from "@/components/ui/sparkle-effect";
@@ -99,15 +97,6 @@ export const ProductActions = ({
       </Button>
       
       <Button 
-        variant={isBookmarked ? "secondary" : "outline"}
-        size="icon"
-        onClick={onBookmark}
-        className={`h-9 w-9 rounded-full ${isBookmarked ? "text-blue-500 border-blue-500" : ""}`}
-      >
-        <Bookmark className="w-4 h-4" />
-      </Button>
-      
-      <Button 
         variant="outline" 
         size="icon"
         onClick={handleShare}
@@ -115,16 +104,6 @@ export const ProductActions = ({
       >
         <Share2 className="w-4 h-4" />
       </Button>
-      
-      {!isMobile && (
-        <Button 
-          variant="outline" 
-          size="icon"
-          className="h-9 w-9 rounded-full"
-        >
-          <BarChart2 className="w-4 h-4" />
-        </Button>
-      )}
     </div>
   );
 };

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { useBookmarks } from "@/hooks/useBookmarks";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ProductImageCarousel } from "./ProductImageCarousel";
@@ -31,7 +30,6 @@ export const ProductDetails = ({ product, isLoadingImages }: ProductDetailsProps
   const { totalLikes, hasLiked, toggleLike } = useProductLikes(product.id);
   const { toast } = useToast();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const { isBookmarked, toggleBookmark } = useBookmarks(product.id);
   const isMobile = useIsMobile();
   const { t } = useLanguage();
 
@@ -55,18 +53,10 @@ export const ProductDetails = ({ product, isLoadingImages }: ProductDetailsProps
   }, [product.id]);
 
   const handleLike = async () => {
-    if (!isAuthenticated) {
-      toast({
-        title: t('product.details.loginRequired'),
-        description: t('product.details.loginRequiredDesc'),
-        className: "text-sm p-2"
-      });
-      return false;
-    }
     const success = await toggleLike();
     if (success) {
       toast({
-        title: hasLiked ? t('product.details.like') : t('product.details.like'),
+        title: hasLiked ? "いいねを取り消しました" : "いいね！",
         description: hasLiked 
           ? `${product.name}のいいねを取り消しました` 
           : `${product.name}にいいねしました`,
@@ -77,26 +67,7 @@ export const ProductDetails = ({ product, isLoadingImages }: ProductDetailsProps
   };
 
   const handleBookmark = async () => {
-    if (!isAuthenticated) {
-      toast({
-        title: t('product.details.loginRequired'),
-        description: t('product.details.loginRequiredDesc'),
-        className: "text-sm p-2"
-      });
-      return false;
-    }
-    const success = await toggleBookmark();
-    if (success) {
-      toast({
-        title: isBookmarked 
-          ? t('product.details.bookmarkRemoved')
-          : t('product.details.bookmarkAdded'),
-        description: isBookmarked 
-          ? t('product.details.bookmarkRemovedDesc').replace('{name}', product.name)
-          : t('product.details.bookmarkAddedDesc').replace('{name}', product.name),
-      });
-    }
-    return success;
+    return false;
   };
 
   return (
@@ -116,7 +87,7 @@ export const ProductDetails = ({ product, isLoadingImages }: ProductDetailsProps
         totalLikes={totalLikes}
         hasLiked={hasLiked}
         commentCount={commentCount}
-        isBookmarked={isBookmarked}
+        isBookmarked={false}
         isMobile={isMobile}
         onLike={handleLike}
         onBookmark={handleBookmark}

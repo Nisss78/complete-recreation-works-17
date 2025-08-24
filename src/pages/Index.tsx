@@ -80,15 +80,12 @@ const Index = () => {
 
   const handleProductClick = (product: any) => {
     console.log('Product clicked:', product);
-    const productSlug = product.name.toLowerCase().replace(/\s+/g, '-');
     setSelectedProduct(product);
-    navigate(`/products/${productSlug}`, { replace: true });
   };
 
   const handleDialogClose = () => {
-    console.log('Dialog closing, redirecting to home');
+    console.log('Dialog closing');
     setSelectedProduct(null);
-    navigate('/', { replace: true });
   };
 
   useEffect(() => {

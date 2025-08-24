@@ -10,15 +10,12 @@ import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Articles() {
-  const [showFollowedOnly, setShowFollowedOnly] = useState(false);
   const { t, language } = useLanguage();
 
   const { data: articles, isLoading } = useQuery({
-    queryKey: ["articles", showFollowedOnly],
+    queryKey: ["articles"],
     queryFn: async () => {
-      const { data: session } = await supabase.auth.getSession();
-      
-      let query = supabase
+      const query = supabase
         .from('articles')
         .select(`
           *,
@@ -29,21 +26,6 @@ export default function Articles() {
           )
         `)
         .order('created_at', { ascending: false });
-
-      if (showFollowedOnly && session.session) {
-        const { data: followedUsers } = await supabase
-          .from('follows')
-          .select('following_id')
-          .eq('follower_id', session.session.user.id);
-
-        const followedIds = followedUsers?.map(f => f.following_id) || [];
-        
-        if (followedIds.length > 0) {
-          query = query.in('user_id', followedIds);
-        } else {
-          return [];
-        }
-      }
 
       const { data, error } = await query;
 
@@ -84,26 +66,10 @@ export default function Articles() {
       <Header />
       <main className="mx-auto py-4 sm:container sm:px-4">
         <div className="space-y-3 sm:space-y-4 px-0">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-3 sm:px-0">
+          <div className="px-3 sm:px-0">
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
               {t('articles.title')}
             </h1>
-            <div className="flex gap-2">
-              <Button
-                variant={showFollowedOnly ? "outline" : "default"}
-                onClick={() => setShowFollowedOnly(false)}
-                className="flex-1 sm:flex-none text-sm sm:text-base px-3 py-1.5"
-              >
-                {t('articles.all')}
-              </Button>
-              <Button
-                variant={showFollowedOnly ? "default" : "outline"}
-                onClick={() => setShowFollowedOnly(true)}
-                className="flex-1 sm:flex-none text-sm sm:text-base px-3 py-1.5"
-              >
-                {t('articles.following')}
-              </Button>
-            </div>
           </div>
 
           {isLoading ? (
@@ -136,7 +102,7 @@ export default function Articles() {
             </div>
           ) : (
             <div className="text-center py-6 sm:py-8 text-gray-500 bg-white rounded-lg shadow-sm mx-3 sm:mx-0">
-              {showFollowedOnly ? t('articles.noFollowingArticles') : t('articles.noArticles')}
+              {t('articles.noArticles')}
             </div>
           )}
         </div>

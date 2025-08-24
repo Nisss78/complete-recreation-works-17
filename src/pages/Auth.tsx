@@ -58,6 +58,8 @@ const AuthPage = () => {
         <div className="bg-white py-8 px-4 shadow-xl rounded-xl sm:px-10 border border-gray-100">
           <Auth
             supabaseClient={supabase}
+            view="sign_in"
+            showLinks={false}
             appearance={{
               theme: ThemeSupa,
               variables: {
@@ -93,7 +95,7 @@ const AuthPage = () => {
                 message: 'text-sm text-gray-600 mt-2',
               },
             }}
-            providers={["google"]}
+            providers={[]}
             localization={{
               variables: {
                 sign_in: {
