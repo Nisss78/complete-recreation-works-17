@@ -144,19 +144,6 @@ export const Header = () => {
             
             <SheetClose asChild>
               <Link
-                to="/about"
-                className={cn(
-                  "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
-                  isActive("/about") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
-                )}
-              >
-                <Building2 className="h-5 w-5" />
-                <span>{t('about')}</span>
-              </Link>
-            </SheetClose>
-            
-            <SheetClose asChild>
-              <Link
                 to="/news"
                 className={cn(
                   "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
@@ -170,6 +157,19 @@ export const Header = () => {
             
             <SheetClose asChild>
               <Link
+                to="/about"
+                className={cn(
+                  "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
+                  isActive("/about") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                )}
+              >
+                <Building2 className="h-5 w-5" />
+                <span>{t('about')}</span>
+              </Link>
+            </SheetClose>
+            
+            {/* <SheetClose asChild>
+              <Link
                 to="/careers"
                 className={cn(
                   "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
@@ -179,7 +179,7 @@ export const Header = () => {
                 <Briefcase className="h-5 w-5" />
                 <span>{t('careers')}</span>
               </Link>
-            </SheetClose>
+            </SheetClose> */}
             
             <SheetClose asChild>
               <Link
@@ -257,9 +257,29 @@ export const Header = () => {
               <NavItem path="/home" icon={<Home className="h-4 w-4" />} label="Home" />
               <NavItem path="/" icon={<Package className="h-4 w-4" />} label={t('home')} />
               <NavItem path="/articles" icon={<FileText className="h-4 w-4" />} label={t("articles")} />
-              <NavItem path="/about" icon={<Building2 className="h-4 w-4" />} label={t("about")} />
               <NavItem path="/news" icon={<Newspaper className="h-4 w-4" />} label={t("news")} />
-              <NavItem path="/careers" icon={<Briefcase className="h-4 w-4" />} label={t("careers")} />
+              <NavItem path="/about" icon={<Building2 className="h-4 w-4" />} label={t("about")} />
+              {/* <NavItem path="/careers" icon={<Briefcase className="h-4 w-4" />} label={t("careers")} /> */}
+              <Button
+                onClick={() => navigate('/contact')}
+                className={cn(
+                  "flex items-center gap-2 font-semibold ml-2 backdrop-blur-xl border transition-all duration-300",
+                  isActive("/contact") 
+                    ? "bg-blue-600/70 border-blue-500/50 text-white hover:bg-blue-600/80"
+                    : "bg-black/70 border-white/10 text-white hover:bg-black/80 hover:border-white/20 hover:text-blue-600"
+                )}
+                style={{
+                  background: isActive("/contact") 
+                    ? "linear-gradient(135deg, rgba(59, 130, 246, 0.7) 0%, rgba(37, 99, 235, 0.7) 100%)"
+                    : "linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.6) 100%)",
+                  backdropFilter: "blur(10px) saturate(1.2)",
+                  WebkitBackdropFilter: "blur(10px) saturate(1.2)",
+                }}
+                size="sm"
+              >
+                <Mail className="h-4 w-4" />
+                <span>{t("contact")}</span>
+              </Button>
               {isAuthenticated && isAdmin && (
                 <NavItem path="/chat" icon={<MessageSquare className="h-4 w-4" />} label={t("chat")} />
               )}
@@ -267,19 +287,6 @@ export const Header = () => {
           </div>
           
           <div className="flex items-center gap-2 sm:gap-4">
-            <Link 
-              to="/contact" 
-              className={cn(
-                "hidden md:inline-flex items-center px-4 py-2 text-sm font-bold border-b-2 transition-colors mr-4",
-                isActive("/contact") 
-                  ? "border-blue-500 text-blue-600"
-                  : "border-transparent text-gray-800 hover:text-blue-600 hover:border-blue-300"
-              )}
-            >
-              <Mail className="h-4 w-4 mr-2" />
-              <span>{t("contact")}</span>
-            </Link>
-            
             {isAuthenticated ? (
               <>
                 <Button 
