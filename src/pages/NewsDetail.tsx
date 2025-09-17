@@ -22,7 +22,7 @@ export default function NewsDetail() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 flex flex-col">
         <Header />
         <main className="flex-1">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -36,7 +36,7 @@ export default function NewsDetail() {
 
   if (!newsItem) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 flex flex-col">
         <Header />
         <main className="flex-1">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -51,7 +51,7 @@ export default function NewsDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
       <main className="flex-1">
         <div className="bg-white">
@@ -104,7 +104,7 @@ export default function NewsDetail() {
                   {format(new Date(newsItem.date), 'yyyy.MM.dd')}
                 </span>
               </div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-6">
+              <h1 className="text-3xl font-bold text-gray-900 mb-6 text-left">
                 {isJapanese ? newsItem.title_ja : (newsItem.title_en || newsItem.title_ja)}
               </h1>
               

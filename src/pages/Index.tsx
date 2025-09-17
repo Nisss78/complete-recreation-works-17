@@ -149,43 +149,59 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen w-full flex flex-col bg-white">
+    <div className="min-h-screen w-full flex flex-col bg-gray-50">
       <Header />
       <main className="flex-1">
-        <div className="max-w-7xl mx-auto py-6 sm:py-8 px-4 sm:px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
-            <div className="lg:col-span-2">
-              <div className="flex justify-between items-center mb-4 sm:mb-6">
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
-                  {t('index.productsTitle')}
-                </h1>
-                <button
-                  onClick={() => setSortByLikes(!sortByLikes)}
-                  className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm gap-2"
-                >
-                  {sortByLikes ? (
-                    <>
-                      <ArrowDownAZ className="h-4 w-4" />
-                      <span className="whitespace-nowrap">{t('products.sortByDate')}</span>
-                    </>
-                  ) : (
-                    <>
-                      <ArrowUpAZ className="h-4 w-4" />
-                      <span className="whitespace-nowrap">{t('products.sortByLikes')}</span>
-                    </>
-                  )}
-                </button>
-              </div>
-              
-              <ProductsList 
-                groupedProducts={groupedProducts}
-                onProductClick={handleProductClick}
-                sortByLikes={sortByLikes}
-              />
-            </div>
+        {/* Hero Section */}
+        <div className="bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+            <h1 className="text-6xl font-bold mb-4 text-left" style={{
+              background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}>
+              PRODUCTS
+            </h1>
+            <p className="text-xl text-gray-700 text-left">
+              {t('index.productsTitle')}
+            </p>
+          </div>
+        </div>
 
-            <div className="lg:col-span-1 order-first lg:order-last mb-6 lg:mb-0">
-              <RecentArticles />
+        <div className="max-w-7xl mx-auto py-6 sm:py-8">
+          <div className="px-4 sm:px-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+              <div className="lg:col-span-2">
+                <div className="flex justify-between items-center mb-4 sm:mb-6">
+                  <button
+                    onClick={() => setSortByLikes(!sortByLikes)}
+                    className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm gap-2"
+                  >
+                    {sortByLikes ? (
+                      <>
+                        <ArrowDownAZ className="h-4 w-4" />
+                        <span className="whitespace-nowrap">{t('products.sortByDate')}</span>
+                      </>
+                    ) : (
+                      <>
+                        <ArrowUpAZ className="h-4 w-4" />
+                        <span className="whitespace-nowrap">{t('products.sortByLikes')}</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+                
+                <ProductsList 
+                  groupedProducts={groupedProducts}
+                  onProductClick={handleProductClick}
+                  sortByLikes={sortByLikes}
+                />
+              </div>
+
+              <div className="lg:col-span-1 order-first lg:order-last mb-6 lg:mb-0">
+                <RecentArticles />
+              </div>
             </div>
           </div>
         </div>

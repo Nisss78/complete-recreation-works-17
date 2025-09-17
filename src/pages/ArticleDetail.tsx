@@ -75,9 +75,9 @@ export default function ArticleDetail() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50 flex flex-col">
         <Header />
-        <main className="container max-w-4xl mx-auto py-4 sm:py-8 px-4">
+        <main className="flex-1 container max-w-4xl mx-auto py-4 sm:py-8 px-4">
           <div className="space-y-4 sm:space-y-8">
             <div className="flex items-center gap-3 sm:gap-4">
               <Skeleton className="w-10 h-10 sm:w-12 sm:h-12 rounded-full" />
@@ -102,9 +102,9 @@ export default function ArticleDetail() {
 
   if (!article) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50 flex flex-col">
         <Header />
-        <main className="container max-w-4xl mx-auto py-4 sm:py-8 px-4">
+        <main className="flex-1 container max-w-4xl mx-auto py-4 sm:py-8 px-4">
           <div className="text-center py-8 sm:py-12">
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">
               記事が見つかりませんでした
@@ -125,7 +125,7 @@ export default function ArticleDetail() {
   const description = article.content.substring(0, 150).replace(/[#*]/g, '') + '...';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50 flex flex-col">
       <Helmet>
         <title>{`${article.title} | Protoduct`}</title>
         <meta name="description" content={description} />
@@ -150,7 +150,7 @@ export default function ArticleDetail() {
         <meta name="twitter:image" content={ogpImageUrl} />
       </Helmet>
       <Header />
-      <main className="container max-w-4xl mx-auto py-4 sm:py-8 px-4">
+      <main className="flex-1 container max-w-4xl mx-auto py-4 sm:py-8 px-4">
         <Button
           variant="ghost"
           size="sm"

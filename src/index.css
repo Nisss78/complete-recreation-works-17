@@ -76,3 +76,12 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Keep the app full width without forcing section wrappers to stretch */
+@layer utilities {
+  #root, body, html {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+}

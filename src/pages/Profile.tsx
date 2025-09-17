@@ -106,9 +106,9 @@ const ProfilePage = () => {
 
   if (profileLoading || articlesLoading) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white flex flex-col">
         <Header />
-        <main className="container max-w-4xl mx-auto py-4 sm:py-8 px-4 sm:px-6">
+        <main className="flex-1 container max-w-4xl mx-auto py-4 sm:py-8 px-4 sm:px-6">
           <div className="animate-pulse space-y-4">
             <div className="h-32 bg-gray-100 rounded-xl" />
             <div className="space-y-4">
@@ -127,9 +127,9 @@ const ProfilePage = () => {
   if (!targetId || !profile) return null;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white flex flex-col">
       <Header />
-      <main className="container max-w-4xl mx-auto py-4 sm:py-8 px-4 sm:px-6">
+      <main className="flex-1 container max-w-4xl mx-auto py-4 sm:py-8 px-4 sm:px-6">
         <div className="space-y-6 sm:space-y-8">
           <ProfileHeader 
             profileId={targetId}

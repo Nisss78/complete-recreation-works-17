@@ -66,9 +66,9 @@ const SettingsPage = () => {
 
   if (!userId) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white flex flex-col">
         <Header />
-        <main className="container max-w-4xl mx-auto py-8 px-4">
+        <main className="flex-1 container max-w-4xl mx-auto py-8 px-4">
           <div className="flex items-center justify-center h-32">
             <div className="animate-pulse text-gray-500">{t('common.loading')}</div>
           </div>
@@ -79,9 +79,9 @@ const SettingsPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white flex flex-col">
       <Header />
-      <main className="container max-w-4xl mx-auto py-4 sm:py-8 px-4 sm:px-6">
+      <main className="flex-1 container max-w-4xl mx-auto py-4 sm:py-8 px-4 sm:px-6">
         <div className="space-y-6">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">{t('common.settings')}</h1>

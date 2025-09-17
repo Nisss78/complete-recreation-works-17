@@ -62,18 +62,32 @@ export default function Articles() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
-      <main className="mx-auto py-4 sm:container sm:px-4">
-        <div className="space-y-3 sm:space-y-4 px-0">
-          <div className="px-3 sm:px-0">
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
-              {t('articles.title')}
+      <main className="flex-1">
+        {/* Hero Section */}
+        <div className="bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+            <h1 className="text-6xl font-bold mb-4 text-left" style={{
+              background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}>
+              ARTICLES
             </h1>
+            <p className="text-xl text-gray-700 text-left">
+              {t('articles.title')}
+            </p>
           </div>
+        </div>
+
+        <div className="py-6 sm:py-8">
+          <div className="max-w-5xl md:max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="space-y-3 sm:space-y-4">
 
           {isLoading ? (
-            <div className="space-y-2 px-3 sm:px-0">
+            <div className="space-y-2">
               {[...Array(3)].map((_, i) => (
                 <div key={i} className="animate-pulse">
                   <div className="h-24 sm:h-32 bg-gray-200 rounded-lg" />
@@ -83,7 +97,7 @@ export default function Articles() {
           ) : articles && articles.length > 0 ? (
             <div className="space-y-2">
               {articles.map((article) => (
-                <div key={article.id} className="px-0">
+                <div key={article.id}>
                   <ArticleCard
                     id={article.id}
                     date={formatDate(article.created_at)}
@@ -101,10 +115,12 @@ export default function Articles() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-6 sm:py-8 text-gray-500 bg-white rounded-lg shadow-sm mx-3 sm:mx-0">
+            <div className="text-center py-6 sm:py-8 text-gray-500 bg-white rounded-lg shadow-sm">
               {t('articles.noArticles')}
             </div>
           )}
+            </div>
+          </div>
         </div>
       </main>
       <Footer />

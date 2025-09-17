@@ -44,23 +44,28 @@ export default function News() {
   ];
 
   const categoryBadges = {
-    announcement: { ja: "お知らせ", en: "Announcement", color: "bg-blue-500 text-white" },
-    event: { ja: "イベント", en: "Event", color: "bg-purple-500 text-white" },
-    media: { ja: "メディア", en: "Media", color: "bg-green-500 text-white" },
-    other: { ja: "その他", en: "Other", color: "bg-gray-500 text-white" },
+    announcement: { ja: "お知らせ", en: "Announcement", color: "text-white", style: { backgroundColor: '#10c876' } },
+    event: { ja: "イベント", en: "Event", color: "text-white", style: { backgroundColor: '#7bc61e' } },
+    media: { ja: "メディア", en: "Media", color: "text-white", style: { backgroundColor: '#15b8e5' } },
+    other: { ja: "その他", en: "Other", color: "bg-gray-500 text-white", style: {} },
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
       <main className="flex-1">
         {/* Hero Section */}
         <div className="bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-            <h1 className="text-6xl font-bold text-[#0066FF] mb-4">
+            <h1 className="text-6xl font-bold mb-4 text-left" style={{
+              background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}>
               NEWS
             </h1>
-            <p className="text-xl text-gray-700">
+            <p className="text-xl text-gray-700 text-left">
               {isJapanese ? "お知らせ" : "Announcements"}
             </p>
           </div>
@@ -71,7 +76,7 @@ export default function News() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <Button 
               onClick={() => setShowNewsForm(true)}
-              className="bg-[#0066FF] hover:bg-[#0052CC] text-white"
+              className="bg-gradient-to-r from-[#10c876] to-[#15b8e5] hover:from-[#0fb368] hover:to-[#13a5d0] text-white"
             >
               <Plus className="h-5 w-5 mr-2" />
               {isJapanese ? "ニュース追加" : "Add News"}
@@ -90,7 +95,7 @@ export default function News() {
                   className={cn(
                     "py-4 px-2 border-b-2 font-medium text-sm transition-colors",
                     selectedCategory === category.value
-                      ? "border-[#0066FF] text-[#0066FF]"
+                      ? "border-[#10c876] text-[#10c876]"
                       : "border-transparent text-gray-500 hover:text-gray-700"
                   )}
                 >
@@ -131,10 +136,13 @@ export default function News() {
                       {/* Content */}
                       <div className={cn("flex-1 p-6", item.thumbnail_url ? "" : "")}>
                         <div className="flex items-start gap-4">
-                          <span className={cn(
-                            "inline-block px-3 py-1 rounded-full text-sm font-medium",
-                            categoryBadges[item.category].color
-                          )}>
+                          <span 
+                            className={cn(
+                              "inline-block px-3 py-1 rounded-full text-sm font-medium",
+                              categoryBadges[item.category].color
+                            )}
+                            style={categoryBadges[item.category].style}
+                          >
                             {isJapanese 
                               ? categoryBadges[item.category].ja 
                               : categoryBadges[item.category].en}
@@ -145,7 +153,7 @@ export default function News() {
                                 {format(new Date(item.date), 'yyyy.M.d')}
                               </span>
                             </div>
-                            <h3 className="text-xl font-medium text-gray-900 line-clamp-2">
+                            <h3 className="text-xl font-medium text-gray-900 line-clamp-2 text-left">
                               {isJapanese ? item.title_ja : (item.title_en || item.title_ja)}
                             </h3>
                           </div>

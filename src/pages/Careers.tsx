@@ -117,7 +117,7 @@ export default function Careers() {
   const isJapanese = language === 'ja';
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
       <main className="flex-1">
         <div className="bg-gradient-to-br from-blue-50 via-white to-purple-50 border-b">

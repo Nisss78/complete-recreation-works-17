@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { ProductSubmissionDialog } from "./ProductSubmissionDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { UserMenu } from "./header/UserMenu";
+import { LanguageToggle } from "./header/LanguageToggle";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLanguage } from "@/contexts/LanguageContext";
 import {
@@ -82,8 +83,8 @@ export const Header = () => {
       className={cn(
         "inline-flex items-center px-3 py-2 text-sm font-medium border-b-2 transition-colors",
         isActive(path) 
-          ? "border-blue-500 text-blue-600"
-          : "border-transparent text-gray-600 hover:text-blue-600 hover:border-blue-300"
+          ? "border-[#10c876] text-[#10c876]"
+          : "border-transparent text-gray-600 hover:text-[#10c876] hover:border-[#10c876]/50"
       )}
     >
       <span className="mr-2">{icon}</span>
@@ -109,7 +110,7 @@ export const Header = () => {
                 to="/home"
                 className={cn(
                   "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
-                  isActive("/home") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                  isActive("/home") ? "bg-green-50 text-[#10c876]" : "hover:bg-gray-100"
                 )}
               >
                 <Home className="h-5 w-5" />
@@ -122,7 +123,7 @@ export const Header = () => {
                 to="/"
                 className={cn(
                   "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
-                  isActive("/") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                  isActive("/") ? "bg-green-50 text-[#10c876]" : "hover:bg-gray-100"
                 )}
               >
                 <Package className="h-5 w-5" />
@@ -135,7 +136,7 @@ export const Header = () => {
                 to="/articles"
                 className={cn(
                   "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
-                  isActive("/articles") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                  isActive("/articles") ? "bg-green-50 text-[#10c876]" : "hover:bg-gray-100"
                 )}
               >
                 <FileText className="h-5 w-5" />
@@ -148,7 +149,7 @@ export const Header = () => {
                 to="/news"
                 className={cn(
                   "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
-                  isActive("/news") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                  isActive("/news") ? "bg-green-50 text-[#10c876]" : "hover:bg-gray-100"
                 )}
               >
                 <Newspaper className="h-5 w-5" />
@@ -161,7 +162,7 @@ export const Header = () => {
                 to="/about"
                 className={cn(
                   "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
-                  isActive("/about") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                  isActive("/about") ? "bg-green-50 text-[#10c876]" : "hover:bg-gray-100"
                 )}
               >
                 <Building2 className="h-5 w-5" />
@@ -187,7 +188,7 @@ export const Header = () => {
                 to="/contact"
                 className={cn(
                   "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
-                  isActive("/contact") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                  isActive("/contact") ? "bg-green-50 text-[#10c876]" : "hover:bg-gray-100"
                 )}
               >
                 <Mail className="h-5 w-5" />
@@ -202,7 +203,7 @@ export const Header = () => {
                     to="/articles/new"
                     className={cn(
                       "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
-                      isActive("/articles/new") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                      isActive("/articles/new") ? "bg-green-50 text-[#10c876]" : "hover:bg-gray-100"
                     )}
                   >
                     <PenLine className="h-5 w-5" />
@@ -216,7 +217,7 @@ export const Header = () => {
                       to="/chat"
                       className={cn(
                         "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
-                        isActive("/chat") ? "bg-blue-50 text-blue-700" : "hover:bg-gray-100"
+                        isActive("/chat") ? "bg-green-50 text-[#10c876]" : "hover:bg-gray-100"
                       )}
                     >
                       <MessageSquare className="h-5 w-5" />
@@ -246,7 +247,7 @@ export const Header = () => {
   };
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-blue">
+    <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center h-24">
           <div className="flex items-center">
@@ -266,12 +267,12 @@ export const Header = () => {
                 className={cn(
                   "flex items-center gap-2 font-semibold ml-2 backdrop-blur-xl border transition-all duration-300",
                   isActive("/contact") 
-                    ? "bg-blue-600/70 border-blue-500/50 text-white hover:bg-blue-600/80"
-                    : "bg-black/70 border-white/10 text-white hover:bg-black/80 hover:border-white/20 hover:text-blue-600"
+                    ? "border-[#10c876]/50 text-white hover:bg-[#10c876]/80"
+                    : "bg-black/70 border-white/10 text-white hover:bg-black/80 hover:border-white/20 hover:text-[#10c876]"
                 )}
                 style={{
                   background: isActive("/contact") 
-                    ? "linear-gradient(135deg, rgba(59, 130, 246, 0.7) 0%, rgba(37, 99, 235, 0.7) 100%)"
+                    ? "linear-gradient(135deg, rgba(123, 198, 30, 0.7) 0%, rgba(16, 200, 118, 0.7) 50%, rgba(21, 184, 229, 0.7) 100%)"
                     : "linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.6) 100%)",
                   backdropFilter: "blur(10px) saturate(1.2)",
                   WebkitBackdropFilter: "blur(10px) saturate(1.2)",
@@ -288,11 +289,13 @@ export const Header = () => {
           </div>
           
           <div className="flex items-center gap-2 sm:gap-4">
+            <LanguageToggle />
+            
             {isAuthenticated ? (
               <>
                 <Button 
                   onClick={() => navigate('/articles/new')}
-                  className="bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 text-white hidden md:flex items-center gap-2"
+                  className="bg-gradient-to-r from-[#10c876] to-[#15b8e5] hover:from-[#0fb368] hover:to-[#13a5d0] text-white hidden md:flex items-center gap-2"
                 >
                   <PenLine className="h-4 w-4" />
                   <span>{t('writeArticle')}</span>

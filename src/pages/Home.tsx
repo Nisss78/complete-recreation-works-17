@@ -1,104 +1,293 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, Users, Zap } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowRight, Code, GraduationCap, Briefcase, Building2, TrendingUp, Users } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useNews } from "@/hooks/useNews";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 export default function Home() {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { language } = useLanguage();
+  const isJapanese = language === 'ja';
+  const { data: newsItems } = useNews();
+  
+  // Get latest 3 news items
+  const latestNews = newsItems?.slice(0, 3) || [];
+
+  const categoryBadges = {
+    announcement: { ja: "お知らせ", en: "Announcement", color: "text-white", style: { backgroundColor: '#10c876' } },
+    event: { ja: "イベント", en: "Event", color: "text-white", style: { backgroundColor: '#7bc61e' } },
+    media: { ja: "メディア", en: "Media", color: "text-white", style: { backgroundColor: '#15b8e5' } },
+    other: { ja: "その他", en: "Other", color: "bg-gray-500 text-white", style: {} },
+  };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white flex flex-col">
       <Header />
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 py-20 sm:py-32">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="relative overflow-hidden py-24 sm:py-32" style={{
+          background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)'
+        }}>
+          <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:60px_60px]" />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
             <div className="text-center">
-              <h1 className="text-4xl sm:text-6xl font-bold text-gray-900 mb-6">
-                Welcome to <span className="text-blue-gradient">Protoduct</span>
+              <h1 className="text-4xl sm:text-6xl font-bold text-white mb-6">
+                We build Cool & Scalable products
               </h1>
-              <p className="text-xl sm:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-                最新のプロダクトと記事を発見し、開発者コミュニティと繋がろう
+              <p className="text-xl sm:text-2xl text-white/90 mb-8 max-w-3xl mx-auto">
+                Delivering experiences beyond imagination with maximum speed and quality
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
                   size="lg"
-                  onClick={() => navigate("/")}
-                  className="bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 text-white"
+                  onClick={() => navigate("/contact")}
+                  className="bg-white hover:bg-gray-100"
+                  style={{ color: '#0b925b' }}
                 >
-                  プロダクトを見る
+                  {isJapanese ? "お問い合わせ" : "Contact Us"}
                   <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  onClick={() => navigate("/articles")}
-                >
-                  記事を読む
                 </Button>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Features Section */}
-        <section className="py-16 sm:py-24">
+        {/* Services Section */}
+        <section className="py-20 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-12">
-              なぜProtoductを選ぶのか
+            <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-4">
+              {isJapanese ? "私たちのサービス" : "Our Services"}
             </h2>
+            <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+              {isJapanese 
+                ? "企業のニーズに合わせた最適なAIソリューションを提供します"
+                : "We provide optimal AI solutions tailored to your business needs"}
+            </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-                  <Sparkles className="h-8 w-8 text-blue-600" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">最新のプロダクト</h3>
-                <p className="text-gray-600">
-                  毎日新しいプロダクトが追加され、最新の技術トレンドを把握できます
+              <Card className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style={{ backgroundColor: 'rgba(123, 198, 30, 0.15)' }}>
+                    <Code className="h-6 w-6" style={{ color: '#7bc61e' }} />
+                  </div>
+                  <CardTitle>{isJapanese ? "AIソフトウェア開発" : "AI Software Development"}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">
+                    {isJapanese
+                      ? "機械学習、深層学習を活用した最先端のAIソリューションを開発します。自然言語処理、画像認識、予測分析など、幅広い分野に対応。"
+                      : "We develop cutting-edge AI solutions using machine learning and deep learning. Supporting various fields including NLP, image recognition, and predictive analytics."}
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style={{ backgroundColor: 'rgba(16, 200, 118, 0.15)' }}>
+                    <GraduationCap className="h-6 w-6" style={{ color: '#10c876' }} />
+                  </div>
+                  <CardTitle>{isJapanese ? "AI研修・コンサルティング" : "AI Training & Consulting"}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">
+                    {isJapanese
+                      ? "企業向けのAI人材育成プログラムと、AI導入に関する戦略的コンサルティングを提供。実践的なワークショップも実施。"
+                      : "Providing AI talent development programs and strategic consulting for AI implementation. Including practical workshops."}
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style={{ backgroundColor: 'rgba(21, 184, 229, 0.15)' }}>
+                    <Briefcase className="h-6 w-6" style={{ color: '#15b8e5' }} />
+                  </div>
+                  <CardTitle>{isJapanese ? "受託開発" : "Contract Development"}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">
+                    {isJapanese
+                      ? "お客様の要件に合わせたカスタムソリューションを開発。既存システムとの統合やPOC開発にも対応します。"
+                      : "Developing custom solutions tailored to your requirements. Supporting system integration and POC development."}
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        {/* Recent News Section */}
+        <section className="py-20 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center mb-12">
+              <div>
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
+                  {isJapanese ? "最新ニュース" : "Recent News"}
+                </h2>
+                <p className="text-gray-600 mt-2">
+                  {isJapanese ? "最新の情報をお届けします" : "Stay updated with our latest news"}
                 </p>
               </div>
-              <div className="text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-4">
-                  <Users className="h-8 w-8 text-purple-600" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">活発なコミュニティ</h3>
-                <p className="text-gray-600">
-                  開発者同士が知識を共有し、フィードバックを交換できます
+              <Link to="/news">
+                <Button variant="outline">
+                  {isJapanese ? "もっと見る" : "View More"}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+            
+            {latestNews.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {latestNews.map((item) => (
+                  <Link key={item.id} to={`/news/${item.id}`}>
+                    <Card className="h-full hover:shadow-lg transition-shadow overflow-hidden">
+                      {item.thumbnail_url && (
+                        <div className="h-48 overflow-hidden">
+                          <img 
+                            src={item.thumbnail_url} 
+                            alt={isJapanese ? item.title_ja : (item.title_en || item.title_ja)}
+                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                          />
+                        </div>
+                      )}
+                      <CardHeader>
+                        <div className="flex items-center gap-2 mb-2">
+                          <span 
+                            className={cn(
+                              "inline-block px-2 py-1 rounded-full text-xs font-medium",
+                              categoryBadges[item.category].color
+                            )}
+                            style={categoryBadges[item.category].style}
+                          >
+                            {isJapanese 
+                              ? categoryBadges[item.category].ja 
+                              : categoryBadges[item.category].en}
+                          </span>
+                          <span className="text-gray-500 text-sm">
+                            {format(new Date(item.date), 'yyyy.MM.dd')}
+                          </span>
+                        </div>
+                        <CardTitle className="line-clamp-2 text-lg">
+                          {isJapanese ? item.title_ja : (item.title_en || item.title_ja)}
+                        </CardTitle>
+                      </CardHeader>
+                    </Card>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 bg-gray-50 rounded-lg">
+                <p className="text-gray-500">
+                  {isJapanese ? "ニュースはまだありません" : "No news available yet"}
                 </p>
               </div>
-              <div className="text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
-                  <Zap className="h-8 w-8 text-green-600" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">簡単な共有</h3>
-                <p className="text-gray-600">
-                  プロダクトや記事を簡単に投稿し、世界中の人々と共有できます
+            )}
+          </div>
+        </section>
+
+        {/* Company Section */}
+        <section className="py-20 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div>
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
+                  COMPANY
+                </h2>
+                <h3 className="text-2xl font-semibold text-gray-800 mb-4">
+                  {isJapanese ? "会社概要" : "About Us"}
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  {isJapanese
+                    ? "ProtoductAI株式会社は、2025年3月に設立された最先端のAI技術企業です。私たちは、AIソフトウェア開発、AI研修・コンサルティング、受託開発の3つの事業を軸に、お客様のデジタルトランスフォーメーションを支援しています。"
+                    : "ProtoductAI Inc. is a cutting-edge AI technology company established in March 2025. We support our customers' digital transformation through three main businesses: AI software development, AI training & consulting, and contract development."}
                 </p>
+                <div className="space-y-3 mb-8">
+                  <div className="flex items-start">
+                    <Building2 className="h-5 w-5 mr-3 mt-1" style={{ color: '#5a9c11' }} />
+                    <div>
+                      <p className="font-semibold">{isJapanese ? "会社名" : "Company Name"}</p>
+                      <p className="text-gray-600">ProtoductAI株式会社</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start">
+                    <TrendingUp className="h-5 w-5 mr-3 mt-1" style={{ color: '#0b925b' }} />
+                    <div>
+                      <p className="font-semibold">{isJapanese ? "設立" : "Founded"}</p>
+                      <p className="text-gray-600">{isJapanese ? "2025年3月7日" : "March 7, 2025"}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start">
+                    <Users className="h-5 w-5 mr-3 mt-1" style={{ color: '#0c87a7' }} />
+                    <div>
+                      <p className="font-semibold">{isJapanese ? "従業員数" : "Employees"}</p>
+                      <p className="text-gray-600">{isJapanese ? "6人（業務委託含む）" : "6 (including contractors)"}</p>
+                    </div>
+                  </div>
+                </div>
+                <Link to="/about">
+                  <Button 
+                    className="text-white"
+                    style={{ 
+                      backgroundColor: '#0b925b',
+                      ':hover': { backgroundColor: '#0a7a4d' }
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0a7a4d'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0b925b'}
+                  >
+                    {isJapanese ? "詳しく見る" : "Learn More"}
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+              </div>
+              <div className="relative">
+                <div className="absolute inset-0 rounded-2xl transform rotate-3" style={{
+                  background: 'linear-gradient(to bottom right, rgba(90, 156, 17, 0.1), rgba(11, 146, 91, 0.1), rgba(12, 135, 167, 0.1))'
+                }}></div>
+                <div className="relative bg-white rounded-2xl p-8 shadow-lg">
+                  <div className="space-y-4">
+                    <div className="h-3 bg-gray-200 rounded w-3/4"></div>
+                    <div className="h-3 bg-gray-200 rounded w-full"></div>
+                    <div className="h-3 bg-gray-200 rounded w-5/6"></div>
+                    <div className="h-20 rounded-lg mt-6" style={{
+                      background: 'linear-gradient(to bottom right, rgba(90, 156, 17, 0.05), rgba(11, 146, 91, 0.05), rgba(12, 135, 167, 0.05))'
+                    }}></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
         {/* CTA Section */}
-        <section className="bg-gradient-to-r from-blue-600 to-purple-600 py-16">
+        <section className="py-20 bg-white">
           <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-              今すぐ始めよう
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              {isJapanese ? "AIで未来を創造しよう" : "Create the Future with AI"}
             </h2>
-            <p className="text-xl text-blue-100 mb-8">
-              あなたのプロダクトや知識を世界と共有しましょう
+            <p className="text-xl text-gray-600 mb-8">
+              {isJapanese 
+                ? "お客様のビジネス課題を、最先端のAI技術で解決します"
+                : "Solving your business challenges with cutting-edge AI technology"}
             </p>
-            <Button
-              size="lg"
-              variant="secondary"
-              onClick={() => navigate("/admin")}
-              className="bg-white text-blue-600 hover:bg-gray-100"
-            >
-              管理者としてログイン
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button
+                size="lg"
+                onClick={() => navigate("/contact")}
+                className="text-white"
+                style={{ 
+                  backgroundColor: '#0b925b'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0a7a4d'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0b925b'}
+              >
+                {isJapanese ? "お問い合わせはこちら" : "Contact Us Now"}
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </div>
           </div>
         </section>
       </main>
