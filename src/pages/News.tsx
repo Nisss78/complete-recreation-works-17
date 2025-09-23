@@ -56,7 +56,7 @@ export default function News() {
       <main className="flex-1">
         {/* Hero Section */}
         <div className="bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 pt-28 md:pt-32">
             <h1 className="text-6xl font-bold mb-4 text-left" style={{
               background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)',
               WebkitBackgroundClip: 'text',

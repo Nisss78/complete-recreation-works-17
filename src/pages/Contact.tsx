@@ -62,15 +62,22 @@ export default function Contact() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
       <main className="flex-1">
-        <div className="bg-gradient-to-br from-blue-50 via-white to-purple-50 border-b">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              {isJapanese ? "お問い合わせ" : "Contact Us"}
+        {/* Page Title */}
+        <div className="bg-white border-b">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 pt-28 md:pt-32">
+            <h1
+              className="text-5xl sm:text-6xl font-bold mb-4 text-left"
+              style={{
+                background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}
+            >
+              CONTACT
             </h1>
-            <p className="text-xl text-gray-600">
-              {isJapanese 
-                ? "ご質問・ご要望がございましたらお気軽にお問い合わせください" 
-                : "Feel free to reach out with any questions or requests"}
+            <p className="text-xl text-gray-700 text-left">
+              {isJapanese ? "お問い合わせ" : "Contact Us"}
             </p>
           </div>
         </div>

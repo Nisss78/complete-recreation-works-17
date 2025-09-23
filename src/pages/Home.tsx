@@ -30,7 +30,7 @@ export default function Home() {
       <Header />
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="relative overflow-hidden py-24 sm:py-32" style={{
+        <section className="relative overflow-hidden min-h-[100svh] flex items-center" style={{
           background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)'
         }}>
           <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:60px_60px]" />

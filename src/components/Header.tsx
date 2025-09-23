@@ -81,13 +81,13 @@ export const Header = () => {
     <Link 
       to={path} 
       className={cn(
-        "inline-flex items-center px-3 py-2 text-sm font-medium border-b-2 transition-colors",
-        isActive(path) 
-          ? "border-[#10c876] text-[#10c876]"
-          : "border-transparent text-gray-600 hover:text-[#10c876] hover:border-[#10c876]/50"
+        "inline-flex items-center gap-2 px-2 sm:px-3 py-2 text-sm font-medium rounded-xl transition-colors whitespace-nowrap",
+        isActive(path)
+          ? "bg-white/40 text-[#10c876] shadow-sm"
+          : "text-gray-800 hover:bg-white/20 hover:text-[#10c876]"
       )}
     >
-      <span className="mr-2">{icon}</span>
+      <span>{icon}</span>
       <span>{label}</span>
     </Link>
   );
@@ -100,7 +100,7 @@ export const Header = () => {
             <Menu className="h-5 w-5" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="right" className="bg-white">
+        <SheetContent side="right" className="bg-white/20 backdrop-blur-xl border-l border-white/25">
           <SheetHeader className="mb-4">
             <SheetTitle>{t('menu')}</SheetTitle>
           </SheetHeader>
@@ -247,78 +247,60 @@ export const Header = () => {
   };
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="flex justify-between items-center h-24">
-          <div className="flex items-center">
-            <Link to="/" className="flex items-center hover:opacity-90 transition-opacity mr-8">
-              <img src={logoImage} alt="Protoduct" className="h-20 w-auto" />
-            </Link>
-            
-            <nav className="hidden md:flex items-center space-x-2 flex-1">
-              <NavItem path="/home" icon={<Home className="h-4 w-4" />} label="Home" />
-              <NavItem path="/" icon={<Package className="h-4 w-4" />} label={t('home')} />
-              <NavItem path="/articles" icon={<FileText className="h-4 w-4" />} label={t("articles")} />
-              <NavItem path="/news" icon={<Newspaper className="h-4 w-4" />} label={t("news")} />
-              <NavItem path="/about" icon={<Building2 className="h-4 w-4" />} label={t("about")} />
-              {/* <NavItem path="/careers" icon={<Briefcase className="h-4 w-4" />} label={t("careers")} /> */}
+    <header className="fixed inset-x-0 top-0 z-50">
+      <div
+        className="max-w-7xl mx-auto px-4 sm:px-6"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 10px)" }}
+      >
+        {/* Glass nav bar container (centered, wider for JA labels) */}
+        <div className="mt-3 md:mt-4 mb-2 rounded-2xl liquid-glass-nav max-w-4xl md:max-w-5xl mx-auto">
+          <div className="h-16 md:h-20 px-2 sm:px-3 grid grid-cols-[1fr_auto_1fr] items-center">
+            {/* Left spacer (keeps center true centered) */}
+            <div className="hidden md:block" />
+
+            {/* Center group: logo + nav + contact + user */}
+            <div className="flex items-center justify-center gap-1.5 sm:gap-2">
+              <Link to="/" className="flex items-center hover:opacity-90 transition-opacity">
+                <img src={logoImage} alt="Protoduct" className="h-11 md:h-14 w-auto" />
+              </Link>
+              <nav className="hidden md:flex items-center gap-1.5 sm:gap-2">
+                <NavItem path="/home" icon={<Home className="h-4 w-4" />} label="Home" />
+                <NavItem path="/" icon={<Package className="h-4 w-4" />} label={t('home')} />
+                <NavItem path="/articles" icon={<FileText className="h-4 w-4" />} label={t("articles")} />
+                <NavItem path="/news" icon={<Newspaper className="h-4 w-4" />} label={t("news")} />
+                <NavItem path="/about" icon={<Building2 className="h-4 w-4" />} label={t("about")} />
+                {isAuthenticated && isAdmin && (
+                  <NavItem path="/chat" icon={<MessageSquare className="h-4 w-4" />} label={t("chat")} />
+                )}
+              </nav>
               <Button
                 onClick={() => navigate('/contact')}
                 className={cn(
-                  "flex items-center gap-2 font-semibold ml-2 backdrop-blur-xl border transition-all duration-300",
+                  "flex items-center gap-2 font-semibold transition-all duration-300 rounded-xl text-white",
                   isActive("/contact") 
-                    ? "border-[#10c876]/50 text-white hover:bg-[#10c876]/80"
-                    : "bg-black/70 border-white/10 text-white hover:bg-black/80 hover:border-white/20 hover:text-[#10c876]"
+                    ? "hover:bg-[#10c876]/80"
+                    : "hover:bg-white/30",
+                  "liquid-glass-pill"
                 )}
                 style={{
                   background: isActive("/contact") 
                     ? "linear-gradient(135deg, rgba(123, 198, 30, 0.7) 0%, rgba(16, 200, 118, 0.7) 50%, rgba(21, 184, 229, 0.7) 100%)"
-                    : "linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.6) 100%)",
-                  backdropFilter: "blur(10px) saturate(1.2)",
-                  WebkitBackdropFilter: "blur(10px) saturate(1.2)",
+                    : undefined,
                 }}
                 size="sm"
               >
                 <Mail className="h-4 w-4" />
                 <span>{t("contact")}</span>
               </Button>
-              {isAuthenticated && isAdmin && (
-                <NavItem path="/chat" icon={<MessageSquare className="h-4 w-4" />} label={t("chat")} />
-              )}
-            </nav>
-          </div>
-          
-          <div className="flex items-center gap-2 sm:gap-4">
-            <LanguageToggle />
-            
-            {isAuthenticated ? (
-              <>
-                <Button 
-                  onClick={() => navigate('/articles/new')}
-                  className="bg-gradient-to-r from-[#10c876] to-[#15b8e5] hover:from-[#0fb368] hover:to-[#13a5d0] text-white hidden md:flex items-center gap-2"
-                >
-                  <PenLine className="h-4 w-4" />
-                  <span>{t('writeArticle')}</span>
-                </Button>
-                
-                {isAdmin && (
-                  <Button 
-                    variant="outline"
-                    size={isMobile ? "icon" : "default"}
-                    className="gap-2 hidden md:flex"
-                    onClick={() => setShowSubmissionDialog(true)}
-                  >
-                    <Plus className="h-4 w-4" />
-                    {!isMobile && <span>製品を投稿</span>}
-                  </Button>
-                )}
+              {userId && <UserMenu userId={userId} />}
+            </div>
 
-                {userId && <UserMenu userId={userId} />}
-              </>
-            ) : null}
-            
-            <div className="md:hidden">
-              <MobileMenu />
+            {/* Right group: language (far right) + mobile menu on small screens */}
+            <div className="flex items-center justify-end gap-2 sm:gap-3">
+              <LanguageToggle />
+              <div className="md:hidden">
+                <MobileMenu />
+              </div>
             </div>
           </div>
         </div>
