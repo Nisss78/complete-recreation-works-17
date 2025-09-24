@@ -90,12 +90,13 @@
 @layer components {
   .liquid-glass-nav {
     position: relative;
-    background: rgba(255, 255, 255, 0.14);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 1rem; /* rounded-2xl approx */
-    box-shadow: 0 12px 30px rgba(0,0,0,0.12), 0 1px 0 rgba(255,255,255,0.2) inset;
-    backdrop-filter: blur(20px) saturate(1.6) contrast(1.05);
-    -webkit-backdrop-filter: blur(20px) saturate(1.6) contrast(1.05);
+    /* add subtle fog gradient + higher white tint for cloudiness */
+    background: linear-gradient(145deg, rgba(255,255,255,0.10), rgba(255,255,255,0.06)), rgba(255, 255, 255, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    border-radius: 1rem; /* overwritten to full on element with rounded-full */
+    box-shadow: 0 14px 34px rgba(0,0,0,0.14), 0 1px 0 rgba(255,255,255,0.22) inset;
+    backdrop-filter: blur(24px) saturate(1.45) contrast(1.0) brightness(1.05);
+    -webkit-backdrop-filter: blur(24px) saturate(1.45) contrast(1.0) brightness(1.05);
     overflow: hidden;
   }
 
@@ -133,10 +134,10 @@
 
   /* Pills inside the nav for additional glass feel */
   .liquid-glass-pill {
-    background: rgba(255,255,255,0.24);
-    border: 1px solid rgba(255,255,255,0.35);
-    backdrop-filter: blur(10px) saturate(1.25);
-    -webkit-backdrop-filter: blur(10px) saturate(1.25);
-    box-shadow: 0 6px 14px rgba(0,0,0,0.10), 0 1px 0 rgba(255,255,255,0.22) inset;
+    background: rgba(255,255,255,0.28);
+    border: 1px solid rgba(255,255,255,0.38);
+    backdrop-filter: blur(12px) saturate(1.25);
+    -webkit-backdrop-filter: blur(12px) saturate(1.25);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.12), 0 1px 0 rgba(255,255,255,0.24) inset;
   }
 }
