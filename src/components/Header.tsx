@@ -249,11 +249,15 @@ export const Header = () => {
   return (
     <header className="fixed inset-x-0 top-0 z-50">
       <div
-        className="max-w-7xl mx-auto px-4 sm:px-6"
-        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 10px)" }}
+        className="max-w-7xl mx-auto px-4 sm:px-6 relative"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 10px)", paddingRight: "calc(env(safe-area-inset-right, 0px) + 0px)" }}
       >
+        {/* Language toggle pinned to top-right, outside the nav */}
+        <div className="absolute right-2 sm:right-4 top-[calc(env(safe-area-inset-top,0px)+6px)] z-[60]">
+          <LanguageToggle />
+        </div>
         {/* Glass nav bar container (centered, wider for JA labels) */}
-        <div className="mt-3 md:mt-4 mb-2 rounded-2xl liquid-glass-nav max-w-4xl md:max-w-5xl mx-auto">
+        <div className="mt-3 md:mt-4 mb-2 rounded-2xl liquid-glass-nav max-w-3xl md:max-w-4xl mx-auto">
           <div className="h-16 md:h-20 px-2 sm:px-3 grid grid-cols-[1fr_auto_1fr] items-center">
             {/* Left spacer (keeps center true centered) */}
             <div className="hidden md:block" />
@@ -295,9 +299,8 @@ export const Header = () => {
               {userId && <UserMenu userId={userId} />}
             </div>
 
-            {/* Right group: language (far right) + mobile menu on small screens */}
+            {/* Right group: mobile menu only on small screens */}
             <div className="flex items-center justify-end gap-2 sm:gap-3">
-              <LanguageToggle />
               <div className="md:hidden">
                 <MobileMenu />
               </div>
