@@ -257,13 +257,13 @@ export const Header = () => {
           <LanguageToggle />
         </div>
         {/* Glass nav bar container (centered, wider for JA labels) */}
-        <div className="mt-3 md:mt-4 mb-2 rounded-2xl liquid-glass-nav max-w-3xl md:max-w-4xl mx-auto">
-          <div className="h-16 md:h-20 px-2 sm:px-3 grid grid-cols-[1fr_auto_1fr] items-center">
+        <div className="mt-3 md:mt-4 mb-2 rounded-full liquid-glass-nav max-w-[44rem] md:max-w-[52rem] mx-auto">
+          <div className="h-16 md:h-20 px-1.5 sm:px-2 grid grid-cols-[1fr_auto_1fr] items-center">
             {/* Left spacer (keeps center true centered) */}
             <div className="hidden md:block" />
 
             {/* Center group: logo + nav + contact + user */}
-            <div className="flex items-center justify-center gap-1.5 sm:gap-2">
+            <div className="flex items-center justify-center gap-1 sm:gap-1.5">
               <Link to="/" className="flex items-center hover:opacity-90 transition-opacity">
                 <img src={logoImage} alt="Protoduct" className="h-11 md:h-14 w-auto" />
               </Link>
@@ -280,7 +280,7 @@ export const Header = () => {
               <Button
                 onClick={() => navigate('/contact')}
                 className={cn(
-                  "flex items-center gap-2 font-semibold transition-all duration-300 rounded-xl text-white",
+                  "flex items-center gap-2 font-semibold transition-all duration-300 rounded-full text-white",
                   isActive("/contact") 
                     ? "hover:bg-[#10c876]/80"
                     : "hover:bg-white/30",
