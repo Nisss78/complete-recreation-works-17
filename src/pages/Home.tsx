@@ -115,68 +115,56 @@ export default function Home() {
           const weBuildX = isMobile ? -80 : isTablet ? -140 : -200;
           const coolProductsX = isMobile ? 60 : isTablet ? 100 : 150;
           const contactButtonX = isMobile ? -20 : isTablet ? -35 : -50;
-          const taglineY = isMobile ? { from: 50, to: -25 } : isTablet ? { from: 75, to: -35 } : { from: 100, to: -50 };
+          const taglineY = isMobile ? { from: 100, to: 0 } : isTablet ? { from: 150, to: 0 } : { from: 200, to: 0 };
 
-          // Hero text parallax animations
+          // Pin hero section and animate text within it (much slower speed)
+          const heroTimeline = gsap.timeline({
+            scrollTrigger: {
+              trigger: heroRef.current,
+              start: 'top top',
+              end: '+=600vh', // Pin for 6x viewport height duration (much slower)
+              scrub: 4, // Much slower scrub value (higher = slower)
+              pin: true, // Pin the hero section
+              invalidateOnRefresh: true,
+            }
+          });
+
+          // Add text animations to the timeline
           if (weBuildRef.current) {
-            gsap.to(weBuildRef.current, {
+            heroTimeline.to(weBuildRef.current, {
               x: weBuildX,
+              opacity: 0.2,
               ease: 'none',
-              scrollTrigger: {
-                trigger: heroRef.current,
-                start: 'top center',
-                end: 'bottom center',
-                scrub: 1,
-                invalidateOnRefresh: true,
-              }
-            });
+            }, 0);
           }
 
           if (coolProductsRef.current) {
-            gsap.to(coolProductsRef.current, {
+            heroTimeline.to(coolProductsRef.current, {
               x: coolProductsX,
+              opacity: 0.2,
               ease: 'none',
-              scrollTrigger: {
-                trigger: heroRef.current,
-                start: 'top center',
-                end: 'bottom center',
-                scrub: 1,
-                invalidateOnRefresh: true,
-              }
-            });
+            }, 0);
           }
 
           if (contactButtonRef.current) {
-            gsap.to(contactButtonRef.current, {
+            heroTimeline.to(contactButtonRef.current, {
               x: contactButtonX,
+              opacity: 0.2,
               ease: 'none',
-              scrollTrigger: {
-                trigger: heroRef.current,
-                start: 'top center',
-                end: 'bottom center',
-                scrub: 1,
-                invalidateOnRefresh: true,
-              }
-            });
+            }, 0);
           }
 
-          // Tagline rise-up animation with responsive values
+          // Add tagline animation to the hero timeline (at 85% completion for much slower reveal)
           if (taglineRef.current) {
-            gsap.fromTo(taglineRef.current, {
+            heroTimeline.fromTo(taglineRef.current, {
               y: taglineY.from,
-              opacity: 0.3,
+              opacity: 0,
             }, {
               y: taglineY.to,
               opacity: 1,
-              ease: 'none',
-              scrollTrigger: {
-                trigger: taglineRef.current,
-                start: 'top bottom',
-                end: 'bottom center',
-                scrub: 1,
-                invalidateOnRefresh: true,
-              }
-            });
+              ease: 'power2.out', // Smoother easing
+              duration: 0.5, // Much longer duration for very smooth animation
+            }, 0.85); // Start at 85% of the timeline for very gradual reveal
           }
 
           // Fade & slide-up for items marked with .reveal-on-scroll
@@ -275,24 +263,21 @@ export default function Home() {
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </div>
+              
+              {/* Tagline within hero section */}
+              <div className="text-center absolute bottom-0 left-0 right-0 pb-20">
+                <h2 
+                  ref={taglineRef}
+                  className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white max-w-4xl mx-auto leading-tight px-4"
+                  style={{ willChange: 'transform' }}
+                >
+                  Delivering experiences beyond imagination with maximum speed and quality
+                </h2>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Tagline Section */}
-        <section className="py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center reveal-on-scroll">
-              <h2 
-                ref={taglineRef}
-                className="text-3xl sm:text-5xl lg:text-6xl font-bold text-gray-900 max-w-4xl mx-auto leading-tight"
-                style={{ willChange: 'transform' }}
-              >
-                Delivering experiences beyond imagination with maximum speed and quality
-              </h2>
-            </div>
-          </div>
-        </section>
 
         {/* Services Section */}
         <section className="py-20 bg-gray-50">
