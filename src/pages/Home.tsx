@@ -27,6 +27,10 @@ export default function Home() {
   const coolProductsRef = useRef<HTMLDivElement | null>(null);
   const contactButtonRef = useRef<HTMLDivElement | null>(null);
   const taglineRef = useRef<HTMLHeadingElement | null>(null);
+  const taglineLine1Ref = useRef<HTMLDivElement | null>(null);
+  const taglineLine2Ref = useRef<HTMLDivElement | null>(null);
+  const taglineLine3Ref = useRef<HTMLDivElement | null>(null);
+  const finalTextRef = useRef<HTMLDivElement | null>(null);
   const timelineRef = useRef<GSAPTimeline | null>(null);
   const refreshHandlerRef = useRef<(() => void) | null>(null);
   
@@ -111,60 +115,171 @@ export default function Home() {
           const isMobile = window.innerWidth < 768;
           const isTablet = window.innerWidth < 1024;
           
-          // Adjust animation values for different screen sizes
-          const weBuildX = isMobile ? -80 : isTablet ? -140 : -200;
-          const coolProductsX = isMobile ? 60 : isTablet ? 100 : 150;
-          const contactButtonX = isMobile ? -20 : isTablet ? -35 : -50;
-          const taglineY = isMobile ? { from: 100, to: 0 } : isTablet ? { from: 150, to: 0 } : { from: 200, to: 0 };
+          // Adjust animation values for complete off-screen exit
+          const screenWidth = window.innerWidth;
+          const weBuildX = -(screenWidth + 200); // Completely off left side
+          const coolProductsX = screenWidth + 200; // Completely off right side
+          const contactButtonX = -(screenWidth + 100); // Completely off left side
+          // Since tagline is now centered, no Y movement needed for initial positioning
+          const taglineY = { from: 0, to: 0 };
 
-          // Pin hero section and animate text within it (much slower speed)
+          // Disable scroll acceleration during animation
+          ScrollTrigger.normalizeScroll(true);
+          
+          // Set CSS to disable smooth scrolling during animation
+          document.documentElement.style.scrollBehavior = 'auto';
+          document.body.style.scrollBehavior = 'auto';
+
+          // Pin hero section and animate text within it (extended for all animations)
           const heroTimeline = gsap.timeline({
             scrollTrigger: {
               trigger: heroRef.current,
               start: 'top top',
-              end: '+=600vh', // Pin for 6x viewport height duration (much slower)
-              scrub: 4, // Much slower scrub value (higher = slower)
+              end: '+=2400vh', // Much longer duration to prevent services section appearing too early
+              scrub: 6, // Even slower scrub for more control
               pin: true, // Pin the hero section
               invalidateOnRefresh: true,
+              onStart: () => {
+                // Ensure scroll acceleration is disabled when animation starts
+                ScrollTrigger.normalizeScroll(true);
+                document.documentElement.style.scrollBehavior = 'auto';
+                document.body.style.scrollBehavior = 'auto';
+              },
+              onComplete: () => {
+                // Restore normal scrolling when animation completes
+                ScrollTrigger.normalizeScroll(false);
+                document.documentElement.style.scrollBehavior = 'smooth';
+                document.body.style.scrollBehavior = 'smooth';
+              },
             }
           });
 
-          // Add text animations to the timeline
+          // Add text animations to the timeline (complete off-screen exit)
           if (weBuildRef.current) {
             heroTimeline.to(weBuildRef.current, {
               x: weBuildX,
-              opacity: 0.2,
-              ease: 'none',
+              ease: 'power2.out',
             }, 0);
           }
 
           if (coolProductsRef.current) {
             heroTimeline.to(coolProductsRef.current, {
               x: coolProductsX,
-              opacity: 0.2,
-              ease: 'none',
+              ease: 'power2.out',
             }, 0);
           }
 
           if (contactButtonRef.current) {
             heroTimeline.to(contactButtonRef.current, {
               x: contactButtonX,
-              opacity: 0.2,
-              ease: 'none',
+              ease: 'power2.out',
             }, 0);
           }
 
-          // Add tagline animation to the hero timeline (at 85% completion for much slower reveal)
-          if (taglineRef.current) {
-            heroTimeline.fromTo(taglineRef.current, {
-              y: taglineY.from,
+          // STEP 1: Tagline appears (3 lines fade in)
+          if (taglineLine1Ref.current) {
+            heroTimeline.to(taglineLine1Ref.current, {
+              opacity: 1,
+              duration: 0.5,
+              ease: 'power2.out',
+            }, 0.45);
+          }
+
+          if (taglineLine2Ref.current) {
+            heroTimeline.to(taglineLine2Ref.current, {
+              opacity: 1,
+              duration: 0.5,
+              ease: 'power2.out',
+            }, 0.48);
+          }
+
+          if (taglineLine3Ref.current) {
+            heroTimeline.to(taglineLine3Ref.current, {
+              opacity: 1,
+              duration: 0.5,
+              ease: 'power2.out',
+            }, 0.51);
+          }
+
+          // STEP 2: Much longer pause to display tagline clearly before wave
+          heroTimeline.to({}, { duration: 0.15 }, 0.54); // Much longer pause after appearance
+
+          // STEP 3: Wave animation (2 repetitions only) - starts much later
+          if (taglineLine3Ref.current) {
+            const waveLetters = taglineLine3Ref.current.querySelectorAll('.wave-letter');
+            
+            // Calculate total wave duration: duration * (1 + repeat) * 2 (yoyo) + stagger time
+            const waveDuration = 0.3 * (1 + 1) * 2; // 1.2 seconds for each letter
+            const totalStaggerTime = waveLetters.length * 0.02; // Total stagger across all letters
+            const totalWaveTime = waveDuration + totalStaggerTime; // Total time for wave to complete
+            
+            waveLetters.forEach((letter, index) => {
+              heroTimeline.to(letter, {
+                y: -35,
+                duration: 0.3,
+                ease: 'power2.inOut',
+                yoyo: true,
+                repeat: 1, // Only 2 waves total (1 repeat = 2 times)
+              }, 0.72 + (index * 0.02)); // Wave starts much later to allow full display
+            });
+          }
+
+          // STEP 4: MUCH LONGER pause after wave completely finishes - wait for all waves to complete
+          heroTimeline.to({}, { duration: 0.25 }, 0.95); // Extended pause until wave animation is completely done
+
+          // STEP 5: Tagline exits upward (starts ONLY after wave is completely finished)
+          if (taglineLine1Ref.current) {
+            heroTimeline.to(taglineLine1Ref.current, {
+              y: -200,
+              opacity: 0,
+              duration: 0.4,
+              ease: 'power2.in',
+            }, 1.05); // Much later start - after wave is completely done
+
+            heroTimeline.to(taglineLine2Ref.current, {
+              y: -200,
+              opacity: 0,
+              duration: 0.4,
+              ease: 'power2.in',
+            }, 1.07);
+
+            heroTimeline.to(taglineLine3Ref.current, {
+              y: -200,
+              opacity: 0,
+              duration: 0.4,
+              ease: 'power2.in',
+            }, 1.09);
+          }
+
+          // STEP 6: Much longer pause on green screen after tagline completely exits
+          heroTimeline.to({}, { duration: 0.45 }, 1.15); // Much longer green screen pause
+
+          // STEP 7: "Let's enjoy" appears at 1.6 timing
+          if (finalTextRef.current) {
+            // Final text entrance - at 1.6 timing
+            heroTimeline.fromTo(finalTextRef.current, {
+              y: 100,
               opacity: 0,
             }, {
-              y: taglineY.to,
+              y: 0,
               opacity: 1,
-              ease: 'power2.out', // Smoother easing
-              duration: 0.5, // Much longer duration for very smooth animation
-            }, 0.85); // Start at 85% of the timeline for very gradual reveal
+              duration: 0.7,
+              ease: 'power2.out',
+            }, 1.60); // 1.6 timing as requested
+
+            // STEP 8: Hold "Let's enjoy" for much longer time
+            heroTimeline.to({}, { duration: 0.25 }, 1.65); // Much longer hold
+
+            // STEP 9: Final text exits upward
+            heroTimeline.to(finalTextRef.current, {
+              y: -200,
+              opacity: 0,
+              duration: 0.6,
+              ease: 'power2.in',
+            }, 1.85); // Later exit timing
+
+            // STEP 10: Much longer final green screen pause before unpinning (1 second)
+            heroTimeline.to({}, { duration: 1.0 }, 1.95); // 1 second final green screen to keep background green until text completely exits
           }
 
           // Fade & slide-up for items marked with .reveal-on-scroll
@@ -200,6 +315,11 @@ export default function Home() {
           // @ts-expect-error - ScrollTrigger removeEventListener not typed but exists
           if (refreshHandlerRef.current) ScrollTrigger.removeEventListener('refreshInit', refreshHandlerRef.current);
           ctx.revert();
+          
+          // Restore normal scrolling behavior on cleanup
+          ScrollTrigger.normalizeScroll(false);
+          document.documentElement.style.scrollBehavior = 'smooth';
+          document.body.style.scrollBehavior = 'smooth';
         };
       } catch (e) {
         // GSAP not installed yet or failed to load; no-op
@@ -264,16 +384,60 @@ export default function Home() {
                 </Button>
               </div>
               
-              {/* Tagline within hero section */}
-              <div className="text-center absolute bottom-0 left-0 right-0 pb-20">
-                <h2 
-                  ref={taglineRef}
-                  className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white max-w-4xl mx-auto leading-tight px-4"
-                  style={{ willChange: 'transform' }}
-                >
-                  Delivering experiences beyond imagination with maximum speed and quality
-                </h2>
+              {/* Tagline within hero section - split into 3 lines - centered */}
+              <div ref={taglineRef} className="text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full">
+                <div className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white max-w-4xl mx-auto leading-tight px-4 space-y-2">
+                  <div 
+                    ref={taglineLine1Ref}
+                    className="opacity-0" 
+                    style={{ willChange: 'transform' }}
+                  >
+                    Delivering experiences
+                  </div>
+                  <div 
+                    ref={taglineLine2Ref}
+                    className="opacity-0" 
+                    style={{ willChange: 'transform' }}
+                  >
+                    beyond imagination with maximum
+                  </div>
+                  <div 
+                    ref={taglineLine3Ref}
+                    className="opacity-0" 
+                    style={{ willChange: 'transform' }}
+                  >
+                    <span className="wave-text">
+                      <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>s</span>
+                      <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>p</span>
+                      <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>e</span>
+                      <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>e</span>
+                      <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>d</span>
+                    </span>
+                    {' '}and{' '}
+                    <span className="wave-text">
+                      <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>q</span>
+                      <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>u</span>
+                      <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>a</span>
+                      <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>l</span>
+                      <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>i</span>
+                      <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>t</span>
+                      <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>y</span>
+                    </span>
+                  </div>
+                </div>
               </div>
+              
+              {/* Final text - Let's enjoy - centered and separate */}
+              <div 
+                ref={finalTextRef}
+                className="text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full opacity-0"
+                style={{ willChange: 'transform' }}
+              >
+                <div className="text-4xl sm:text-6xl lg:text-7xl font-bold text-white max-w-4xl mx-auto leading-tight px-4">
+                  Let's enjoy immersing ourselves!!
+                </div>
+              </div>
+              
             </div>
           </div>
         </section>
