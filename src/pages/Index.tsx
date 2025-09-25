@@ -57,7 +57,7 @@ const fetchProductsWithImages = async () => {
         tags: product.product_tags?.map(t => t.tag) || [],
         upvotes: likesCount || 0,
         comments: commentsCount || 0,
-        launchDate: new Date(product.created_at),
+        launchDate: product.created_at ? new Date(product.created_at) : new Date(),
         images: product.product_images?.map(img => img.image_url) || []
       };
     })
@@ -77,6 +77,8 @@ const Index = () => {
   const { data: allProducts = [], isLoading, error } = useQuery({
     queryKey: ['products-with-images'],
     queryFn: fetchProductsWithImages,
+    staleTime: 1000 * 60 * 5, // Data is fresh for 5 minutes
+    gcTime: 1000 * 60 * 10, // Cache for 10 minutes
   });
 
   const handleProductClick = (product: any) => {
@@ -135,7 +137,11 @@ const Index = () => {
   }
 
   const groupedProducts = allProducts.reduce((groups: any, product) => {
-    const date = format(product.launchDate, 'yyyy-MM-dd');
+    // Check if launchDate is valid
+    const dateToUse = product.launchDate && !isNaN(product.launchDate.getTime()) 
+      ? product.launchDate 
+      : new Date();
+    const date = format(dateToUse, 'yyyy-MM-dd');
     if (!groups[date]) {
       groups[date] = [];
     }
