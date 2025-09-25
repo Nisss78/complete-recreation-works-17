@@ -8,12 +8,18 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useNews } from "@/hooks/useNews";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { useEffect, useRef } from "react";
 
 export default function Home() {
   const navigate = useNavigate();
   const { language } = useLanguage();
   const isJapanese = language === 'ja';
   const { data: newsItems } = useNews();
+  const heroRef = useRef<HTMLElement | null>(null);
+  const mainRef = useRef<HTMLDivElement | null>(null);
+  const ballRef = useRef<HTMLDivElement | null>(null);
+  const timelineRef = useRef<any>(null);
+  const refreshHandlerRef = useRef<(() => void) | null>(null);
   
   // Get latest 3 news items
   const latestNews = newsItems?.slice(0, 3) || [];
@@ -25,24 +31,132 @@ export default function Home() {
     other: { ja: "その他", en: "Other", color: "bg-gray-500 text-white", style: {} },
   };
 
+  useEffect(() => {
+    let cleanup: (() => void) | undefined;
+    (async () => {
+      try {
+        const gsapMod: any = await import(/* @vite-ignore */ 'gsap');
+        const ScrollTriggerMod: any = await import(/* @vite-ignore */ 'gsap/ScrollTrigger');
+        const MotionPathMod: any = await import(/* @vite-ignore */ 'gsap/MotionPathPlugin');
+
+        const gsap = gsapMod.default || gsapMod;
+        const ScrollTrigger = ScrollTriggerMod.default || ScrollTriggerMod.ScrollTrigger || ScrollTriggerMod;
+        const MotionPathPlugin = MotionPathMod.default || MotionPathMod.MotionPathPlugin || MotionPathMod;
+
+        gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
+
+        const ctx = gsap.context(() => {
+          // A serpentine path that spans from hero to bottom, synced to scroll
+          const buildSerpentinePath = () => {
+            if (!mainRef.current || !ballRef.current) return;
+            const el = mainRef.current;
+            const w = el.clientWidth;
+            const h = el.scrollHeight; // full content height
+            const topOffset = 120;
+            const bottomOffset = 160;
+            const usableH = Math.max(0, h - topOffset - bottomOffset);
+            const segments = Math.max(6, Math.ceil(usableH / 480));
+            const xs = [0.2, 0.8];
+            const points: Array<{ x: number; y: number }> = [];
+            points.push({ x: w * 0.5, y: Math.max(60, topOffset * 0.5) });
+            for (let i = 1; i <= segments; i++) {
+              const y = topOffset + (i / segments) * usableH;
+              const x = w * xs[i % 2];
+              points.push({ x, y });
+            }
+
+            // Reset previous timeline
+            timelineRef.current?.kill();
+            gsap.set(ballRef.current, { x: points[0].x, y: points[0].y, opacity: 1, rotate: 0 });
+
+            const tl = gsap.timeline({
+              scrollTrigger: {
+                trigger: el,
+                start: 'top top',
+                end: 'bottom bottom',
+                scrub: 1,
+                invalidateOnRefresh: true,
+              }
+            });
+            tl.to(ballRef.current, {
+              motionPath: {
+                path: points,
+                curviness: 1.25,
+                autoRotate: false,
+              },
+              ease: 'none',
+            }, 0).to(ballRef.current, { rotate: 900, ease: 'none' }, 0);
+            timelineRef.current = tl;
+          };
+
+          buildSerpentinePath();
+          // Recompute on refresh (resize, content changes)
+          // @ts-ignore
+          ScrollTrigger.addEventListener('refreshInit', buildSerpentinePath);
+          refreshHandlerRef.current = buildSerpentinePath;
+
+          // Fade & slide-up for items marked with .reveal-on-scroll
+          if (mainRef.current) {
+            const items = mainRef.current.querySelectorAll('.reveal-on-scroll');
+            items.forEach((el, i) => {
+              gsap.from(el, {
+                y: 30,
+                opacity: 0,
+                duration: 0.6,
+                ease: 'power2.out',
+                delay: Math.min(i * 0.06, 0.3),
+                scrollTrigger: {
+                  trigger: el as Element,
+                  start: 'top 85%',
+                  toggleActions: 'play none none reverse',
+                }
+              });
+            });
+          }
+        }, mainRef);
+        cleanup = () => {
+          timelineRef.current?.kill();
+          // @ts-ignore
+          if (refreshHandlerRef.current) ScrollTrigger.removeEventListener('refreshInit', refreshHandlerRef.current);
+          ctx.revert();
+        };
+      } catch (e) {
+        // GSAP not installed yet or failed to load; no-op
+        if (import.meta.env.DEV) {
+          console.warn('GSAP not available. Install gsap to enable animations.', e);
+        }
+      }
+    })();
+
+    return () => {
+      cleanup?.();
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div ref={mainRef} className="relative min-h-screen bg-white flex flex-col">
+      {/* Rolling ball overlay across the whole page */}
+      <div ref={ballRef} className="pointer-events-none absolute z-30 size-4 sm:size-5 rounded-full" style={{
+        background: 'radial-gradient(circle at 35% 35%, #ffffff, rgba(255,255,255,0.15))',
+        boxShadow: '0 6px 22px rgba(0,0,0,0.25), 0 0 18px rgba(255,255,255,0.5)'
+      }} />
       <Header />
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="relative overflow-hidden min-h-[100svh] flex items-center" style={{
+        <section ref={heroRef} className="relative overflow-hidden min-h-[100svh] flex items-center" style={{
           background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)'
         }}>
           <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:60px_60px]" />
+          {/* The ball is now outside hero to avoid clipping while scrolling */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
             <div className="text-center">
-              <h1 className="text-4xl sm:text-6xl font-bold text-white mb-6">
+              <h1 className="text-4xl sm:text-6xl font-bold text-white mb-6 reveal-on-scroll">
                 We build Cool & Scalable products
               </h1>
-              <p className="text-xl sm:text-2xl text-white/90 mb-8 max-w-3xl mx-auto">
+              <p className="text-xl sm:text-2xl text-white/90 mb-8 max-w-3xl mx-auto reveal-on-scroll">
                 Delivering experiences beyond imagination with maximum speed and quality
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center reveal-on-scroll">
                 <Button
                   size="lg"
                   onClick={() => navigate("/contact")}
@@ -69,7 +183,7 @@ export default function Home() {
                 : "We provide optimal AI solutions tailored to your business needs"}
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <Card className="hover:shadow-lg transition-shadow">
+              <Card className="hover:shadow-lg transition-shadow reveal-on-scroll">
                 <CardHeader>
                   <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style={{ backgroundColor: 'rgba(123, 198, 30, 0.15)' }}>
                     <Code className="h-6 w-6" style={{ color: '#7bc61e' }} />
@@ -85,7 +199,7 @@ export default function Home() {
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-lg transition-shadow">
+              <Card className="hover:shadow-lg transition-shadow reveal-on-scroll">
                 <CardHeader>
                   <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style={{ backgroundColor: 'rgba(16, 200, 118, 0.15)' }}>
                     <GraduationCap className="h-6 w-6" style={{ color: '#10c876' }} />
@@ -101,7 +215,7 @@ export default function Home() {
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-lg transition-shadow">
+              <Card className="hover:shadow-lg transition-shadow reveal-on-scroll">
                 <CardHeader>
                   <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style={{ backgroundColor: 'rgba(21, 184, 229, 0.15)' }}>
                     <Briefcase className="h-6 w-6" style={{ color: '#15b8e5' }} />
@@ -143,7 +257,7 @@ export default function Home() {
             {latestNews.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {latestNews.map((item) => (
-                  <Link key={item.id} to={`/news/${item.id}`}>
+                  <Link key={item.id} to={`/news/${item.id}`} className="reveal-on-scroll">
                     <Card className="h-full hover:shadow-lg transition-shadow overflow-hidden">
                       {item.thumbnail_url && (
                         <div className="h-48 overflow-hidden">
@@ -193,7 +307,7 @@ export default function Home() {
         <section className="py-20 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div>
+              <div className="reveal-on-scroll">
                 <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
                   COMPANY
                 </h2>
@@ -243,7 +357,7 @@ export default function Home() {
                   </Button>
                 </Link>
               </div>
-              <div className="relative">
+              <div className="relative reveal-on-scroll">
                 <div className="absolute inset-0 rounded-2xl transform rotate-3" style={{
                   background: 'linear-gradient(to bottom right, rgba(90, 156, 17, 0.1), rgba(11, 146, 91, 0.1), rgba(12, 135, 167, 0.1))'
                 }}></div>
@@ -264,7 +378,7 @@ export default function Home() {
 
         {/* CTA Section */}
         <section className="py-20 bg-white">
-          <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 reveal-on-scroll">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
               {isJapanese ? "AIで未来を創造しよう" : "Create the Future with AI"}
             </h2>
