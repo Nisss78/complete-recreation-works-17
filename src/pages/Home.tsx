@@ -10,6 +10,11 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useEffect, useRef } from "react";
 
+// GSAP types
+type GSAPTimeline = {
+  kill: () => void;
+};
+
 export default function Home() {
   const navigate = useNavigate();
   const { language } = useLanguage();
@@ -18,7 +23,11 @@ export default function Home() {
   const heroRef = useRef<HTMLElement | null>(null);
   const mainRef = useRef<HTMLDivElement | null>(null);
   const ballRef = useRef<HTMLDivElement | null>(null);
-  const timelineRef = useRef<any>(null);
+  const weBuildRef = useRef<HTMLDivElement | null>(null);
+  const coolProductsRef = useRef<HTMLDivElement | null>(null);
+  const contactButtonRef = useRef<HTMLDivElement | null>(null);
+  const taglineRef = useRef<HTMLHeadingElement | null>(null);
+  const timelineRef = useRef<GSAPTimeline | null>(null);
   const refreshHandlerRef = useRef<(() => void) | null>(null);
   
   // Get latest 3 news items
@@ -35,9 +44,9 @@ export default function Home() {
     let cleanup: (() => void) | undefined;
     (async () => {
       try {
-        const gsapMod: any = await import(/* @vite-ignore */ 'gsap');
-        const ScrollTriggerMod: any = await import(/* @vite-ignore */ 'gsap/ScrollTrigger');
-        const MotionPathMod: any = await import(/* @vite-ignore */ 'gsap/MotionPathPlugin');
+        const gsapMod = await import(/* @vite-ignore */ 'gsap') as { default?: unknown } & Record<string, unknown>;
+        const ScrollTriggerMod = await import(/* @vite-ignore */ 'gsap/ScrollTrigger') as { default?: unknown, ScrollTrigger?: unknown } & Record<string, unknown>;
+        const MotionPathMod = await import(/* @vite-ignore */ 'gsap/MotionPathPlugin') as { default?: unknown, MotionPathPlugin?: unknown } & Record<string, unknown>;
 
         const gsap = gsapMod.default || gsapMod;
         const ScrollTrigger = ScrollTriggerMod.default || ScrollTriggerMod.ScrollTrigger || ScrollTriggerMod;
@@ -46,9 +55,12 @@ export default function Home() {
         gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
         const ctx = gsap.context(() => {
+          // Performance optimization: only show ball on larger screens
+          const shouldShowBall = window.innerWidth >= 768;
+          
           // A serpentine path that spans from hero to bottom, synced to scroll
           const buildSerpentinePath = () => {
-            if (!mainRef.current || !ballRef.current) return;
+            if (!mainRef.current || !ballRef.current || !shouldShowBall) return;
             const el = mainRef.current;
             const w = el.clientWidth;
             const h = el.scrollHeight; // full content height
@@ -67,7 +79,7 @@ export default function Home() {
 
             // Reset previous timeline
             timelineRef.current?.kill();
-            gsap.set(ballRef.current, { x: points[0].x, y: points[0].y, opacity: 1, rotate: 0 });
+            gsap.set(ballRef.current, { x: points[0].x, y: points[0].y, opacity: shouldShowBall ? 1 : 0, rotate: 0 });
 
             const tl = gsap.timeline({
               scrollTrigger: {
@@ -91,32 +103,113 @@ export default function Home() {
 
           buildSerpentinePath();
           // Recompute on refresh (resize, content changes)
-          // @ts-ignore
+          // @ts-expect-error - ScrollTrigger addEventListener not typed but exists
           ScrollTrigger.addEventListener('refreshInit', buildSerpentinePath);
           refreshHandlerRef.current = buildSerpentinePath;
+
+          // Responsive animation values based on screen size
+          const isMobile = window.innerWidth < 768;
+          const isTablet = window.innerWidth < 1024;
+          
+          // Adjust animation values for different screen sizes
+          const weBuildX = isMobile ? -80 : isTablet ? -140 : -200;
+          const coolProductsX = isMobile ? 60 : isTablet ? 100 : 150;
+          const contactButtonX = isMobile ? -20 : isTablet ? -35 : -50;
+          const taglineY = isMobile ? { from: 50, to: -25 } : isTablet ? { from: 75, to: -35 } : { from: 100, to: -50 };
+
+          // Hero text parallax animations
+          if (weBuildRef.current) {
+            gsap.to(weBuildRef.current, {
+              x: weBuildX,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: heroRef.current,
+                start: 'top center',
+                end: 'bottom center',
+                scrub: 1,
+                invalidateOnRefresh: true,
+              }
+            });
+          }
+
+          if (coolProductsRef.current) {
+            gsap.to(coolProductsRef.current, {
+              x: coolProductsX,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: heroRef.current,
+                start: 'top center',
+                end: 'bottom center',
+                scrub: 1,
+                invalidateOnRefresh: true,
+              }
+            });
+          }
+
+          if (contactButtonRef.current) {
+            gsap.to(contactButtonRef.current, {
+              x: contactButtonX,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: heroRef.current,
+                start: 'top center',
+                end: 'bottom center',
+                scrub: 1,
+                invalidateOnRefresh: true,
+              }
+            });
+          }
+
+          // Tagline rise-up animation with responsive values
+          if (taglineRef.current) {
+            gsap.fromTo(taglineRef.current, {
+              y: taglineY.from,
+              opacity: 0.3,
+            }, {
+              y: taglineY.to,
+              opacity: 1,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: taglineRef.current,
+                start: 'top bottom',
+                end: 'bottom center',
+                scrub: 1,
+                invalidateOnRefresh: true,
+              }
+            });
+          }
 
           // Fade & slide-up for items marked with .reveal-on-scroll
           if (mainRef.current) {
             const items = mainRef.current.querySelectorAll('.reveal-on-scroll');
             items.forEach((el, i) => {
               gsap.from(el, {
-                y: 30,
+                y: isMobile ? 15 : 30, // Reduce movement on mobile
                 opacity: 0,
-                duration: 0.6,
+                duration: isMobile ? 0.4 : 0.6, // Faster animations on mobile
                 ease: 'power2.out',
-                delay: Math.min(i * 0.06, 0.3),
+                delay: Math.min(i * (isMobile ? 0.04 : 0.06), 0.3),
                 scrollTrigger: {
                   trigger: el as Element,
                   start: 'top 85%',
                   toggleActions: 'play none none reverse',
+                  fastScrollEnd: true, // Performance optimization
+                  preventOverlaps: true, // Prevent animation conflicts
                 }
               });
             });
           }
+
+          // Optimize ScrollTrigger settings for performance
+          ScrollTrigger.config({
+            limitCallbacks: true,
+            syncInterval: 150, // Throttle scroll events for better performance
+            ignoreMobileResize: true, // Don't recalculate on mobile keyboard show/hide
+          });
         }, mainRef);
         cleanup = () => {
           timelineRef.current?.kill();
-          // @ts-ignore
+          // @ts-expect-error - ScrollTrigger removeEventListener not typed but exists
           if (refreshHandlerRef.current) ScrollTrigger.removeEventListener('refreshInit', refreshHandlerRef.current);
           ctx.revert();
         };
@@ -149,24 +242,54 @@ export default function Home() {
           <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:60px_60px]" />
           {/* The ball is now outside hero to avoid clipping while scrolling */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-            <div className="text-center">
-              <h1 className="text-4xl sm:text-6xl font-bold text-white mb-6 reveal-on-scroll">
-                We build Cool & Scalable products
+            <div className="text-left">
+              <h1 className="reveal-on-scroll mb-4">
+                <div 
+                  ref={weBuildRef}
+                  className="text-6xl sm:text-8xl lg:text-9xl font-bold mb-2"
+                  style={{
+                    color: 'transparent',
+                    WebkitTextStroke: '2px white',
+                    textStroke: '2px white',
+                    willChange: 'transform'
+                  }}
+                >
+                  We build,
+                </div>
+                <div 
+                  ref={coolProductsRef}
+                  className="text-4xl sm:text-6xl lg:text-7xl font-bold text-white"
+                  style={{ willChange: 'transform' }}
+                >
+                  Cool & Scalable products
+                </div>
               </h1>
-              <p className="text-xl sm:text-2xl text-white/90 mb-8 max-w-3xl mx-auto reveal-on-scroll">
-                Delivering experiences beyond imagination with maximum speed and quality
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center reveal-on-scroll">
+              <div ref={contactButtonRef} className="flex flex-col sm:flex-row gap-4 mb-16 reveal-on-scroll" style={{ willChange: 'transform' }}>
                 <Button
                   size="lg"
                   onClick={() => navigate("/contact")}
-                  className="bg-white hover:bg-gray-100"
+                  className="bg-white hover:bg-gray-100 w-fit"
                   style={{ color: '#0b925b' }}
                 >
                   {isJapanese ? "お問い合わせ" : "Contact Us"}
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Tagline Section */}
+        <section className="py-20 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center reveal-on-scroll">
+              <h2 
+                ref={taglineRef}
+                className="text-3xl sm:text-5xl lg:text-6xl font-bold text-gray-900 max-w-4xl mx-auto leading-tight"
+                style={{ willChange: 'transform' }}
+              >
+                Delivering experiences beyond imagination with maximum speed and quality
+              </h2>
             </div>
           </div>
         </section>
