@@ -27,7 +27,7 @@ export const ProductHeader = ({
         <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base mb-2">{tagline}</p>
         <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base mb-3">{description}</p>
         <div className="flex flex-wrap gap-1.5 sm:gap-2">
-          {tags.map((tag) => (
+          {tags && tags.map((tag) => (
             <Badge key={tag} variant="secondary" className="text-xs sm:text-sm">
               {tag}
             </Badge>

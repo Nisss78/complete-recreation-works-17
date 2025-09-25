@@ -17,8 +17,21 @@ type LanguageContextType = {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
+// Function to detect browser language
+const detectBrowserLanguage = (): Language => {
+  const browserLang = navigator.language || navigator.languages?.[0] || 'en';
+  // Check if browser language is Japanese
+  if (browserLang.startsWith('ja')) {
+    return 'ja';
+  }
+  return 'en';
+};
+
 export const LanguageProvider = ({ children }: { children: React.ReactNode }) => {
-  const [language, setLanguageState] = useState<Language>('en');
+  const [language, setLanguageState] = useState<Language>(() => {
+    // Initialize with browser language detection
+    return detectBrowserLanguage();
+  });
 
   useEffect(() => {
     const fetchLanguagePreference = async () => {
@@ -33,7 +46,23 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
         if (data?.language_preference && 
             (data.language_preference === 'en' || data.language_preference === 'ja')) {
           setLanguageState(data.language_preference);
+        } else {
+          // If no preference in database, use browser language
+          const browserLanguage = detectBrowserLanguage();
+          setLanguageState(browserLanguage);
+          
+          // Optionally save browser language as preference
+          if (session?.user?.id) {
+            await supabase
+              .from('profiles')
+              .update({ language_preference: browserLanguage })
+              .eq('id', session.user.id);
+          }
         }
+      } else {
+        // For non-logged-in users, use browser language
+        const browserLanguage = detectBrowserLanguage();
+        setLanguageState(browserLanguage);
       }
     };
 

@@ -23,7 +23,7 @@ export function ProductCard({
   name, 
   tagline, 
   icon, 
-  tags, 
+  tags = [], 
   comments: initialComments,
   onClick 
 }: ProductCardProps) {
@@ -122,7 +122,7 @@ export function ProductCard({
         </div>
         
         <div className="flex flex-wrap gap-1.5">
-          {tags.map((tag) => (
+          {tags && tags.map((tag) => (
             <Badge 
               key={tag} 
               variant="secondary" 

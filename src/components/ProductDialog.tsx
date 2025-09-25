@@ -102,7 +102,7 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
   if (!product) return null;
 
   // OGP画像のURLを生成
-  const ogpImageUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-ogp?type=product&name=${encodeURIComponent(product.name)}&tags=${encodeURIComponent(product.tags.join(','))}&service=Protoduct`;
+  const ogpImageUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-ogp?type=product&name=${encodeURIComponent(product.name)}&tags=${encodeURIComponent((product.tags || []).join(','))}&service=Protoduct`;
   const shareUrl = product.URL || window.location.href;
 
   return (
