@@ -10,6 +10,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { ProductsList } from "@/components/home/ProductsList";
 import { RecentArticles } from "@/components/home/RecentArticles";
 import { ArrowDownAZ, ArrowUpAZ } from "lucide-react";
+import LoadingScreen from "@/components/LoadingScreen";
 
 // 製品データと画像を同時に取得する関数
 const fetchProductsWithImages = async () => {
@@ -112,7 +113,7 @@ const Index = () => {
       <div className="min-h-screen w-full flex flex-col bg-white">
         <Header />
         <main className="flex-1 flex items-center justify-center">
-          <div className="animate-pulse text-gray-500">{t('common.loading')}</div>
+          <LoadingScreen fullScreen={false} />
         </main>
         <Footer />
       </div>
