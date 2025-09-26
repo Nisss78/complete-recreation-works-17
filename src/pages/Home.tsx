@@ -347,7 +347,7 @@ export default function Home() {
       <main className="flex-1">
         {/* Hero Section */}
         <section ref={heroRef} className="relative overflow-hidden min-h-[100svh] flex items-center" style={{
-          background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)'
+          background: 'linear-gradient(135deg, #4a5568, #718096, #a0aec0)'
         }}>
           <FloatingParticles />
           <FloatingLogos />

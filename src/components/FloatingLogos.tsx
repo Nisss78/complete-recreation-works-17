@@ -34,22 +34,18 @@ const FloatingLogos = () => {
     const sectionHeight = containerHeight / rows;
 
     for (let i = 0; i < logoCount; i++) {
-      // Calculate grid position
-      const col = i % cols;
-      const row = Math.floor(i / cols);
-      
-      // Random position within section for natural look
-      const x = col * sectionWidth + Math.random() * sectionWidth * 0.8 + sectionWidth * 0.1;
-      const y = row * sectionHeight + Math.random() * sectionHeight;
+      // More randomized positioning to avoid clustering
+      const x = Math.random() * containerWidth;
+      const y = Math.random() * containerHeight * 2; // Spread over larger area
       
       logos.push({
         id: i,
         size: 40 + Math.random() * 40, // 40-80px
         x: x,
         y: y,
-        speed: 12 + Math.random() * 8, // 12-20 seconds (slower than particles)
-        opacity: 0.15 + Math.random() * 0.25, // 0.15-0.4 (more subtle)
-        drift: (Math.random() - 0.5) * 60,
+        speed: 20 + Math.random() * 15, // 20-35 seconds (much slower)
+        opacity: 0.4 + Math.random() * 0.4, // 0.4-0.8 (much more visible)
+        drift: (Math.random() - 0.5) * 80,
         rotation: Math.random() * 360,
       });
     }
