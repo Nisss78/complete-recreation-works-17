@@ -150,7 +150,7 @@ export default function ArticleDetail() {
         <meta name="twitter:image" content={ogpImageUrl} />
       </Helmet>
       <Header />
-      <main className="flex-1 container max-w-4xl mx-auto py-4 sm:py-8 px-4">
+      <main className="flex-1 container max-w-4xl mx-auto py-4 sm:py-8 px-4 pt-28 md:pt-32">
         <Button
           variant="ghost"
           size="sm"
