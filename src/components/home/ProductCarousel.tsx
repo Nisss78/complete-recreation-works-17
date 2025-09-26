@@ -23,7 +23,8 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
   const visibleCount = 5;
   // プロダクト順に基づく色（製品は5色でループ: 緑, 青, 赤, オレンジ, 黄）
   const productColorIndex = (orderIndex: number) => {
-    const cycle = [0, 1, 3, 4, 5];
+    // 緑(0) → 青(1) → 紫(2) → 赤(3) → オレンジ(4) → 黄(5)
+    const cycle = [0, 1, 2, 3, 4, 5];
     return cycle[orderIndex % cycle.length];
   };
   // 拡張配列（5以上の場合のみ使用）。順序インデックスを埋め込む
@@ -35,24 +36,35 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
   }
   
   // 現在位置から5枚を常に表示（ラップアラウンド）。
-  // 5未満のときは重複させずにプレースホルダーで埋める。
+  // 5未満でもプレースホルダーにスロット固定色は使わず、
+  // 欠け分も「プロダクト順の色ループ」に基づく色を割り当てる。
   let visibleItems: any[] = [];
+  const startSlot = 1; // 2枚目のスロットから配置開始
+  const baseShift = currentIndex % visibleCount; // スロットローテーション
   if (totalProducts === 0) {
-    visibleItems = Array.from({ length: visibleCount }, (_, i) => ({ isPlaceholder: true, id: `placeholder-${i}`, colorIndex: (i - 1 + 6) % 6 }));
-  } else if (totalProducts < visibleCount) {
-    // センター寄り（2枚目=index1）から、currentIndex をスロット回転として反映
-    // まず全スロットを固定カラーのプレースホルダーで初期化
-    visibleItems = Array.from({ length: visibleCount }, (_, i) => ({ isPlaceholder: true, id: `placeholder-${i}`, colorIndex: (i - 1 + 6) % 6 }));
-    const startSlot = 1; // 2枚目から
-    const baseShift = currentIndex % visibleCount;
-    const productStart = totalProducts > 0 ? currentIndex % totalProducts : 0;
-    for (let k = 0; k < totalProducts; k++) {
+    // 全てプレースホルダー。色は productColorIndex のループで決定（2枚目が緑でスタート）
+    visibleItems = Array.from({ length: visibleCount }, () => ({} as any));
+    for (let k = 0; k < visibleCount; k++) {
       const slotIndex = (startSlot + baseShift + k) % visibleCount;
-      const productIndex = (productStart + k) % totalProducts; // 並び順の絶対インデックス
-      const colorIndex = productColorIndex(productIndex);
-      visibleItems[slotIndex] = { ...displayProducts[productIndex], colorIndex, __orderIndex: productIndex };
+      const colorIndex = productColorIndex(k);
+      visibleItems[slotIndex] = { isPlaceholder: true, id: `placeholder-${slotIndex}`, colorIndex };
+    }
+  } else if (totalProducts < visibleCount) {
+    // 実データと欠け分（プレースホルダー）を、同一の色ルールで埋める
+    visibleItems = Array.from({ length: visibleCount }, () => ({} as any));
+    const productStart = currentIndex % totalProducts; // 並び順の先頭
+    for (let k = 0; k < visibleCount; k++) {
+      const slotIndex = (startSlot + baseShift + k) % visibleCount;
+      const colorIndex = productColorIndex(productStart + k);
+      if (k < totalProducts) {
+        const productIndex = (productStart + k) % totalProducts;
+        visibleItems[slotIndex] = { ...displayProducts[productIndex], colorIndex, __orderIndex: productIndex };
+      } else {
+        visibleItems[slotIndex] = { isPlaceholder: true, id: `placeholder-${slotIndex}`, colorIndex };
+      }
     }
   } else {
+    // 5件以上: 並び順インデックスで色を決定
     visibleItems = Array.from({ length: visibleCount }, (_, i) => {
       const item = extendedProducts[(currentIndex + i) % extendedProducts.length] as any;
       const orderIdx = item.__orderIndex ?? 0;
