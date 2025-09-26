@@ -7,6 +7,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import unoImage from "@/assets/uno.jpg";
+import FloatingParticles from "@/components/FloatingParticles";
+import FloatingLogos from "@/components/FloatingLogos";
 
 export default function About() {
   const { language } = useLanguage();
@@ -18,8 +20,10 @@ export default function About() {
       <Header />
       <main className="flex-1">
         {/* Hero Section */}
-        <div className="bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 pt-28 md:pt-32">
+        <div className="bg-white relative overflow-hidden">
+          <FloatingParticles />
+          <FloatingLogos />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 pt-28 md:pt-32 relative z-10">
             <h1 className="text-6xl font-bold mb-4 text-left" style={{
               background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)',
               WebkitBackgroundClip: 'text',

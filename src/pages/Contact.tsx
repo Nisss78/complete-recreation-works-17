@@ -10,6 +10,8 @@ import { Mail, Phone, MapPin, Clock, Send } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import FloatingParticles from "@/components/FloatingParticles";
+import FloatingLogos from "@/components/FloatingLogos";
 
 export default function Contact() {
   const { language } = useLanguage();
@@ -63,8 +65,10 @@ export default function Contact() {
       <Header />
       <main className="flex-1">
         {/* Page Title */}
-        <div className="bg-white border-b">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 pt-28 md:pt-32">
+        <div className="bg-white border-b relative overflow-hidden">
+          <FloatingParticles />
+          <FloatingLogos />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 pt-28 md:pt-32 relative z-10">
             <h1
               className="text-5xl sm:text-6xl font-bold mb-4 text-left"
               style={{
