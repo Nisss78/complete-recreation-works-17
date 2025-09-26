@@ -469,8 +469,8 @@ export default function Home() {
               const cardsTimeline = gsap.timeline({
                 scrollTrigger: {
                   trigger: servicesTitleRef.current,
-                  start: '100% center', // "Our Services"が完全に左上に配置された後
-                  end: '130% center',
+                  start: '98% center', // "Our Services"が左上に配置された直後
+                  end: '125% center',
                   scrub: 1,
                 }
               });
@@ -792,7 +792,7 @@ export default function Home() {
         <ProductCarousel ref={productCarouselRef} />
 
         {/* Spacer for product cards */}
-        <div style={{ height: '100vh' }}></div>
+        <div style={{ height: '200vh' }}></div>
 
         {/* Services Section */}
         <section className="py-20 bg-gray-50">
