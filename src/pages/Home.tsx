@@ -351,33 +351,91 @@ export default function Home() {
             // Clean up temp element
             document.body.removeChild(tempText);
 
-            // STAGE 1: Animate each letter to natural positions
+            // STAGE 1: Animate each letter to natural positions with enhanced effects
             letters.forEach((letter, index) => {
-              gsap.to(letter, {
-                left: finalPositions[index].left + 'px',
-                top: '0px',
-                ease: 'power2.out',
+              // Create a timeline for each letter with sequential delays
+              const letterTimeline = gsap.timeline({
                 scrollTrigger: {
                   trigger: servicesTitleRef.current,
                   start: 'top center',
-                  end: 'center center',
-                  scrub: 1,
+                  end: '20% center', // Much shorter range for gathering
+                  scrub: 0.5, // Reduced scrub for smoother, less accelerated movement
                 }
               });
+
+              // Add staggered delay based on index
+              const staggerDelay = index * 0.05; // Reduced for smoother effect
+              
+              letterTimeline
+                .to(letter, {
+                  left: finalPositions[index].left + 'px',
+                  top: '0px',
+                  opacity: 1, // Full opacity when gathered
+                  rotation: 0, // Reset rotation to 0
+                  scale: 1, // Reset scale to 1
+                  filter: 'drop-shadow(0 0 15px rgba(255,255,255,0.8))', // Enhanced glow
+                  duration: 0.8,
+                  ease: 'elastic.out(1, 0.5)', // Bouncy elastic effect
+                  delay: staggerDelay
+                });
             });
 
-            // STAGE 2: Move the entire text container to top-left (keep visible)
-            gsap.to(scatteredTextRef.current, {
-              top: '20vh',
-              left: '30%',
-              ease: 'power2.out',
+            // STAGE 2: Long pause in center, then move to top-left with underline effect
+            const finalTimeline = gsap.timeline({
               scrollTrigger: {
                 trigger: servicesTitleRef.current,
-                start: 'center center',
-                end: 'bottom center',
-                scrub: 1,
+                start: '20% center', // Start after gathering is complete
+                end: '95% center', // Even longer range for extended center pause
+                scrub: 0.1, // Much slower scrub for very smooth movement
+                onComplete: () => {
+                  // Add underline effect after positioning
+                  const underline = document.createElement('div');
+                  underline.style.position = 'absolute';
+                  underline.style.bottom = '-5px'; // Closer to text
+                  underline.style.left = '0';
+                  underline.style.width = '0%';
+                  underline.style.height = '3px';
+                  underline.style.background = 'linear-gradient(90deg, #7bc61e, #10c876, #15b8e5)'; // Green gradient
+                  underline.style.borderRadius = '2px';
+                  underline.style.boxShadow = '0 0 8px rgba(123, 198, 30, 0.4)'; // Green glow
+                  scatteredTextRef.current?.appendChild(underline);
+                  
+                  // Animate underline
+                  gsap.to(underline, {
+                    width: '100%',
+                    duration: 1.5,
+                    ease: 'power2.out',
+                    delay: 0.5
+                  });
+                }
               }
             });
+
+            finalTimeline
+              // Long pause at center (most of the scroll range)
+              .to(scatteredTextRef.current, {
+                top: '50vh', // Stay at center longer
+                left: '50%',
+                ease: 'none',
+                duration: 0.8 // 80% of timeline spent at center
+              })
+              // Slow, elegant move to final position
+              .to(scatteredTextRef.current, {
+                top: '20vh',
+                left: '30%',
+                ease: 'power1.out', // Gentler easing for slower feel
+                duration: 0.2 // 20% for final positioning, more gradual
+              })
+              .to(scatteredTextRef.current, {
+                scale: 1.02,
+                duration: 0.1,
+                ease: 'power2.out',
+              }, '-=0.1')
+              .to(scatteredTextRef.current, {
+                scale: 1,
+                duration: 0.2,
+                ease: 'elastic.out(1, 0.3)',
+              });
           }
 
           // Fade & slide-up for items marked with .reveal-on-scroll
@@ -452,18 +510,90 @@ export default function Home() {
         }}
       >
         <>
-          <span className="scattered-letter inline-block absolute" style={{ left: '-400px', top: '-250px', opacity: 1 }}>O</span>
-          <span className="scattered-letter inline-block absolute" style={{ left: '450px', top: '-300px', opacity: 1 }}>u</span>
-          <span className="scattered-letter inline-block absolute" style={{ left: '-500px', top: '150px', opacity: 1 }}>r</span>
-          <span className="scattered-letter inline-block absolute" style={{ left: '-350px', top: '350px', opacity: 1 }}> </span>
-          <span className="scattered-letter inline-block absolute" style={{ left: '500px', top: '-80px', opacity: 1 }}>S</span>
-          <span className="scattered-letter inline-block absolute" style={{ left: '-450px', top: '-350px', opacity: 1 }}>e</span>
-          <span className="scattered-letter inline-block absolute" style={{ left: '350px', top: '380px', opacity: 1 }}>r</span>
-          <span className="scattered-letter inline-block absolute" style={{ left: '-280px', top: '-380px', opacity: 1 }}>v</span>
-          <span className="scattered-letter inline-block absolute" style={{ left: '420px', top: '180px', opacity: 1 }}>i</span>
-          <span className="scattered-letter inline-block absolute" style={{ left: '-380px', top: '250px', opacity: 1 }}>c</span>
-          <span className="scattered-letter inline-block absolute" style={{ left: '480px', top: '-220px', opacity: 1 }}>e</span>
-          <span className="scattered-letter inline-block absolute" style={{ left: '-320px', top: '-150px', opacity: 1 }}>s</span>
+          <span className="scattered-letter inline-block absolute" style={{ 
+            left: '-400px', top: '-250px', 
+            opacity: 0.6, 
+            transform: 'rotate(-15deg) scale(0.8)',
+            filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
+            transition: 'all 0.3s ease'
+          }}>O</span>
+          <span className="scattered-letter inline-block absolute" style={{ 
+            left: '450px', top: '-300px', 
+            opacity: 0.7, 
+            transform: 'rotate(22deg) scale(1.1)',
+            filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
+            transition: 'all 0.3s ease'
+          }}>u</span>
+          <span className="scattered-letter inline-block absolute" style={{ 
+            left: '-500px', top: '150px', 
+            opacity: 0.5, 
+            transform: 'rotate(-8deg) scale(0.7)',
+            filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
+            transition: 'all 0.3s ease'
+          }}>r</span>
+          <span className="scattered-letter inline-block absolute" style={{ 
+            left: '-350px', top: '350px', 
+            opacity: 0.8, 
+            transform: 'rotate(0deg) scale(1.0)',
+            filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
+            transition: 'all 0.3s ease'
+          }}> </span>
+          <span className="scattered-letter inline-block absolute" style={{ 
+            left: '500px', top: '-80px', 
+            opacity: 0.4, 
+            transform: 'rotate(18deg) scale(1.2)',
+            filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
+            transition: 'all 0.3s ease'
+          }}>S</span>
+          <span className="scattered-letter inline-block absolute" style={{ 
+            left: '-450px', top: '-350px', 
+            opacity: 0.6, 
+            transform: 'rotate(-25deg) scale(0.9)',
+            filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
+            transition: 'all 0.3s ease'
+          }}>e</span>
+          <span className="scattered-letter inline-block absolute" style={{ 
+            left: '350px', top: '380px', 
+            opacity: 0.7, 
+            transform: 'rotate(12deg) scale(0.8)',
+            filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
+            transition: 'all 0.3s ease'
+          }}>r</span>
+          <span className="scattered-letter inline-block absolute" style={{ 
+            left: '-280px', top: '-380px', 
+            opacity: 0.5, 
+            transform: 'rotate(-18deg) scale(1.1)',
+            filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
+            transition: 'all 0.3s ease'
+          }}>v</span>
+          <span className="scattered-letter inline-block absolute" style={{ 
+            left: '420px', top: '180px', 
+            opacity: 0.8, 
+            transform: 'rotate(8deg) scale(0.6)',
+            filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
+            transition: 'all 0.3s ease'
+          }}>i</span>
+          <span className="scattered-letter inline-block absolute" style={{ 
+            left: '-380px', top: '250px', 
+            opacity: 0.6, 
+            transform: 'rotate(-12deg) scale(1.0)',
+            filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
+            transition: 'all 0.3s ease'
+          }}>c</span>
+          <span className="scattered-letter inline-block absolute" style={{ 
+            left: '480px', top: '-220px', 
+            opacity: 0.7, 
+            transform: 'rotate(20deg) scale(0.9)',
+            filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
+            transition: 'all 0.3s ease'
+          }}>e</span>
+          <span className="scattered-letter inline-block absolute" style={{ 
+            left: '-320px', top: '-150px', 
+            opacity: 0.5, 
+            transform: 'rotate(-10deg) scale(1.1)',
+            filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
+            transition: 'all 0.3s ease'
+          }}>s</span>
         </>
       </div>
 
@@ -480,38 +610,31 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="text-left">
               <h1 className="mb-4">
-                <div className="wormhole-intro">
-                  <div className="wormhole-pop">
-                    <div 
-                      ref={weBuildRef}
-                      className="text-6xl sm:text-8xl lg:text-9xl font-bold mb-8"
-                      style={{
-                        color: 'transparent',
-                        WebkitTextStroke: '2px white',
-                        textStroke: '2px white',
-                        fontWeight: '900',
-                        letterSpacing: '-0.02em',
-                        willChange: 'transform'
-                      }}
-                    >
-                      We build,
-                    </div>
-                  </div>
+                <div 
+                  ref={weBuildRef}
+                  className="text-6xl sm:text-8xl lg:text-9xl font-bold mb-8 intro-from-right"
+                  style={{
+                    color: 'transparent',
+                    WebkitTextStroke: '2px white',
+                    textStroke: '2px white',
+                    fontWeight: '900',
+                    letterSpacing: '-0.02em',
+                    willChange: 'transform'
+                  }}
+                >
+                  We build,
                 </div>
-                <div className="wormhole-intro">
-                  <div className="wormhole-pop">
-                    <div 
-                      ref={coolProductsRef}
-                      className="text-4xl sm:text-6xl lg:text-7xl font-bold text-white"
-                      style={{ 
-                        willChange: 'transform',
-                        fontWeight: '900',
-                        letterSpacing: '-0.02em'
-                      }}
-                    >
-                      Cool & Scalable products
-                    </div>
-                  </div>
+                <div 
+                  ref={coolProductsRef}
+                  className="text-4xl sm:text-6xl lg:text-7xl font-bold text-white intro-from-left"
+                  style={{ 
+                    willChange: 'transform',
+                    fontWeight: '900',
+                    letterSpacing: '-0.02em',
+                    animationDelay: '180ms'
+                  }}
+                >
+                  Cool & Scalable products
                 </div>
               </h1>
               <div ref={contactButtonRef} className="flex flex-col sm:flex-row gap-4 mb-16 reveal-on-scroll" style={{ willChange: 'transform', pointerEvents: 'auto' }}>
