@@ -269,7 +269,7 @@ export const Header = () => {
             {/* Center group: logo + nav + contact + user */}
             <div className="flex items-center justify-center gap-1 sm:gap-1.5">
               <Link to="/home" className="flex items-center hover:opacity-90 transition-opacity">
-                <img src={logoImage} alt="Protoduct" className="h-12 md:h-16 w-auto" />
+                <img src={logoImage} alt="Protoduct" className="h-14 w-auto" />
               </Link>
               <nav className="hidden md:flex items-center gap-1.5 sm:gap-2">
                 <NavItem path="/home" icon={<Home className="h-4 w-4" />} label="Home" />
