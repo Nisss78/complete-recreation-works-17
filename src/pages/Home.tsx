@@ -456,8 +456,12 @@ export default function Home() {
               const cards = productCarouselRef.current.querySelectorAll('[data-product-card]');
               const navButtons = productCarouselRef.current.querySelector('[data-nav-buttons]');
               
+              console.log('Product cards found:', cards.length);
+              
               // Initially hide all cards and nav buttons
-              gsap.set(cards, { opacity: 0, x: 150, y: -100 });
+              if (cards.length > 0) {
+                gsap.set(cards, { opacity: 0, x: 150, y: -100 });
+              }
               if (navButtons) {
                 gsap.set(navButtons, { opacity: 0 });
               }
@@ -469,9 +473,9 @@ export default function Home() {
               const cardsTimeline = gsap.timeline({
                 scrollTrigger: {
                   trigger: servicesTitleRef.current,
-                  start: '98% center', // "Our Services"が左上に配置された直後
-                  end: '125% center',
-                  scrub: 1,
+                  start: '91% center', // "Our Services"が左上に配置された直後
+                  end: '135% center',
+                  scrub: 0.5,
                 }
               });
 
@@ -481,18 +485,18 @@ export default function Home() {
                   opacity: 1,
                   x: 0,
                   y: 0,
-                  duration: 0.3,
+                  duration: 0.2,
                   ease: 'power2.out',
-                }, index * 0.2); // Sequential timing
+                }, index * 0.15); // Faster sequential timing
               });
 
               // Navigation buttons fade in after all cards
               if (navButtons) {
                 cardsTimeline.to(navButtons, {
                   opacity: 1,
-                  duration: 0.5,
+                  duration: 0.3,
                   ease: 'power2.inOut',
-                }, cards.length * 0.2); // After all cards
+                }, cards.length * 0.15); // After all cards appear
               }
             }
           }
@@ -523,6 +527,11 @@ export default function Home() {
             limitCallbacks: true,
             syncInterval: 150, // Throttle scroll events for better performance
             ignoreMobileResize: true, // Don't recalculate on mobile keyboard show/hide
+          });
+          
+          // Refresh ScrollTrigger after all animations are set up
+          requestAnimationFrame(() => {
+            ScrollTrigger.refresh();
           });
         }, mainRef);
         cleanup = () => {
