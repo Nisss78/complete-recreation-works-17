@@ -434,7 +434,7 @@ export default function Home() {
             finalTimeline
               // Long pause at center (most of the scroll range)
               .to(scatteredTextRef.current, {
-                top: '40vh', // Higher center completion position
+                top: '30vh', // さらに高い位置で文字が完成
                 left: '50%',
                 ease: 'none',
                 duration: 0.8 // 80% of timeline spent at center
@@ -442,7 +442,7 @@ export default function Home() {
               // Slow, elegant move to final position with size reduction
               .to(scatteredTextRef.current, {
                 top: '15vh', // Reverted back to 15vh
-                left: '15%', // Move much more to the left side
+                left: '25%', // 文字が切れないように右に調整
                 scale: 0.5, // Scale down to 50% for upper display
                 ease: 'power1.out', // Smooth, no bounce
                 duration: 0.2 // 20% for final positioning, stable
@@ -514,7 +514,7 @@ export default function Home() {
         ref={scatteredTextRef}
         className="fixed left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-bold text-gray-900 pointer-events-none"
         style={{ 
-          top: '50vh',
+          top: '30vh', // 最初から30vhで完成させる
           zIndex: 40, 
           clipPath: 'circle(0px at center)', 
           willChange: 'clip-path, top, left',
@@ -738,7 +738,7 @@ export default function Home() {
         </section>
 
         {/* Transition Section - for scroll-based text gathering */}
-        <section ref={servicesTitleRef} className="relative min-h-screen bg-white"></section>
+        <section ref={servicesTitleRef} className="relative bg-white" style={{ minHeight: '300vh' }}></section>
 
         {/* Services Section */}
         <section className="py-20 bg-gray-50">
