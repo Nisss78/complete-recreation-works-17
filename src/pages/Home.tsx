@@ -315,29 +315,47 @@ export default function Home() {
           if (scatteredTextRef.current && servicesTitleRef.current) {
             const letters = scatteredTextRef.current.querySelectorAll('.scattered-letter');
             
-            // Calculate proper positions for readable text alignment
-            // Manual positioning for better visual alignment of "Our Services"
-            const finalPositions = [
-              { left: -240, top: 0 }, // O
-              { left: -200, top: 0 }, // u
-              { left: -160, top: 0 }, // r
-              { left: -120, top: 0 }, // (space)
-              { left: -70, top: 0 },  // S
-              { left: -30, top: 0 },  // e
-              { left: 10, top: 0 },   // r
-              { left: 50, top: 0 },   // v
-              { left: 85, top: 0 },   // i (narrower)
-              { left: 110, top: 0 },  // c
-              { left: 150, top: 0 },  // e
-              { left: 190, top: 0 }   // s
-            ];
+            // Create a temporary reference text to get natural letter positions
+            const tempText = document.createElement('div');
+            tempText.style.position = 'absolute';
+            tempText.style.visibility = 'hidden';
+            tempText.style.fontSize = window.getComputedStyle(scatteredTextRef.current).fontSize;
+            tempText.style.fontFamily = window.getComputedStyle(scatteredTextRef.current).fontFamily;
+            tempText.style.fontWeight = window.getComputedStyle(scatteredTextRef.current).fontWeight;
+            tempText.innerHTML = 'Our Services';
+            document.body.appendChild(tempText);
+            
+            // Get natural character positions
+            const textMetrics = tempText.getBoundingClientRect();
+            const finalPositions = [];
+            
+            // Calculate each character position based on natural text layout
+            let currentPos = -textMetrics.width / 2; // Center the whole text
+            'Our Services'.split('').forEach((char, i) => {
+              const charSpan = document.createElement('span');
+              charSpan.textContent = char;
+              charSpan.style.position = 'absolute';
+              charSpan.style.left = currentPos + 'px';
+              tempText.appendChild(charSpan);
+              
+              const charRect = charSpan.getBoundingClientRect();
+              finalPositions.push({ 
+                left: currentPos, 
+                top: 0 
+              });
+              
+              // Move to next character position
+              currentPos += charRect.width;
+            });
+            
+            // Clean up temp element
+            document.body.removeChild(tempText);
 
-            // STAGE 1: Animate each letter to center with proper alignment (readable text)
-            // Complete at screen center - all letters at same height (top: 0)
+            // STAGE 1: Animate each letter to natural positions
             letters.forEach((letter, index) => {
               gsap.to(letter, {
                 left: finalPositions[index].left + 'px',
-                top: '0px', // All letters at same height
+                top: '0px',
                 ease: 'power2.out',
                 scrollTrigger: {
                   trigger: servicesTitleRef.current,
