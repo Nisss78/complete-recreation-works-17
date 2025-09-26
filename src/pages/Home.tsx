@@ -35,6 +35,10 @@ export default function Home() {
   const finalTextRef = useRef<HTMLDivElement | null>(null);
   const timelineRef = useRef<GSAPTimeline | null>(null);
   const refreshHandlerRef = useRef<(() => void) | null>(null);
+  const transitionRef = useRef<HTMLDivElement | null>(null);
+  const whiteCircleRef = useRef<HTMLDivElement | null>(null);
+  const scatteredTextRef = useRef<HTMLDivElement | null>(null);
+  const servicesTitleRef = useRef<HTMLDivElement | null>(null);
   
   // Get latest 3 news items
   const latestNews = newsItems?.slice(0, 3) || [];
@@ -282,6 +286,50 @@ export default function Home() {
 
             // STEP 10: Much longer final green screen pause before unpinning (1 second)
             heroTimeline.to({}, { duration: 1.0 }, 1.95); // 1 second final green screen to keep background green until text completely exits
+
+            // STEP 11: White circle expansion - starts after final text exits
+            if (whiteCircleRef.current) {
+              heroTimeline.fromTo(whiteCircleRef.current, {
+                scale: 0,
+                opacity: 1,
+              }, {
+                scale: 30,
+                duration: 1.5,
+                ease: 'power2.out',
+              }, 2.95); // Start after green screen pause
+            }
+
+            // STEP 12: Scattered text reveal - sync with white circle expansion
+            if (scatteredTextRef.current) {
+              heroTimeline.fromTo(scatteredTextRef.current, {
+                clipPath: 'circle(0px at center)',
+              }, {
+                clipPath: 'circle(2000px at center)',
+                duration: 1.5,
+                ease: 'power2.out',
+              }, 2.95); // Same timing as white circle
+            }
+          }
+
+          // Scattered text animation - characters gather to center on scroll
+          if (scatteredTextRef.current && servicesTitleRef.current) {
+            const letters = scatteredTextRef.current.querySelectorAll('.scattered-letter');
+            letters.forEach((letter) => {
+              const initialLeft = parseFloat((letter as HTMLElement).style.left);
+              const initialTop = parseFloat((letter as HTMLElement).style.top);
+              
+              gsap.to(letter, {
+                left: '0px',
+                top: '0px',
+                ease: 'power2.out',
+                scrollTrigger: {
+                  trigger: servicesTitleRef.current,
+                  start: 'top bottom',
+                  end: 'center center',
+                  scrub: 1,
+                }
+              });
+            });
           }
 
           // Fade & slide-up for items marked with .reveal-on-scroll
@@ -447,18 +495,59 @@ export default function Home() {
                   Let's enjoy immersing ourselves!!
                 </div>
               </div>
+
+              {/* White Circle - expands after final text */}
+              <div 
+                ref={whiteCircleRef}
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-white rounded-full pointer-events-none"
+                style={{ willChange: 'transform', scale: 0, zIndex: 50 }}
+              />
+
+              {/* Scattered Text - appears within white circle */}
+              <div 
+                ref={scatteredTextRef}
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 pointer-events-none"
+                style={{ zIndex: 60, clipPath: 'circle(0px at center)', willChange: 'clip-path' }}
+              >
+                {isJapanese ? (
+                  <>
+                    <span className="scattered-letter inline-block absolute" style={{ left: '-200px', top: '-100px', opacity: 1 }}>私</span>
+                    <span className="scattered-letter inline-block absolute" style={{ left: '250px', top: '-150px', opacity: 1 }}>た</span>
+                    <span className="scattered-letter inline-block absolute" style={{ left: '-300px', top: '50px', opacity: 1 }}>ち</span>
+                    <span className="scattered-letter inline-block absolute" style={{ left: '180px', top: '120px', opacity: 1 }}>の</span>
+                    <span className="scattered-letter inline-block absolute" style={{ left: '-150px', top: '200px', opacity: 1 }}>サ</span>
+                    <span className="scattered-letter inline-block absolute" style={{ left: '300px', top: '-50px', opacity: 1 }}>ー</span>
+                    <span className="scattered-letter inline-block absolute" style={{ left: '-250px', top: '-200px', opacity: 1 }}>ビ</span>
+                    <span className="scattered-letter inline-block absolute" style={{ left: '150px', top: '180px', opacity: 1 }}>ス</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="scattered-letter inline-block absolute" style={{ left: '-200px', top: '-100px', opacity: 1 }}>O</span>
+                    <span className="scattered-letter inline-block absolute" style={{ left: '250px', top: '-150px', opacity: 1 }}>u</span>
+                    <span className="scattered-letter inline-block absolute" style={{ left: '-300px', top: '50px', opacity: 1 }}>r</span>
+                    <span className="scattered-letter inline-block absolute" style={{ left: '180px', top: '120px', opacity: 1 }}>&nbsp;</span>
+                    <span className="scattered-letter inline-block absolute" style={{ left: '-150px', top: '200px', opacity: 1 }}>S</span>
+                    <span className="scattered-letter inline-block absolute" style={{ left: '300px', top: '-50px', opacity: 1 }}>e</span>
+                    <span className="scattered-letter inline-block absolute" style={{ left: '-250px', top: '-200px', opacity: 1 }}>r</span>
+                    <span className="scattered-letter inline-block absolute" style={{ left: '150px', top: '180px', opacity: 1 }}>v</span>
+                    <span className="scattered-letter inline-block absolute" style={{ left: '-100px', top: '-180px', opacity: 1 }}>i</span>
+                    <span className="scattered-letter inline-block absolute" style={{ left: '220px', top: '80px', opacity: 1 }}>c</span>
+                    <span className="scattered-letter inline-block absolute" style={{ left: '-180px', top: '150px', opacity: 1 }}>e</span>
+                    <span className="scattered-letter inline-block absolute" style={{ left: '280px', top: '-120px', opacity: 1 }}>s</span>
+                  </>
+                )}
+              </div>
               
             </div>
           </div>
         </section>
 
+        {/* Transition Section - for scroll-based text gathering */}
+        <section ref={servicesTitleRef} className="relative min-h-screen bg-white"></section>
 
         {/* Services Section */}
         <section className="py-20 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-4">
-              {isJapanese ? "私たちのサービス" : "Our Services"}
-            </h2>
             <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
               {isJapanese 
                 ? "企業のニーズに合わせた最適なAIソリューションを提供します"
