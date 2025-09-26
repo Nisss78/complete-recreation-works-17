@@ -434,14 +434,14 @@ export default function Home() {
             finalTimeline
               // Long pause at center (most of the scroll range)
               .to(scatteredTextRef.current, {
-                top: '50vh', // Stay at center longer
+                top: '40vh', // Higher center completion position
                 left: '50%',
                 ease: 'none',
                 duration: 0.8 // 80% of timeline spent at center
               })
               // Slow, elegant move to final position with size reduction
               .to(scatteredTextRef.current, {
-                top: '20vh',
+                top: '15vh', // Reverted back to 15vh
                 left: '15%', // Move much more to the left side
                 scale: 0.5, // Scale down to 50% for upper display
                 ease: 'power1.out', // Smooth, no bounce
@@ -527,7 +527,7 @@ export default function Home() {
             transform: 'rotate(-15deg) scale(0.8)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#dc2626' // Red-600
+            color: '#dc2626' // Deep red - start of gradient
           }}>O</span>
           <span className="scattered-letter inline-block absolute" style={{ 
             left: '400px', top: '-300px', 
@@ -535,7 +535,7 @@ export default function Home() {
             transform: 'rotate(22deg) scale(1.1)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#ef4444' // Red-500
+            color: '#e11d48' // Red-pink
           }}>u</span>
           <span className="scattered-letter inline-block absolute" style={{ 
             left: '-450px', top: '120px', 
@@ -543,7 +543,7 @@ export default function Home() {
             transform: 'rotate(-8deg) scale(0.7)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#f87171' // Red-400
+            color: '#ec4899' // Pink
           }}>r</span>
           <span className="scattered-letter inline-block absolute" style={{ 
             left: '100px', top: '350px', 
@@ -558,7 +558,7 @@ export default function Home() {
             transform: 'rotate(18deg) scale(1.2)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#1d4ed8' // Blue-700
+            color: '#d946ef' // Purple-pink
           }}>S</span>
           <span className="scattered-letter inline-block absolute" style={{ 
             left: '350px', top: '-200px', 
@@ -566,7 +566,7 @@ export default function Home() {
             transform: 'rotate(-25deg) scale(0.9)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#2563eb' // Blue-600
+            color: '#c026d3' // Purple
           }}>e</span>
           <span className="scattered-letter inline-block absolute" style={{ 
             left: '-250px', top: '300px', 
@@ -574,7 +574,7 @@ export default function Home() {
             transform: 'rotate(12deg) scale(0.8)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#3b82f6' // Blue-500
+            color: '#a855f7' // Purple-blue
           }}>r</span>
           <span className="scattered-letter inline-block absolute" style={{ 
             left: '300px', top: '280px', 
@@ -582,7 +582,7 @@ export default function Home() {
             transform: 'rotate(-18deg) scale(1.1)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#60a5fa' // Blue-400
+            color: '#8b5cf6' // Violet
           }}>v</span>
           <span className="scattered-letter inline-block absolute" style={{ 
             left: '200px', top: '-150px', 
@@ -590,7 +590,7 @@ export default function Home() {
             transform: 'rotate(8deg) scale(0.6)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#93c5fd' // Blue-300
+            color: '#6366f1' // Indigo
           }}>i</span>
           <span className="scattered-letter inline-block absolute" style={{ 
             left: '-150px', top: '-100px', 
@@ -598,7 +598,7 @@ export default function Home() {
             transform: 'rotate(-12deg) scale(1.0)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#bfdbfe' // Blue-200
+            color: '#3b82f6' // Blue
           }}>c</span>
           <span className="scattered-letter inline-block absolute" style={{ 
             left: '-350px', top: '200px', 
@@ -606,7 +606,7 @@ export default function Home() {
             transform: 'rotate(20deg) scale(0.9)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#dbeafe' // Blue-100
+            color: '#2563eb' // Deep blue
           }}>e</span>
           <span className="scattered-letter inline-block absolute" style={{ 
             left: '380px', top: '250px', 
@@ -614,7 +614,7 @@ export default function Home() {
             transform: 'rotate(-10deg) scale(1.1)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#1e40af' // Blue-800
+            color: '#1d4ed8' // Deepest blue - end of gradient
           }}>s</span>
         </>
       </div>
