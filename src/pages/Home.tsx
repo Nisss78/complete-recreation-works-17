@@ -512,17 +512,18 @@ export default function Home() {
       {/* Scattered Text - Fixed position overlay */}
       <div 
         ref={scatteredTextRef}
-        className="fixed left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-8xl sm:text-9xl lg:text-11xl font-bold text-gray-900 pointer-events-none"
+        className="fixed left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-bold text-gray-900 pointer-events-none"
         style={{ 
           top: '50vh',
           zIndex: 40, 
           clipPath: 'circle(0px at center)', 
-          willChange: 'clip-path, top, left' 
+          willChange: 'clip-path, top, left',
+          fontSize: '16rem' // 16倍の大きさ
         }}
       >
         <>
           <span className="scattered-letter inline-block absolute" style={{ 
-            left: '-350px', top: '-250px', 
+            left: '-600px', top: '-400px', // 左上に大きく散らばらせる
             opacity: 0.6, 
             transform: 'rotate(-15deg) scale(0.8)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
@@ -530,7 +531,7 @@ export default function Home() {
             color: '#dc2626' // Deep red - start of gradient
           }}>O</span>
           <span className="scattered-letter inline-block absolute" style={{ 
-            left: '400px', top: '-300px', 
+            left: '650px', top: '-500px', // 右上にもっと散らばらせる
             opacity: 0.7, 
             transform: 'rotate(22deg) scale(1.1)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
@@ -538,7 +539,7 @@ export default function Home() {
             color: '#e11d48' // Red-pink
           }}>u</span>
           <span className="scattered-letter inline-block absolute" style={{ 
-            left: '-450px', top: '120px', 
+            left: '-750px', top: '150px', // 左側に大きく散らばらせる
             opacity: 0.5, 
             transform: 'rotate(-8deg) scale(0.7)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
@@ -546,14 +547,14 @@ export default function Home() {
             color: '#ec4899' // Pink
           }}>r</span>
           <span className="scattered-letter inline-block absolute" style={{ 
-            left: '100px', top: '350px', 
+            left: '0px', top: '0px', // スペース文字は中央に
             opacity: 0.8, 
             transform: 'rotate(0deg) scale(1.0)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease'
           }}> </span>
           <span className="scattered-letter inline-block absolute" style={{ 
-            left: '450px', top: '180px', 
+            left: '750px', top: '300px', // 右側に大きく散らばらせる
             opacity: 0.4, 
             transform: 'rotate(18deg) scale(1.2)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
@@ -561,7 +562,7 @@ export default function Home() {
             color: '#d946ef' // Purple-pink
           }}>S</span>
           <span className="scattered-letter inline-block absolute" style={{ 
-            left: '350px', top: '-200px', 
+            left: '150px', top: '-350px', // 中央上部に配置
             opacity: 0.6, 
             transform: 'rotate(-25deg) scale(0.9)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
@@ -569,7 +570,7 @@ export default function Home() {
             color: '#c026d3' // Purple
           }}>e</span>
           <span className="scattered-letter inline-block absolute" style={{ 
-            left: '-250px', top: '300px', 
+            left: '-450px', top: '500px', // 左下に大きく散らばらせる
             opacity: 0.7, 
             transform: 'rotate(12deg) scale(0.8)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
@@ -577,7 +578,7 @@ export default function Home() {
             color: '#a855f7' // Purple-blue
           }}>r</span>
           <span className="scattered-letter inline-block absolute" style={{ 
-            left: '300px', top: '280px', 
+            left: '500px', top: '600px', // 右下に大きく散らばらせる
             opacity: 0.5, 
             transform: 'rotate(-18deg) scale(1.1)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
@@ -585,7 +586,7 @@ export default function Home() {
             color: '#8b5cf6' // Violet
           }}>v</span>
           <span className="scattered-letter inline-block absolute" style={{ 
-            left: '200px', top: '-150px', 
+            left: '-100px', top: '-250px', // 中央上部に配置
             opacity: 0.8, 
             transform: 'rotate(8deg) scale(0.6)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
@@ -593,7 +594,7 @@ export default function Home() {
             color: '#6366f1' // Indigo
           }}>i</span>
           <span className="scattered-letter inline-block absolute" style={{ 
-            left: '-150px', top: '-100px', 
+            left: '-200px', top: '100px', // 中央左に配置
             opacity: 0.6, 
             transform: 'rotate(-12deg) scale(1.0)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
@@ -601,7 +602,7 @@ export default function Home() {
             color: '#3b82f6' // Blue
           }}>c</span>
           <span className="scattered-letter inline-block absolute" style={{ 
-            left: '-350px', top: '200px', 
+            left: '200px', top: '400px', // 中央下に配置
             opacity: 0.7, 
             transform: 'rotate(20deg) scale(0.9)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
@@ -609,7 +610,7 @@ export default function Home() {
             color: '#2563eb' // Deep blue
           }}>e</span>
           <span className="scattered-letter inline-block absolute" style={{ 
-            left: '380px', top: '250px', 
+            left: '600px', top: '450px', // 右下に散らばらせる（vから離す）
             opacity: 0.5, 
             transform: 'rotate(-10deg) scale(1.1)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
