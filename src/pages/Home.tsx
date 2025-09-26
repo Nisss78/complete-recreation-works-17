@@ -322,6 +322,9 @@ export default function Home() {
             tempText.style.fontSize = window.getComputedStyle(scatteredTextRef.current).fontSize;
             tempText.style.fontFamily = window.getComputedStyle(scatteredTextRef.current).fontFamily;
             tempText.style.fontWeight = window.getComputedStyle(scatteredTextRef.current).fontWeight;
+            // Ensure proper line height for large text
+            tempText.style.lineHeight = '1.2';
+            tempText.style.whiteSpace = 'nowrap';
             tempText.innerHTML = 'Our Services';
             document.body.appendChild(tempText);
             
@@ -329,23 +332,40 @@ export default function Home() {
             const textMetrics = tempText.getBoundingClientRect();
             const finalPositions = [];
             
-            // Calculate each character position based on natural text layout
-            let currentPos = -textMetrics.width / 2; // Center the whole text
-            'Our Services'.split('').forEach((char, i) => {
+            // Calculate each character position for perfect center alignment
+            const text = 'Our Services';
+            const chars = text.split('');
+            
+            // Calculate total width first
+            let totalWidth = 0;
+            const charWidths = [];
+            
+            chars.forEach((char, i) => {
               const charSpan = document.createElement('span');
               charSpan.textContent = char;
+              charSpan.style.visibility = 'hidden';
               charSpan.style.position = 'absolute';
-              charSpan.style.left = currentPos + 'px';
-              tempText.appendChild(charSpan);
+              // Apply same styles as the actual container
+              charSpan.style.fontSize = window.getComputedStyle(scatteredTextRef.current).fontSize;
+              charSpan.style.fontFamily = window.getComputedStyle(scatteredTextRef.current).fontFamily;
+              charSpan.style.fontWeight = window.getComputedStyle(scatteredTextRef.current).fontWeight;
+              document.body.appendChild(charSpan);
               
               const charRect = charSpan.getBoundingClientRect();
+              charWidths[i] = charRect.width;
+              totalWidth += charRect.width;
+              
+              document.body.removeChild(charSpan);
+            });
+            
+            // Position each character from center
+            let currentPos = -totalWidth / 2;
+            chars.forEach((char, i) => {
               finalPositions.push({ 
                 left: currentPos, 
                 top: 0 
               });
-              
-              // Move to next character position
-              currentPos += charRect.width;
+              currentPos += charWidths[i];
             });
             
             // Clean up temp element
@@ -358,13 +378,13 @@ export default function Home() {
                 scrollTrigger: {
                   trigger: servicesTitleRef.current,
                   start: 'top center',
-                  end: '20% center', // Much shorter range for gathering
-                  scrub: 0.5, // Reduced scrub for smoother, less accelerated movement
+                  end: '60% center', // Much longer range for slow gathering
+                  scrub: 0.2, // Very slow scrub for extremely gradual movement
                 }
               });
 
-              // Add staggered delay based on index
-              const staggerDelay = index * 0.05; // Reduced for smoother effect
+              // Add staggered delay based on index for very gradual gathering
+              const staggerDelay = index * 0.15; // Increased delay for more dramatic sequential effect
               
               letterTimeline
                 .to(letter, {
@@ -375,7 +395,7 @@ export default function Home() {
                   scale: 1, // Reset scale to 1
                   filter: 'drop-shadow(0 0 15px rgba(255,255,255,0.8))', // Enhanced glow
                   duration: 0.8,
-                  ease: 'elastic.out(1, 0.5)', // Bouncy elastic effect
+                  ease: 'power2.out', // Smooth without bounce
                   delay: staggerDelay
                 });
             });
@@ -384,9 +404,9 @@ export default function Home() {
             const finalTimeline = gsap.timeline({
               scrollTrigger: {
                 trigger: servicesTitleRef.current,
-                start: '20% center', // Start after gathering is complete
-                end: '95% center', // Even longer range for extended center pause
-                scrub: 0.1, // Much slower scrub for very smooth movement
+                start: '60% center', // Start after gathering is complete (matches STAGE 1 end)
+                end: '120% center', // Even longer range for very extended center pause
+                scrub: 0.05, // Extremely slow scrub for ultra-smooth movement
                 onComplete: () => {
                   // Add underline effect after positioning
                   const underline = document.createElement('div');
@@ -419,22 +439,13 @@ export default function Home() {
                 ease: 'none',
                 duration: 0.8 // 80% of timeline spent at center
               })
-              // Slow, elegant move to final position
+              // Slow, elegant move to final position with size reduction
               .to(scatteredTextRef.current, {
                 top: '20vh',
-                left: '30%',
-                ease: 'power1.out', // Gentler easing for slower feel
-                duration: 0.2 // 20% for final positioning, more gradual
-              })
-              .to(scatteredTextRef.current, {
-                scale: 1.02,
-                duration: 0.1,
-                ease: 'power2.out',
-              }, '-=0.1')
-              .to(scatteredTextRef.current, {
-                scale: 1,
-                duration: 0.2,
-                ease: 'elastic.out(1, 0.3)',
+                left: '15%', // Move much more to the left side
+                scale: 0.5, // Scale down to 50% for upper display
+                ease: 'power1.out', // Smooth, no bounce
+                duration: 0.2 // 20% for final positioning, stable
               });
           }
 
@@ -501,7 +512,7 @@ export default function Home() {
       {/* Scattered Text - Fixed position overlay */}
       <div 
         ref={scatteredTextRef}
-        className="fixed left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 pointer-events-none"
+        className="fixed left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-8xl sm:text-9xl lg:text-11xl font-bold text-gray-900 pointer-events-none"
         style={{ 
           top: '50vh',
           zIndex: 40, 
@@ -511,84 +522,84 @@ export default function Home() {
       >
         <>
           <span className="scattered-letter inline-block absolute" style={{ 
-            left: '-400px', top: '-250px', 
+            left: '-350px', top: '-250px', 
             opacity: 0.6, 
             transform: 'rotate(-15deg) scale(0.8)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease'
           }}>O</span>
           <span className="scattered-letter inline-block absolute" style={{ 
-            left: '450px', top: '-300px', 
+            left: '400px', top: '-300px', 
             opacity: 0.7, 
             transform: 'rotate(22deg) scale(1.1)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease'
           }}>u</span>
           <span className="scattered-letter inline-block absolute" style={{ 
-            left: '-500px', top: '150px', 
+            left: '-450px', top: '120px', 
             opacity: 0.5, 
             transform: 'rotate(-8deg) scale(0.7)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease'
           }}>r</span>
           <span className="scattered-letter inline-block absolute" style={{ 
-            left: '-350px', top: '350px', 
+            left: '100px', top: '350px', 
             opacity: 0.8, 
             transform: 'rotate(0deg) scale(1.0)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease'
           }}> </span>
           <span className="scattered-letter inline-block absolute" style={{ 
-            left: '500px', top: '-80px', 
+            left: '450px', top: '180px', 
             opacity: 0.4, 
             transform: 'rotate(18deg) scale(1.2)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease'
           }}>S</span>
           <span className="scattered-letter inline-block absolute" style={{ 
-            left: '-450px', top: '-350px', 
+            left: '350px', top: '-200px', 
             opacity: 0.6, 
             transform: 'rotate(-25deg) scale(0.9)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease'
           }}>e</span>
           <span className="scattered-letter inline-block absolute" style={{ 
-            left: '350px', top: '380px', 
+            left: '-250px', top: '300px', 
             opacity: 0.7, 
             transform: 'rotate(12deg) scale(0.8)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease'
           }}>r</span>
           <span className="scattered-letter inline-block absolute" style={{ 
-            left: '-280px', top: '-380px', 
+            left: '300px', top: '280px', 
             opacity: 0.5, 
             transform: 'rotate(-18deg) scale(1.1)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease'
           }}>v</span>
           <span className="scattered-letter inline-block absolute" style={{ 
-            left: '420px', top: '180px', 
+            left: '200px', top: '-150px', 
             opacity: 0.8, 
             transform: 'rotate(8deg) scale(0.6)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease'
           }}>i</span>
           <span className="scattered-letter inline-block absolute" style={{ 
-            left: '-380px', top: '250px', 
+            left: '-150px', top: '-100px', 
             opacity: 0.6, 
             transform: 'rotate(-12deg) scale(1.0)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease'
           }}>c</span>
           <span className="scattered-letter inline-block absolute" style={{ 
-            left: '480px', top: '-220px', 
+            left: '-350px', top: '200px', 
             opacity: 0.7, 
             transform: 'rotate(20deg) scale(0.9)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease'
           }}>e</span>
           <span className="scattered-letter inline-block absolute" style={{ 
-            left: '-320px', top: '-150px', 
+            left: '380px', top: '250px', 
             opacity: 0.5, 
             transform: 'rotate(-10deg) scale(1.1)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
