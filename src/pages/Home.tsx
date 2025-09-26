@@ -473,9 +473,9 @@ export default function Home() {
               const cardsTimeline = gsap.timeline({
                 scrollTrigger: {
                   trigger: servicesTitleRef.current,
-                  start: '91% center', // "Our Services"が左上に配置された直後
-                  end: '135% center',
-                  scrub: 0.5,
+                  start: '100% center', // "Our Services"が左上に配置された直後
+                  end: '120% center',
+                  scrub: 0.3,
                 }
               });
 
@@ -485,18 +485,18 @@ export default function Home() {
                   opacity: 1,
                   x: 0,
                   y: 0,
-                  duration: 0.2,
+                  duration: 0.15,
                   ease: 'power2.out',
-                }, index * 0.15); // Faster sequential timing
+                }, index * 0.1); // Faster sequential timing
               });
 
               // Navigation buttons fade in after all cards
               if (navButtons) {
                 cardsTimeline.to(navButtons, {
                   opacity: 1,
-                  duration: 0.3,
+                  duration: 0.2,
                   ease: 'power2.inOut',
-                }, cards.length * 0.15); // After all cards appear
+                }, cards.length * 0.1); // After all cards appear
               }
             }
           }
