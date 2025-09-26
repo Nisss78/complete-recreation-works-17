@@ -311,24 +311,49 @@ export default function Home() {
             }
           }
 
-          // Scattered text animation - characters gather to center on scroll
+          // Scattered text animation - characters gather to center on scroll (fixed position)
           if (scatteredTextRef.current && servicesTitleRef.current) {
             const letters = scatteredTextRef.current.querySelectorAll('.scattered-letter');
-            letters.forEach((letter) => {
-              const initialLeft = parseFloat((letter as HTMLElement).style.left);
-              const initialTop = parseFloat((letter as HTMLElement).style.top);
-              
+            
+            // Calculate proper positions for readable text alignment
+            const letterSpacing = 60; // spacing between letters
+            const letterCount = letters.length;
+            const finalPositions = [];
+            
+            // For Japanese: 私たちのサービス (8 letters)
+            // For English: Our Services (12 letters including space)
+            for (let i = 0; i < letterCount; i++) {
+              const offset = (i - (letterCount - 1) / 2) * letterSpacing;
+              finalPositions.push({ left: offset, top: 0 });
+            }
+
+            // STAGE 1: Animate each letter to center with proper alignment (readable text)
+            // Complete at screen center
+            letters.forEach((letter, index) => {
               gsap.to(letter, {
-                left: '0px',
-                top: '0px',
+                left: finalPositions[index].left + 'px',
+                top: finalPositions[index].top + 'px',
                 ease: 'power2.out',
                 scrollTrigger: {
                   trigger: servicesTitleRef.current,
-                  start: 'top bottom',
+                  start: 'top center',
                   end: 'center center',
                   scrub: 1,
                 }
               });
+            });
+
+            // STAGE 2: Move the entire text container to top-left (keep visible)
+            gsap.to(scatteredTextRef.current, {
+              top: '20vh',
+              left: '30%',
+              ease: 'power2.out',
+              scrollTrigger: {
+                trigger: servicesTitleRef.current,
+                start: 'center center',
+                end: 'bottom center',
+                scrub: 1,
+              }
             });
           }
 
@@ -391,6 +416,47 @@ export default function Home() {
         background: 'radial-gradient(circle at 35% 35%, #ffffff, rgba(255,255,255,0.15))',
         boxShadow: '0 6px 22px rgba(0,0,0,0.25), 0 0 18px rgba(255,255,255,0.5)'
       }} />
+
+      {/* Scattered Text - Fixed position overlay */}
+      <div 
+        ref={scatteredTextRef}
+        className="fixed left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 pointer-events-none"
+        style={{ 
+          top: '50vh',
+          zIndex: 150, 
+          clipPath: 'circle(0px at center)', 
+          willChange: 'clip-path, top, left' 
+        }}
+      >
+        {isJapanese ? (
+          <>
+            <span className="scattered-letter inline-block absolute" style={{ left: '-400px', top: '-250px', opacity: 1 }}>私</span>
+            <span className="scattered-letter inline-block absolute" style={{ left: '450px', top: '-300px', opacity: 1 }}>た</span>
+            <span className="scattered-letter inline-block absolute" style={{ left: '-500px', top: '150px', opacity: 1 }}>ち</span>
+            <span className="scattered-letter inline-block absolute" style={{ left: '380px', top: '280px', opacity: 1 }}>の</span>
+            <span className="scattered-letter inline-block absolute" style={{ left: '-350px', top: '350px', opacity: 1 }}>サ</span>
+            <span className="scattered-letter inline-block absolute" style={{ left: '500px', top: '-80px', opacity: 1 }}>ー</span>
+            <span className="scattered-letter inline-block absolute" style={{ left: '-450px', top: '-350px', opacity: 1 }}>ビ</span>
+            <span className="scattered-letter inline-block absolute" style={{ left: '350px', top: '380px', opacity: 1 }}>ス</span>
+          </>
+        ) : (
+          <>
+            <span className="scattered-letter inline-block absolute" style={{ left: '-400px', top: '-250px', opacity: 1 }}>O</span>
+            <span className="scattered-letter inline-block absolute" style={{ left: '450px', top: '-300px', opacity: 1 }}>u</span>
+            <span className="scattered-letter inline-block absolute" style={{ left: '-500px', top: '150px', opacity: 1 }}>r</span>
+            <span className="scattered-letter inline-block absolute" style={{ left: '380px', top: '280px', opacity: 1 }}>&nbsp;</span>
+            <span className="scattered-letter inline-block absolute" style={{ left: '-350px', top: '350px', opacity: 1 }}>S</span>
+            <span className="scattered-letter inline-block absolute" style={{ left: '500px', top: '-80px', opacity: 1 }}>e</span>
+            <span className="scattered-letter inline-block absolute" style={{ left: '-450px', top: '-350px', opacity: 1 }}>r</span>
+            <span className="scattered-letter inline-block absolute" style={{ left: '350px', top: '380px', opacity: 1 }}>v</span>
+            <span className="scattered-letter inline-block absolute" style={{ left: '-280px', top: '-380px', opacity: 1 }}>i</span>
+            <span className="scattered-letter inline-block absolute" style={{ left: '420px', top: '180px', opacity: 1 }}>c</span>
+            <span className="scattered-letter inline-block absolute" style={{ left: '-380px', top: '250px', opacity: 1 }}>e</span>
+            <span className="scattered-letter inline-block absolute" style={{ left: '480px', top: '-220px', opacity: 1 }}>s</span>
+          </>
+        )}
+      </div>
+
       <Header />
       <main className="flex-1">
         {/* Hero Section */}
@@ -502,41 +568,6 @@ export default function Home() {
                 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-white rounded-full pointer-events-none"
                 style={{ willChange: 'transform', scale: 0, zIndex: 50 }}
               />
-
-              {/* Scattered Text - appears within white circle */}
-              <div 
-                ref={scatteredTextRef}
-                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 pointer-events-none"
-                style={{ zIndex: 60, clipPath: 'circle(0px at center)', willChange: 'clip-path' }}
-              >
-                {isJapanese ? (
-                  <>
-                    <span className="scattered-letter inline-block absolute" style={{ left: '-200px', top: '-100px', opacity: 1 }}>私</span>
-                    <span className="scattered-letter inline-block absolute" style={{ left: '250px', top: '-150px', opacity: 1 }}>た</span>
-                    <span className="scattered-letter inline-block absolute" style={{ left: '-300px', top: '50px', opacity: 1 }}>ち</span>
-                    <span className="scattered-letter inline-block absolute" style={{ left: '180px', top: '120px', opacity: 1 }}>の</span>
-                    <span className="scattered-letter inline-block absolute" style={{ left: '-150px', top: '200px', opacity: 1 }}>サ</span>
-                    <span className="scattered-letter inline-block absolute" style={{ left: '300px', top: '-50px', opacity: 1 }}>ー</span>
-                    <span className="scattered-letter inline-block absolute" style={{ left: '-250px', top: '-200px', opacity: 1 }}>ビ</span>
-                    <span className="scattered-letter inline-block absolute" style={{ left: '150px', top: '180px', opacity: 1 }}>ス</span>
-                  </>
-                ) : (
-                  <>
-                    <span className="scattered-letter inline-block absolute" style={{ left: '-200px', top: '-100px', opacity: 1 }}>O</span>
-                    <span className="scattered-letter inline-block absolute" style={{ left: '250px', top: '-150px', opacity: 1 }}>u</span>
-                    <span className="scattered-letter inline-block absolute" style={{ left: '-300px', top: '50px', opacity: 1 }}>r</span>
-                    <span className="scattered-letter inline-block absolute" style={{ left: '180px', top: '120px', opacity: 1 }}>&nbsp;</span>
-                    <span className="scattered-letter inline-block absolute" style={{ left: '-150px', top: '200px', opacity: 1 }}>S</span>
-                    <span className="scattered-letter inline-block absolute" style={{ left: '300px', top: '-50px', opacity: 1 }}>e</span>
-                    <span className="scattered-letter inline-block absolute" style={{ left: '-250px', top: '-200px', opacity: 1 }}>r</span>
-                    <span className="scattered-letter inline-block absolute" style={{ left: '150px', top: '180px', opacity: 1 }}>v</span>
-                    <span className="scattered-letter inline-block absolute" style={{ left: '-100px', top: '-180px', opacity: 1 }}>i</span>
-                    <span className="scattered-letter inline-block absolute" style={{ left: '220px', top: '80px', opacity: 1 }}>c</span>
-                    <span className="scattered-letter inline-block absolute" style={{ left: '-180px', top: '150px', opacity: 1 }}>e</span>
-                    <span className="scattered-letter inline-block absolute" style={{ left: '280px', top: '-120px', opacity: 1 }}>s</span>
-                  </>
-                )}
-              </div>
               
             </div>
           </div>
