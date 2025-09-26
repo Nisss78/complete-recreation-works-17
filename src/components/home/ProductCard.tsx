@@ -43,6 +43,12 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
     const darkCardColor = darkColors[colorIndex % darkColors.length];
     const subtleCardColor = colors[colorIndex % colors.length] + '80'; // 背景用の控えめな透明色
 
+    // Fallbacks when product info is missing
+    const displayName = isPlaceholder || !name ? 'XXX' : name;
+    const displayDescription = isPlaceholder || !description ? 'XXX XXX XXX XXX XXX XXX' : description;
+    const displayYear = isPlaceholder || !year ? 'XXXX' : year;
+    const hasIcon = !isPlaceholder && !!icon_url;
+
     return (
       <div
         ref={ref}
@@ -53,11 +59,10 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
         style={{
           width: '320px',
           height: '380px',
-          background: isPlaceholder
-            ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
-            : isBackground
-              ? `linear-gradient(135deg, ${subtleCardColor} 0%, ${subtleCardColor} 100%)`
-              : `linear-gradient(135deg, ${cardColor} 0%, ${darkCardColor} 100%)`,
+          // Placeholder(XXX)でも黒にせず、通常のカラーパレットを使う
+          background: isBackground
+            ? `linear-gradient(135deg, ${subtleCardColor} 0%, ${subtleCardColor} 100%)`
+            : `linear-gradient(135deg, ${cardColor} 0%, ${darkCardColor} 100%)`,
           // Transform scale is controlled by carousel wrappers (avoid double scaling)
           transform: 'scale(1)',
           transition: 'transform 0.3s ease',
@@ -70,7 +75,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
       >
         {/* Year badge */}
         <div className="absolute top-6 right-6 text-white text-xl font-bold opacity-80">
-          {isPlaceholder ? 'XXXX' : year}
+          {displayYear}
         </div>
 
         {/* Content container */}
@@ -78,13 +83,13 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
           {/* Top section with icon and name */}
           <div className="px-8 pt-8 pb-6">
             <div className="flex items-center gap-4">
-              {isPlaceholder ? (
-                <div className="w-12 h-12 rounded-lg bg-gray-600" />
+              {hasIcon ? (
+                <img src={icon_url!} alt={displayName} className="w-12 h-12 rounded-lg object-cover" />
               ) : (
-                <img src={icon_url} alt={name} className="w-12 h-12 rounded-lg object-cover" />
+                <div className="w-12 h-12 rounded-lg bg-gray-600" />
               )}
               <h3 className="text-3xl font-bold text-white">
-                {isPlaceholder ? 'XXX' : name}
+                {displayName}
               </h3>
             </div>
           </div>
@@ -103,7 +108,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
           {/* Bottom section with description */}
           <div className="px-8 pb-8">
             <p className="text-white text-base mb-6 line-clamp-3">
-              {isPlaceholder ? 'XXX XXX XXX XXX XXX XXX' : description}
+              {displayDescription}
             </p>
 
             {/* Visit button */}

@@ -19,36 +19,43 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
   const displayProducts = products || [];
   const totalProducts = displayProducts.length;
   
-  // デフォルト5枚表示、5個未満の場合はループして5枚確保
+  // デフォルト5枚枠
   const visibleCount = 5;
-  const extendedProducts = [];
-  
-  if (totalProducts === 0) {
-    // プロダクトがない場合はプレースホルダー5枚
-    for (let i = 0; i < visibleCount; i++) {
-      extendedProducts.push({ isPlaceholder: true, id: `placeholder-${i}`, colorIndex: i });
-    }
-  } else if (totalProducts < visibleCount) {
-    // 5個未満の場合は繰り返して5枚作る
-    for (let i = 0; i < visibleCount; i++) {
-      const productIndex = i % totalProducts;
-      extendedProducts.push({ ...displayProducts[productIndex], colorIndex: i });
-    }
-  } else {
-    // 5個以上の場合は通常通り
+  // 拡張配列（5以上の場合のみ使用）
+  const extendedProducts: any[] = [];
+  if (totalProducts >= visibleCount) {
     displayProducts.forEach((product, index) => {
-      extendedProducts.push({ ...product, colorIndex: index });
+      // 各プロダクトに固定のカラーインデックスを付与（2枚目=index1が緑=0）
+      const colorIndex = (index - 1 + 6) % 6;
+      extendedProducts.push({ ...product, colorIndex });
     });
   }
   
-  // 現在位置から5枚を常に表示（ラップアラウンド）
-  const visibleItems = extendedProducts.length > 0
-    ? Array.from({ length: visibleCount }, (_, i) => extendedProducts[(currentIndex + i) % extendedProducts.length])
-    : [];
+  // 現在位置から5枚を常に表示（ラップアラウンド）。
+  // 5未満のときは重複させずにプレースホルダーで埋める。
+  let visibleItems: any[] = [];
+  if (totalProducts === 0) {
+    visibleItems = Array.from({ length: visibleCount }, (_, i) => ({ isPlaceholder: true, id: `placeholder-${i}`, colorIndex: (i - 1 + 6) % 6 }));
+  } else if (totalProducts < visibleCount) {
+    // センター寄り（2枚目=index1）から、currentIndex をスロット回転として反映
+    // まず全スロットを固定カラーのプレースホルダーで初期化
+    visibleItems = Array.from({ length: visibleCount }, (_, i) => ({ isPlaceholder: true, id: `placeholder-${i}`, colorIndex: (i - 1 + 6) % 6 }));
+    const startSlot = 1; // 2枚目から
+    const baseShift = currentIndex % visibleCount;
+    const productStart = totalProducts > 0 ? currentIndex % totalProducts : 0;
+    for (let k = 0; k < totalProducts; k++) {
+      const slotIndex = (startSlot + baseShift + k) % visibleCount;
+      const productIndex = (productStart + k) % totalProducts;
+      const colorIndex = (productIndex - 1 + 6) % 6; // プロダクトごとに固定
+      visibleItems[slotIndex] = { ...displayProducts[productIndex], colorIndex };
+    }
+  } else {
+    visibleItems = Array.from({ length: visibleCount }, (_, i) => extendedProducts[(currentIndex + i) % extendedProducts.length]);
+  }
 
-  // ナビゲーション可否（1枚以上あれば回転可能）
-  const canGoPrev = extendedProducts.length > 1;
-  const canGoNext = extendedProducts.length > 1;
+  // ナビゲーション可否（1件でも回転可能に）
+  const canGoPrev = totalProducts >= 1;
+  const canGoNext = totalProducts >= 1;
 
   const runFlip = () => {
     const state = flipStateRef.current;
@@ -72,8 +79,9 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
     setIsAnimating(true);
     flipStateRef.current = Flip.getState('[data-carousel-item]');
     setCurrentIndex(prev => {
-      if (extendedProducts.length === 0) return 0;
-      return (prev - 1 + extendedProducts.length) % extendedProducts.length;
+      const len = totalProducts >= visibleCount ? extendedProducts.length : visibleCount;
+      if (len <= 0) return 0;
+      return (prev - 1 + len) % len;
     });
   };
 
@@ -83,8 +91,9 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
     setIsAnimating(true);
     flipStateRef.current = Flip.getState('[data-carousel-item]');
     setCurrentIndex(prev => {
-      if (extendedProducts.length === 0) return 0;
-      return (prev + 1) % extendedProducts.length;
+      const len = totalProducts >= visibleCount ? extendedProducts.length : visibleCount;
+      if (len <= 0) return 0;
+      return (prev + 1) % len;
     });
   };
 
@@ -134,13 +143,13 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
                 <div key={item.id} style={wrapperStyle} {...commonAttrs}>
                   <ProductCard
                     ref={el => cardRefs.current[index] = el}
-                    name="XXX"
-                    description="XXX XXX XXX XXX XXX XXX"
-                    icon_url=""
-                    year="XXXX"
+                    name={"XXX"}
+                    description={"XXX XXX XXX XXX XXX XXX"}
+                    icon_url={""}
+                    year={"XXXX"}
                     isPlaceholder={true}
                     isBackground={!isMain}
-                    colorIndex={item.colorIndex}
+                    colorIndex={(item as any).colorIndex ?? (index - 1 + 6) % 6}
                   />
                 </div>
               );
@@ -159,7 +168,7 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
                   year={year}
                   url={product.URL}
                   isBackground={!isMain}
-                  colorIndex={(item as any).colorIndex}
+                  colorIndex={(product as any).colorIndex ?? (index - 1 + 6) % 6}
                 />
               </div>
             );
@@ -171,7 +180,7 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
       <div 
         data-nav-buttons
         className="fixed flex gap-6 pointer-events-auto"
-        style={{ bottom: '12vh', left: '8%', zIndex: 50, opacity: 1 }}
+        style={{ bottom: '12vh', left: '12%', zIndex: 50, opacity: 1 }}
       >
           <button
             onClick={handlePrev}
