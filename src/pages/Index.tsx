@@ -12,6 +12,7 @@ import { RecentArticles } from "@/components/home/RecentArticles";
 import { ArrowDownAZ, ArrowUpAZ } from "lucide-react";
 import LoadingScreen from "@/components/LoadingScreen";
 import FloatingParticles from "@/components/FloatingParticles";
+import FloatingLogos from "@/components/FloatingLogos";
 
 // 製品データと画像を同時に取得する関数
 const fetchProductsWithImages = async () => {
@@ -163,6 +164,7 @@ const Index = () => {
         {/* Hero Section */}
         <div className="bg-white relative overflow-hidden">
           <FloatingParticles />
+          <FloatingLogos />
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 pt-28 md:pt-32 relative z-10">
             <h1 className="text-6xl font-bold mb-4 text-left" style={{
               background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)',

@@ -358,11 +358,13 @@ export default function Home() {
               <h1 className="reveal-on-scroll mb-4">
                 <div 
                   ref={weBuildRef}
-                  className="text-6xl sm:text-8xl lg:text-9xl font-bold mb-2"
+                  className="text-6xl sm:text-8xl lg:text-9xl font-bold mb-8"
                   style={{
                     color: 'transparent',
                     WebkitTextStroke: '2px white',
                     textStroke: '2px white',
+                    fontWeight: '900',
+                    letterSpacing: '-0.02em',
                     willChange: 'transform'
                   }}
                 >
@@ -371,7 +373,11 @@ export default function Home() {
                 <div 
                   ref={coolProductsRef}
                   className="text-4xl sm:text-6xl lg:text-7xl font-bold text-white"
-                  style={{ willChange: 'transform' }}
+                  style={{ 
+                    willChange: 'transform',
+                    fontWeight: '900',
+                    letterSpacing: '-0.02em'
+                  }}
                 >
                   Cool & Scalable products
                 </div>
