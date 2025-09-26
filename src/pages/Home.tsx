@@ -526,21 +526,24 @@ export default function Home() {
             opacity: 0.6, 
             transform: 'rotate(-15deg) scale(0.8)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
-            transition: 'all 0.3s ease'
+            transition: 'all 0.3s ease',
+            color: '#dc2626' // Red-600
           }}>O</span>
           <span className="scattered-letter inline-block absolute" style={{ 
             left: '400px', top: '-300px', 
             opacity: 0.7, 
             transform: 'rotate(22deg) scale(1.1)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
-            transition: 'all 0.3s ease'
+            transition: 'all 0.3s ease',
+            color: '#ef4444' // Red-500
           }}>u</span>
           <span className="scattered-letter inline-block absolute" style={{ 
             left: '-450px', top: '120px', 
             opacity: 0.5, 
             transform: 'rotate(-8deg) scale(0.7)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
-            transition: 'all 0.3s ease'
+            transition: 'all 0.3s ease',
+            color: '#f87171' // Red-400
           }}>r</span>
           <span className="scattered-letter inline-block absolute" style={{ 
             left: '100px', top: '350px', 
@@ -554,56 +557,64 @@ export default function Home() {
             opacity: 0.4, 
             transform: 'rotate(18deg) scale(1.2)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
-            transition: 'all 0.3s ease'
+            transition: 'all 0.3s ease',
+            color: '#1d4ed8' // Blue-700
           }}>S</span>
           <span className="scattered-letter inline-block absolute" style={{ 
             left: '350px', top: '-200px', 
             opacity: 0.6, 
             transform: 'rotate(-25deg) scale(0.9)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
-            transition: 'all 0.3s ease'
+            transition: 'all 0.3s ease',
+            color: '#2563eb' // Blue-600
           }}>e</span>
           <span className="scattered-letter inline-block absolute" style={{ 
             left: '-250px', top: '300px', 
             opacity: 0.7, 
             transform: 'rotate(12deg) scale(0.8)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
-            transition: 'all 0.3s ease'
+            transition: 'all 0.3s ease',
+            color: '#3b82f6' // Blue-500
           }}>r</span>
           <span className="scattered-letter inline-block absolute" style={{ 
             left: '300px', top: '280px', 
             opacity: 0.5, 
             transform: 'rotate(-18deg) scale(1.1)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
-            transition: 'all 0.3s ease'
+            transition: 'all 0.3s ease',
+            color: '#60a5fa' // Blue-400
           }}>v</span>
           <span className="scattered-letter inline-block absolute" style={{ 
             left: '200px', top: '-150px', 
             opacity: 0.8, 
             transform: 'rotate(8deg) scale(0.6)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
-            transition: 'all 0.3s ease'
+            transition: 'all 0.3s ease',
+            color: '#93c5fd' // Blue-300
           }}>i</span>
           <span className="scattered-letter inline-block absolute" style={{ 
             left: '-150px', top: '-100px', 
             opacity: 0.6, 
             transform: 'rotate(-12deg) scale(1.0)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
-            transition: 'all 0.3s ease'
+            transition: 'all 0.3s ease',
+            color: '#bfdbfe' // Blue-200
           }}>c</span>
           <span className="scattered-letter inline-block absolute" style={{ 
             left: '-350px', top: '200px', 
             opacity: 0.7, 
             transform: 'rotate(20deg) scale(0.9)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
-            transition: 'all 0.3s ease'
+            transition: 'all 0.3s ease',
+            color: '#dbeafe' // Blue-100
           }}>e</span>
           <span className="scattered-letter inline-block absolute" style={{ 
             left: '380px', top: '250px', 
             opacity: 0.5, 
             transform: 'rotate(-10deg) scale(1.1)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
-            transition: 'all 0.3s ease'
+            transition: 'all 0.3s ease',
+            color: '#1e40af' // Blue-800
           }}>s</span>
         </>
       </div>
