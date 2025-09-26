@@ -452,21 +452,25 @@ export default function Home() {
 
             // Product cards slide in from top-right one by one AFTER "Our Services" is fixed
             if (productCarouselRef.current) {
+              const cardsContainer = productCarouselRef.current.querySelector('.relative');
               const cards = productCarouselRef.current.querySelectorAll('[data-product-card]');
               const navButtons = productCarouselRef.current.querySelector('[data-nav-buttons]');
               
               // Initially hide all cards and nav buttons
               gsap.set(cards, { opacity: 0, x: 150, y: -100 });
               if (navButtons) {
-                gsap.set(navButtons, { opacity: 0, y: 50 });
+                gsap.set(navButtons, { opacity: 0 });
+              }
+              if (cardsContainer) {
+                gsap.set(cardsContainer, { opacity: 1 });
               }
 
               // Create a timeline for sequential card appearance - starts right after "Our Services" is fixed
               const cardsTimeline = gsap.timeline({
                 scrollTrigger: {
                   trigger: servicesTitleRef.current,
-                  start: '75% center', // "Our Services"が完全に左上に配置された後
-                  end: '100% center',
+                  start: '100% center', // "Our Services"が完全に左上に配置された後
+                  end: '130% center',
                   scrub: 1,
                 }
               });
@@ -482,13 +486,12 @@ export default function Home() {
                 }, index * 0.2); // Sequential timing
               });
 
-              // Navigation buttons appear from bottom after all cards
+              // Navigation buttons fade in after all cards
               if (navButtons) {
                 cardsTimeline.to(navButtons, {
                   opacity: 1,
-                  y: 0,
-                  duration: 0.3,
-                  ease: 'power2.out',
+                  duration: 0.5,
+                  ease: 'power2.inOut',
                 }, cards.length * 0.2); // After all cards
               }
             }
@@ -787,6 +790,9 @@ export default function Home() {
 
         {/* Product Carousel - fixed position below "Our Product" */}
         <ProductCarousel ref={productCarouselRef} />
+
+        {/* Spacer for product cards */}
+        <div style={{ height: '100vh' }}></div>
 
         {/* Services Section */}
         <section className="py-20 bg-gray-50">

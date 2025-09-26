@@ -27,8 +27,8 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
           isBackground ? 'opacity-60' : 'opacity-100'
         }`}
         style={{
-          width: '380px',
-          height: '450px',
+          width: '320px',
+          height: '380px',
           background: isPlaceholder 
             ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
             : 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
