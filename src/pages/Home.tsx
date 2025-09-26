@@ -473,8 +473,8 @@ export default function Home() {
               const cardsTimeline = gsap.timeline({
                 scrollTrigger: {
                   trigger: servicesTitleRef.current,
-                  start: '100% center', // "Our Services"が左上に配置された直後
-                  end: '120% center',
+                  start: '60% center', // "Our Services"が左上に固定された直後
+                  end: '85% center',
                   scrub: 0.3,
                 }
               });
