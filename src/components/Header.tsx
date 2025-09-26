@@ -81,7 +81,7 @@ export const Header = () => {
     <Link 
       to={path} 
       className={cn(
-        "inline-flex items-center gap-2 px-2 sm:px-3 py-2 text-sm font-medium rounded-xl transition-colors whitespace-nowrap",
+        "inline-flex items-center gap-2 px-2 sm:px-3 py-2 text-[13px] md:text-sm lg:text-[15px] font-medium rounded-xl transition-colors whitespace-nowrap",
         isActive(path)
           ? "bg-white/40 text-[#10c876] shadow-sm"
           : "text-gray-800 hover:bg-white/20 hover:text-[#10c876]"
@@ -104,6 +104,10 @@ export const Header = () => {
           <SheetHeader className="mb-4">
             <SheetTitle>{t('menu')}</SheetTitle>
           </SheetHeader>
+          {/* Language toggle (mobile only, with separator) */}
+          <div className="mb-3 pb-2 border-b border-gray-200">
+            <LanguageToggle />
+          </div>
           <div className="flex flex-col gap-1">
             <SheetClose asChild>
               <Link
@@ -252,8 +256,8 @@ export const Header = () => {
         className="max-w-7xl mx-auto px-4 sm:px-6 relative"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 10px)", paddingRight: "calc(env(safe-area-inset-right, 0px) + 0px)" }}
       >
-        {/* Language toggle pinned to top-right, outside the nav */}
-        <div className="absolute right-2 sm:right-4 top-[calc(env(safe-area-inset-top,0px)+6px)] z-[60]">
+        {/* Language toggle pinned to top-right on md+; not inside nav */}
+        <div className="hidden md:block absolute right-2 sm:right-4 top-[calc(env(safe-area-inset-top,0px)+6px)] z-[60]">
           <LanguageToggle />
         </div>
         {/* Glass nav bar container (centered, wider for JA labels) */}
@@ -264,8 +268,8 @@ export const Header = () => {
 
             {/* Center group: logo + nav + contact + user */}
             <div className="flex items-center justify-center gap-1 sm:gap-1.5">
-              <Link to="/" className="flex items-center hover:opacity-90 transition-opacity">
-                <img src={logoImage} alt="Protoduct" className="h-11 md:h-14 w-auto" />
+              <Link to="/home" className="flex items-center hover:opacity-90 transition-opacity">
+                <img src={logoImage} alt="Protoduct" className="h-12 md:h-16 w-auto" />
               </Link>
               <nav className="hidden md:flex items-center gap-1.5 sm:gap-2">
                 <NavItem path="/home" icon={<Home className="h-4 w-4" />} label="Home" />
@@ -299,7 +303,7 @@ export const Header = () => {
               {userId && <UserMenu userId={userId} />}
             </div>
 
-            {/* Right group: mobile menu only on small screens */}
+            {/* Right group: mobile menu (sm). Language toggle stays pinned above on md+ */}
             <div className="flex items-center justify-end gap-2 sm:gap-3">
               <div className="md:hidden">
                 <MobileMenu />

@@ -9,6 +9,8 @@ import { useNews } from "@/hooks/useNews";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useEffect, useRef } from "react";
+import FloatingParticles from "@/components/FloatingParticles";
+import FloatingLogos from "@/components/FloatingLogos";
 
 // GSAP types
 type GSAPTimeline = {
@@ -347,9 +349,11 @@ export default function Home() {
         <section ref={heroRef} className="relative overflow-hidden min-h-[100svh] flex items-center" style={{
           background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)'
         }}>
+          <FloatingParticles />
+          <FloatingLogos />
           <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:60px_60px]" />
           {/* The ball is now outside hero to avoid clipping while scrolling */}
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="text-left">
               <h1 className="reveal-on-scroll mb-4">
                 <div 
