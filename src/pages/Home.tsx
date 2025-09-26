@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { useEffect, useRef } from "react";
 import FloatingParticles from "@/components/FloatingParticles";
 import FloatingLogos from "@/components/FloatingLogos";
+import { ProductCarousel } from "@/components/home/ProductCarousel";
 
 // GSAP types
 type GSAPTimeline = {
@@ -39,6 +40,7 @@ export default function Home() {
   const whiteCircleRef = useRef<HTMLDivElement | null>(null);
   const scatteredTextRef = useRef<HTMLDivElement | null>(null);
   const servicesTitleRef = useRef<HTMLDivElement | null>(null);
+  const productCarouselRef = useRef<HTMLDivElement | null>(null);
   
   // Get latest 3 news items
   const latestNews = newsItems?.slice(0, 3) || [];
@@ -378,13 +380,13 @@ export default function Home() {
                 scrollTrigger: {
                   trigger: servicesTitleRef.current,
                   start: 'top center',
-                  end: '60% center', // Much longer range for slow gathering
-                  scrub: 0.2, // Very slow scrub for extremely gradual movement
+                  end: '30% center', // 短縮して速く集まるように
+                  scrub: 0.1, // scrubも速く
                 }
               });
 
               // Add staggered delay based on index for very gradual gathering
-              const staggerDelay = index * 0.15; // Increased delay for more dramatic sequential effect
+              const staggerDelay = index * 0.1; // delayも短縮
               
               letterTimeline
                 .to(letter, {
@@ -394,18 +396,18 @@ export default function Home() {
                   rotation: 0, // Reset rotation to 0
                   scale: 1, // Reset scale to 1
                   filter: 'drop-shadow(0 0 15px rgba(255,255,255,0.8))', // Enhanced glow
-                  duration: 0.8,
+                  duration: 0.6, // durationも短縮
                   ease: 'power2.out', // Smooth without bounce
                   delay: staggerDelay
                 });
             });
 
-            // STAGE 2: Long pause in center, then move to top-left with underline effect
+            // STAGE 2: Shorter pause in center, then move to top-left with underline effect
             const finalTimeline = gsap.timeline({
               scrollTrigger: {
                 trigger: servicesTitleRef.current,
-                start: '60% center', // Start after gathering is complete (matches STAGE 1 end)
-                end: '120% center', // Even longer range for very extended center pause
+                start: '30% center', // Start after gathering is complete (matches STAGE 1 end)
+                end: '60% center', // 短縮してテンポよく
                 scrub: 0.05, // Extremely slow scrub for ultra-smooth movement
                 onComplete: () => {
                   // Add underline effect after positioning
@@ -432,21 +434,64 @@ export default function Home() {
             });
 
             finalTimeline
-              // Long pause at center (most of the scroll range)
+              // Shorter pause at center
               .to(scatteredTextRef.current, {
                 top: '30vh', // さらに高い位置で文字が完成
                 left: '50%',
                 ease: 'none',
-                duration: 0.8 // 80% of timeline spent at center
+                duration: 0.3 // 中央停止時間をさらに短縮
               })
-              // Slow, elegant move to final position with size reduction
+              // Smooth, elegant move to final position with size reduction
               .to(scatteredTextRef.current, {
-                top: '15vh', // Reverted back to 15vh
+                top: '12vh', // 少し下に配置
                 left: '25%', // 文字が切れないように右に調整
-                scale: 0.5, // Scale down to 50% for upper display
-                ease: 'power1.out', // Smooth, no bounce
-                duration: 0.2 // 20% for final positioning, stable
+                scale: 0.3, // さらに小さく（30%）
+                ease: 'power2.inOut', // よりスムーズなイージング
+                duration: 0.7 // スムーズな移動のため少し長めに
               });
+
+            // Product cards slide in from top-right one by one AFTER "Our Services" is fixed
+            if (productCarouselRef.current) {
+              const cards = productCarouselRef.current.querySelectorAll('[data-product-card]');
+              const navButtons = productCarouselRef.current.querySelector('[data-nav-buttons]');
+              
+              // Initially hide all cards and nav buttons
+              gsap.set(cards, { opacity: 0, x: 150, y: -100 });
+              if (navButtons) {
+                gsap.set(navButtons, { opacity: 0, y: 50 });
+              }
+
+              // Create a timeline for sequential card appearance - starts right after "Our Services" is fixed
+              const cardsTimeline = gsap.timeline({
+                scrollTrigger: {
+                  trigger: servicesTitleRef.current,
+                  start: '75% center', // "Our Services"が完全に左上に配置された後
+                  end: '100% center',
+                  scrub: 1,
+                }
+              });
+
+              // Add cards one by one with stagger
+              cards.forEach((card, index) => {
+                cardsTimeline.to(card, {
+                  opacity: 1,
+                  x: 0,
+                  y: 0,
+                  duration: 0.3,
+                  ease: 'power2.out',
+                }, index * 0.2); // Sequential timing
+              });
+
+              // Navigation buttons appear from bottom after all cards
+              if (navButtons) {
+                cardsTimeline.to(navButtons, {
+                  opacity: 1,
+                  y: 0,
+                  duration: 0.3,
+                  ease: 'power2.out',
+                }, cards.length * 0.2); // After all cards
+              }
+            }
           }
 
           // Fade & slide-up for items marked with .reveal-on-scroll
@@ -737,8 +782,11 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Transition Section - for scroll-based text gathering */}
-        <section ref={servicesTitleRef} className="relative bg-white" style={{ minHeight: '300vh' }}></section>
+        {/* Transition Section - for scroll-based text gathering and future product animations */}
+        <section ref={servicesTitleRef} className="relative bg-white" style={{ minHeight: '600vh' }}></section>
+
+        {/* Product Carousel - fixed position below "Our Product" */}
+        <ProductCarousel ref={productCarouselRef} />
 
         {/* Services Section */}
         <section className="py-20 bg-gray-50">
