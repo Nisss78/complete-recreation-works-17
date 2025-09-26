@@ -479,31 +479,39 @@ export default function Home() {
           {/* The ball is now outside hero to avoid clipping while scrolling */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="text-left">
-              <h1 className="reveal-on-scroll mb-4">
-                <div 
-                  ref={weBuildRef}
-                  className="text-6xl sm:text-8xl lg:text-9xl font-bold mb-8"
-                  style={{
-                    color: 'transparent',
-                    WebkitTextStroke: '2px white',
-                    textStroke: '2px white',
-                    fontWeight: '900',
-                    letterSpacing: '-0.02em',
-                    willChange: 'transform'
-                  }}
-                >
-                  We build,
+              <h1 className="mb-4">
+                <div className="wormhole-intro">
+                  <div className="wormhole-pop">
+                    <div 
+                      ref={weBuildRef}
+                      className="text-6xl sm:text-8xl lg:text-9xl font-bold mb-8"
+                      style={{
+                        color: 'transparent',
+                        WebkitTextStroke: '2px white',
+                        textStroke: '2px white',
+                        fontWeight: '900',
+                        letterSpacing: '-0.02em',
+                        willChange: 'transform'
+                      }}
+                    >
+                      We build,
+                    </div>
+                  </div>
                 </div>
-                <div 
-                  ref={coolProductsRef}
-                  className="text-4xl sm:text-6xl lg:text-7xl font-bold text-white"
-                  style={{ 
-                    willChange: 'transform',
-                    fontWeight: '900',
-                    letterSpacing: '-0.02em'
-                  }}
-                >
-                  Cool & Scalable products
+                <div className="wormhole-intro">
+                  <div className="wormhole-pop">
+                    <div 
+                      ref={coolProductsRef}
+                      className="text-4xl sm:text-6xl lg:text-7xl font-bold text-white"
+                      style={{ 
+                        willChange: 'transform',
+                        fontWeight: '900',
+                        letterSpacing: '-0.02em'
+                      }}
+                    >
+                      Cool & Scalable products
+                    </div>
+                  </div>
                 </div>
               </h1>
               <div ref={contactButtonRef} className="flex flex-col sm:flex-row gap-4 mb-16 reveal-on-scroll" style={{ willChange: 'transform', pointerEvents: 'auto' }}>
