@@ -21,13 +21,16 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
   
   // デフォルト5枚枠
   const visibleCount = 5;
-  // 拡張配列（5以上の場合のみ使用）
-  const extendedProducts: any[] = [];
+  // プロダクト順に基づく色（製品は5色でループ: 緑, 青, 赤, オレンジ, 黄）
+  const productColorIndex = (orderIndex: number) => {
+    const cycle = [0, 1, 3, 4, 5];
+    return cycle[orderIndex % cycle.length];
+  };
+  // 拡張配列（5以上の場合のみ使用）。順序インデックスを埋め込む
+  const extendedProducts: Array<any & { __orderIndex?: number }> = [];
   if (totalProducts >= visibleCount) {
     displayProducts.forEach((product, index) => {
-      // 各プロダクトに固定のカラーインデックスを付与（2枚目=index1が緑=0）
-      const colorIndex = (index - 1 + 6) % 6;
-      extendedProducts.push({ ...product, colorIndex });
+      extendedProducts.push({ ...product, __orderIndex: index });
     });
   }
   
@@ -45,12 +48,17 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
     const productStart = totalProducts > 0 ? currentIndex % totalProducts : 0;
     for (let k = 0; k < totalProducts; k++) {
       const slotIndex = (startSlot + baseShift + k) % visibleCount;
-      const productIndex = (productStart + k) % totalProducts;
-      const colorIndex = (productIndex - 1 + 6) % 6; // プロダクトごとに固定
-      visibleItems[slotIndex] = { ...displayProducts[productIndex], colorIndex };
+      const productIndex = (productStart + k) % totalProducts; // 並び順の絶対インデックス
+      const colorIndex = productColorIndex(productIndex);
+      visibleItems[slotIndex] = { ...displayProducts[productIndex], colorIndex, __orderIndex: productIndex };
     }
   } else {
-    visibleItems = Array.from({ length: visibleCount }, (_, i) => extendedProducts[(currentIndex + i) % extendedProducts.length]);
+    visibleItems = Array.from({ length: visibleCount }, (_, i) => {
+      const item = extendedProducts[(currentIndex + i) % extendedProducts.length] as any;
+      const orderIdx = item.__orderIndex ?? 0;
+      const colorIndex = productColorIndex(orderIdx);
+      return { ...item, colorIndex };
+    });
   }
 
   // ナビゲーション可否（1件でも回転可能に）
@@ -149,7 +157,7 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
                     year={"XXXX"}
                     isPlaceholder={true}
                     isBackground={!isMain}
-                    colorIndex={(item as any).colorIndex ?? (index - 1 + 6) % 6}
+                    colorIndex={(item as any).colorIndex}
                   />
                 </div>
               );
@@ -168,7 +176,7 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
                   year={year}
                   url={product.URL}
                   isBackground={!isMain}
-                  colorIndex={(product as any).colorIndex ?? (index - 1 + 6) % 6}
+                  colorIndex={(product as any).colorIndex}
                 />
               </div>
             );
