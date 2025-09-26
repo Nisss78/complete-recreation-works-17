@@ -1,12 +1,20 @@
 import { forwardRef, useState, useRef, useEffect } from "react";
+import { gsap } from 'gsap';
+import { Flip } from 'gsap/Flip';
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ProductCard } from "./ProductCard";
 import { useProducts } from "@/hooks/useProducts";
+
+gsap.registerPlugin(Flip);
 
 export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
   const { data: products, isLoading } = useProducts();
   const [currentIndex, setCurrentIndex] = useState(0);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const rowRef = useRef<HTMLDivElement | null>(null);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const animatingRef = useRef(false);
+  const flipStateRef = useRef<Flip.FlipState | null>(null);
 
   const displayProducts = products || [];
   const totalProducts = displayProducts.length;
@@ -42,8 +50,27 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
   const canGoPrev = extendedProducts.length > 1;
   const canGoNext = extendedProducts.length > 1;
 
+  const runFlip = () => {
+    const state = flipStateRef.current;
+    if (!state) return;
+    flipStateRef.current = null;
+    Flip.from(state, {
+      absolute: true,
+      duration: 0.6,
+      ease: 'power3.inOut',
+      stagger: 0.02,
+      onComplete: () => {
+        animatingRef.current = false;
+        setIsAnimating(false);
+      }
+    });
+  };
+
   const handlePrev = () => {
-    if (!canGoPrev) return;
+    if (!canGoPrev || animatingRef.current) return;
+    animatingRef.current = true;
+    setIsAnimating(true);
+    flipStateRef.current = Flip.getState('[data-carousel-item]');
     setCurrentIndex(prev => {
       if (extendedProducts.length === 0) return 0;
       return (prev - 1 + extendedProducts.length) % extendedProducts.length;
@@ -51,12 +78,21 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
   };
 
   const handleNext = () => {
-    if (!canGoNext) return;
+    if (!canGoNext || animatingRef.current) return;
+    animatingRef.current = true;
+    setIsAnimating(true);
+    flipStateRef.current = Flip.getState('[data-carousel-item]');
     setCurrentIndex(prev => {
       if (extendedProducts.length === 0) return 0;
       return (prev + 1) % extendedProducts.length;
     });
   };
+
+  useEffect(() => {
+    if (animatingRef.current && flipStateRef.current) {
+      runFlip();
+    }
+  }, [currentIndex]);
 
   useEffect(() => {
     cardRefs.current = cardRefs.current.slice(0, visibleItems.length);
@@ -72,121 +108,38 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
 
   return (
     <div ref={ref} className="fixed left-0 w-full pointer-events-none" style={{ top: '30vh', zIndex: 39 }}>
-      {/* Cards container */}
-      <div className="relative flex items-center justify-center pointer-events-auto" style={{ opacity: 0 }}>
-        {/* Left peek card - behind main cards */}
-        {visibleItems[0] && (
-          // 左のプレビューカード（緑など）: 右側と左右対称、同サイズ・同透明度
-          <div
-            className="absolute"
-            style={{ left: '5%', transform: 'scale(0.7)', opacity: 0.6, zIndex: 1 }}
-            data-product-card
-            data-product-card-peek="left"
-          >
-            {(() => {
-              const item = visibleItems[0];
-              if ('isPlaceholder' in item && item.isPlaceholder) {
-                return (
-                  <ProductCard
-                    key={item.id}
-                    ref={el => cardRefs.current[0] = el}
-                    name="XXX"
-                    description="XXX XXX XXX XXX XXX XXX"
-                    icon_url=""
-                    year="XXXX"
-                    isPlaceholder={true}
-                    isBackground={true}
-                    colorIndex={item.colorIndex}
-                  />
-                );
-              }
-
-              const product = item as any;
-              const year = new Date(product.created_at).getFullYear().toString();
-
-              return (
-                <ProductCard
-                  key={product.id || `${product.name}-0`}
-                  ref={el => cardRefs.current[0] = el}
-                  name={product.name}
-                  description={product.description}
-                  icon_url={product.icon_url}
-                  year={year}
-                  url={product.URL}
-                  isBackground={true}
-                  colorIndex={item.colorIndex}
-                />
-              );
-            })()}
-          </div>
-        )}
-
-        {/* Right peek card - behind main cards */}
-        {visibleItems[4] && (
-          <div
-            className="absolute"
-            style={{ right: '5%', transform: 'scale(0.7)', opacity: 0.6, zIndex: 1 }}
-            data-product-card
-            data-product-card-peek="right"
-          >
-            {(() => {
-              const item = visibleItems[4];
-              if ('isPlaceholder' in item && item.isPlaceholder) {
-                return (
-                  <ProductCard
-                    key={item.id}
-                    ref={el => cardRefs.current[4] = el}
-                    name="XXX"
-                    description="XXX XXX XXX XXX XXX XXX"
-                    icon_url=""
-                    year="XXXX"
-                    isPlaceholder={true}
-                    isBackground={true}
-                    colorIndex={item.colorIndex}
-                  />
-                );
-              }
-
-              const product = item as any;
-              const year = new Date(product.created_at).getFullYear().toString();
-
-              return (
-                <ProductCard
-                  key={product.id || `${product.name}-4`}
-                  ref={el => cardRefs.current[4] = el}
-                  name={product.name}
-                  description={product.description}
-                  icon_url={product.icon_url}
-                  year={year}
-                  url={product.URL}
-                  isBackground={true}
-                  colorIndex={item.colorIndex}
-                />
-              );
-            })()}
-          </div>
-        )}
-
-        {/* Main 3 cards - in front of peek cards */}
+      {/* Cards container unified for Flip */}
+      <div ref={rowRef} className="relative flex items-center justify-center pointer-events-auto" style={{ opacity: 0 }}>
         <div className="relative flex items-center justify-center gap-8" style={{ zIndex: 10 }}>
-          {visibleItems.slice(1, 4).map((item, index) => {
-          
+          {visibleItems.map((item, index) => {
+            const isMain = index >= 1 && index <= 3;
+            const isPeekLeft = index === 0;
+            const isPeekRight = index === 4;
+            const wrapperStyle: React.CSSProperties = {
+              transform: `scale(${isMain ? 1.08 : 0.7})`,
+              opacity: isMain ? 1 : 0.6,
+              zIndex: isMain ? 20 : 10,
+              transition: 'transform 0.3s ease, opacity 0.3s ease',
+            };
+            const commonAttrs = {
+              'data-carousel-item': true,
+              'data-product-card': true,
+              ...(isMain ? { 'data-product-card-main': true } : {}),
+              ...(isPeekLeft ? { 'data-product-card-peek': 'left' } : {}),
+              ...(isPeekRight ? { 'data-product-card-peek': 'right' } : {}),
+            } as any;
+
             if ('isPlaceholder' in item && item.isPlaceholder) {
               return (
-                <div
-                  key={item.id}
-                  data-product-card
-                  data-product-card-main
-                  style={{ transform: 'scale(1.08)', zIndex: 20 }}
-                >
+                <div key={item.id} style={wrapperStyle} {...commonAttrs}>
                   <ProductCard
-                    ref={el => cardRefs.current[index + 1] = el}
+                    ref={el => cardRefs.current[index] = el}
                     name="XXX"
                     description="XXX XXX XXX XXX XXX XXX"
                     icon_url=""
                     year="XXXX"
                     isPlaceholder={true}
-                    isBackground={false}
+                    isBackground={!isMain}
                     colorIndex={item.colorIndex}
                   />
                 </div>
@@ -197,21 +150,16 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
             const year = new Date(product.created_at).getFullYear().toString();
 
             return (
-              <div
-                key={product.id || `${product.name}-${index + 1}`}
-                data-product-card
-                data-product-card-main
-                style={{ transform: 'scale(1.08)', zIndex: 20 }}
-              >
+              <div key={product.id || `${product.name}-${index}`} style={wrapperStyle} {...commonAttrs}>
                 <ProductCard
-                  ref={el => cardRefs.current[index + 1] = el}
+                  ref={el => cardRefs.current[index] = el}
                   name={product.name}
                   description={product.description}
                   icon_url={product.icon_url}
                   year={year}
                   url={product.URL}
-                  isBackground={false}
-                  colorIndex={item.colorIndex}
+                  isBackground={!isMain}
+                  colorIndex={(item as any).colorIndex}
                 />
               </div>
             );
@@ -227,14 +175,14 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
       >
           <button
             onClick={handlePrev}
-            disabled={!canGoPrev}
+            disabled={!canGoPrev || isAnimating}
             className="w-12 h-12 rounded-full bg-black/80 border-2 border-white/80 text-white hover:bg-black/90 hover:border-white shadow-lg transition-all flex items-center justify-center cursor-pointer"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
           <button
             onClick={handleNext}
-            disabled={!canGoNext}
+            disabled={!canGoNext || isAnimating}
             className="w-12 h-12 rounded-full bg-black/80 border-2 border-white/80 text-white hover:bg-black/90 hover:border-white shadow-lg transition-all flex items-center justify-center cursor-pointer"
           >
             <ChevronRight className="w-6 h-6" />

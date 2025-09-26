@@ -1,4 +1,4 @@
 declare module 'gsap';
 declare module 'gsap/ScrollTrigger';
 declare module 'gsap/MotionPathPlugin';
-
+declare module 'gsap/Flip';
