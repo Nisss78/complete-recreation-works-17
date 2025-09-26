@@ -9,15 +9,29 @@ interface ProductCardProps {
   url?: string | null;
   isPlaceholder?: boolean;
   isBackground?: boolean;
+  colorIndex?: number;
 }
 
 export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
-  ({ name, description, icon_url, year, url, isPlaceholder = false, isBackground = false }, ref) => {
+  ({ name, description, icon_url, year, url, isPlaceholder = false, isBackground = false, colorIndex = 0 }, ref) => {
+    // Color palette: 黄緑、青、紫、赤、オレンジ、黄色
+    const colors = [
+      '#7bc61e', // 黄緑
+      '#3b82f6', // 青
+      '#8b5cf6', // 紫
+      '#ef4444', // 赤
+      '#f97316', // オレンジ
+      '#eab308'  // 黄色
+    ];
+
     const handleClick = () => {
       if (url && !isPlaceholder) {
         window.open(url, '_blank', 'noopener,noreferrer');
       }
     };
+
+    const cardColor = colors[colorIndex % colors.length];
+    const darkerCardColor = colors[colorIndex % colors.length] + '90'; // Add alpha for darker variant
 
     return (
       <div
@@ -31,7 +45,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
           height: '380px',
           background: isPlaceholder 
             ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
-            : 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
+            : `linear-gradient(135deg, ${cardColor} 0%, ${darkerCardColor} 100%)`,
           transform: isBackground ? 'scale(0.9)' : 'scale(1)',
           transition: 'transform 0.3s ease',
         }}

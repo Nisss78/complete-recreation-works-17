@@ -451,16 +451,22 @@ export default function Home() {
               });
 
             // Product cards slide in from top-right one by one AFTER "Our Services" is fixed
-            if (productCarouselRef.current) {
+            // Wait for ProductCarousel to render
+            const setupProductCards = () => {
+              if (!productCarouselRef.current) return;
+              
               const cardsContainer = productCarouselRef.current.querySelector('.relative');
               const cards = productCarouselRef.current.querySelectorAll('[data-product-card]');
               const navButtons = productCarouselRef.current.querySelector('[data-nav-buttons]');
               
-              console.log('Product cards found:', cards.length);
+              if (cards.length === 0 || !navButtons) {
+                setTimeout(setupProductCards, 100);
+                return;
+              }
               
-              // Initially hide all cards and nav buttons
+              // Initially hide all cards and nav buttons with more dramatic positioning
               if (cards.length > 0) {
-                gsap.set(cards, { opacity: 0, x: 150, y: -100 });
+                gsap.set(cards, { opacity: 0, x: 400, y: -200, rotation: 15, scale: 0.8 });
               }
               if (navButtons) {
                 gsap.set(navButtons, { opacity: 0 });
@@ -474,31 +480,37 @@ export default function Home() {
                 scrollTrigger: {
                   trigger: servicesTitleRef.current,
                   start: '60% center', // "Our Services"が左上に固定された直後
-                  end: '85% center',
+                  end: '95% center',
                   scrub: 0.3,
                 }
               });
 
-              // Add cards one by one with stagger
+              // Add all cards (including peek cards) one by one with stagger - dynamic entrance from top-right
               cards.forEach((card, index) => {
+                // All cards animate from the same dramatic position
                 cardsTimeline.to(card, {
                   opacity: 1,
                   x: 0,
                   y: 0,
-                  duration: 0.15,
-                  ease: 'power2.out',
-                }, index * 0.1); // Faster sequential timing
+                  rotation: 0,
+                  scale: 1,
+                  duration: 0.5,
+                  ease: 'back.out(1.7)', // Bouncy effect
+                }, index * 0.06); // Sequential timing for all 5 cards
               });
 
-              // Navigation buttons fade in after all cards
+              // Navigation buttons fade in after all cards with slight delay
               if (navButtons) {
+                const navStartTime = cards.length * 0.06 + 0.3; // Adjusted timing for new card animation (5 cards * 0.06 + delay)
                 cardsTimeline.to(navButtons, {
                   opacity: 1,
-                  duration: 0.2,
+                  duration: 0.4,
                   ease: 'power2.inOut',
-                }, cards.length * 0.1); // After all cards appear
+                }, navStartTime);
               }
-            }
+            };
+            
+            setupProductCards();
           }
 
           // Fade & slide-up for items marked with .reveal-on-scroll
