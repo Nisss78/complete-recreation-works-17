@@ -456,17 +456,26 @@ export default function Home() {
               if (!productCarouselRef.current) return;
               
               const cardsContainer = productCarouselRef.current.querySelector('.relative');
-              const cards = productCarouselRef.current.querySelectorAll('[data-product-card]');
+              // メイン3枚と左右プレビューを分離して制御する
+              const mainCards = productCarouselRef.current.querySelectorAll('[data-product-card-main]');
+              const peekCards = productCarouselRef.current.querySelectorAll('[data-product-card-peek]');
+              const leftPeek = productCarouselRef.current.querySelector('[data-product-card-peek="left"]');
+              const rightPeek = productCarouselRef.current.querySelector('[data-product-card-peek="right"]');
               const navButtons = productCarouselRef.current.querySelector('[data-nav-buttons]');
               
-              if (cards.length === 0 || !navButtons) {
+              if (mainCards.length === 0 || !navButtons) {
                 setTimeout(setupProductCards, 100);
                 return;
               }
               
-              // Initially hide all cards and nav buttons with more dramatic positioning
-              if (cards.length > 0) {
-                gsap.set(cards, { opacity: 0, x: 400, y: -200, rotation: 15, scale: 0.8 });
+              // Initially hide main and peek cards; keep transforms intact for peeks
+              if (mainCards.length > 0) {
+                gsap.set(mainCards, { opacity: 0, x: 400, y: -200, rotation: 15, scale: 0.85, transformOrigin: '50% 50%' });
+              }
+              if (peekCards.length > 0) {
+                // Match main cards' entrance style: come from top-right with slight rotation
+                // Start a bit smaller and grow to their final 0.7 scale
+                gsap.set(peekCards, { opacity: 0, x: 400, y: -200, rotation: 15, scale: 0.65, transformOrigin: '50% 50%' });
               }
               if (navButtons) {
                 gsap.set(navButtons, { opacity: 0 });
@@ -485,23 +494,42 @@ export default function Home() {
                 }
               });
 
-              // Add all cards (including peek cards) one by one with stagger - dynamic entrance from top-right
-              cards.forEach((card, index) => {
-                // All cards animate from the same dramatic position
-                cardsTimeline.to(card, {
-                  opacity: 1,
-                  x: 0,
-                  y: 0,
-                  rotation: 0,
-                  scale: 1,
-                  duration: 0.5,
-                  ease: 'back.out(1.7)', // Bouncy effect
-                }, index * 0.06); // Sequential timing for all 5 cards
+              // Animate all 5 cards sequentially from left to right: left peek -> 3 main -> right peek
+              const orderedCards: Element[] = [];
+              if (leftPeek) orderedCards.push(leftPeek);
+              orderedCards.push(...Array.from(mainCards));
+              if (rightPeek) orderedCards.push(rightPeek);
+
+              const step = 0.08; // Slightly longer for clear left-to-right feel
+              orderedCards.forEach((card, index) => {
+                const isMain = (card as HTMLElement).hasAttribute('data-product-card-main');
+                if (isMain) {
+                  cardsTimeline.to(card, {
+                    opacity: 1,
+                    x: 0,
+                    y: 0,
+                    rotation: 0,
+                    scale: 1.08,
+                    duration: 0.5,
+                    ease: 'back.out(1.7)',
+                  }, index * step);
+                } else {
+                  // Peek cards: same style as mains but end smaller and semi-transparent
+                  cardsTimeline.to(card, {
+                    opacity: 0.6,
+                    x: 0,
+                    y: 0,
+                    rotation: 0,
+                    scale: 0.7,
+                    duration: 0.5,
+                    ease: 'back.out(1.7)',
+                  }, index * step);
+                }
               });
 
               // Navigation buttons fade in after all cards with slight delay
               if (navButtons) {
-                const navStartTime = cards.length * 0.06 + 0.3; // Adjusted timing for new card animation (5 cards * 0.06 + delay)
+                const navStartTime = orderedCards.length * step + 0.3; // After all 5 cards finish
                 cardsTimeline.to(navButtons, {
                   opacity: 1,
                   duration: 0.4,

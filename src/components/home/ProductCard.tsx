@@ -23,6 +23,15 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
       '#f97316', // オレンジ
       '#eab308'  // 黄色
     ];
+    // Darker variants for stronger gradients on main cards
+    const darkColors = [
+      '#4d8c12', // 黄緑(濃)
+      '#1e40af', // 青(濃)
+      '#6d28d9', // 紫(濃)
+      '#b91c1c', // 赤(濃)
+      '#c2410c', // オレンジ(濃)
+      '#a16207'  // 黄色(濃)
+    ];
 
     const handleClick = () => {
       if (url && !isPlaceholder) {
@@ -31,7 +40,8 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
     };
 
     const cardColor = colors[colorIndex % colors.length];
-    const darkerCardColor = colors[colorIndex % colors.length] + '90'; // Add alpha for darker variant
+    const darkCardColor = darkColors[colorIndex % darkColors.length];
+    const subtleCardColor = colors[colorIndex % colors.length] + '80'; // 背景用の控えめな透明色
 
     return (
       <div
@@ -43,11 +53,19 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
         style={{
           width: '320px',
           height: '380px',
-          background: isPlaceholder 
+          background: isPlaceholder
             ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
-            : `linear-gradient(135deg, ${cardColor} 0%, ${darkerCardColor} 100%)`,
-          transform: isBackground ? 'scale(0.9)' : 'scale(1)',
+            : isBackground
+              ? `linear-gradient(135deg, ${subtleCardColor} 0%, ${subtleCardColor} 100%)`
+              : `linear-gradient(135deg, ${cardColor} 0%, ${darkCardColor} 100%)`,
+          // Transform scale is controlled by carousel wrappers (avoid double scaling)
+          transform: 'scale(1)',
           transition: 'transform 0.3s ease',
+          // Make main cards feel richer; background ones stay subtle
+          filter: isBackground ? 'saturate(0.95) brightness(0.98)' : 'saturate(1.15) contrast(1.05)',
+          boxShadow: isBackground
+            ? '0 8px 24px rgba(0,0,0,0.15)'
+            : '0 10px 30px rgba(0,0,0,0.25)',
         }}
       >
         {/* Year badge */}

@@ -33,27 +33,28 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
     });
   }
   
-  const visibleItems = extendedProducts.slice(currentIndex, currentIndex + visibleCount);
-  
-  // 無限ループのためのインデックス計算
-  const maxIndex = Math.max(0, extendedProducts.length - visibleCount);
-  // 5枚以上またはループするプロダクトがある場合は常にナビゲーション可能
-  const canGoPrev = extendedProducts.length >= visibleCount;
-  const canGoNext = extendedProducts.length >= visibleCount;
+  // 現在位置から5枚を常に表示（ラップアラウンド）
+  const visibleItems = extendedProducts.length > 0
+    ? Array.from({ length: visibleCount }, (_, i) => extendedProducts[(currentIndex + i) % extendedProducts.length])
+    : [];
+
+  // ナビゲーション可否（1枚以上あれば回転可能）
+  const canGoPrev = extendedProducts.length > 1;
+  const canGoNext = extendedProducts.length > 1;
 
   const handlePrev = () => {
     if (!canGoPrev) return;
     setCurrentIndex(prev => {
-      const newIndex = prev - 1;
-      return newIndex < 0 ? maxIndex : newIndex;
+      if (extendedProducts.length === 0) return 0;
+      return (prev - 1 + extendedProducts.length) % extendedProducts.length;
     });
   };
 
   const handleNext = () => {
     if (!canGoNext) return;
     setCurrentIndex(prev => {
-      const newIndex = prev + 1;
-      return newIndex > maxIndex ? 0 : newIndex;
+      if (extendedProducts.length === 0) return 0;
+      return (prev + 1) % extendedProducts.length;
     });
   };
 
@@ -75,8 +76,13 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
       <div className="relative flex items-center justify-center pointer-events-auto" style={{ opacity: 0 }}>
         {/* Left peek card - behind main cards */}
         {visibleItems[0] && (
-          // 左のプレビューカードも右側と左右対称になるように位置を調整
-          <div className="absolute" style={{ left: '5%', transform: 'scale(0.7)', opacity: 0.6, zIndex: 1 }} data-product-card>
+          // 左のプレビューカード（緑など）: 右側と左右対称、同サイズ・同透明度
+          <div
+            className="absolute"
+            style={{ left: '5%', transform: 'scale(0.7)', opacity: 0.6, zIndex: 1 }}
+            data-product-card
+            data-product-card-peek="left"
+          >
             {(() => {
               const item = visibleItems[0];
               if ('isPlaceholder' in item && item.isPlaceholder) {
@@ -117,7 +123,12 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
 
         {/* Right peek card - behind main cards */}
         {visibleItems[4] && (
-          <div className="absolute" style={{ right: '5%', transform: 'scale(0.7)', opacity: 0.6, zIndex: 1 }} data-product-card>
+          <div
+            className="absolute"
+            style={{ right: '5%', transform: 'scale(0.7)', opacity: 0.6, zIndex: 1 }}
+            data-product-card
+            data-product-card-peek="right"
+          >
             {(() => {
               const item = visibleItems[4];
               if ('isPlaceholder' in item && item.isPlaceholder) {
@@ -162,7 +173,12 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
           
             if ('isPlaceholder' in item && item.isPlaceholder) {
               return (
-                <div key={item.id} data-product-card>
+                <div
+                  key={item.id}
+                  data-product-card
+                  data-product-card-main
+                  style={{ transform: 'scale(1.08)', zIndex: 20 }}
+                >
                   <ProductCard
                     ref={el => cardRefs.current[index + 1] = el}
                     name="XXX"
@@ -181,7 +197,12 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
             const year = new Date(product.created_at).getFullYear().toString();
 
             return (
-              <div key={product.id || `${product.name}-${index + 1}`} data-product-card>
+              <div
+                key={product.id || `${product.name}-${index + 1}`}
+                data-product-card
+                data-product-card-main
+                style={{ transform: 'scale(1.08)', zIndex: 20 }}
+              >
                 <ProductCard
                   ref={el => cardRefs.current[index + 1] = el}
                   name={product.name}
