@@ -376,14 +376,14 @@ export default function Home() {
                   Cool & Scalable products
                 </div>
               </h1>
-              <div ref={contactButtonRef} className="flex flex-col sm:flex-row gap-4 mb-16 reveal-on-scroll" style={{ willChange: 'transform' }}>
+              <div ref={contactButtonRef} className="flex flex-col sm:flex-row gap-4 mb-16 reveal-on-scroll" style={{ willChange: 'transform', pointerEvents: 'auto' }}>
                 <Button
                   size="lg"
                   onClick={() => navigate("/contact")}
                   className="bg-white hover:bg-gray-100 w-fit"
-                  style={{ color: '#0b925b' }}
+                  style={{ color: '#0b925b', pointerEvents: 'auto' }}
                 >
-                  {isJapanese ? "お問い合わせ" : "Contact Us"}
+                  Contact Us
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </div>
