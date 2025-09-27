@@ -537,8 +537,33 @@ export default function Home() {
                 }, navStartTime);
               }
             };
-            
+
             setupProductCards();
+
+            // Scroll-based fade out animation for Our Services and Product Cards only
+            if (servicesTitleRef.current && scatteredTextRef.current && productCarouselRef.current) {
+              const screenHeight = window.innerHeight;
+              const moveDistance = screenHeight + 300;
+
+              const fadeOutTimeline = gsap.timeline({
+                scrollTrigger: {
+                  trigger: servicesTitleRef.current,
+                  start: 'bottom bottom',
+                  end: '+=900vh',
+                  scrub: 1,
+                }
+              });
+
+              fadeOutTimeline
+                .to([scatteredTextRef.current, productCarouselRef.current], {
+                  y: -moveDistance,
+                  ease: 'none',
+                }, 0)
+                .to([scatteredTextRef.current, productCarouselRef.current], {
+                  opacity: 0,
+                  ease: 'none',
+                }, 0.85);
+            }
           }
 
           // Fade & slide-up for items marked with .reveal-on-scroll
@@ -835,39 +860,27 @@ export default function Home() {
         </section>
 
         {/* Transition Section - for scroll-based text gathering and future product animations */}
-        <section ref={servicesTitleRef} className="relative bg-white" style={{ minHeight: '600vh' }}></section>
+        <section ref={servicesTitleRef} className="relative bg-white" style={{ minHeight: '1500vh' }}></section>
 
         {/* Product Carousel - fixed position below "Our Product" */}
         <ProductCarousel ref={productCarouselRef} />
 
         {/* Spacer for product cards */}
-        <div style={{ height: '200vh' }}></div>
+        <div style={{ height: '0vh' }}></div>
 
         {/* Services Section */}
         <section className="py-20 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
-              {isJapanese 
+            <h2 className="text-7xl font-bold mb-8">
+              <span style={{ color: '#e63946' }}>Our</span>
+              <span style={{ color: '#457b9d' }}>Support</span>
+            </h2>
+            <p className="text-gray-600 mb-12 max-w-2xl">
+              {isJapanese
                 ? "企業のニーズに合わせた最適なAIソリューションを提供します"
                 : "We provide optimal AI solutions tailored to your business needs"}
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <Card className="hover:shadow-lg transition-shadow reveal-on-scroll">
-                <CardHeader>
-                  <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style={{ backgroundColor: 'rgba(123, 198, 30, 0.15)' }}>
-                    <Code className="h-6 w-6" style={{ color: '#7bc61e' }} />
-                  </div>
-                  <CardTitle>{isJapanese ? "AIソフトウェア開発" : "AI Software Development"}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">
-                    {isJapanese
-                      ? "機械学習、深層学習を活用した最先端のAIソリューションを開発します。自然言語処理、画像認識、予測分析など、幅広い分野に対応。"
-                      : "We develop cutting-edge AI solutions using machine learning and deep learning. Supporting various fields including NLP, image recognition, and predictive analytics."}
-                  </p>
-                </CardContent>
-              </Card>
-
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <Card className="hover:shadow-lg transition-shadow reveal-on-scroll">
                 <CardHeader>
                   <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style={{ backgroundColor: 'rgba(16, 200, 118, 0.15)' }}>

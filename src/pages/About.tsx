@@ -219,11 +219,11 @@ export default function About() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="py-8">
               <div className="max-w-4xl md:max-w-5xl mx-auto">
-                <div className="mb-8 text-center">
-                  <h3 className="text-3xl font-bold text-blue-600 mb-2">COMPANY</h3>
-                  <div>
-                    <span className="text-2xl font-medium">会社概要</span>
-                  </div>
+                <div className="mb-8 text-left">
+                  <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900">
+                    COMPANY
+                  </h2>
+                  <p className="text-2xl font-medium text-gray-600 mt-2">会社概要</p>
                 </div>
 
                 <div className="bg-white rounded-lg p-6 sm:p-8 border border-gray-200">
@@ -269,11 +269,17 @@ export default function About() {
         </section>
 
         {/* Contact and Recruitment Section */}
-        <section className="py-20 bg-gradient-to-br from-blue-600 to-blue-500">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid md:grid-cols-2 gap-8">
+        <section
+          className="relative py-20 overflow-hidden"
+          style={{ background: 'linear-gradient(135deg, #4a5568, #718096, #a0aec0)' }}
+        >
+          <FloatingParticles />
+          <FloatingLogos />
+          <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:60px_60px]" />
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
+            <div className="grid md:grid-cols-2 gap-8 text-white">
               {/* Contact Section */}
-              <div className="text-white">
+              <div>
                 <h2 className="text-3xl font-bold mb-4">
                   {isJapanese ? "お問い合わせ" : "Contact Us"}
                 </h2>
@@ -292,11 +298,8 @@ export default function About() {
                 </Button>
               </div>
 
-              {/* Vertical Divider */}
-              <div className="hidden md:block absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 h-32 w-px bg-white/30"></div>
-
               {/* Recruitment Section */}
-              <div className="text-white md:border-l md:border-white/30 md:pl-8">
+              <div className="md:border-l md:border-white/30 md:pl-8">
                 <h2 className="text-3xl font-bold mb-4">
                   {isJapanese ? "採用について" : "Careers"}
                 </h2>

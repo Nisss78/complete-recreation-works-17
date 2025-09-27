@@ -197,10 +197,10 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
       </div>
 
       {/* Navigation buttons - simple design */}
-      <div 
+      <div
         data-nav-buttons
         className="fixed flex gap-6 pointer-events-auto"
-        style={{ bottom: '12vh', left: '12%', zIndex: 50, opacity: 1 }}
+        style={{ bottom: '12vh', left: '12%', zIndex: 50, opacity: 0 }}
       >
           <button
             onClick={handlePrev}
