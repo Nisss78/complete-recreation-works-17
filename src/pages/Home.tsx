@@ -881,35 +881,45 @@ export default function Home() {
                 : "We provide optimal AI solutions tailored to your business needs"}
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <Card className="hover:shadow-lg transition-shadow reveal-on-scroll">
+              <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader>
-                  <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style={{ backgroundColor: 'rgba(16, 200, 118, 0.15)' }}>
-                    <GraduationCap className="h-6 w-6" style={{ color: '#10c876' }} />
-                  </div>
                   <CardTitle>{isJapanese ? "AI研修・コンサルティング" : "AI Training & Consulting"}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 mb-4">
                     {isJapanese
                       ? "企業向けのAI人材育成プログラムと、AI導入に関する戦略的コンサルティングを提供。実践的なワークショップも実施。"
                       : "Providing AI talent development programs and strategic consulting for AI implementation. Including practical workshops."}
                   </p>
+                  <Button
+                    variant="outline"
+                    onClick={() => navigate("/services")}
+                    className="w-full"
+                  >
+                    {isJapanese ? "さらに詳しく" : "Learn More"}
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-lg transition-shadow reveal-on-scroll">
+              <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader>
-                  <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style={{ backgroundColor: 'rgba(21, 184, 229, 0.15)' }}>
-                    <Briefcase className="h-6 w-6" style={{ color: '#15b8e5' }} />
-                  </div>
                   <CardTitle>{isJapanese ? "受託開発" : "Contract Development"}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 mb-4">
                     {isJapanese
                       ? "お客様の要件に合わせたカスタムソリューションを開発。既存システムとの統合やPOC開発にも対応します。"
                       : "Developing custom solutions tailored to your requirements. Supporting system integration and POC development."}
                   </p>
+                  <Button
+                    variant="outline"
+                    onClick={() => navigate("/services")}
+                    className="w-full"
+                  >
+                    {isJapanese ? "さらに詳しく" : "Learn More"}
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
                 </CardContent>
               </Card>
             </div>
@@ -1055,26 +1065,14 @@ export default function Home() {
                 </div>
               </div>
             </div>
-          </div>
-        </section>
 
-        {/* CTA Section */}
-        <section className="py-20 bg-white">
-          <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 reveal-on-scroll">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              {isJapanese ? "AIで未来を創造しよう" : "Create the Future with AI"}
-            </h2>
-            <p className="text-xl text-gray-600 mb-8">
-              {isJapanese 
-                ? "お客様のビジネス課題を、最先端のAI技術で解決します"
-                : "Solving your business challenges with cutting-edge AI technology"}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            {/* Contact Button */}
+            <div className="flex justify-center mt-12">
               <Button
                 size="lg"
                 onClick={() => navigate("/contact")}
                 className="text-white"
-                style={{ 
+                style={{
                   backgroundColor: '#0b925b'
                 }}
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0a7a4d'}
@@ -1086,6 +1084,7 @@ export default function Home() {
             </div>
           </div>
         </section>
+
       </main>
       <Footer />
     </div>
