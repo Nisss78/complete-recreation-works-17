@@ -67,20 +67,29 @@ export default function About() {
               {/* Our Strengths - removed per request */}
 
               {/* Vision */}
-              <div className="mb-12 text-center bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8 rounded-xl">
-                <h3 className="text-2xl font-bold mb-4">
-                  {isJapanese ? "ビジョン" : "Vision"}
-                </h3>
-                <p className="text-xl">
-                  {isJapanese 
-                    ? "クールな未来体験を、世界へ最速で届けるプラットフォームになる。"
-                    : "To become the platform that delivers cool future experiences to the world at maximum speed."}
-                </p>
-                <p className="mt-4 text-blue-100">
-                  {isJapanese 
-                    ? "私たちはスピードと挑戦を武器に、AIと人が共創する新しいカルチャーと経済圏を切り拓きます。"
-                    : "Armed with speed and challenge, we pioneer new cultures and economic zones where AI and humans co-create."}
-                </p>
+              <div className="relative overflow-hidden rounded-2xl mb-12">
+                <div
+                  className="absolute inset-0"
+                  style={{ background: 'linear-gradient(135deg, #4a5568, #718096, #a0aec0)' }}
+                />
+                <FloatingParticles />
+                <FloatingLogos />
+                <div className="absolute inset-0 bg-black/30" />
+                <div className="relative z-10 px-8 sm:px-12 py-12 text-white text-left">
+                  <h3 className="text-3xl font-bold mb-4">
+                    {isJapanese ? "ビジョン" : "Vision"}
+                  </h3>
+                  <p className="text-2xl md:text-3xl font-semibold leading-snug">
+                    {isJapanese
+                      ? "Speed & Quality を武器に、クールな未来体験を世界へ最速で届ける。"
+                      : "Deliver cool future experiences to the world with Speed & Quality."}
+                  </p>
+                  <p className="mt-6 text-lg md:text-xl text-blue-100 max-w-3xl">
+                    {isJapanese
+                      ? "私たちは究極のスピードと妥協なき品質を両立させ、AIと人が共創するカルチャーを世界中に広げていきます。"
+                      : "We pair ultimate speed with uncompromising quality to expand a culture where AI and people co-create across the globe."}
+                  </p>
+                </div>
               </div>
 
               {/* Core Values - removed per request */}
@@ -104,11 +113,6 @@ export default function About() {
                   {isJapanese 
                     ? <>合言葉は <strong className="text-blue-600">"Create Cool Experience"</strong>。</>
                     : <>Our motto is <strong className="text-blue-600">"Create Cool Experience"</strong>.</>}
-                </p>
-                <p className="text-lg md:text-xl text-gray-700 leading-8">
-                  {isJapanese 
-                    ? "以来、スタジオ（自社サービス）・受託・エンタメ の3軸で事業を加速させています。"
-                    : "Since then, we've been accelerating our business across three pillars: Studio (in-house services), Contract Development, and Entertainment."}
                 </p>
               </div>
             </div>
