@@ -123,12 +123,12 @@ export default function About() {
             <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 mb-8 text-left">
               Member
             </h2>
-            {/* First row - 2 members */}
+            {/* First row - 2 members (keep layout) */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto mb-6">
               {/* 宇野慎一郎 */}
               <div className="relative group">
-                <div className="relative rounded-2xl bg-white border border-gray-200 shadow-lg p-5 w-full h-80 flex items-end">
-                  {/* Image - vertical rectangle, positioned at bottom-left with margin */}
+                <div className="relative rounded-2xl bg-white border border-gray-200 shadow-lg p-5 w-full aspect-square flex items-end">
+                  {/* Proportional vertical image rectangle (match bottom ratio) */}
                   <div className="absolute bottom-5 left-5 w-3/5 h-5/6 rounded-lg overflow-hidden">
                     <img 
                       src={unoImage} 
@@ -136,8 +136,6 @@ export default function About() {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  
-                  {/* X Icon - aligned with top of image */}
                   <a 
                     href="https://x.com/protoduct_ai" 
                     target="_blank" 
@@ -146,8 +144,6 @@ export default function About() {
                   >
                     <X className="w-6 h-6 text-gray-700" />
                   </a>
-                  
-                  {/* Name and title - bottom right */}
                   <div className="absolute bottom-6 right-6 text-right">
                     <h3 className="text-gray-900 font-semibold text-base">宇野慎一郎</h3>
                     <p className="text-gray-600 text-sm mt-1">Founder</p>
@@ -157,17 +153,12 @@ export default function About() {
 
               {/* イギョンウク */}
               <div className="relative group">
-                <div className="relative rounded-2xl bg-white border border-gray-200 shadow-lg p-5 w-full h-80 flex items-end">
-                  {/* Image - vertical rectangle, positioned at bottom-left with margin */}
-                  <div className="absolute bottom-5 left-5 w-3/5 h-5/6 rounded-lg overflow-hidden bg-gray-200">
-                  </div>
-                  
-                  {/* X Icon - aligned with top of image */}
+                <div className="relative rounded-2xl bg-white border border-gray-200 shadow-lg p-5 w-full aspect-square flex items-end">
+                  {/* Proportional placeholder rectangle */}
+                  <div className="absolute bottom-5 left-5 w-3/5 h-5/6 rounded-lg overflow-hidden bg-gray-200"></div>
                   <div className="absolute top-[18%] right-6 w-12 h-12 rounded-xl border border-gray-300 bg-white shadow-md flex items-center justify-center">
                     <X className="w-6 h-6 text-gray-700" />
                   </div>
-                  
-                  {/* Name and title - bottom right */}
                   <div className="absolute bottom-6 right-6 text-right">
                     <h3 className="text-gray-900 font-semibold text-base">イギョンウク</h3>
                     <p className="text-gray-600 text-sm mt-1">Co-founder</p>
@@ -180,17 +171,11 @@ export default function About() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
               {/* 山内泰嘉 */}
               <div className="relative group">
-                <div className="relative rounded-2xl bg-white border border-gray-200 shadow-lg p-5 w-full h-80 flex items-end">
-                  {/* Image - vertical rectangle, positioned at bottom-left with margin */}
-                  <div className="absolute bottom-5 left-5 w-3/5 h-5/6 rounded-lg overflow-hidden bg-gray-200">
-                  </div>
-                  
-                  {/* X Icon - aligned with top of image */}
+                <div className="relative rounded-2xl bg-white border border-gray-200 shadow-lg p-5 w-full aspect-square flex items-end">
+                  <div className="absolute bottom-5 left-5 w-3/5 h-5/6 rounded-lg overflow-hidden bg-gray-200"></div>
                   <div className="absolute top-[18%] right-6 w-12 h-12 rounded-xl border border-gray-300 bg-white shadow-md flex items-center justify-center">
                     <X className="w-6 h-6 text-gray-700" />
                   </div>
-                  
-                  {/* Name and title - bottom right */}
                   <div className="absolute bottom-6 right-6 text-right">
                     <h3 className="text-gray-900 font-semibold text-base">山内泰嘉</h3>
                     <p className="text-gray-600 text-sm mt-1">Co-founder</p>
@@ -200,17 +185,11 @@ export default function About() {
 
               {/* 奥谷大地 */}
               <div className="relative group">
-                <div className="relative rounded-2xl bg-white border border-gray-200 shadow-lg p-5 w-full h-80 flex items-end">
-                  {/* Image - vertical rectangle, positioned at bottom-left with margin */}
-                  <div className="absolute bottom-5 left-5 w-3/5 h-5/6 rounded-lg overflow-hidden bg-gray-200">
-                  </div>
-                  
-                  {/* X Icon - aligned with top of image */}
+                <div className="relative rounded-2xl bg-white border border-gray-200 shadow-lg p-5 w-full aspect-square flex items-end">
+                  <div className="absolute bottom-5 left-5 w-3/5 h-5/6 rounded-lg overflow-hidden bg-gray-200"></div>
                   <div className="absolute top-[18%] right-6 w-12 h-12 rounded-xl border border-gray-300 bg-white shadow-md flex items-center justify-center">
                     <X className="w-6 h-6 text-gray-700" />
                   </div>
-                  
-                  {/* Name and title - bottom right */}
                   <div className="absolute bottom-6 right-6 text-right">
                     <h3 className="text-gray-900 font-semibold text-base">奥谷大地</h3>
                     <p className="text-gray-600 text-sm mt-1">Co-founder</p>
@@ -220,17 +199,11 @@ export default function About() {
 
               {/* 中塚一晃 */}
               <div className="relative group">
-                <div className="relative rounded-2xl bg-white border border-gray-200 shadow-lg p-5 w-full h-80 flex items-end">
-                  {/* Image - vertical rectangle, positioned at bottom-left with margin */}
-                  <div className="absolute bottom-5 left-5 w-3/5 h-5/6 rounded-lg overflow-hidden bg-gray-200">
-                  </div>
-                  
-                  {/* X Icon - aligned with top of image */}
+                <div className="relative rounded-2xl bg-white border border-gray-200 shadow-lg p-5 w-full aspect-square flex items-end">
+                  <div className="absolute bottom-5 left-5 w-3/5 h-5/6 rounded-lg overflow-hidden bg-gray-200"></div>
                   <div className="absolute top-[18%] right-6 w-12 h-12 rounded-xl border border-gray-300 bg-white shadow-md flex items-center justify-center">
                     <X className="w-6 h-6 text-gray-700" />
                   </div>
-                  
-                  {/* Name and title - bottom right */}
                   <div className="absolute bottom-6 right-6 text-right">
                     <h3 className="text-gray-900 font-semibold text-base">中塚一晃</h3>
                     <p className="text-gray-600 text-sm mt-1">Co-founder</p>
