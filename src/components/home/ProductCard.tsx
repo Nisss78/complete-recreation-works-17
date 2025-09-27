@@ -10,10 +10,11 @@ interface ProductCardProps {
   isPlaceholder?: boolean;
   isBackground?: boolean;
   colorIndex?: number;
+  className?: string;
 }
 
 export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
-  ({ name, description, icon_url, year, url, isPlaceholder = false, isBackground = false, colorIndex = 0 }, ref) => {
+  ({ name, description, icon_url, year, url, isPlaceholder = false, isBackground = false, colorIndex = 0, className = '' }, ref) => {
     // Color palette: 黄緑、青、紫、赤、オレンジ、黄色
     const colors = [
       '#7bc61e', // 黄緑
@@ -55,7 +56,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
         data-product-card
         className={`relative rounded-2xl overflow-hidden ${
           isBackground ? 'opacity-60' : 'opacity-100'
-        }`}
+        } ${className}`}
         style={{
           width: '320px',
           height: '380px',

@@ -1,6 +1,5 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building2, Users, Globe, Award, Target, TrendingUp, Calendar, MapPin, ArrowRight, ExternalLink } from "lucide-react";
 import { X } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -39,137 +38,33 @@ export default function About() {
         </div>
 
         {/* About Us Section */}
-        <section className="py-16 bg-white">
+        <section className="py-16 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-16">
-              <h2 className="text-3xl font-bold mb-8 text-center">
+              <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 mb-8 text-left">
                 {isJapanese ? "私たちについて" : "About Us"}
               </h2>
               
               {/* Our Purpose */}
-              <div className="mb-12">
-                <h3 className="text-2xl font-bold mb-4 text-gray-800">
+              <div className="mb-12 max-w-3xl">
+                <h3 className="text-2xl md:text-3xl font-semibold mb-5 text-gray-900">
                   {isJapanese ? "私たちの存在意義" : "Our Purpose"}
                 </h3>
-                <p className="text-gray-600 leading-relaxed mb-4">
+                <p className="text-lg md:text-xl text-gray-700 leading-8 mb-5">
                   {isJapanese 
                     ? <>ProtoductAI株式会社は、<strong className="text-gray-900">「AIで可能性を拡張し、想像力を爆発させる未来体験を創造する」</strong>ことを使命に、京都で誕生しました。</>
                     : <>ProtoductAI Inc. was born in Kyoto with the mission to <strong className="text-gray-900">"expand possibilities with AI and create future experiences that ignite imagination."</strong></>}
                 </p>
-                <p className="text-gray-600 leading-relaxed">
+                <p className="text-lg md:text-xl text-gray-700 leading-8">
                   {isJapanese 
                     ? '生成AIと最先端のノーコード／AIcodingツールを駆使し、アイデアからローンチまでを「最速」で駆け抜ける。それが私たちのスタイルであり、カルチャーです。'
                     : "We leverage generative AI and cutting-edge no-code/AI coding tools to sprint from idea to launch at 'maximum speed.' This is our style and our culture."}
                 </p>
               </div>
 
-              {/* What We Do */}
-              <div className="mb-12">
-                <h3 className="text-2xl font-bold mb-6 text-gray-800">
-                  {isJapanese ? "何をしているのか" : "What We Do"}
-                </h3>
-                <div className="grid md:grid-cols-2 gap-8">
-                  {/* Protoduct Studio */}
-                  <Card className="border-2 border-blue-100">
-                    <CardHeader>
-                      <CardTitle className="text-xl text-blue-600">
-                        Protoduct Studio
-                        <span className="ml-2 text-sm text-gray-500 font-normal">
-                          {isJapanese ? "（メイン）" : "(Main)"}
-                        </span>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      <p className="text-gray-700 font-medium">
-                        {isJapanese ? "アイデア 100 → 5 → 1。" : "Ideas 100 → 5 → 1."}
-                      </p>
-                      <ul className="space-y-2 text-gray-600">
-                        <li className="flex items-start">
-                          <span className="text-blue-500 mr-2">•</span>
-                          {isJapanese 
-                            ? "週次の公開デモで次々にサービスを量産"
-                            : "Mass-produce services through weekly public demos"}
-                        </li>
-                        <li className="flex items-start">
-                          <span className="text-blue-500 mr-2">•</span>
-                          {isJapanese 
-                            ? "スタジオ型でアイデアを量産・実装"
-                            : "Studio-style idea generation and implementation"}
-                        </li>
-                        <li className="flex items-start">
-                          <span className="text-blue-500 mr-2">•</span>
-                          {isJapanese 
-                            ? "ユーザーの声を即反映"
-                            : "Immediate reflection of user feedback"}
-                        </li>
-                        <li className="flex items-start">
-                          <span className="text-blue-500 mr-2">•</span>
-                          {isJapanese 
-                            ? '「死なない実験」を積み重ね、未来のプロダクトを生む'
-                            : "Creating future products through 'experiments that don't die'"}
-                        </li>
-                      </ul>
-                    </CardContent>
-                  </Card>
+              {/* What We Do - removed per request */}
 
-                  {/* Fast-AI Solutions */}
-                  <Card className="border-2 border-green-100">
-                    <CardHeader>
-                      <CardTitle className="text-xl text-green-600">
-                        Fast-AI Solutions
-                        <span className="ml-2 text-sm text-gray-500 font-normal">
-                          {isJapanese ? "（サブ）" : "(Sub)"}
-                        </span>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      <p className="text-gray-700 font-medium">
-                        {isJapanese 
-                          ? "AI公式LINE、LP／HP制作、DB×UIミニアプリなどを \"2週間\"で納品。"
-                          : "Delivering AI official LINE, LP/HP creation, DB×UI mini-apps in '2 weeks'."}
-                      </p>
-                      <p className="text-gray-600">
-                        {isJapanese 
-                          ? "クライアントワークを通じて鍛えた「スピードと品質」で、受託と自社サービスを循環させています。"
-                          : "We cycle between client work and our own services with 'speed and quality' honed through client projects."}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
-
-              {/* Our Strengths */}
-              <div className="mb-12">
-                <h3 className="text-2xl font-bold mb-6 text-gray-800">
-                  {isJapanese ? "私たちの強み" : "Our Strengths"}
-                </h3>
-                <div className="grid md:grid-cols-3 gap-6">
-                  <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-6 rounded-lg">
-                    <h4 className="font-bold text-blue-700 mb-2">Speed</h4>
-                    <p className="text-gray-700">
-                      {isJapanese 
-                        ? "週1リリース、常時β運用"
-                        : "Weekly releases, continuous beta operation"}
-                    </p>
-                  </div>
-                  <div className="bg-gradient-to-r from-purple-50 to-purple-100 p-6 rounded-lg">
-                    <h4 className="font-bold text-purple-700 mb-2">PromptOps</h4>
-                    <p className="text-gray-700">
-                      {isJapanese 
-                        ? "mastra × Cursor × n8n で開発も運用も自動化"
-                        : "Automating development and operations with mastra × Cursor × n8n"}
-                    </p>
-                  </div>
-                  <div className="bg-gradient-to-r from-green-50 to-green-100 p-6 rounded-lg">
-                    <h4 className="font-bold text-green-700 mb-2">Community-Driven</h4>
-                    <p className="text-gray-700">
-                      {isJapanese 
-                        ? "大学AIコミュニティ発の知と情熱を結集"
-                        : "Gathering knowledge and passion from university AI communities"}
-                    </p>
-                  </div>
-                </div>
-              </div>
+              {/* Our Strengths - removed per request */}
 
               {/* Vision */}
               <div className="mb-12 text-center bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8 rounded-xl">
@@ -188,95 +83,29 @@ export default function About() {
                 </p>
               </div>
 
-              {/* Core Values */}
-              <div className="mb-12">
-                <h3 className="text-2xl font-bold mb-6 text-gray-800">
-                  {isJapanese ? "コアバリュー" : "Core Values"}
-                </h3>
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse">
-                    <thead>
-                      <tr className="bg-gray-100">
-                        <th className="border border-gray-300 px-4 py-3 text-left font-bold">Value</th>
-                        <th className="border border-gray-300 px-4 py-3 text-left font-bold">
-                          {isJapanese ? "一言で表すと" : "In a Word"}
-                        </th>
-                        <th className="border border-gray-300 px-4 py-3 text-left font-bold">
-                          {isJapanese ? "行動指針" : "Action Guidelines"}
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td className="border border-gray-300 px-4 py-3 font-medium">Speed</td>
-                        <td className="border border-gray-300 px-4 py-3">
-                          {isJapanese ? "明日じゃなく\"今日\"リリース" : "Release 'today' not tomorrow"}
-                        </td>
-                        <td className="border border-gray-300 px-4 py-3">
-                          {isJapanese 
-                            ? "巨大タスクは1時間単位に分割し即アウトプット"
-                            : "Break giant tasks into hour units for immediate output"}
-                        </td>
-                      </tr>
-                      <tr className="bg-gray-50">
-                        <td className="border border-gray-300 px-4 py-3 font-medium">Challenge</td>
-                        <td className="border border-gray-300 px-4 py-3">
-                          {isJapanese ? "常識を疑い、限界を越える" : "Question common sense, exceed limits"}
-                        </td>
-                        <td className="border border-gray-300 px-4 py-3">
-                          {isJapanese 
-                            ? "新技術はまず触れ、使って判断"
-                            : "Touch new technology first, judge by using"}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="border border-gray-300 px-4 py-3 font-medium">Cool Experience</td>
-                        <td className="border border-gray-300 px-4 py-3">
-                          {isJapanese ? "ワクワクする体験を届ける" : "Deliver exciting experiences"}
-                        </td>
-                        <td className="border border-gray-300 px-4 py-3">
-                          {isJapanese 
-                            ? "UI/UXは妥協しない。感情を動かす演出を追求"
-                            : "No compromise on UI/UX. Pursue emotional presentation"}
-                        </td>
-                      </tr>
-                      <tr className="bg-gray-50">
-                        <td className="border border-gray-300 px-4 py-3 font-medium">Automation</td>
-                        <td className="border border-gray-300 px-4 py-3">
-                          {isJapanese ? "AIに任せて人は創造" : "Let AI handle, humans create"}
-                        </td>
-                        <td className="border border-gray-300 px-4 py-3">
-                          {isJapanese 
-                            ? "「手動作業」を見つけたら自動化スクリプトを書く"
-                            : "Write automation scripts when finding 'manual work'"}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+              {/* Core Values - removed per request */}
 
               {/* Founding Story */}
-              <div className="bg-gray-50 p-8 rounded-xl">
-                <h3 className="text-2xl font-bold mb-4 text-gray-800">
+              <div className="mb-12 max-w-3xl">
+                <h3 className="text-2xl md:text-3xl font-semibold mb-5 text-gray-900">
                   {isJapanese ? "創業ストーリー" : "Founding Story"}
                 </h3>
-                <p className="text-gray-700 leading-relaxed mb-3">
+                <p className="text-lg md:text-xl text-gray-700 leading-8 mb-5">
                   {isJapanese 
                     ? "「学生こそ世界を揺らすイノベーションを起こせる」。"
                     : "'Students can create innovations that shake the world.'"}
                 </p>
-                <p className="text-gray-700 leading-relaxed mb-3">
+                <p className="text-lg md:text-xl text-gray-700 leading-8 mb-5">
                   {isJapanese 
                     ? "その想いを共有した仲間が集まり、2025年3月に ProtoductAI を設立。"
                     : "Companions who shared this belief gathered and established ProtoductAI in March 2025."}
                 </p>
-                <p className="text-gray-700 leading-relaxed mb-3">
+                <p className="text-lg md:text-xl text-gray-700 leading-8 mb-5">
                   {isJapanese 
                     ? <>合言葉は <strong className="text-blue-600">"Create Cool Experience"</strong>。</>
                     : <>Our motto is <strong className="text-blue-600">"Create Cool Experience"</strong>.</>}
                 </p>
-                <p className="text-gray-700 leading-relaxed">
+                <p className="text-lg md:text-xl text-gray-700 leading-8">
                   {isJapanese 
                     ? "以来、スタジオ（自社サービス）・受託・エンタメ の3軸で事業を加速させています。"
                     : "Since then, we've been accelerating our business across three pillars: Studio (in-house services), Contract Development, and Entertainment."}
@@ -284,63 +113,15 @@ export default function About() {
               </div>
             </div>
 
-            {/* Company Table */}
-            <div className="py-8">
-              <div className="max-w-4xl md:max-w-5xl mx-auto">
-                <div className="mb-8 text-center">
-                  <h3 className="text-3xl font-bold text-blue-600 mb-2">COMPANY</h3>
-                  <div>
-                    <span className="text-2xl font-medium">会社概要</span>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-lg p-6 sm:p-8">
-                  <table className="w-full table-fixed">
-                    <tbody>
-                      <tr className="border-b border-gray-300">
-                        <td className="py-4 pr-8 font-medium text-gray-900 w-36 sm:w-40 align-top">会社名</td>
-                        <td className="py-4 text-gray-700">ProtoductAI株式会社</td>
-                      </tr>
-                      <tr className="border-b border-gray-300">
-                        <td className="py-4 pr-8 font-medium text-gray-900 w-36 sm:w-40 align-top">住所</td>
-                        <td className="py-4 text-gray-700">
-                          〒605-0074<br />
-                          京都市東山区祇園町南側582
-                        </td>
-                      </tr>
-                      <tr className="border-b border-gray-300">
-                        <td className="py-4 pr-8 font-medium text-gray-900 w-36 sm:w-40 align-top">代表者</td>
-                        <td className="py-4 text-gray-700">代表取締役 CEO</td>
-                      </tr>
-                      <tr className="border-b border-gray-300">
-                        <td className="py-4 pr-8 font-medium text-gray-900 w-36 sm:w-40 align-top">設立</td>
-                        <td className="py-4 text-gray-700">2025年3月7日</td>
-                      </tr>
-                      <tr className="border-b border-gray-300">
-                        <td className="py-4 pr-8 font-medium text-gray-900 w-36 sm:w-40 align-top">事業内容</td>
-                        <td className="py-4 text-gray-700">
-                          AIソフトウェア開発<br />
-                          AI研修・コンサルティング<br />
-                          受託開発
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="py-4 pr-8 font-medium text-gray-900 w-36 sm:w-40 align-top">従業員数</td>
-                        <td className="py-4 text-gray-700">6人（業務委託含む）</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
+            {/* Company Table moved below Team Members */}
           </div>
         </section>
 
         {/* Team Members */}
         <section className="py-20 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-bold text-center mb-16 text-gray-900">
-              {isJapanese ? "メンバー紹介" : "Our Team"}
+            <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 mb-8 text-left">
+              Member
             </h2>
             {/* First row - 2 members */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto mb-6">
@@ -454,6 +235,60 @@ export default function About() {
                     <h3 className="text-gray-900 font-semibold text-base">中塚一晃</h3>
                     <p className="text-gray-600 text-sm mt-1">Co-founder</p>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Company Table (moved below Team Members) */}
+        <section className="py-16 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="py-8">
+              <div className="max-w-4xl md:max-w-5xl mx-auto">
+                <div className="mb-8 text-center">
+                  <h3 className="text-3xl font-bold text-blue-600 mb-2">COMPANY</h3>
+                  <div>
+                    <span className="text-2xl font-medium">会社概要</span>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-lg p-6 sm:p-8 border border-gray-200">
+                  <table className="w-full table-fixed">
+                    <tbody>
+                      <tr className="border-b border-gray-300">
+                        <td className="py-4 pr-8 font-medium text-gray-900 w-36 sm:w-40 align-top">会社名</td>
+                        <td className="py-4 text-gray-700">ProtoductAI株式会社</td>
+                      </tr>
+                      <tr className="border-b border-gray-300">
+                        <td className="py-4 pr-8 font-medium text-gray-900 w-36 sm:w-40 align-top">住所</td>
+                        <td className="py-4 text-gray-700">
+                          〒605-0074<br />
+                          京都市東山区祇園町南側582
+                        </td>
+                      </tr>
+                      <tr className="border-b border-gray-300">
+                        <td className="py-4 pr-8 font-medium text-gray-900 w-36 sm:w-40 align-top">代表者</td>
+                        <td className="py-4 text-gray-700">代表取締役 CEO</td>
+                      </tr>
+                      <tr className="border-b border-gray-300">
+                        <td className="py-4 pr-8 font-medium text-gray-900 w-36 sm:w-40 align-top">設立</td>
+                        <td className="py-4 text-gray-700">2025年3月7日</td>
+                      </tr>
+                      <tr className="border-b border-gray-300">
+                        <td className="py-4 pr-8 font-medium text-gray-900 w-36 sm:w-40 align-top">事業内容</td>
+                        <td className="py-4 text-gray-700">
+                          AIソフトウェア開発<br />
+                          AI研修・コンサルティング<br />
+                          受託開発
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="py-4 pr-8 font-medium text-gray-900 w-36 sm:w-40 align-top">従業員数</td>
+                        <td className="py-4 text-gray-700">6人（業務委託含む）</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
