@@ -12,6 +12,7 @@ import { useEffect, useRef } from "react";
 import FloatingParticles from "@/components/FloatingParticles";
 import FloatingLogos from "@/components/FloatingLogos";
 import { ProductCarousel } from "@/components/home/ProductCarousel";
+import RotatingText from "@/components/RotatingText";
 
 // GSAP types
 type GSAPTimeline = {
@@ -1049,20 +1050,8 @@ export default function Home() {
                   </Button>
                 </Link>
               </div>
-              <div className="relative reveal-on-scroll">
-                <div className="absolute inset-0 rounded-2xl transform rotate-3" style={{
-                  background: 'linear-gradient(to bottom right, rgba(90, 156, 17, 0.1), rgba(11, 146, 91, 0.1), rgba(12, 135, 167, 0.1))'
-                }}></div>
-                <div className="relative bg-white rounded-2xl p-8 shadow-lg">
-                  <div className="space-y-4">
-                    <div className="h-3 bg-gray-200 rounded w-3/4"></div>
-                    <div className="h-3 bg-gray-200 rounded w-full"></div>
-                    <div className="h-3 bg-gray-200 rounded w-5/6"></div>
-                    <div className="h-20 rounded-lg mt-6" style={{
-                      background: 'linear-gradient(to bottom right, rgba(90, 156, 17, 0.05), rgba(11, 146, 91, 0.05), rgba(12, 135, 167, 0.05))'
-                    }}></div>
-                  </div>
-                </div>
+              <div className="relative reveal-on-scroll w-full h-[500px]">
+                <RotatingText />
               </div>
             </div>
 
