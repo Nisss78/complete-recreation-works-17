@@ -167,7 +167,7 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
         onTouchEnd={handleTouchEnd}
       >
         {/* Cards container */}
-        <div ref={rowRef} className="relative flex items-center justify-center" style={{ opacity: 0, pointerEvents: 'auto', visibility: 'hidden' }}>
+        <div ref={rowRef} className="relative flex items-center justify-center" style={{ opacity: 0, pointerEvents: 'auto', visibility: 'hidden', willChange: 'opacity, visibility' }}>
           <div className="relative flex items-center justify-center gap-12" style={{ zIndex: 10 }}>
             {visibleItems.map((item, index) => {
               const isMain = index >= 1 && index <= 3;
@@ -177,9 +177,11 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
               const wrapperStyle: React.CSSProperties = {
                 transform: `scale(${isMain ? 1.08 : 0.7})`,
                 opacity: 0, // Always start hidden to prevent flash
+                visibility: 'hidden', // Extra hiding layer
                 zIndex: isMain ? 20 : 10,
-                transition: 'transform 0.3s ease, opacity 0.3s ease',
+                transition: 'transform 0.3s ease, opacity 0.3s ease, visibility 0s',
                 pointerEvents: 'auto',
+                willChange: 'transform, opacity, visibility',
               };
 
               const commonAttrs = {

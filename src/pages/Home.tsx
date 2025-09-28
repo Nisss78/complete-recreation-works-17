@@ -64,7 +64,7 @@ export default function Home() {
     other: { ja: "その他", en: "Other", color: "bg-gray-500 text-white", style: {} },
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     let cleanup: (() => void) | undefined;
     (async () => {
       try {
@@ -651,6 +651,7 @@ export default function Home() {
                 if (isMain) {
                   cardsTimeline.to(card, {
                     opacity: 1,
+                    visibility: 'visible',
                     x: 0,
                     y: 0,
                     rotation: 0,
@@ -661,6 +662,7 @@ export default function Home() {
                 } else {
                   cardsTimeline.to(card, {
                     opacity: 0.6,
+                    visibility: 'visible',
                     x: 0,
                     y: 0,
                     rotation: 0,
