@@ -169,7 +169,7 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
       >
         {/* Cards container */}
         <div ref={rowRef} className="relative flex items-center justify-center" style={{ opacity: 0, pointerEvents: 'auto', visibility: 'hidden' }}>
-          <div className="relative flex items-center justify-center gap-8" style={{ zIndex: 10 }}>
+          <div className="relative flex items-center justify-center gap-12" style={{ zIndex: 10 }}>
             {visibleItems.map((item, index) => {
               const isMain = index >= 1 && index <= 3;
               const isPeekLeft = index === 0;
