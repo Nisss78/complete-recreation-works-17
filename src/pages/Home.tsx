@@ -753,12 +753,12 @@ export default function Home() {
           <FloatingLogos />
           <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:60px_60px]" />
           {/* The ball is now outside hero to avoid clipping while scrolling */}
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="text-left">
+          <div className="w-full px-8 sm:px-12 lg:px-20 relative z-10">
+            <div className="text-left pl-8 sm:pl-16 lg:pl-24">
               <h1 className="mb-4">
-                <div 
+                <div
                   ref={weBuildRef}
-                  className="text-6xl sm:text-8xl lg:text-9xl font-bold mb-8 intro-from-right"
+                  className="text-9xl sm:text-[10rem] lg:text-[13rem] font-bold mb-8 intro-from-right"
                   style={{
                     color: 'transparent',
                     WebkitTextStroke: '2px white',
@@ -770,10 +770,10 @@ export default function Home() {
                 >
                   We build,
                 </div>
-                <div 
+                <div
                   ref={coolProductsRef}
-                  className="text-4xl sm:text-6xl lg:text-7xl font-bold text-white intro-from-left"
-                  style={{ 
+                  className="text-5xl sm:text-7xl lg:text-8xl font-bold text-white intro-from-left whitespace-nowrap"
+                  style={{
                     willChange: 'transform',
                     fontWeight: '900',
                     letterSpacing: '-0.02em',
@@ -783,12 +783,35 @@ export default function Home() {
                   Cool & Scalable products
                 </div>
               </h1>
-              <div ref={contactButtonRef} className="flex flex-col sm:flex-row gap-4 mb-16 reveal-on-scroll" style={{ willChange: 'transform', pointerEvents: 'auto' }}>
+              <div ref={contactButtonRef} className="flex flex-col sm:flex-row gap-4 mb-16 reveal-on-scroll" style={{ willChange: 'transform', pointerEvents: 'auto', position: 'relative', zIndex: 999 }}>
                 <Button
                   size="lg"
-                  onClick={() => navigate("/contact")}
-                  className="bg-white hover:bg-gray-100 w-fit"
-                  style={{ color: '#0b925b', pointerEvents: 'auto' }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    navigate("/contact");
+                  }}
+                  className="relative overflow-hidden text-white w-fit cursor-pointer"
+                  style={{
+                    background: 'rgba(16, 200, 118, 0.9)',
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                    boxShadow: '0 4px 15px rgba(16, 200, 118, 0.4)',
+                    pointerEvents: 'auto',
+                    position: 'relative',
+                    zIndex: 999
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(16, 200, 118, 1)';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = '0 8px 25px rgba(16, 200, 118, 0.5)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(16, 200, 118, 0.9)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 4px 15px rgba(16, 200, 118, 0.4)';
+                  }}
                 >
                   Contact Us
                   <ArrowRight className="ml-2 h-5 w-5" />
@@ -796,7 +819,7 @@ export default function Home() {
               </div>
               
               {/* Tagline within hero section - split into 3 lines - centered */}
-              <div ref={taglineRef} className="text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full">
+              <div ref={taglineRef} className="text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full" style={{ pointerEvents: 'none' }}>
                 <div className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white max-w-4xl mx-auto leading-tight px-4 space-y-2">
                   <div 
                     ref={taglineLine1Ref}
@@ -1050,14 +1073,25 @@ export default function Home() {
                   </div>
                 </div>
                 <Link to="/about">
-                  <Button 
-                    className="text-white"
-                    style={{ 
-                      backgroundColor: '#0b925b',
-                      ':hover': { backgroundColor: '#0a7a4d' }
+                  <Button
+                    className="relative overflow-hidden text-white"
+                    style={{
+                      background: 'rgba(16, 200, 118, 0.9)',
+                      backdropFilter: 'blur(10px)',
+                      WebkitBackdropFilter: 'blur(10px)',
+                      border: '1px solid rgba(255, 255, 255, 0.3)',
+                      boxShadow: '0 4px 15px rgba(16, 200, 118, 0.4)'
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0a7a4d'}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0b925b'}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'rgba(16, 200, 118, 1)';
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 8px 25px rgba(16, 200, 118, 0.5)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'rgba(16, 200, 118, 0.9)';
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 4px 15px rgba(16, 200, 118, 0.4)';
+                    }}
                   >
                     {isJapanese ? "詳しく見る" : "Learn More"}
                     <ArrowRight className="ml-2 h-5 w-5" />
@@ -1070,16 +1104,26 @@ export default function Home() {
             </div>
 
             {/* Contact Button */}
-            <div className="flex justify-center mt-12">
+            <div className="flex justify-center mt-20">
               <Button
                 size="lg"
                 onClick={() => navigate("/contact")}
-                className="text-white"
+                className="relative overflow-hidden text-white"
                 style={{
-                  backgroundColor: '#0b925b'
+                  background: 'linear-gradient(145deg, rgba(16, 200, 118, 0.85), rgba(123, 198, 30, 0.75))',
+                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                  boxShadow: '0 8px 20px rgba(16, 200, 118, 0.25), 0 1px 0 rgba(255,255,255,0.2) inset',
+                  backdropFilter: 'blur(16px) saturate(1.3)',
+                  WebkitBackdropFilter: 'blur(16px) saturate(1.3)'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0a7a4d'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0b925b'}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'linear-gradient(145deg, rgba(16, 200, 118, 0.95), rgba(123, 198, 30, 0.85))';
+                  e.currentTarget.style.boxShadow = '0 12px 28px rgba(16, 200, 118, 0.35), 0 1px 0 rgba(255,255,255,0.3) inset';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'linear-gradient(145deg, rgba(16, 200, 118, 0.85), rgba(123, 198, 30, 0.75))';
+                  e.currentTarget.style.boxShadow = '0 8px 20px rgba(16, 200, 118, 0.25), 0 1px 0 rgba(255,255,255,0.2) inset';
+                }}
               >
                 {isJapanese ? "お問い合わせはこちら" : "Contact Us Now"}
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -1087,7 +1131,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
       </main>
       <Footer />
     </div>
