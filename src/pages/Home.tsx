@@ -19,6 +19,14 @@ type GSAPTimeline = {
   kill: () => void;
 };
 
+// Extend window for global carousel control
+declare global {
+  interface Window {
+    productCarouselScrubTo?: (totalTime: number) => void;
+    productCarouselScrubTween?: React.MutableRefObject<any>;
+  }
+}
+
 export default function Home() {
   const navigate = useNavigate();
   const { language } = useLanguage();
@@ -42,7 +50,11 @@ export default function Home() {
   const scatteredTextRef = useRef<HTMLDivElement | null>(null);
   const servicesTitleRef = useRef<HTMLDivElement | null>(null);
   const productCarouselRef = useRef<HTMLDivElement | null>(null);
-  
+  const seamlessLoopRef = useRef<any>(null);
+  const scrubTweenRef = useRef<any>(null);
+  const iterationRef = useRef<number>(0);
+  const scrollTriggerRef = useRef<any>(null);
+
   // Get latest 3 news items
   const latestNews = newsItems?.slice(0, 3) || [];
 
@@ -451,57 +463,182 @@ export default function Home() {
                 duration: 0.7 // スムーズな移動のため少し長めに
               });
 
+            // Build seamless loop for infinite horizontal scrolling
+            const buildSeamlessLoop = (items: Element[], spacing: number, gsapInstance: any) => {
+              const overlap = Math.ceil(1 / spacing);
+              const startTime = items.length * spacing + 0.5;
+              const loopTime = (items.length + overlap) * spacing + 1;
+              const rawSequence = gsapInstance.timeline({ paused: true });
+              const seamlessLoop = gsapInstance.timeline({
+                paused: true,
+                repeat: -1,
+                onRepeat() {
+                  // @ts-expect-error - GSAP internal properties
+                  if (this._time === this._dur) {
+                    // @ts-expect-error - GSAP internal properties
+                    this._tTime += this._dur - 0.01;
+                  }
+                }
+              });
+
+              const l = items.length + overlap * 2;
+              let time = 0;
+
+              // Set initial state
+              gsapInstance.set(items, { xPercent: 400, opacity: 0, scale: 0 });
+
+              // Create animations with stagger
+              for (let i = 0; i < l; i++) {
+                const index = i % items.length;
+                const item = items[index];
+                time = i * spacing;
+
+                rawSequence
+                  .fromTo(item,
+                    { scale: 0, opacity: 0 },
+                    {
+                      scale: 1,
+                      opacity: 1,
+                      zIndex: 100,
+                      duration: 0.5,
+                      yoyo: true,
+                      repeat: 1,
+                      ease: 'power1.in',
+                      immediateRender: false
+                    },
+                    time
+                  )
+                  .fromTo(item,
+                    { xPercent: 400 },
+                    {
+                      xPercent: -400,
+                      duration: 1,
+                      ease: 'none',
+                      immediateRender: false
+                    },
+                    time
+                  );
+
+                if (i <= items.length) {
+                  seamlessLoop.add('label' + i, time);
+                }
+              }
+
+              // Setup scrubbing
+              rawSequence.time(startTime);
+              seamlessLoop
+                .to(rawSequence, {
+                  time: loopTime,
+                  duration: loopTime - startTime,
+                  ease: 'none'
+                })
+                .fromTo(rawSequence,
+                  { time: overlap * spacing + 1 },
+                  {
+                    time: startTime,
+                    duration: startTime - (overlap * spacing + 1),
+                    immediateRender: false,
+                    ease: 'none'
+                  }
+                );
+
+              return seamlessLoop;
+            };
+
+            // Wrap forward function
+            const wrapForward = (trigger: any) => {
+              iterationRef.current++;
+              trigger.wrapping = true;
+              trigger.scroll(trigger.start + 1);
+            };
+
+            // Wrap backward function
+            const wrapBackward = (trigger: any) => {
+              iterationRef.current--;
+              if (iterationRef.current < 0) {
+                iterationRef.current = 9;
+                if (seamlessLoopRef.current) {
+                  seamlessLoopRef.current.totalTime(
+                    seamlessLoopRef.current.totalTime() + seamlessLoopRef.current.duration() * 10
+                  );
+                }
+                if (scrubTweenRef.current) {
+                  scrubTweenRef.current.pause();
+                }
+              }
+              trigger.wrapping = true;
+              trigger.scroll(trigger.end - 1);
+            };
+
+            // scrubTo function for navigation buttons
+            const scrubTo = (totalTime: number) => {
+              if (!seamlessLoopRef.current || !scrollTriggerRef.current) return;
+
+              const progress = (totalTime - seamlessLoopRef.current.duration() * iterationRef.current) / seamlessLoopRef.current.duration();
+
+              if (progress > 1) {
+                wrapForward(scrollTriggerRef.current);
+              } else if (progress < 0) {
+                wrapBackward(scrollTriggerRef.current);
+              } else {
+                scrollTriggerRef.current.scroll(
+                  scrollTriggerRef.current.start + progress * (scrollTriggerRef.current.end - scrollTriggerRef.current.start)
+                );
+              }
+            };
+
+            // Expose scrubTo to window for ProductCarousel access
+            window.productCarouselScrubTo = scrubTo;
+            window.productCarouselScrubTween = scrubTweenRef;
+
             // Product cards slide in from top-right one by one AFTER "Our Services" is fixed
             // Wait for ProductCarousel to render
             const setupProductCards = () => {
               if (!productCarouselRef.current) return;
-              
+
               const cardsContainer = productCarouselRef.current.querySelector('.relative');
-              // メイン3枚と左右プレビューを分離して制御する
               const mainCards = productCarouselRef.current.querySelectorAll('[data-product-card-main]');
               const peekCards = productCarouselRef.current.querySelectorAll('[data-product-card-peek]');
               const leftPeek = productCarouselRef.current.querySelector('[data-product-card-peek="left"]');
               const rightPeek = productCarouselRef.current.querySelector('[data-product-card-peek="right"]');
-              const navButtons = productCarouselRef.current.querySelector('[data-nav-buttons]');
-              
+              const navButtons = document.querySelector('[data-nav-buttons]'); // Query from document root
+
               if (mainCards.length === 0 || !navButtons) {
                 setTimeout(setupProductCards, 100);
                 return;
               }
-              
-              // Initially hide main and peek cards; keep transforms intact for peeks
+
+              // Initially hide cards with entrance position
               if (mainCards.length > 0) {
-                gsap.set(mainCards, { opacity: 0, x: 400, y: -200, rotation: 15, scale: 0.85, transformOrigin: '50% 50%' });
+                (gsap as any).set(mainCards, { opacity: 0, x: 400, y: -200, rotation: 15, scale: 0.85, transformOrigin: '50% 50%' });
               }
               if (peekCards.length > 0) {
-                // Match main cards' entrance style: come from top-right with slight rotation
-                // Start a bit smaller and grow to their final 0.7 scale
-                gsap.set(peekCards, { opacity: 0, x: 400, y: -200, rotation: 15, scale: 0.65, transformOrigin: '50% 50%' });
+                (gsap as any).set(peekCards, { opacity: 0, x: 400, y: -200, rotation: 15, scale: 0.65, transformOrigin: '50% 50%' });
               }
               if (navButtons) {
-                gsap.set(navButtons, { opacity: 0 });
+                (gsap as any).set(navButtons, { opacity: 0 });
               }
               if (cardsContainer) {
-                gsap.set(cardsContainer, { opacity: 1 });
+                (gsap as any).set(cardsContainer, { opacity: 1 });
               }
 
-              // Create a timeline for sequential card appearance - starts right after "Our Services" is fixed
-              const cardsTimeline = gsap.timeline({
+              // Initial entrance animation timeline
+              const cardsTimeline = (gsap as any).timeline({
                 scrollTrigger: {
                   trigger: servicesTitleRef.current,
-                  start: '60% center', // "Our Services"が左上に固定された直後
+                  start: '60% center',
                   end: '95% center',
                   scrub: 0.3,
                 }
               });
 
-              // Animate all 5 cards sequentially from left to right: left peek -> 3 main -> right peek
+              // Animate entrance from top-right
               const orderedCards: Element[] = [];
               if (leftPeek) orderedCards.push(leftPeek);
               orderedCards.push(...Array.from(mainCards));
               if (rightPeek) orderedCards.push(rightPeek);
 
-              const step = 0.08; // Slightly longer for clear left-to-right feel
+              const step = 0.08;
               orderedCards.forEach((card, index) => {
                 const isMain = (card as HTMLElement).hasAttribute('data-product-card-main');
                 if (isMain) {
@@ -515,7 +652,6 @@ export default function Home() {
                     ease: 'back.out(1.7)',
                   }, index * step);
                 } else {
-                  // Peek cards: same style as mains but end smaller and semi-transparent
                   cardsTimeline.to(card, {
                     opacity: 0.6,
                     x: 0,
@@ -528,14 +664,65 @@ export default function Home() {
                 }
               });
 
-              // Navigation buttons fade in after all cards with slight delay
+              // Navigation buttons fade in
               if (navButtons) {
-                const navStartTime = orderedCards.length * step + 0.3; // After all 5 cards finish
+                const navStartTime = orderedCards.length * step + 0.3;
                 cardsTimeline.to(navButtons, {
                   opacity: 1,
                   duration: 0.4,
                   ease: 'power2.inOut',
                 }, navStartTime);
+
+                // After entrance animation completes, setup seamless loop
+                cardsTimeline.call(() => {
+                  const allCards = Array.from(orderedCards);
+                  if (allCards.length === 0) return;
+
+                  console.log('[Home] Initializing seamless loop with', allCards.length, 'cards');
+
+                  const spacing = 0.1;
+                  const snap = (gsap as any).utils.snap(spacing);
+
+                  // Build seamless loop
+                  seamlessLoopRef.current = buildSeamlessLoop(allCards, spacing, gsap);
+                  console.log('[Home] Seamless loop created:', seamlessLoopRef.current);
+
+                  // Create smooth scrub tween
+                  scrubTweenRef.current = (gsap as any).to(seamlessLoopRef.current, {
+                    totalTime: 0,
+                    duration: 0.5,
+                    ease: 'power3',
+                    paused: true
+                  });
+                  console.log('[Home] Scrub tween created:', scrubTweenRef.current);
+
+                  // Expose to window immediately
+                  window.productCarouselScrubTo = scrubTo;
+                  window.productCarouselScrubTween = scrubTweenRef;
+                  console.log('[Home] Global functions exposed to window');
+
+                  // Create scroll trigger for infinite scrolling
+                  scrollTriggerRef.current = (ScrollTrigger as any).create({
+                    trigger: servicesTitleRef.current,
+                    start: '95% center',
+                    end: '+=3000',
+                    onUpdate(self) {
+                      if (self.progress === 1 && self.direction > 0 && !self.wrapping) {
+                        wrapForward(self);
+                      } else if (self.progress < 1e-5 && self.direction < 0 && !self.wrapping) {
+                        wrapBackward(self);
+                      } else {
+                        if (scrubTweenRef.current && seamlessLoopRef.current) {
+                          scrubTweenRef.current.vars.totalTime = snap(
+                            (iterationRef.current + self.progress) * seamlessLoopRef.current.duration()
+                          );
+                          scrubTweenRef.current.invalidate().restart();
+                        }
+                        self.wrapping = false;
+                      }
+                    }
+                  });
+                }, '>', navStartTime + 0.4);
               }
             };
 
@@ -545,8 +732,9 @@ export default function Home() {
             if (servicesTitleRef.current && scatteredTextRef.current && productCarouselRef.current) {
               const screenHeight = window.innerHeight;
               const moveDistance = screenHeight + 300;
+              const navButtons = document.querySelector('[data-nav-buttons]');
 
-              const fadeOutTimeline = gsap.timeline({
+              const fadeOutTimeline = (gsap as any).timeline({
                 scrollTrigger: {
                   trigger: servicesTitleRef.current,
                   start: 'bottom bottom',
@@ -564,6 +752,15 @@ export default function Home() {
                   opacity: 0,
                   ease: 'none',
                 }, 0.85);
+
+              // Fade out nav buttons earlier and faster
+              if (navButtons) {
+                fadeOutTimeline.to(navButtons, {
+                  opacity: 0,
+                  ease: 'power2.in',
+                  duration: 0.15,
+                }, 0.05); // Start immediately
+              }
             }
           }
 
@@ -571,7 +768,7 @@ export default function Home() {
           if (mainRef.current) {
             const items = mainRef.current.querySelectorAll('.reveal-on-scroll');
             items.forEach((el, i) => {
-              gsap.from(el, {
+              (gsap as any).from(el, {
                 y: isMobile ? 15 : 30, // Reduce movement on mobile
                 opacity: 0,
                 duration: isMobile ? 0.4 : 0.6, // Faster animations on mobile
@@ -589,7 +786,7 @@ export default function Home() {
           }
 
           // Optimize ScrollTrigger settings for performance
-          ScrollTrigger.config({
+          (ScrollTrigger as any).config({
             limitCallbacks: true,
             syncInterval: 150, // Throttle scroll events for better performance
             ignoreMobileResize: true, // Don't recalculate on mobile keyboard show/hide
@@ -597,7 +794,7 @@ export default function Home() {
           
           // Refresh ScrollTrigger after all animations are set up
           requestAnimationFrame(() => {
-            ScrollTrigger.refresh();
+            (ScrollTrigger as any).refresh();
           });
         }, mainRef);
         cleanup = () => {
@@ -607,7 +804,7 @@ export default function Home() {
           ctx.revert();
           
           // Restore normal scrolling behavior on cleanup
-          ScrollTrigger.normalizeScroll(false);
+          (ScrollTrigger as any).normalizeScroll(false);
           document.documentElement.style.scrollBehavior = 'smooth';
           document.body.style.scrollBehavior = 'smooth';
         };

@@ -1,20 +1,15 @@
 import { forwardRef, useState, useRef, useEffect } from "react";
-import { gsap } from 'gsap';
-import { Flip } from 'gsap/Flip';
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ProductCard } from "./ProductCard";
 import { useProducts } from "@/hooks/useProducts";
 
-gsap.registerPlugin(Flip);
-
 export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
   const { data: products, isLoading } = useProducts();
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const currentIndex = 0; // Static index for seamless loop system
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const rowRef = useRef<HTMLDivElement | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const animatingRef = useRef(false);
-  const flipStateRef = useRef<Flip.FlipState | null>(null);
 
   const displayProducts = products || [];
   const totalProducts = displayProducts.length;
@@ -73,51 +68,57 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
   const canGoPrev = totalProducts >= 1;
   const canGoNext = totalProducts >= 1;
 
-  const runFlip = () => {
-    const state = flipStateRef.current;
-    if (!state) return;
-    flipStateRef.current = null;
-    Flip.from(state, {
-      absolute: true,
-      duration: 0.6,
-      ease: 'power3.inOut',
-      stagger: 0.02,
-      onComplete: () => {
-        animatingRef.current = false;
-        setIsAnimating(false);
-      }
-    });
-  };
-
   const handlePrev = () => {
     if (!canGoPrev || animatingRef.current) return;
+
+    console.log('[ProductCarousel] Prev button clicked');
+    console.log('[ProductCarousel] scrubTo exists:', !!window.productCarouselScrubTo);
+    console.log('[ProductCarousel] scrubTween exists:', !!window.productCarouselScrubTween?.current);
+
     animatingRef.current = true;
     setIsAnimating(true);
-    flipStateRef.current = Flip.getState('[data-carousel-item]');
-    setCurrentIndex(prev => {
-      const len = totalProducts >= visibleCount ? extendedProducts.length : visibleCount;
-      if (len <= 0) return 0;
-      return (prev - 1 + len) % len;
-    });
+
+    // Use global scrubTo function
+    if (window.productCarouselScrubTo && window.productCarouselScrubTween?.current) {
+      const spacing = 0.1;
+      const currentTime = window.productCarouselScrubTween.current.vars.totalTime || 0;
+      console.log('[ProductCarousel] Current time:', currentTime, 'Target:', currentTime - spacing);
+      window.productCarouselScrubTo(currentTime - spacing);
+    } else {
+      console.warn('[ProductCarousel] Seamless loop not initialized yet');
+    }
+
+    setTimeout(() => {
+      animatingRef.current = false;
+      setIsAnimating(false);
+    }, 600);
   };
 
   const handleNext = () => {
     if (!canGoNext || animatingRef.current) return;
+
+    console.log('[ProductCarousel] Next button clicked');
+    console.log('[ProductCarousel] scrubTo exists:', !!window.productCarouselScrubTo);
+    console.log('[ProductCarousel] scrubTween exists:', !!window.productCarouselScrubTween?.current);
+
     animatingRef.current = true;
     setIsAnimating(true);
-    flipStateRef.current = Flip.getState('[data-carousel-item]');
-    setCurrentIndex(prev => {
-      const len = totalProducts >= visibleCount ? extendedProducts.length : visibleCount;
-      if (len <= 0) return 0;
-      return (prev + 1) % len;
-    });
-  };
 
-  useEffect(() => {
-    if (animatingRef.current && flipStateRef.current) {
-      runFlip();
+    // Use global scrubTo function
+    if (window.productCarouselScrubTo && window.productCarouselScrubTween?.current) {
+      const spacing = 0.1;
+      const currentTime = window.productCarouselScrubTween.current.vars.totalTime || 0;
+      console.log('[ProductCarousel] Current time:', currentTime, 'Target:', currentTime + spacing);
+      window.productCarouselScrubTo(currentTime + spacing);
+    } else {
+      console.warn('[ProductCarousel] Seamless loop not initialized yet');
     }
-  }, [currentIndex]);
+
+    setTimeout(() => {
+      animatingRef.current = false;
+      setIsAnimating(false);
+    }, 600);
+  };
 
   useEffect(() => {
     cardRefs.current = cardRefs.current.slice(0, visibleItems.length);
@@ -132,70 +133,72 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
   }
 
   return (
-    <div ref={ref} className="fixed left-0 w-full pointer-events-none" style={{ top: '30vh', zIndex: 39 }}>
-      {/* Cards container */}
-      <div ref={rowRef} className="relative flex items-center justify-center" style={{ opacity: 0, pointerEvents: 'none' }}>
-        <div className="relative flex items-center justify-center gap-8" style={{ zIndex: 10 }}>
-          {visibleItems.map((item, index) => {
-            const isMain = index >= 1 && index <= 3;
-            const isPeekLeft = index === 0;
-            const isPeekRight = index === 4;
+    <>
+      <div ref={ref} className="fixed left-0 w-full pointer-events-none" style={{ top: '30vh', zIndex: 39 }}>
+        {/* Cards container */}
+        <div ref={rowRef} className="relative flex items-center justify-center" style={{ opacity: 0, pointerEvents: 'none' }}>
+          <div className="relative flex items-center justify-center gap-8" style={{ zIndex: 10 }}>
+            {visibleItems.map((item, index) => {
+              const isMain = index >= 1 && index <= 3;
+              const isPeekLeft = index === 0;
+              const isPeekRight = index === 4;
 
-            const wrapperStyle: React.CSSProperties = {
-              transform: `scale(${isMain ? 1.08 : 0.7})`,
-              opacity: isMain ? 1 : 0.6,
-              zIndex: isMain ? 20 : 10,
-              transition: 'transform 0.3s ease, opacity 0.3s ease',
-              pointerEvents: 'auto',
-            };
+              const wrapperStyle: React.CSSProperties = {
+                transform: `scale(${isMain ? 1.08 : 0.7})`,
+                opacity: isMain ? 1 : 0.6,
+                zIndex: isMain ? 20 : 10,
+                transition: 'transform 0.3s ease, opacity 0.3s ease',
+                pointerEvents: 'auto',
+              };
 
-            const commonAttrs = {
-              'data-carousel-item': true,
-              'data-product-card': true,
-              ...(isMain ? { 'data-product-card-main': true } : {}),
-              ...(isPeekLeft ? { 'data-product-card-peek': 'left' } : {}),
-              ...(isPeekRight ? { 'data-product-card-peek': 'right' } : {}),
-            } as any;
+              const commonAttrs = {
+                'data-carousel-item': true,
+                'data-product-card': true,
+                ...(isMain ? { 'data-product-card-main': true } : {}),
+                ...(isPeekLeft ? { 'data-product-card-peek': 'left' } : {}),
+                ...(isPeekRight ? { 'data-product-card-peek': 'right' } : {}),
+              } as any;
 
-            if ('isPlaceholder' in item && item.isPlaceholder) {
+              if ('isPlaceholder' in item && item.isPlaceholder) {
+                return (
+                  <div key={item.id} style={wrapperStyle} {...commonAttrs}>
+                    <ProductCard
+                      ref={el => cardRefs.current[index] = el}
+                      name={"XXX"}
+                      description={"XXX XXX XXX XXX XXX XXX"}
+                      icon_url={""}
+                      year={"XXXX"}
+                      isPlaceholder={true}
+                      isBackground={!isMain}
+                      colorIndex={item.colorIndex}
+                    />
+                  </div>
+                );
+              }
+
+              const product = item as any;
+              const year = new Date(product.created_at).getFullYear().toString();
+
               return (
-                <div key={item.id} style={wrapperStyle} {...commonAttrs}>
+                <div key={product.id || `${product.name}-${index}`} style={wrapperStyle} {...commonAttrs}>
                   <ProductCard
                     ref={el => cardRefs.current[index] = el}
-                    name={"XXX"}
-                    description={"XXX XXX XXX XXX XXX XXX"}
-                    icon_url={""}
-                    year={"XXXX"}
-                    isPlaceholder={true}
+                    name={product.name}
+                    description={product.description}
+                    icon_url={product.icon_url}
+                    year={year}
+                    url={product.URL}
                     isBackground={!isMain}
-                    colorIndex={item.colorIndex}
+                    colorIndex={product.colorIndex}
                   />
                 </div>
               );
-            }
-
-            const product = item as any;
-            const year = new Date(product.created_at).getFullYear().toString();
-
-            return (
-              <div key={product.id || `${product.name}-${index}`} style={wrapperStyle} {...commonAttrs}>
-                <ProductCard
-                  ref={el => cardRefs.current[index] = el}
-                  name={product.name}
-                  description={product.description}
-                  icon_url={product.icon_url}
-                  year={year}
-                  url={product.URL}
-                  isBackground={!isMain}
-                  colorIndex={product.colorIndex}
-                />
-              </div>
-            );
-          })}
+            })}
+          </div>
         </div>
       </div>
 
-      {/* Navigation buttons */}
+      {/* Navigation buttons - separate fixed element to avoid transform issues */}
       <div
         data-nav-buttons
         className="fixed flex gap-6 pointer-events-auto"
@@ -216,7 +219,7 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
           <ChevronRight className="w-6 h-6" />
         </button>
       </div>
-    </div>
+    </>
   );
 });
 
