@@ -872,9 +872,13 @@ export default function Home() {
         {/* Services Section */}
         <section className="py-20 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-7xl font-bold mb-8">
-              <span style={{ color: '#e63946' }}>Our</span>
-              <span style={{ color: '#457b9d' }}>Support</span>
+            <h2 className="text-7xl font-bold mb-8" style={{
+              background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}>
+              Our Support
             </h2>
             <p className="text-gray-600 mb-12 max-w-2xl">
               {isJapanese
@@ -932,7 +936,12 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center mb-12">
               <div>
-                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
+                <h2 className="text-3xl sm:text-4xl font-bold" style={{
+                  background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text'
+                }}>
                   {isJapanese ? "最新ニュース" : "Recent News"}
                 </h2>
                 <p className="text-gray-600 mt-2">
@@ -1001,7 +1010,12 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div className="reveal-on-scroll">
-                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
+                <h2 className="text-3xl sm:text-4xl font-bold mb-6" style={{
+                  background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text'
+                }}>
                   COMPANY
                 </h2>
                 <h3 className="text-2xl font-semibold text-gray-800 mb-4">

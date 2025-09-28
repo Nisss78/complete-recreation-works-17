@@ -18,31 +18,30 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
 
   const displayProducts = products || [];
   const totalProducts = displayProducts.length;
-  
-  // デフォルト5枚枠
+
+  // 5枚表示（左ピーク1 + メイン3 + 右ピーク1）
   const visibleCount = 5;
-  // プロダクト順に基づく色（製品は5色でループ: 緑, 青, 赤, オレンジ, 黄）
+
+  // プロダクト順に基づく色
   const productColorIndex = (orderIndex: number) => {
-    // 緑(0) → 青(1) → 紫(2) → 赤(3) → オレンジ(4) → 黄(5)
-    const cycle = [0, 1, 2, 3, 4, 5];
+    const cycle = [0, 1, 2, 3, 4, 5]; // 黄緑, 青, 紫, 赤, オレンジ, 黄色
     return cycle[orderIndex % cycle.length];
   };
-  // 拡張配列（5以上の場合のみ使用）。順序インデックスを埋め込む
+
+  // 拡張配列（循環用）
   const extendedProducts: Array<any & { __orderIndex?: number }> = [];
-  if (totalProducts >= visibleCount) {
+  if (totalProducts > 0) {
     displayProducts.forEach((product, index) => {
       extendedProducts.push({ ...product, __orderIndex: index });
     });
   }
-  
-  // 現在位置から5枚を常に表示（ラップアラウンド）。
-  // 5未満でもプレースホルダーにスロット固定色は使わず、
-  // 欠け分も「プロダクト順の色ループ」に基づく色を割り当てる。
+
+  // 現在位置から5枚を常に表示（ラップアラウンド）
   let visibleItems: any[] = [];
-  const startSlot = 1; // 2枚目のスロットから配置開始
-  const baseShift = currentIndex % visibleCount; // スロットローテーション
+  const startSlot = 1;
+  const baseShift = currentIndex % visibleCount;
+
   if (totalProducts === 0) {
-    // 全てプレースホルダー。色は productColorIndex のループで決定（2枚目が緑でスタート）
     visibleItems = Array.from({ length: visibleCount }, () => ({} as any));
     for (let k = 0; k < visibleCount; k++) {
       const slotIndex = (startSlot + baseShift + k) % visibleCount;
@@ -50,9 +49,8 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
       visibleItems[slotIndex] = { isPlaceholder: true, id: `placeholder-${slotIndex}`, colorIndex };
     }
   } else if (totalProducts < visibleCount) {
-    // 実データと欠け分（プレースホルダー）を、同一の色ルールで埋める
     visibleItems = Array.from({ length: visibleCount }, () => ({} as any));
-    const productStart = currentIndex % totalProducts; // 並び順の先頭
+    const productStart = currentIndex % totalProducts;
     for (let k = 0; k < visibleCount; k++) {
       const slotIndex = (startSlot + baseShift + k) % visibleCount;
       const colorIndex = productColorIndex(productStart + k);
@@ -64,7 +62,6 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
       }
     }
   } else {
-    // 5件以上: 並び順インデックスで色を決定
     visibleItems = Array.from({ length: visibleCount }, (_, i) => {
       const item = extendedProducts[(currentIndex + i) % extendedProducts.length] as any;
       const orderIdx = item.__orderIndex ?? 0;
@@ -73,7 +70,6 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
     });
   }
 
-  // ナビゲーション可否（1件でも回転可能に）
   const canGoPrev = totalProducts >= 1;
   const canGoNext = totalProducts >= 1;
 
@@ -137,19 +133,21 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
 
   return (
     <div ref={ref} className="fixed left-0 w-full pointer-events-none" style={{ top: '30vh', zIndex: 39 }}>
-      {/* Cards container unified for Flip */}
+      {/* Cards container */}
       <div ref={rowRef} className="relative flex items-center justify-center pointer-events-auto" style={{ opacity: 0 }}>
         <div className="relative flex items-center justify-center gap-8" style={{ zIndex: 10 }}>
           {visibleItems.map((item, index) => {
             const isMain = index >= 1 && index <= 3;
             const isPeekLeft = index === 0;
             const isPeekRight = index === 4;
+
             const wrapperStyle: React.CSSProperties = {
               transform: `scale(${isMain ? 1.08 : 0.7})`,
               opacity: isMain ? 1 : 0.6,
               zIndex: isMain ? 20 : 10,
               transition: 'transform 0.3s ease, opacity 0.3s ease',
             };
+
             const commonAttrs = {
               'data-carousel-item': true,
               'data-product-card': true,
@@ -169,7 +167,7 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
                     year={"XXXX"}
                     isPlaceholder={true}
                     isBackground={!isMain}
-                    colorIndex={(item as any).colorIndex}
+                    colorIndex={item.colorIndex}
                   />
                 </div>
               );
@@ -188,7 +186,7 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
                   year={year}
                   url={product.URL}
                   isBackground={!isMain}
-                  colorIndex={(product as any).colorIndex}
+                  colorIndex={product.colorIndex}
                 />
               </div>
             );
@@ -196,26 +194,26 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
         </div>
       </div>
 
-      {/* Navigation buttons - simple design */}
+      {/* Navigation buttons */}
       <div
         data-nav-buttons
         className="fixed flex gap-6 pointer-events-auto"
         style={{ bottom: '12vh', left: '12%', zIndex: 50, opacity: 0 }}
       >
-          <button
-            onClick={handlePrev}
-            disabled={!canGoPrev || isAnimating}
-            className="w-12 h-12 rounded-full bg-black/80 border-2 border-white/80 text-white hover:bg-black/90 hover:border-white shadow-lg transition-all flex items-center justify-center cursor-pointer"
-          >
-            <ChevronLeft className="w-6 h-6" />
-          </button>
-          <button
-            onClick={handleNext}
-            disabled={!canGoNext || isAnimating}
-            className="w-12 h-12 rounded-full bg-black/80 border-2 border-white/80 text-white hover:bg-black/90 hover:border-white shadow-lg transition-all flex items-center justify-center cursor-pointer"
-          >
-            <ChevronRight className="w-6 h-6" />
-          </button>
+        <button
+          onClick={handlePrev}
+          disabled={!canGoPrev || isAnimating}
+          className="w-12 h-12 rounded-full bg-black/80 border-2 border-white/80 text-white hover:bg-black/90 hover:border-white shadow-lg transition-all flex items-center justify-center cursor-pointer"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+        <button
+          onClick={handleNext}
+          disabled={!canGoNext || isAnimating}
+          className="w-12 h-12 rounded-full bg-black/80 border-2 border-white/80 text-white hover:bg-black/90 hover:border-white shadow-lg transition-all flex items-center justify-center cursor-pointer"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
       </div>
     </div>
   );
