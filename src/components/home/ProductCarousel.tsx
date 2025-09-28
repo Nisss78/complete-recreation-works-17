@@ -1,5 +1,4 @@
 import { forwardRef, useState, useRef, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ProductCard } from "./ProductCard";
 import { useProducts } from "@/hooks/useProducts";
 
@@ -232,27 +231,6 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
         </div>
       </div>
 
-      {/* Navigation buttons - separate fixed element to avoid transform issues - hidden on mobile */}
-      <div
-        data-nav-buttons
-        className="hidden md:flex fixed gap-6 pointer-events-auto"
-        style={{ bottom: '12vh', left: '12%', zIndex: 50, opacity: 0 }}
-      >
-        <button
-          onClick={handlePrev}
-          disabled={!canGoPrev || isAnimating}
-          className="w-12 h-12 rounded-full bg-black/80 border-2 border-white/80 text-white hover:bg-black/90 hover:border-white shadow-lg transition-all flex items-center justify-center cursor-pointer"
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-        <button
-          onClick={handleNext}
-          disabled={!canGoNext || isAnimating}
-          className="w-12 h-12 rounded-full bg-black/80 border-2 border-white/80 text-white hover:bg-black/90 hover:border-white shadow-lg transition-all flex items-center justify-center cursor-pointer"
-        >
-          <ChevronRight className="w-6 h-6" />
-        </button>
-      </div>
     </>
   );
 });

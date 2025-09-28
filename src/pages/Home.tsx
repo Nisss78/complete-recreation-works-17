@@ -607,9 +607,8 @@ export default function Home() {
               const peekCards = productCarouselRef.current.querySelectorAll('[data-product-card-peek]');
               const leftPeek = productCarouselRef.current.querySelector('[data-product-card-peek="left"]');
               const rightPeek = productCarouselRef.current.querySelector('[data-product-card-peek="right"]');
-              const navButtons = document.querySelector('[data-nav-buttons]'); // Query from document root
 
-              if (mainCards.length === 0 || !navButtons) {
+              if (mainCards.length === 0) {
                 setTimeout(setupProductCards, 100);
                 return;
               }
@@ -625,9 +624,6 @@ export default function Home() {
               }
               if (peekCards.length > 0) {
                 (gsap as any).set(peekCards, { opacity: 0, x: 400, y: -200, rotation: 15, scale: 0.65, transformOrigin: '50% 50%' });
-              }
-              if (navButtons) {
-                (gsap as any).set(navButtons, { opacity: 0 });
               }
               if (cardsContainer) {
                 (gsap as any).set(cardsContainer, { opacity: 1, visibility: 'visible' });
@@ -675,17 +671,9 @@ export default function Home() {
                 }
               });
 
-              // Navigation buttons fade in
-              if (navButtons) {
-                const navStartTime = orderedCards.length * step + 0.3;
-                cardsTimeline.to(navButtons, {
-                  opacity: 1,
-                  duration: 0.4,
-                  ease: 'power2.inOut',
-                }, navStartTime);
-
-                // After entrance animation completes, setup seamless loop
-                cardsTimeline.call(() => {
+              // Setup seamless loop after cards animation
+              const callStartTime = orderedCards.length * step + 0.3;
+              cardsTimeline.call(() => {
                   const allCards = Array.from(orderedCards);
                   if (allCards.length === 0) return;
 
@@ -733,8 +721,7 @@ export default function Home() {
                       }
                     }
                   });
-                }, '>', navStartTime + 0.4);
-              }
+                }, '>', callStartTime + 0.4);
             };
 
             setupProductCards();
@@ -743,7 +730,6 @@ export default function Home() {
             if (servicesTitleRef.current && scatteredTextRef.current && productCarouselRef.current) {
               const screenHeight = window.innerHeight;
               const moveDistance = screenHeight + 300;
-              const navButtons = document.querySelector('[data-nav-buttons]');
 
               const fadeOutTimeline = (gsap as any).timeline({
                 scrollTrigger: {
@@ -764,14 +750,6 @@ export default function Home() {
                   ease: 'none',
                 }, 0.85);
 
-              // Fade out nav buttons earlier and faster
-              if (navButtons) {
-                fadeOutTimeline.to(navButtons, {
-                  opacity: 0,
-                  ease: 'power2.in',
-                  duration: 0.15,
-                }, 0.05); // Start immediately
-              }
             }
           }
 
