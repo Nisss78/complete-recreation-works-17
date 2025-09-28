@@ -176,7 +176,7 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
 
               const wrapperStyle: React.CSSProperties = {
                 transform: `scale(${isMain ? 1.08 : 0.7})`,
-                opacity: isMain ? 1 : 0.6,
+                opacity: 0, // Always start hidden to prevent flash
                 zIndex: isMain ? 20 : 10,
                 transition: 'transform 0.3s ease, opacity 0.3s ease',
                 pointerEvents: 'auto',
