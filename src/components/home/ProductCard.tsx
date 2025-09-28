@@ -55,7 +55,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
       <div
         ref={ref}
         data-product-card
-        className={`relative overflow-hidden border-2 border-black ${
+        className={`relative overflow-hidden border-2 border-black rounded ${
           isBackground ? 'opacity-60' : 'opacity-100'
         } ${className}`}
         style={{
@@ -131,9 +131,9 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
           <div className="px-8 pt-12 pb-6">
             <div className="flex items-center gap-4">
               {hasIcon ? (
-                <img src={icon_url!} alt={displayName} className="w-12 h-12 object-cover" />
+                <img src={icon_url!} alt={displayName} className="w-12 h-12 object-cover rounded-lg" />
               ) : (
-                <div className="w-12 h-12 bg-gray-600" />
+                <div className="w-12 h-12 bg-gray-600 rounded-lg" />
               )}
               <h3 className="text-3xl font-bold text-gray-800">
                 {displayName}
