@@ -982,7 +982,7 @@ export default function Home() {
 
             {/* Tagline within hero section - split into 3 lines - centered */}
             <div ref={taglineRef} className="text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full" style={{ pointerEvents: 'none', zIndex: 100 }}>
-              <div className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white max-w-4xl mx-auto leading-tight px-4 space-y-1 sm:space-y-2">
+              <div className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white max-w-4xl mx-auto leading-tight px-4 space-y-1 sm:space-y-2">
                 <div
                   ref={taglineLine1Ref}
                   className="opacity-0"
@@ -1029,7 +1029,7 @@ export default function Home() {
               className="text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full opacity-0"
               style={{ willChange: 'transform' }}
             >
-              <div className="text-4xl sm:text-6xl lg:text-7xl font-bold text-white max-w-4xl mx-auto leading-tight px-4">
+              <div className="font-bold text-white mx-auto leading-tight px-2 whitespace-nowrap" style={{ fontSize: 'clamp(1.2rem, 5.5vw, 5rem)' }}>
                 Let's enjoy immersing ourselves!!
               </div>
             </div>

@@ -11,12 +11,12 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
   const animatingRef = useRef(false);
   const touchStartX = useRef<number>(0);
   const touchEndX = useRef<number>(0);
+  const [isMobile, setIsMobile] = useState(false);
 
   const displayProducts = products || [];
   const totalProducts = displayProducts.length;
 
   // レスポンシブ表示数: モバイル3枚（ピーク+メイン+ピーク）、デスクトップ5枚
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
   const visibleCount = isMobile ? 3 : 5;
 
   // プロダクト順に基づく色
@@ -144,6 +144,20 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
       }
     }
   };
+
+  // レスポンシブ対応
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    // 初期化
+    checkMobile();
+
+    // リサイズリスナー
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     cardRefs.current = cardRefs.current.slice(0, visibleItems.length);
