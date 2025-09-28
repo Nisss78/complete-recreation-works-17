@@ -25,7 +25,7 @@ const FloatingParticles = () => {
 
     // Create particles data
     const particles: Particle[] = [];
-    const particleCount = 60; // Increased from 30 to 60
+    const particleCount = 80; // Increased for more visible effect
 
     for (let i = 0; i < particleCount; i++) {
       const x = Math.random() * containerWidth; // Spread across entire width
@@ -51,17 +51,22 @@ const FloatingParticles = () => {
         position: absolute;
         width: ${particle.size}px;
         height: ${particle.size}px;
-        background: radial-gradient(circle, rgba(255, 255, 255, ${particle.opacity}) 0%, rgba(240, 240, 255, ${particle.opacity * 0.9}) 50%, rgba(220, 220, 240, ${particle.opacity * 0.8}) 100%);
+        background: radial-gradient(circle, rgba(116, 235, 213, ${particle.opacity * 0.5}) 0%, rgba(159, 172, 230, ${particle.opacity * 0.4}) 50%, rgba(116, 235, 213, ${particle.opacity * 0.3}) 100%);
         border-radius: 50%;
         pointer-events: none;
         will-change: transform;
         left: ${particle.x}px;
         top: ${particle.y}px;
-        box-shadow: 0 0 ${particle.size * 2}px rgba(255, 255, 255, ${particle.opacity * 0.8}), 0 0 ${particle.size * 4}px rgba(240, 240, 255, ${particle.opacity * 0.6});
+        box-shadow: 0 0 ${particle.size * 2}px rgba(116, 235, 213, ${particle.opacity * 0.4}), 0 0 ${particle.size * 4}px rgba(159, 172, 230, ${particle.opacity * 0.3});
       `;
       particleElement.setAttribute('data-particle-id', particle.id.toString());
       container.appendChild(particleElement);
     });
+
+    // Calculate speed multiplier based on container height
+    // Standard viewport height reference: 800px
+    const standardViewportHeight = 800;
+    const speedMultiplier = Math.max(1, containerHeight / standardViewportHeight);
 
     // Animate each particle independently for seamless infinite loop
     particles.forEach(particle => {
@@ -79,7 +84,7 @@ const FloatingParticles = () => {
           y: -(containerHeight + particle.y + 200), // Move above container
           x: particle.drift, // Slight horizontal drift
           rotation: 360,
-          duration: particle.speed,
+          duration: particle.speed * speedMultiplier, // Adjust duration based on container height
           ease: "none",
           repeat: -1, // Infinite repeat for each particle
           modifiers: {
@@ -110,7 +115,8 @@ const FloatingParticles = () => {
   return (
     <div 
       ref={containerRef}
-      className="absolute inset-0 overflow-hidden pointer-events-none z-0"
+      className="absolute inset-0 overflow-hidden pointer-events-none"
+      style={{ height: '100%', width: '100%', zIndex: 0 }}
       style={{ height: '100%', width: '100%' }}
     />
   );

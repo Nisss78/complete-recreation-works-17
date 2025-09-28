@@ -842,109 +842,111 @@ export default function Home() {
         }}
       >
         <>
-          <span className="scattered-letter inline-block absolute" style={{ 
+          <span className="scattered-letter inline-block absolute" style={{
             left: '-600px', top: '-400px', // 左上に大きく散らばらせる
-            opacity: 0.6, 
+            opacity: 0.6,
             transform: 'rotate(-15deg) scale(0.8)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#dc2626' // Deep red - start of gradient
+            color: '#74ebd5' // Gradient start
           }}>O</span>
-          <span className="scattered-letter inline-block absolute" style={{ 
+          <span className="scattered-letter inline-block absolute" style={{
             left: '650px', top: '-500px', // 右上にもっと散らばらせる
-            opacity: 0.7, 
+            opacity: 0.7,
             transform: 'rotate(22deg) scale(1.1)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#e11d48' // Red-pink
+            color: '#7aecd9' // Step 1
           }}>u</span>
-          <span className="scattered-letter inline-block absolute" style={{ 
+          <span className="scattered-letter inline-block absolute" style={{
             left: '-750px', top: '150px', // 左側に大きく散らばらせる
-            opacity: 0.5, 
+            opacity: 0.5,
             transform: 'rotate(-8deg) scale(0.7)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#ec4899' // Pink
+            color: '#80eddd' // Step 2
           }}>r</span>
-          <span className="scattered-letter inline-block absolute" style={{ 
+          <span className="scattered-letter inline-block absolute" style={{
             left: '0px', top: '0px', // スペース文字は中央に
-            opacity: 0.8, 
+            opacity: 0.8,
             transform: 'rotate(0deg) scale(1.0)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease'
           }}> </span>
-          <span className="scattered-letter inline-block absolute" style={{ 
+          <span className="scattered-letter inline-block absolute" style={{
             left: '750px', top: '300px', // 右側に大きく散らばらせる
-            opacity: 0.4, 
+            opacity: 0.4,
             transform: 'rotate(18deg) scale(1.2)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#d946ef' // Purple-pink
+            color: '#86eee1' // Step 3
           }}>S</span>
-          <span className="scattered-letter inline-block absolute" style={{ 
+          <span className="scattered-letter inline-block absolute" style={{
             left: '150px', top: '-350px', // 中央上部に配置
-            opacity: 0.6, 
+            opacity: 0.6,
             transform: 'rotate(-25deg) scale(0.9)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#c026d3' // Purple
+            color: '#8bf1e3' // Step 4
           }}>e</span>
-          <span className="scattered-letter inline-block absolute" style={{ 
+          <span className="scattered-letter inline-block absolute" style={{
             left: '-450px', top: '500px', // 左下に大きく散らばらせる
-            opacity: 0.7, 
+            opacity: 0.7,
             transform: 'rotate(12deg) scale(0.8)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#a855f7' // Purple-blue
+            color: '#8ff3e5' // Step 5
           }}>r</span>
-          <span className="scattered-letter inline-block absolute" style={{ 
+          <span className="scattered-letter inline-block absolute" style={{
             left: '500px', top: '600px', // 右下に大きく散らばらせる
-            opacity: 0.5, 
+            opacity: 0.5,
             transform: 'rotate(-18deg) scale(1.1)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#8b5cf6' // Violet
+            color: '#93f5e6' // Step 6
           }}>v</span>
-          <span className="scattered-letter inline-block absolute" style={{ 
+          <span className="scattered-letter inline-block absolute" style={{
             left: '-100px', top: '-250px', // 中央上部に配置
-            opacity: 0.8, 
+            opacity: 0.8,
             transform: 'rotate(8deg) scale(0.6)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#6366f1' // Indigo
+            color: '#97f7e6' // Step 7
           }}>i</span>
-          <span className="scattered-letter inline-block absolute" style={{ 
+          <span className="scattered-letter inline-block absolute" style={{
             left: '-200px', top: '100px', // 中央左に配置
-            opacity: 0.6, 
+            opacity: 0.6,
             transform: 'rotate(-12deg) scale(1.0)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#3b82f6' // Blue
+            color: '#9af9e6' // Step 8
           }}>c</span>
-          <span className="scattered-letter inline-block absolute" style={{ 
+          <span className="scattered-letter inline-block absolute" style={{
             left: '200px', top: '400px', // 中央下に配置
-            opacity: 0.7, 
+            opacity: 0.7,
             transform: 'rotate(20deg) scale(0.9)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#2563eb' // Deep blue
+            color: '#9dfbe6' // Step 9
           }}>e</span>
-          <span className="scattered-letter inline-block absolute" style={{ 
+          <span className="scattered-letter inline-block absolute" style={{
             left: '600px', top: '450px', // 右下に散らばらせる（vから離す）
-            opacity: 0.5, 
+            opacity: 0.5,
             transform: 'rotate(-10deg) scale(1.1)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#1d4ed8' // Deepest blue - end of gradient
+            color: '#9face6' // Gradient end
           }}>s</span>
         </>
       </div>
 
-      <Header />
+      <div style={{ position: 'relative', zIndex: 10000 }}>
+        <Header />
+      </div>
       <main className="flex-1">
         {/* Hero Section */}
         <section ref={heroRef} className="relative overflow-hidden min-h-[100svh] flex items-center" style={{
-          background: 'linear-gradient(-225deg, #69EACB 0%, #EACCF8 48%, #6654F1 100%)'
+          background: 'linear-gradient(-225deg, #D4FFEC 0%, #57F2CC 48%, #4596FB 100%)'
         }}>
           <FloatingParticles />
           <FloatingLogos />
@@ -1090,14 +1092,18 @@ export default function Home() {
             {/* White Circle - expands after final text */}
             <div
               ref={whiteCircleRef}
-              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-white rounded-full pointer-events-none"
-              style={{ willChange: 'transform', scale: 0, zIndex: 50 }}
+              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-gray-50 rounded-full pointer-events-none"
+              style={{ willChange: 'transform', scale: 0, zIndex: 9999 }}
             />
           </div>
         </section>
 
         {/* Transition Section - for scroll-based text gathering and future product animations */}
-        <section ref={servicesTitleRef} className="relative bg-white" style={{ minHeight: '1500vh' }}></section>
+        <section ref={servicesTitleRef} className="relative bg-gray-50" style={{ minHeight: '1500vh' }}>
+          <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
+            <FloatingParticles />
+          </div>
+        </section>
 
         {/* Product Carousel - fixed position below "Our Product" */}
         <ProductCarousel ref={productCarouselRef} />
@@ -1106,8 +1112,11 @@ export default function Home() {
         <div style={{ height: '0vh' }}></div>
 
         {/* Services Section */}
-        <section className="py-20 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="py-20 bg-gray-50 relative">
+          <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
+            <FloatingParticles />
+          </div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative" style={{ zIndex: 10 }}>
             <h2 className="text-7xl font-bold mb-8" style={{
               background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)',
               WebkitBackgroundClip: 'text',
@@ -1168,8 +1177,11 @@ export default function Home() {
         </section>
 
         {/* Recent News Section */}
-        <section className="py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="py-20 bg-gray-50 relative">
+          <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
+            <FloatingParticles />
+          </div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative" style={{ zIndex: 10 }}>
             <div className="flex justify-between items-center mb-12">
               <div>
                 <h2 className="text-3xl sm:text-4xl font-bold" style={{
@@ -1242,8 +1254,11 @@ export default function Home() {
         </section>
 
         {/* Company Section */}
-        <section className="py-20 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="py-20 bg-gray-50 relative">
+          <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
+            <FloatingParticles />
+          </div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative" style={{ zIndex: 10 }}>
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div className="reveal-on-scroll">
                 <h2 className="text-3xl sm:text-4xl font-bold mb-6" style={{
