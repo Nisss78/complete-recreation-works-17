@@ -78,32 +78,6 @@ export default function About() {
 
               {/* Core Values - removed per request */}
 
-              {/* Founding Story */}
-              <div className="mb-12 max-w-5xl">
-                <h3 className="text-2xl md:text-3xl font-semibold mb-6" style={{
-                  background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text'
-                }}>
-                  {isJapanese ? "創業ストーリー" : "Founding Story"}
-                </h3>
-                <p className="text-xl md:text-2xl text-gray-700 leading-relaxed mb-6">
-                  {isJapanese
-                    ? "「学生こそ世界を揺らすイノベーションを起こせる」。"
-                    : "'Students can create innovations that shake the world.'"}
-                </p>
-                <p className="text-xl md:text-2xl text-gray-700 leading-relaxed mb-6">
-                  {isJapanese
-                    ? "その想いを共有した仲間が集まり、2025年3月に ProtoductAI を設立。"
-                    : "Companions who shared this belief gathered and established ProtoductAI in March 2025."}
-                </p>
-                <p className="text-xl md:text-2xl text-gray-700 leading-relaxed mb-6">
-                  {isJapanese
-                    ? <>合言葉は <strong className="text-gray-900 font-bold">"Create Cool Experience"</strong>。</>
-                    : <>Our motto is <strong className="text-gray-900 font-bold">"Create Cool Experience"</strong>.</>}
-                </p>
-              </div>
             </div>
 
             {/* Company Table moved below Team Members */}
@@ -124,6 +98,37 @@ export default function About() {
               </p>
               <p className="text-lg md:text-xl text-blue-100 max-w-3xl">
                 {isJapanese ? "私たちは究極のスピードと妥協なき品質を両立させ、AIと人が共創するカルチャーを世界中に広げていきます。" : "We pair ultimate speed with uncompromising quality to expand a culture where AI and people co-create across the globe."}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Founding Story Section */}
+        <section className="py-16 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-5xl">
+              <h3 className="text-2xl md:text-3xl font-semibold mb-6" style={{
+                background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>
+                {isJapanese ? "創業ストーリー" : "Founding Story"}
+              </h3>
+              <p className="text-xl md:text-2xl text-gray-700 leading-relaxed mb-6">
+                {isJapanese
+                  ? "「学生こそ世界を揺らすイノベーションを起こせる」。"
+                  : "'Students can create innovations that shake the world.'"}
+              </p>
+              <p className="text-xl md:text-2xl text-gray-700 leading-relaxed mb-6">
+                {isJapanese
+                  ? "その想いを共有した仲間が集まり、2025年3月に ProtoductAI を設立。"
+                  : "Companions who shared this belief gathered and established ProtoductAI in March 2025."}
+              </p>
+              <p className="text-xl md:text-2xl text-gray-700 leading-relaxed mb-6">
+                {isJapanese
+                  ? <>合言葉は <strong className="text-gray-900 font-bold">"Create Cool Experience"</strong>。</>
+                  : <>Our motto is <strong className="text-gray-900 font-bold">"Create Cool Experience"</strong>.</>}
               </p>
             </div>
           </div>
