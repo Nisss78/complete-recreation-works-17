@@ -41,19 +41,29 @@ export default function About() {
         <section className="py-16 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-16">
-              <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 mb-8 text-left">
+              <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-8 text-left" style={{
+                background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>
                 {isJapanese ? "私たちについて" : "About Us"}
               </h2>
               
               {/* Our Purpose */}
               <div className="mb-12 max-w-3xl">
-                <h3 className="text-2xl md:text-3xl font-semibold mb-5 text-gray-900">
+                <h3 className="text-2xl md:text-3xl font-semibold mb-5" style={{
+                  background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text'
+                }}>
                   {isJapanese ? "私たちの存在意義" : "Our Purpose"}
                 </h3>
                 <p className="text-lg md:text-xl text-gray-700 leading-8 mb-5">
-                  {isJapanese 
-                    ? <>ProtoductAI株式会社は、<strong className="text-gray-900">「AIで可能性を拡張し、想像力を爆発させる未来体験を創造する」</strong>ことを使命に、京都で誕生しました。</>
-                    : <>ProtoductAI Inc. was born in Kyoto with the mission to <strong className="text-gray-900">"expand possibilities with AI and create future experiences that ignite imagination."</strong></>}
+                  {isJapanese
+                    ? <>ProtoductAI株式会社は、<strong className="text-gray-900 whitespace-nowrap">「AIで可能性を拡張し、想像力を爆発させる未来体験を創造する」</strong>ことを使命に、京都で誕生しました。</>
+                    : <>ProtoductAI Inc. was born in Kyoto with the mission to <strong className="text-gray-900 whitespace-nowrap">"expand possibilities with AI and create future experiences that ignite imagination."</strong></>}
                 </p>
                 <p className="text-lg md:text-xl text-gray-700 leading-8">
                   {isJapanese 
@@ -77,7 +87,7 @@ export default function About() {
                 <div className="absolute inset-0 bg-black/30" />
                 <div className="relative z-10 px-8 sm:px-12 py-12 text-white text-left">
                   <h3 className="text-3xl font-bold mb-4">
-                    {isJapanese ? "ビジョン" : "Vision"}
+                    Vision
                   </h3>
                   <p className="text-2xl md:text-3xl font-semibold leading-snug">
                     {isJapanese
@@ -95,24 +105,29 @@ export default function About() {
               {/* Core Values - removed per request */}
 
               {/* Founding Story */}
-              <div className="mb-12 max-w-3xl">
-                <h3 className="text-2xl md:text-3xl font-semibold mb-5 text-gray-900">
+              <div className="mb-12 max-w-5xl">
+                <h3 className="text-2xl md:text-3xl font-semibold mb-6" style={{
+                  background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text'
+                }}>
                   {isJapanese ? "創業ストーリー" : "Founding Story"}
                 </h3>
-                <p className="text-lg md:text-xl text-gray-700 leading-8 mb-5">
-                  {isJapanese 
+                <p className="text-xl md:text-2xl text-gray-700 leading-relaxed mb-6">
+                  {isJapanese
                     ? "「学生こそ世界を揺らすイノベーションを起こせる」。"
                     : "'Students can create innovations that shake the world.'"}
                 </p>
-                <p className="text-lg md:text-xl text-gray-700 leading-8 mb-5">
-                  {isJapanese 
+                <p className="text-xl md:text-2xl text-gray-700 leading-relaxed mb-6">
+                  {isJapanese
                     ? "その想いを共有した仲間が集まり、2025年3月に ProtoductAI を設立。"
                     : "Companions who shared this belief gathered and established ProtoductAI in March 2025."}
                 </p>
-                <p className="text-lg md:text-xl text-gray-700 leading-8 mb-5">
-                  {isJapanese 
-                    ? <>合言葉は <strong className="text-blue-600">"Create Cool Experience"</strong>。</>
-                    : <>Our motto is <strong className="text-blue-600">"Create Cool Experience"</strong>.</>}
+                <p className="text-xl md:text-2xl text-gray-700 leading-relaxed mb-6">
+                  {isJapanese
+                    ? <>合言葉は <strong className="text-gray-900 font-bold">"Create Cool Experience"</strong>。</>
+                    : <>Our motto is <strong className="text-gray-900 font-bold">"Create Cool Experience"</strong>.</>}
                 </p>
               </div>
             </div>
@@ -124,7 +139,12 @@ export default function About() {
         {/* Team Members */}
         <section className="py-20 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 mb-8 text-left">
+            <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-8 text-left" style={{
+              background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}>
               Member
             </h2>
             {/* First row - 2 members (keep layout) */}
@@ -224,7 +244,12 @@ export default function About() {
             <div className="py-8">
               <div className="max-w-4xl md:max-w-5xl mx-auto">
                 <div className="mb-8 text-left">
-                  <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900">
+                  <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight" style={{
+                    background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text'
+                  }}>
                     COMPANY
                   </h2>
                   <p className="text-2xl font-medium text-gray-600 mt-2">会社概要</p>
@@ -294,7 +319,7 @@ export default function About() {
                 </p>
                 <Button
                   onClick={() => navigate("/contact")}
-                  className="bg-white text-blue-600 hover:bg-gray-100 rounded-full px-8 py-6 text-lg font-medium"
+                  className="bg-black text-white hover:bg-gray-900 rounded-full px-8 py-6 text-lg font-medium"
                   size="lg"
                 >
                   <ArrowRight className="mr-2 h-5 w-5" />
@@ -314,7 +339,7 @@ export default function About() {
                 </p>
                 <Button
                   onClick={() => navigate("/careers")}
-                  className="bg-white text-blue-600 hover:bg-gray-100 rounded-full px-8 py-6 text-lg font-medium"
+                  className="bg-black text-white hover:bg-gray-900 rounded-full px-8 py-6 text-lg font-medium"
                   size="lg"
                 >
                   <ExternalLink className="mr-2 h-5 w-5" />

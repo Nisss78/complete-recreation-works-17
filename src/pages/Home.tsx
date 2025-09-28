@@ -754,7 +754,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:60px_60px]" />
           {/* The ball is now outside hero to avoid clipping while scrolling */}
           <div className="w-full px-8 sm:px-12 lg:px-20 relative z-10">
-            <div className="text-left pl-8 sm:pl-16 lg:pl-24 pt-32 sm:pt-40 lg:pt-48">
+            <div className="text-left pl-8 sm:pl-16 lg:pl-24 pt-20 sm:pt-28 lg:pt-36">
               <h1 className="mb-4">
                 <div
                   ref={weBuildRef}
@@ -772,115 +772,130 @@ export default function Home() {
                 </div>
                 <div
                   ref={coolProductsRef}
-                  className="text-5xl sm:text-7xl lg:text-8xl font-bold text-white intro-from-left leading-tight"
+                  className="text-5xl sm:text-7xl lg:text-8xl font-bold text-white intro-from-left -mt-4"
                   style={{
                     willChange: 'transform',
                     fontWeight: '900',
                     letterSpacing: '-0.02em',
                     animationDelay: '180ms',
-                    lineHeight: '1.2'
+                    lineHeight: '0.95'
                   }}
                 >
                   Cool & Scalable<br />products
                 </div>
               </h1>
-              <div ref={contactButtonRef} className="flex flex-col sm:flex-row gap-4 mb-16 reveal-on-scroll" style={{ willChange: 'transform', pointerEvents: 'auto', position: 'relative', zIndex: 999 }}>
-                <Button
-                  size="lg"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    navigate("/contact");
-                  }}
-                  className="relative overflow-hidden text-white w-fit cursor-pointer"
-                  style={{
-                    background: 'rgba(16, 200, 118, 0.9)',
-                    backdropFilter: 'blur(10px)',
-                    WebkitBackdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255, 255, 255, 0.3)',
-                    boxShadow: '0 4px 15px rgba(16, 200, 118, 0.4)',
-                    pointerEvents: 'auto',
-                    position: 'relative',
-                    zIndex: 999
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'rgba(16, 200, 118, 1)';
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = '0 8px 25px rgba(16, 200, 118, 0.5)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'rgba(16, 200, 118, 0.9)';
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = '0 4px 15px rgba(16, 200, 118, 0.4)';
-                  }}
-                >
-                  Contact Us
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </div>
-              
-              {/* Tagline within hero section - split into 3 lines - centered */}
-              <div ref={taglineRef} className="text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full" style={{ pointerEvents: 'none' }}>
-                <div className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white max-w-4xl mx-auto leading-tight px-4 space-y-2">
-                  <div 
-                    ref={taglineLine1Ref}
-                    className="opacity-0" 
-                    style={{ willChange: 'transform' }}
-                  >
-                    Delivering experiences
-                  </div>
-                  <div 
-                    ref={taglineLine2Ref}
-                    className="opacity-0" 
-                    style={{ willChange: 'transform' }}
-                  >
-                    beyond imagination with maximum
-                  </div>
-                  <div 
-                    ref={taglineLine3Ref}
-                    className="opacity-0" 
-                    style={{ willChange: 'transform' }}
-                  >
-                    <span className="wave-text">
-                      <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>s</span>
-                      <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>p</span>
-                      <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>e</span>
-                      <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>e</span>
-                      <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>d</span>
-                    </span>
-                    {' '}and{' '}
-                    <span className="wave-text">
-                      <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>q</span>
-                      <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>u</span>
-                      <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>a</span>
-                      <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>l</span>
-                      <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>i</span>
-                      <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>t</span>
-                      <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>y</span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Final text - Let's enjoy - centered and separate */}
-              <div 
-                ref={finalTextRef}
-                className="text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full opacity-0"
-                style={{ willChange: 'transform' }}
-              >
-                <div className="text-4xl sm:text-6xl lg:text-7xl font-bold text-white max-w-4xl mx-auto leading-tight px-4">
-                  Let's enjoy immersing ourselves!!
-                </div>
-              </div>
-
-              {/* White Circle - expands after final text */}
-              <div 
-                ref={whiteCircleRef}
-                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-white rounded-full pointer-events-none"
-                style={{ willChange: 'transform', scale: 0, zIndex: 50 }}
-              />
-              
             </div>
+            <div ref={contactButtonRef} className="absolute reveal-on-scroll" style={{ willChange: 'transform', pointerEvents: 'auto', zIndex: 999, top: 'calc(16rem + 22vh)', right: '2rem' }}>
+              <style>{`
+                @media (min-width: 640px) {
+                  [data-contact-button] {
+                    top: calc(18rem + 24vh) !important;
+                    right: 6rem !important;
+                  }
+                }
+                @media (min-width: 1024px) {
+                  [data-contact-button] {
+                    top: calc(19rem + 26vh) !important;
+                    right: 10rem !important;
+                  }
+                }
+              `}</style>
+              <div data-contact-button style={{ position: 'relative' }}>
+              <Button
+                size="lg"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  navigate("/contact");
+                }}
+                className="relative overflow-hidden text-white w-fit cursor-pointer"
+                style={{
+                  background: 'rgba(16, 200, 118, 0.9)',
+                  backdropFilter: 'blur(10px)',
+                  WebkitBackdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                  boxShadow: '0 4px 15px rgba(16, 200, 118, 0.4)',
+                  pointerEvents: 'auto',
+                  position: 'relative',
+                  zIndex: 999
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(16, 200, 118, 1)';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 8px 25px rgba(16, 200, 118, 0.5)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(16, 200, 118, 0.9)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(16, 200, 118, 0.4)';
+                }}
+              >
+                Contact Us
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+              </div>
+            </div>
+
+            {/* Tagline within hero section - split into 3 lines - centered */}
+            <div ref={taglineRef} className="text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full" style={{ pointerEvents: 'none' }}>
+              <div className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white max-w-4xl mx-auto leading-tight px-4 space-y-2">
+                <div
+                  ref={taglineLine1Ref}
+                  className="opacity-0"
+                  style={{ willChange: 'transform' }}
+                >
+                  Delivering experiences
+                </div>
+                <div
+                  ref={taglineLine2Ref}
+                  className="opacity-0"
+                  style={{ willChange: 'transform' }}
+                >
+                  beyond imagination with maximum
+                </div>
+                <div
+                  ref={taglineLine3Ref}
+                  className="opacity-0"
+                  style={{ willChange: 'transform' }}
+                >
+                  <span className="wave-text">
+                    <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>s</span>
+                    <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>p</span>
+                    <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>e</span>
+                    <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>e</span>
+                    <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>d</span>
+                  </span>
+                  {' '}and{' '}
+                  <span className="wave-text">
+                    <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>q</span>
+                    <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>u</span>
+                    <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>a</span>
+                    <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>l</span>
+                    <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>i</span>
+                    <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>t</span>
+                    <span className="wave-letter inline-block" style={{ willChange: 'transform' }}>y</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Final text - Let's enjoy - centered and separate */}
+            <div
+              ref={finalTextRef}
+              className="text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full opacity-0"
+              style={{ willChange: 'transform' }}
+            >
+              <div className="text-4xl sm:text-6xl lg:text-7xl font-bold text-white max-w-4xl mx-auto leading-tight px-4">
+                Let's enjoy immersing ourselves!!
+              </div>
+            </div>
+
+            {/* White Circle - expands after final text */}
+            <div
+              ref={whiteCircleRef}
+              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-white rounded-full pointer-events-none"
+              style={{ willChange: 'transform', scale: 0, zIndex: 50 }}
+            />
           </div>
         </section>
 
