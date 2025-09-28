@@ -10,6 +10,8 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
   const rowRef = useRef<HTMLDivElement | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const animatingRef = useRef(false);
+  const touchStartX = useRef<number>(0);
+  const touchEndX = useRef<number>(0);
 
   const displayProducts = products || [];
   const totalProducts = displayProducts.length;
@@ -120,6 +122,29 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
     }, 600);
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    const swipeDistance = touchStartX.current - touchEndX.current;
+    const minSwipeDistance = 50;
+
+    if (Math.abs(swipeDistance) > minSwipeDistance) {
+      if (swipeDistance > 0) {
+        // Swiped left - go to next
+        handleNext();
+      } else {
+        // Swiped right - go to previous
+        handlePrev();
+      }
+    }
+  };
+
   useEffect(() => {
     cardRefs.current = cardRefs.current.slice(0, visibleItems.length);
   }, [visibleItems.length]);
@@ -134,9 +159,16 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
 
   return (
     <>
-      <div ref={ref} className="fixed left-0 w-full pointer-events-none" style={{ top: '30vh', zIndex: 39, visibility: 'hidden' }}>
+      <div
+        ref={ref}
+        className="fixed left-0 w-full pointer-events-none md:pointer-events-none"
+        style={{ top: '30vh', zIndex: 39, visibility: 'hidden' }}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         {/* Cards container */}
-        <div ref={rowRef} className="relative flex items-center justify-center" style={{ opacity: 0, pointerEvents: 'none', visibility: 'hidden' }}>
+        <div ref={rowRef} className="relative flex items-center justify-center" style={{ opacity: 0, pointerEvents: 'auto', visibility: 'hidden' }}>
           <div className="relative flex items-center justify-center gap-8" style={{ zIndex: 10 }}>
             {visibleItems.map((item, index) => {
               const isMain = index >= 1 && index <= 3;
@@ -200,10 +232,10 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
         </div>
       </div>
 
-      {/* Navigation buttons - separate fixed element to avoid transform issues */}
+      {/* Navigation buttons - separate fixed element to avoid transform issues - hidden on mobile */}
       <div
         data-nav-buttons
-        className="fixed flex gap-6 pointer-events-auto"
+        className="hidden md:flex fixed gap-6 pointer-events-auto"
         style={{ bottom: '12vh', left: '12%', zIndex: 50, opacity: 0 }}
       >
         <button

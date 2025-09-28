@@ -89,15 +89,15 @@ export default function News() {
         )}
 
         {/* Category Tabs */}
-        <div className="bg-white border-b">
+        <div className="bg-white border-b overflow-x-auto">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex space-x-8">
+            <div className="flex space-x-4 sm:space-x-8 min-w-max">
               {categories.map((category) => (
                 <button
                   key={category.value}
                   onClick={() => setSelectedCategory(category.value)}
                   className={cn(
-                    "py-4 px-2 border-b-2 font-medium text-sm transition-colors",
+                    "py-4 px-2 border-b-2 font-medium text-sm whitespace-nowrap transition-colors flex-shrink-0",
                     selectedCategory === category.value
                       ? "border-[#10c876] text-[#10c876]"
                       : "border-transparent text-gray-500 hover:text-gray-700"

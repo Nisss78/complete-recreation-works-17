@@ -183,7 +183,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto py-6 sm:py-8">
           <div className="px-4 sm:px-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
-              <div className="lg:col-span-2">
+              <div className="lg:col-span-2 order-first">
                 <div className="flex justify-between items-center mb-4 sm:mb-6">
                   <button
                     onClick={() => setSortByLikes(!sortByLikes)}
@@ -202,15 +202,15 @@ const Index = () => {
                     )}
                   </button>
                 </div>
-                
-                <ProductsList 
+
+                <ProductsList
                   groupedProducts={groupedProducts}
                   onProductClick={handleProductClick}
                   sortByLikes={sortByLikes}
                 />
               </div>
 
-              <div className="lg:col-span-1 order-first lg:order-last mb-6 lg:mb-0">
+              <div className="lg:col-span-1 order-last mb-6 lg:mb-0">
                 <RecentArticles />
               </div>
             </div>

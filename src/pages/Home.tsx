@@ -150,22 +150,26 @@ export default function Home() {
           document.body.style.scrollBehavior = 'auto';
 
           // Pin hero section and animate text within it (extended for all animations)
+          // Adjust animation duration based on screen size - increased for mobile to allow full animation display
+          const scrollDuration = isMobile ? '+=4000vh' : '+=2400vh';
+          const scrubSpeed = isMobile ? 3 : 6;
+
           const heroTimeline = gsap.timeline({
             scrollTrigger: {
               trigger: heroRef.current,
               start: 'top top',
-              end: '+=2400vh', // Much longer duration to prevent services section appearing too early
-              scrub: 6, // Even slower scrub for more control
-              pin: true, // Pin the hero section
+              end: scrollDuration,
+              scrub: scrubSpeed,
+              pin: true,
+              pinSpacing: true,
               invalidateOnRefresh: true,
+              anticipatePin: 1,
               onStart: () => {
-                // Ensure scroll acceleration is disabled when animation starts
                 ScrollTrigger.normalizeScroll(true);
                 document.documentElement.style.scrollBehavior = 'auto';
                 document.body.style.scrollBehavior = 'auto';
               },
               onComplete: () => {
-                // Restore normal scrolling when animation completes
                 ScrollTrigger.normalizeScroll(false);
                 document.documentElement.style.scrollBehavior = 'smooth';
                 document.body.style.scrollBehavior = 'smooth';
@@ -310,12 +314,22 @@ export default function Home() {
             if (scatteredTextRef.current) {
               heroTimeline.fromTo(scatteredTextRef.current, {
                 clipPath: 'circle(0px at center)',
+                opacity: 0,
+                visibility: 'hidden',
               }, {
                 clipPath: 'circle(2000px at center)',
+                opacity: 1,
+                visibility: 'visible',
                 duration: 1.5,
                 ease: 'power2.out',
               }, 2.95); // Same timing as white circle
             }
+
+            // STEP 13: Extended hold after white circle completes - keep hero section pinned
+            // This ensures the animation completes fully before unpinning
+            heroTimeline.to({}, {
+              duration: isMobile ? 3.0 : 2.0
+            }, 4.45); // Hold for 3 seconds on mobile to ensure full display
           }
 
           // Scattered text animation - characters gather to center on scroll (fixed position)
@@ -837,12 +851,14 @@ export default function Home() {
           willChange: 'clip-path, top, left',
           fontSize: 'clamp(3rem, 15vw, 16rem)',
           maxWidth: '90vw',
-          overflow: 'visible'
+          overflow: 'visible',
+          opacity: 0,
+          visibility: 'hidden'
         }}
       >
         <>
           <span className="scattered-letter inline-block absolute" style={{
-            left: 'clamp(-300px, -40vw, -600px)', top: 'clamp(-200px, -25vh, -400px)',
+            left: 'clamp(-350px, -45vw, -700px)', top: 'clamp(-180px, -23vh, -360px)',
             opacity: 0.6,
             transform: 'rotate(-15deg) scale(0.8)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
@@ -850,7 +866,7 @@ export default function Home() {
             color: '#74ebd5'
           }}>O</span>
           <span className="scattered-letter inline-block absolute" style={{
-            left: 'clamp(300px, 40vw, 650px)', top: 'clamp(-250px, -30vh, -500px)',
+            left: 'clamp(-200px, -25vw, -400px)', top: 'clamp(-280px, -35vh, -560px)',
             opacity: 0.7,
             transform: 'rotate(22deg) scale(1.1)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
@@ -858,7 +874,7 @@ export default function Home() {
             color: '#7aecd9'
           }}>u</span>
           <span className="scattered-letter inline-block absolute" style={{
-            left: 'clamp(-350px, -45vw, -750px)', top: 'clamp(80px, 10vh, 150px)',
+            left: 'clamp(-280px, -35vw, -560px)', top: 'clamp(100px, 12vh, 200px)',
             opacity: 0.5,
             transform: 'rotate(-8deg) scale(0.7)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
@@ -873,7 +889,7 @@ export default function Home() {
             transition: 'all 0.3s ease'
           }}> </span>
           <span className="scattered-letter inline-block absolute" style={{
-            left: 'clamp(350px, 45vw, 750px)', top: 'clamp(150px, 20vh, 300px)',
+            left: 'clamp(200px, 25vw, 400px)', top: 'clamp(120px, 15vh, 240px)',
             opacity: 0.4,
             transform: 'rotate(18deg) scale(1.2)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
@@ -881,7 +897,7 @@ export default function Home() {
             color: '#86eee1'
           }}>S</span>
           <span className="scattered-letter inline-block absolute" style={{
-            left: 'clamp(80px, 10vw, 150px)', top: 'clamp(-180px, -22vh, -350px)',
+            left: 'clamp(-150px, -18vw, -300px)', top: 'clamp(-150px, -19vh, -300px)',
             opacity: 0.6,
             transform: 'rotate(-25deg) scale(0.9)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
@@ -889,7 +905,7 @@ export default function Home() {
             color: '#8bf1e3'
           }}>e</span>
           <span className="scattered-letter inline-block absolute" style={{
-            left: 'clamp(-220px, -30vw, -450px)', top: 'clamp(250px, 32vh, 500px)',
+            left: 'clamp(-400px, -50vw, -800px)', top: 'clamp(280px, 35vh, 560px)',
             opacity: 0.7,
             transform: 'rotate(12deg) scale(0.8)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
@@ -897,7 +913,7 @@ export default function Home() {
             color: '#8ff3e5'
           }}>r</span>
           <span className="scattered-letter inline-block absolute" style={{
-            left: 'clamp(250px, 32vw, 500px)', top: 'clamp(300px, 38vh, 600px)',
+            left: 'clamp(-80px, -10vw, -160px)', top: 'clamp(320px, 40vh, 640px)',
             opacity: 0.5,
             transform: 'rotate(-18deg) scale(1.1)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
@@ -905,7 +921,7 @@ export default function Home() {
             color: '#93f5e6'
           }}>v</span>
           <span className="scattered-letter inline-block absolute" style={{
-            left: 'clamp(-50px, -7vw, -100px)', top: 'clamp(-130px, -16vh, -250px)',
+            left: 'clamp(120px, 15vw, 240px)', top: 'clamp(-100px, -12vh, -200px)',
             opacity: 0.8,
             transform: 'rotate(8deg) scale(0.6)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
@@ -913,7 +929,7 @@ export default function Home() {
             color: '#97f7e6'
           }}>i</span>
           <span className="scattered-letter inline-block absolute" style={{
-            left: 'clamp(-100px, -13vw, -200px)', top: 'clamp(50px, 6vh, 100px)',
+            left: 'clamp(-320px, -40vw, -640px)', top: 'clamp(180px, 22vh, 360px)',
             opacity: 0.6,
             transform: 'rotate(-12deg) scale(1.0)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
@@ -921,7 +937,7 @@ export default function Home() {
             color: '#9af9e6'
           }}>c</span>
           <span className="scattered-letter inline-block absolute" style={{
-            left: 'clamp(100px, 13vw, 200px)', top: 'clamp(200px, 26vh, 400px)',
+            left: 'clamp(80px, 10vw, 160px)', top: 'clamp(250px, 31vh, 500px)',
             opacity: 0.7,
             transform: 'rotate(20deg) scale(0.9)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
@@ -929,7 +945,7 @@ export default function Home() {
             color: '#9dfbe6'
           }}>e</span>
           <span className="scattered-letter inline-block absolute" style={{
-            left: 'clamp(300px, 38vw, 600px)', top: 'clamp(220px, 28vh, 450px)',
+            left: 'clamp(280px, 35vw, 560px)', top: 'clamp(-200px, -25vh, -400px)',
             opacity: 0.5,
             transform: 'rotate(-10deg) scale(1.1)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
@@ -939,10 +955,10 @@ export default function Home() {
         </>
       </div>
 
-      <div style={{ position: 'relative', zIndex: 10000 }}>
+      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 10000 }}>
         <Header />
       </div>
-      <main className="flex-1">
+      <main className="flex-1 flex flex-col md:block">
         {/* Hero Section */}
         <section ref={heroRef} className="relative overflow-hidden min-h-[100svh] flex items-center" style={{
           background: 'linear-gradient(-225deg, #D4FFEC 0%, #57F2CC 48%, #4596FB 100%)'
@@ -985,8 +1001,8 @@ export default function Home() {
             </div>
 
             {/* Tagline within hero section - split into 3 lines - centered */}
-            <div ref={taglineRef} className="text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full" style={{ pointerEvents: 'none' }}>
-              <div className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white max-w-4xl mx-auto leading-tight px-4 space-y-2">
+            <div ref={taglineRef} className="text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full" style={{ pointerEvents: 'none', zIndex: 100 }}>
+              <div className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white max-w-4xl mx-auto leading-tight px-4 space-y-1 sm:space-y-2">
                 <div
                   ref={taglineLine1Ref}
                   className="opacity-0"
