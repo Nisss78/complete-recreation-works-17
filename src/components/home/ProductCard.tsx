@@ -11,27 +11,29 @@ interface ProductCardProps {
   isBackground?: boolean;
   colorIndex?: number;
   className?: string;
+  cardNumber?: number;
 }
 
 export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
-  ({ name, description, icon_url, year, url, isPlaceholder = false, isBackground = false, colorIndex = 0, className = '' }, ref) => {
-    // Color palette: 黄緑、青、紫、赤、オレンジ、黄色
-    const colors = [
-      '#7bc61e', // 黄緑
-      '#3b82f6', // 青
-      '#8b5cf6', // 紫
-      '#ef4444', // 赤
-      '#f97316', // オレンジ
-      '#eab308'  // 黄色
+  ({ name, description, icon_url, year, url, isPlaceholder = false, isBackground = false, colorIndex = 0, className = '', cardNumber }, ref) => {
+    // Custom gradient palette
+    const gradients = [
+      'linear-gradient(to top, #37ecba 0%, #72afd3 100%)',
+      'linear-gradient(to top, #ebbba7 0%, #cfc7f8 100%)',
+      'linear-gradient(to top, #9795f0 0%, #fbc8d4 100%)',
+      'linear-gradient(to top, #d9afd9 0%, #97d9e1 100%)',
+      'linear-gradient(-20deg, #ddd6f3 0%, #faaca8 100%, #faaca8 100%)',
+      'linear-gradient(to top, #d5dee7 0%, #ffafbd 0%, #c9ffbf 100%)'
     ];
-    // Darker variants for stronger gradients on main cards
-    const darkColors = [
-      '#4d8c12', // 黄緑(濃)
-      '#1e40af', // 青(濃)
-      '#6d28d9', // 紫(濃)
-      '#b91c1c', // 赤(濃)
-      '#c2410c', // オレンジ(濃)
-      '#a16207'  // 黄色(濃)
+
+    // Background versions (more subtle for peek cards)
+    const backgroundGradients = [
+      'linear-gradient(to top, rgba(55, 236, 186, 0.6) 0%, rgba(114, 175, 211, 0.6) 100%)',
+      'linear-gradient(to top, rgba(235, 187, 167, 0.6) 0%, rgba(207, 199, 248, 0.6) 100%)',
+      'linear-gradient(to top, rgba(151, 149, 240, 0.6) 0%, rgba(251, 200, 212, 0.6) 100%)',
+      'linear-gradient(to top, rgba(217, 175, 217, 0.6) 0%, rgba(151, 217, 225, 0.6) 100%)',
+      'linear-gradient(-20deg, rgba(221, 214, 243, 0.6) 0%, rgba(250, 172, 168, 0.6) 100%, rgba(250, 172, 168, 0.6) 100%)',
+      'linear-gradient(to top, rgba(213, 222, 231, 0.6) 0%, rgba(255, 175, 189, 0.6) 0%, rgba(201, 255, 191, 0.6) 100%)'
     ];
 
     const handleClick = () => {
@@ -40,9 +42,8 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
       }
     };
 
-    const cardColor = colors[colorIndex % colors.length];
-    const darkCardColor = darkColors[colorIndex % darkColors.length];
-    const subtleCardColor = colors[colorIndex % colors.length] + '80'; // 背景用の控えめな透明色
+    const cardGradient = gradients[colorIndex % gradients.length];
+    const backgroundGradient = backgroundGradients[colorIndex % backgroundGradients.length];
 
     // Fallbacks when product info is missing
     const displayName = isPlaceholder || !name ? 'XXX' : name;
@@ -54,16 +55,14 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
       <div
         ref={ref}
         data-product-card
-        className={`relative rounded-2xl overflow-hidden ${
+        className={`relative overflow-hidden border-2 border-black ${
           isBackground ? 'opacity-60' : 'opacity-100'
         } ${className}`}
         style={{
           width: '320px',
           height: '380px',
-          // Placeholder(XXX)でも黒にせず、通常のカラーパレットを使う
-          background: isBackground
-            ? `linear-gradient(135deg, ${subtleCardColor} 0%, ${subtleCardColor} 100%)`
-            : `linear-gradient(135deg, ${cardColor} 0%, ${darkCardColor} 100%)`,
+          // Use custom gradients
+          background: isBackground ? backgroundGradient : cardGradient,
           // Transform scale is controlled by carousel wrappers (avoid double scaling)
           transform: 'scale(1)',
           transition: 'transform 0.3s ease',
@@ -74,22 +73,69 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
             : '0 10px 30px rgba(0,0,0,0.25)',
         }}
       >
-        {/* Year badge */}
-        <div className="absolute top-6 right-6 text-white text-xl font-bold opacity-80">
-          {displayYear}
+        {/* Large transparent card number in background - positioned absolutely from card root */}
+        {cardNumber && (
+          <div className="absolute inset-0 flex items-center justify-center" style={{ zIndex: 1 }}>
+            <span
+              className="text-gray-800 font-black select-none pointer-events-none"
+              style={{
+                fontFamily: '"Stencil", "Impact", "Arial Black", sans-serif',
+                fontWeight: '900',
+                fontSize: '16rem',
+                opacity: '0.06',
+                letterSpacing: '0.1em',
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%) scaleY(1.2)'
+              }}
+            >
+              {cardNumber.toString().padStart(2, '0')}
+            </span>
+          </div>
+        )}
+
+        {/* Year badge in rectangle - positioned to avoid title overlap */}
+        <div className="absolute top-4 right-4">
+          <div className="bg-white bg-opacity-20 backdrop-blur-sm border border-white border-opacity-30 px-2.5 py-1">
+            <span className="text-gray-800 text-sm font-bold">
+              {displayYear}
+            </span>
+          </div>
+        </div>
+
+        {/* Fixed position divider lines - frame to frame */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Main horizontal divider line after title area - frame to frame */}
+          <div className="absolute left-0 right-0 h-0.5 bg-black bg-opacity-40" style={{ top: '30%' }} />
+
+
+          {/* Corner decorative elements - same thickness as main lines */}
+          <div className="absolute top-4 left-4 w-2 h-2 bg-white bg-opacity-50" />
+          <div className="absolute top-4 right-4 w-2 h-2 bg-white bg-opacity-50" />
+          <div className="absolute bottom-4 left-4 w-2 h-2 bg-white bg-opacity-50" />
+          <div className="absolute bottom-4 right-4 w-2 h-2 bg-white bg-opacity-50" />
+
+          {/* Additional accent lines */}
+          <div className="absolute left-6 right-6 h-px bg-white bg-opacity-30" style={{ top: '40%' }} />
+          <div className="absolute left-6 right-6 h-px bg-white bg-opacity-30" style={{ top: '60%' }} />
+
+          {/* Central cross grid */}
+          <div className="absolute top-8 bottom-8 left-1/2 w-px bg-white bg-opacity-15" />
+          <div className="absolute left-8 right-8 top-1/2 h-px bg-white bg-opacity-15" />
         </div>
 
         {/* Content container */}
         <div className="relative h-full flex flex-col">
           {/* Top section with icon and name */}
-          <div className="px-8 pt-8 pb-6">
+          <div className="px-8 pt-12 pb-6">
             <div className="flex items-center gap-4">
               {hasIcon ? (
-                <img src={icon_url!} alt={displayName} className="w-12 h-12 rounded-lg object-cover" />
+                <img src={icon_url!} alt={displayName} className="w-12 h-12 object-cover" />
               ) : (
-                <div className="w-12 h-12 rounded-lg bg-gray-600" />
+                <div className="w-12 h-12 bg-gray-600" />
               )}
-              <h3 className="text-3xl font-bold text-white">
+              <h3 className="text-3xl font-bold text-gray-800">
                 {displayName}
               </h3>
             </div>
@@ -97,35 +143,27 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
 
           {/* Middle decorative section */}
           <div className="flex-1 relative px-8">
-            {!isPlaceholder && (
-              <div className="absolute inset-0 opacity-20">
-                {/* Decorative graphics - can be customized per product */}
-                <div className="absolute bottom-0 right-0 w-48 h-48 rounded-full bg-gradient-to-br from-blue-400 to-purple-600 blur-3xl" />
-                <div className="absolute top-1/4 left-0 w-32 h-32 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 blur-2xl" />
-              </div>
-            )}
+
           </div>
 
           {/* Bottom section with description */}
           <div className="px-8 pb-8">
-            <p className="text-white text-base mb-6 line-clamp-3">
+            <p className="text-gray-800 text-base mb-6 line-clamp-3">
               {displayDescription}
             </p>
 
-            {/* Visit button */}
+            {/* Visit button with rectangle border */}
             <button
               onClick={handleClick}
               disabled={isPlaceholder || !url}
-              className={`w-full py-3 px-6 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all ${
+              className={`w-full py-3 px-6 font-semibold border-2 border-gray-800 border-opacity-50 flex items-center justify-center gap-2 transition-all ${
                 isPlaceholder || !url
-                  ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                  : 'bg-white text-gray-900 hover:bg-gray-100'
+                  ? 'bg-gray-700 bg-opacity-50 text-gray-400 cursor-not-allowed border-gray-600'
+                  : 'bg-white bg-opacity-20 backdrop-blur-sm text-gray-800 hover:bg-opacity-30'
               }`}
             >
               VISIT
-              <ArrowRight className="w-5 h-5" />
-              <ArrowRight className="w-5 h-5 -ml-4" />
-              <ArrowRight className="w-5 h-5 -ml-4" />
+              <span className="ml-2 tracking-wider font-mono text-lg">›››</span>
             </button>
           </div>
         </div>

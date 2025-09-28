@@ -171,6 +171,7 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
                       isPlaceholder={true}
                       isBackground={!isMain}
                       colorIndex={item.colorIndex}
+                      cardNumber={index === 1 ? 1 : ((index + 4) % 5) + 1}
                     />
                   </div>
                 );
@@ -190,6 +191,7 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
                     url={product.URL}
                     isBackground={!isMain}
                     colorIndex={product.colorIndex}
+                    cardNumber={index === 1 ? 1 : ((index + 4) % 5) + 1}
                   />
                 </div>
               );
