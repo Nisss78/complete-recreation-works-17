@@ -754,7 +754,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:60px_60px]" />
           {/* The ball is now outside hero to avoid clipping while scrolling */}
           <div className="w-full px-8 sm:px-12 lg:px-20 relative z-10">
-            <div className="text-left pl-8 sm:pl-16 lg:pl-24">
+            <div className="text-left pl-8 sm:pl-16 lg:pl-24 pt-32 sm:pt-40 lg:pt-48">
               <h1 className="mb-4">
                 <div
                   ref={weBuildRef}
@@ -772,15 +772,16 @@ export default function Home() {
                 </div>
                 <div
                   ref={coolProductsRef}
-                  className="text-5xl sm:text-7xl lg:text-8xl font-bold text-white intro-from-left whitespace-nowrap"
+                  className="text-5xl sm:text-7xl lg:text-8xl font-bold text-white intro-from-left leading-tight"
                   style={{
                     willChange: 'transform',
                     fontWeight: '900',
                     letterSpacing: '-0.02em',
-                    animationDelay: '180ms'
+                    animationDelay: '180ms',
+                    lineHeight: '1.2'
                   }}
                 >
-                  Cool & Scalable products
+                  Cool & Scalable<br />products
                 </div>
               </h1>
               <div ref={contactButtonRef} className="flex flex-col sm:flex-row gap-4 mb-16 reveal-on-scroll" style={{ willChange: 'transform', pointerEvents: 'auto', position: 'relative', zIndex: 999 }}>
