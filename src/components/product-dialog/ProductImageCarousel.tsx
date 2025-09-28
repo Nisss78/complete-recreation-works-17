@@ -27,16 +27,16 @@ export const ProductImageCarousel = ({ productName, images }: ProductImageCarous
   }
 
   return (
-    <div className="mt-8 mb-8">
+    <div className="mt-4 sm:mt-8 mb-4 sm:mb-8">
       <Carousel className="w-full max-w-3xl mx-auto">
         <CarouselContent>
           {images.map((image, index) => (
             <CarouselItem key={index}>
-              <div className="flex items-center justify-center p-4">
+              <div className="flex items-center justify-center p-2 sm:p-4">
                 <img
                   src={image}
                   alt={`${productName} の説明画像 ${index + 1}`}
-                  className="max-w-full max-h-[500px] object-contain rounded-lg"
+                  className="max-w-full max-h-[250px] sm:max-h-[400px] object-contain rounded-lg"
                 />
               </div>
             </CarouselItem>

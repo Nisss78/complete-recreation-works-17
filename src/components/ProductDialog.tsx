@@ -108,17 +108,18 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTitle className="sr-only">{product.name}</DialogTitle>
-      <DialogContent className="max-w-4xl h-[95vh] sm:h-[90vh] p-0 overflow-hidden bg-white dark:bg-gray-900 mx-2 sm:mx-4">
-        <ScrollArea className="h-full">
-          <div className="p-3 sm:p-6">
+      <DialogContent className="w-[95vw] max-w-4xl h-[80vh] sm:h-[85vh] p-0 overflow-hidden bg-white dark:bg-gray-900 mt-8 sm:mt-4 rounded-2xl flex flex-col">
+        <div className="flex-1 relative">
+          <div className="absolute inset-0 overflow-y-auto scrollbar-hidden pr-4 -mr-4">
+          <div className="p-3 sm:p-6 w-full">
             {/* SNSシェアボタン */}
-            <div className="flex gap-3 mb-4">
+            <div className="flex flex-wrap gap-2 sm:gap-3 mb-4">
               {/* X（Twitter） */}
               <a
                 href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(`${window.location.origin}/product/${product.name.toLowerCase().replace(/\s+/g, '-')}`)}&text=${encodeURIComponent(`${product.name} | Protoduct`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center px-3 py-1.5 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 text-sm"
+                className="inline-flex items-center px-2 sm:px-3 py-1.5 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 text-xs sm:text-sm"
               >
                 Xでシェア
               </a>
@@ -135,7 +136,8 @@ const ProductDialog = memo(({ open, onOpenChange, product }: ProductDialogProps)
               />
             </div>
           </div>
-        </ScrollArea>
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );

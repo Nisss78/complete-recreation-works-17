@@ -955,7 +955,7 @@ export default function Home() {
         </>
       </div>
 
-      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 10000 }}>
+      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 40 }}>
         <Header />
       </div>
       <main className="flex-1 flex flex-col md:block">
@@ -1219,7 +1219,7 @@ export default function Home() {
         </section>
 
         {/* Company Section */}
-        <section className="py-20 bg-gray-50 relative">
+        <section className="pt-20 bg-gray-50 relative">
           <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
             <FloatingParticles />
           </div>
@@ -1297,7 +1297,7 @@ export default function Home() {
             </div>
 
             {/* Contact Button */}
-            <div className="flex justify-center mt-20">
+            <div className="flex justify-center pb-20">
               <Button
                 size="lg"
                 onClick={() => navigate("/contact")}
