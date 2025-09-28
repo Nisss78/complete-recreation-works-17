@@ -15,8 +15,9 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
   const displayProducts = products || [];
   const totalProducts = displayProducts.length;
 
-  // 5枚表示（左ピーク1 + メイン3 + 右ピーク1）
-  const visibleCount = 5;
+  // レスポンシブ表示数: モバイル3枚（ピーク+メイン+ピーク）、デスクトップ5枚
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const visibleCount = isMobile ? 3 : 5;
 
   // プロダクト順に基づく色
   const productColorIndex = (orderIndex: number) => {
@@ -32,9 +33,9 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
     });
   }
 
-  // 現在位置から5枚を常に表示（ラップアラウンド）
+  // 現在位置から表示（ラップアラウンド）
   let visibleItems: any[] = [];
-  const startSlot = 1;
+  const startSlot = 1; // モバイル・デスクトップ共に1から（メインカードが中央）
   const baseShift = currentIndex % visibleCount;
 
   if (totalProducts === 0) {
@@ -168,14 +169,15 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
       >
         {/* Cards container */}
         <div ref={rowRef} className="relative flex items-center justify-center" style={{ opacity: 0, pointerEvents: 'auto', visibility: 'hidden', willChange: 'opacity, visibility' }}>
-          <div className="relative flex items-center justify-center gap-12" style={{ zIndex: 10 }}>
+          <div className={`relative flex items-center justify-center ${isMobile ? 'gap-4' : 'gap-12'}`} style={{ zIndex: 10 }}>
             {visibleItems.map((item, index) => {
-              const isMain = index >= 1 && index <= 3;
-              const isPeekLeft = index === 0;
-              const isPeekRight = index === 4;
+              // モバイル: 3枚表示（0=左ピーク、1=メイン、2=右ピーク）, デスクトップ: 5枚表示
+              const isMain = isMobile ? (index === 1) : (index >= 1 && index <= 3);
+              const isPeekLeft = isMobile ? (index === 0) : (index === 0);
+              const isPeekRight = isMobile ? (index === 2) : (index === 4);
 
               const wrapperStyle: React.CSSProperties = {
-                transform: `scale(${isMain ? 1.08 : 0.7})`,
+                transform: `scale(${isMain ? (isMobile ? 0.85 : 1.08) : (isMobile ? 0.5 : 0.7)})`,
                 opacity: 0, // Always start hidden to prevent flash
                 visibility: 'hidden', // Extra hiding layer
                 zIndex: isMain ? 20 : 10,

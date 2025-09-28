@@ -59,8 +59,8 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
           isBackground ? 'opacity-60' : 'opacity-100'
         } ${className}`}
         style={{
-          width: '320px',
-          height: '380px',
+          width: 'clamp(280px, 85vw, 320px)',
+          height: 'clamp(340px, 85vw * 1.19, 380px)',
           // Use custom gradients
           background: isBackground ? backgroundGradient : cardGradient,
           // Transform scale is controlled by carousel wrappers (avoid double scaling)
