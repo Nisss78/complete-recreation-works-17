@@ -608,6 +608,11 @@ export default function Home() {
                 return;
               }
 
+              // Make carousel visible once setup starts
+              if (productCarouselRef.current) {
+                (gsap as any).set(productCarouselRef.current, { visibility: 'visible' });
+              }
+
               // Initially hide cards with entrance position
               if (mainCards.length > 0) {
                 (gsap as any).set(mainCards, { opacity: 0, x: 400, y: -200, rotation: 15, scale: 0.85, transformOrigin: '50% 50%' });
@@ -619,7 +624,7 @@ export default function Home() {
                 (gsap as any).set(navButtons, { opacity: 0 });
               }
               if (cardsContainer) {
-                (gsap as any).set(cardsContainer, { opacity: 1 });
+                (gsap as any).set(cardsContainer, { opacity: 1, visibility: 'visible' });
               }
 
               // Initial entrance animation timeline
