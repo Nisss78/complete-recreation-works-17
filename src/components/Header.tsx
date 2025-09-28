@@ -100,12 +100,12 @@ export const Header = () => {
             <Menu className="h-5 w-5" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="right" className="bg-white/20 backdrop-blur-xl border-l border-white/25">
+        <SheetContent side="right" className="bg-white/95 backdrop-blur-xl border-l border-white/25 pt-20">
           <SheetHeader className="mb-4">
             <SheetTitle>{t('menu')}</SheetTitle>
           </SheetHeader>
           {/* Language toggle (mobile only, with separator) */}
-          <div className="mb-3 pb-2 border-b border-gray-200">
+          <div className="mb-4 pb-3 border-b border-gray-200">
             <LanguageToggle />
           </div>
           <div className="flex flex-col gap-1">
@@ -253,23 +253,23 @@ export const Header = () => {
   return (
     <header className="fixed inset-x-0 top-0 z-50">
       <div
-        className="max-w-7xl mx-auto px-4 sm:px-6 relative"
-        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 10px)", paddingRight: "calc(env(safe-area-inset-right, 0px) + 0px)" }}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 10px)", paddingLeft: "calc(env(safe-area-inset-left, 0px) + 16px)", paddingRight: "calc(env(safe-area-inset-right, 0px) + 16px)" }}
       >
         {/* Language toggle pinned to top-right on md+; not inside nav */}
-        <div className="hidden md:block absolute right-2 sm:right-4 top-[calc(env(safe-area-inset-top,0px)+6px)] z-[60]">
+        <div className="hidden md:block absolute right-4 sm:right-6 lg:right-8 top-[calc(env(safe-area-inset-top,0px)+6px)] z-[60]">
           <LanguageToggle />
         </div>
         {/* Glass nav bar container (centered, wider for JA labels) */}
         <div className="mt-3 md:mt-4 mb-2 rounded-full liquid-glass-nav max-w-[44rem] md:max-w-[52rem] mx-auto">
-          <div className="h-16 md:h-20 px-1.5 sm:px-2 grid grid-cols-[1fr_auto_1fr] items-center">
-            {/* Left spacer (keeps center true centered) */}
+          <div className="h-16 md:h-20 px-3 sm:px-4 md:px-2 flex md:grid md:grid-cols-[1fr_auto_1fr] items-center justify-between md:justify-start">
+            {/* Left spacer (desktop only) */}
             <div className="hidden md:block" />
 
             {/* Center group: logo + nav + contact + user */}
             <div className="flex items-center justify-center gap-1 sm:gap-1.5">
-              <Link to="/home" className="flex items-center hover:opacity-90 transition-opacity">
-                <img src={logoImage} alt="Protoduct" className="h-14 w-auto" />
+              <Link to="/home" className="flex-shrink-0 flex items-center hover:opacity-90 transition-opacity">
+                <img src={logoImage} alt="Protoduct" className="h-20 sm:h-24 md:h-16 w-auto" />
               </Link>
               <nav className="hidden md:flex items-center gap-1.5 sm:gap-2">
                 <NavItem path="/home" icon={<Home className="h-4 w-4" />} label="Home" />
@@ -284,14 +284,14 @@ export const Header = () => {
               <Button
                 onClick={() => navigate('/contact')}
                 className={cn(
-                  "flex items-center gap-2 font-semibold transition-all duration-300 rounded-full text-white",
-                  isActive("/contact") 
+                  "hidden md:flex items-center gap-2 font-semibold transition-all duration-300 rounded-full text-white",
+                  isActive("/contact")
                     ? "hover:bg-[#10c876]/80"
                     : "hover:bg-white/30",
                   "liquid-glass-pill"
                 )}
                 style={{
-                  background: isActive("/contact") 
+                  background: isActive("/contact")
                     ? "linear-gradient(135deg, rgba(123, 198, 30, 0.7) 0%, rgba(16, 200, 118, 0.7) 50%, rgba(21, 184, 229, 0.7) 100%)"
                     : undefined,
                 }}
@@ -303,12 +303,12 @@ export const Header = () => {
               {userId && <UserMenu userId={userId} />}
             </div>
 
-            {/* Right group: mobile menu (sm). Language toggle stays pinned above on md+ */}
-            <div className="flex items-center justify-end gap-2 sm:gap-3">
-              <div className="md:hidden">
-                <MobileMenu />
-              </div>
+            {/* Right group: mobile menu */}
+            <div className="flex items-center justify-end gap-2 sm:gap-3 md:hidden">
+              <MobileMenu />
             </div>
+            {/* Desktop empty right spacer */}
+            <div className="hidden md:block" />
           </div>
         </div>
       </div>

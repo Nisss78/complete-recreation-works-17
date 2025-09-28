@@ -26,23 +26,56 @@ export default function Contact() {
     message: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // ここで実際の送信処理を行います
-    toast({
-      title: isJapanese ? "送信完了" : "Sent Successfully",
-      description: isJapanese 
-        ? "お問い合わせを受け付けました。担当者より2営業日以内にご連絡いたします。" 
-        : "We have received your inquiry. Our team will contact you within 2 business days.",
-    });
-    // フォームをリセット
-    setFormData({
-      name: "",
-      email: "",
-      company: "",
-      inquiryType: "general",
-      message: ""
-    });
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-contact-email`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: isJapanese ? "送信完了" : "Sent Successfully",
+          description: isJapanese
+            ? "お問い合わせを受け付けました。担当者より2営業日以内にご連絡いたします。"
+            : "We have received your inquiry. Our team will contact you within 2 business days.",
+        });
+        setFormData({
+          name: "",
+          email: "",
+          company: "",
+          inquiryType: "general",
+          message: ""
+        });
+      } else {
+        throw new Error(data.error || 'Failed to send email');
+      }
+    } catch (error) {
+      console.error('Error sending contact form:', error);
+      toast({
+        title: isJapanese ? "送信エラー" : "Error",
+        description: isJapanese
+          ? "送信中にエラーが発生しました。もう一度お試しください。"
+          : "An error occurred while sending. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -99,14 +132,7 @@ export default function Contact() {
                     <Mail className="h-5 w-5 text-gray-500 mt-0.5" />
                     <div>
                       <p className="font-medium">{isJapanese ? "メール" : "Email"}</p>
-                      <p className="text-gray-600">support@protoductai.com</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Phone className="h-5 w-5 text-gray-500 mt-0.5" />
-                    <div>
-                      <p className="font-medium">{isJapanese ? "電話" : "Phone"}</p>
-                      <p className="text-gray-600">+81 3-1234-5678</p>
+                      <p className="text-gray-600">protoduct3@gmail.com</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -128,41 +154,6 @@ export default function Contact() {
                         {isJapanese 
                           ? "平日 9:00 - 18:00 (JST)" 
                           : "Mon-Fri 9:00 AM - 6:00 PM (JST)"}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>{isJapanese ? "よくある質問" : "FAQ"}</CardTitle>
-                  <CardDescription>
-                    {isJapanese 
-                      ? "お問い合わせの前にFAQをご確認ください" 
-                      : "Please check our FAQ before contacting us"}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div>
-                      <p className="font-medium text-sm">
-                        {isJapanese ? "Q: アカウント登録は必須ですか？" : "Q: Is account registration required?"}
-                      </p>
-                      <p className="text-gray-600 text-sm mt-1">
-                        {isJapanese 
-                          ? "A: いいえ、閲覧のみであれば登録不要です。" 
-                          : "A: No, registration is not required for browsing."}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="font-medium text-sm">
-                        {isJapanese ? "Q: 料金はかかりますか？" : "Q: Are there any fees?"}
-                      </p>
-                      <p className="text-gray-600 text-sm mt-1">
-                        {isJapanese 
-                          ? "A: 基本機能は無料でご利用いただけます。" 
-                          : "A: Basic features are free to use."}
                       </p>
                     </div>
                   </div>
@@ -268,9 +259,11 @@ export default function Contact() {
                       </p>
                     </div>
 
-                    <Button type="submit" className="w-full" size="lg">
+                    <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
                       <Send className="h-4 w-4 mr-2" />
-                      {isJapanese ? "送信する" : "Send Message"}
+                      {isSubmitting
+                        ? (isJapanese ? "送信中..." : "Sending...")
+                        : (isJapanese ? "送信する" : "Send Message")}
                     </Button>
                   </form>
                 </CardContent>

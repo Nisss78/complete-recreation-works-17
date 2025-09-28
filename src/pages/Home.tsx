@@ -37,7 +37,6 @@ export default function Home() {
   const ballRef = useRef<HTMLDivElement | null>(null);
   const weBuildRef = useRef<HTMLDivElement | null>(null);
   const coolProductsRef = useRef<HTMLDivElement | null>(null);
-  const contactButtonRef = useRef<HTMLDivElement | null>(null);
   const taglineRef = useRef<HTMLHeadingElement | null>(null);
   const taglineLine1Ref = useRef<HTMLDivElement | null>(null);
   const taglineLine2Ref = useRef<HTMLDivElement | null>(null);
@@ -140,7 +139,6 @@ export default function Home() {
           const screenWidth = window.innerWidth;
           const weBuildX = -(screenWidth + 200); // Completely off left side
           const coolProductsX = screenWidth + 200; // Completely off right side
-          const contactButtonX = -(screenWidth + 100); // Completely off left side
           // Since tagline is now centered, no Y movement needed for initial positioning
           const taglineY = { from: 0, to: 0 };
 
@@ -190,12 +188,6 @@ export default function Home() {
             }, 0);
           }
 
-          if (contactButtonRef.current) {
-            heroTimeline.to(contactButtonRef.current, {
-              x: contactButtonX,
-              ease: 'power2.out',
-            }, 0);
-          }
 
           // STEP 1: Tagline appears (3 lines fade in)
           if (taglineLine1Ref.current) {
@@ -449,18 +441,18 @@ export default function Home() {
             finalTimeline
               // Shorter pause at center
               .to(scatteredTextRef.current, {
-                top: '30vh', // さらに高い位置で文字が完成
+                top: '30vh',
                 left: '50%',
                 ease: 'none',
-                duration: 0.3 // 中央停止時間をさらに短縮
+                duration: 0.3
               })
               // Smooth, elegant move to final position with size reduction
               .to(scatteredTextRef.current, {
-                top: '12vh', // 少し下に配置
-                left: '25%', // 文字が切れないように右に調整
-                scale: 0.3, // さらに小さく（30%）
-                ease: 'power2.inOut', // よりスムーズなイージング
-                duration: 0.7 // スムーズな移動のため少し長めに
+                top: '15vh',
+                left: window.innerWidth < 768 ? '50%' : '30%',
+                scale: window.innerWidth < 768 ? 0.7 : 0.3,
+                ease: 'power2.inOut',
+                duration: 0.7
               });
 
             // Build seamless loop for infinite horizontal scrolling
@@ -835,112 +827,114 @@ export default function Home() {
       }} />
 
       {/* Scattered Text - Fixed position overlay */}
-      <div 
+      <div
         ref={scatteredTextRef}
         className="fixed left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-bold text-gray-900 pointer-events-none"
-        style={{ 
-          top: '30vh', // 最初から30vhで完成させる
-          zIndex: 40, 
-          clipPath: 'circle(0px at center)', 
+        style={{
+          top: '30vh',
+          zIndex: 40,
+          clipPath: 'circle(0px at center)',
           willChange: 'clip-path, top, left',
-          fontSize: '16rem' // 16倍の大きさ
+          fontSize: 'clamp(3rem, 15vw, 16rem)',
+          maxWidth: '90vw',
+          overflow: 'visible'
         }}
       >
         <>
           <span className="scattered-letter inline-block absolute" style={{
-            left: '-600px', top: '-400px', // 左上に大きく散らばらせる
+            left: 'clamp(-300px, -40vw, -600px)', top: 'clamp(-200px, -25vh, -400px)',
             opacity: 0.6,
             transform: 'rotate(-15deg) scale(0.8)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#74ebd5' // Gradient start
+            color: '#74ebd5'
           }}>O</span>
           <span className="scattered-letter inline-block absolute" style={{
-            left: '650px', top: '-500px', // 右上にもっと散らばらせる
+            left: 'clamp(300px, 40vw, 650px)', top: 'clamp(-250px, -30vh, -500px)',
             opacity: 0.7,
             transform: 'rotate(22deg) scale(1.1)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#7aecd9' // Step 1
+            color: '#7aecd9'
           }}>u</span>
           <span className="scattered-letter inline-block absolute" style={{
-            left: '-750px', top: '150px', // 左側に大きく散らばらせる
+            left: 'clamp(-350px, -45vw, -750px)', top: 'clamp(80px, 10vh, 150px)',
             opacity: 0.5,
             transform: 'rotate(-8deg) scale(0.7)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#80eddd' // Step 2
+            color: '#80eddd'
           }}>r</span>
           <span className="scattered-letter inline-block absolute" style={{
-            left: '0px', top: '0px', // スペース文字は中央に
+            left: '0px', top: '0px',
             opacity: 0.8,
             transform: 'rotate(0deg) scale(1.0)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease'
           }}> </span>
           <span className="scattered-letter inline-block absolute" style={{
-            left: '750px', top: '300px', // 右側に大きく散らばらせる
+            left: 'clamp(350px, 45vw, 750px)', top: 'clamp(150px, 20vh, 300px)',
             opacity: 0.4,
             transform: 'rotate(18deg) scale(1.2)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#86eee1' // Step 3
+            color: '#86eee1'
           }}>S</span>
           <span className="scattered-letter inline-block absolute" style={{
-            left: '150px', top: '-350px', // 中央上部に配置
+            left: 'clamp(80px, 10vw, 150px)', top: 'clamp(-180px, -22vh, -350px)',
             opacity: 0.6,
             transform: 'rotate(-25deg) scale(0.9)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#8bf1e3' // Step 4
+            color: '#8bf1e3'
           }}>e</span>
           <span className="scattered-letter inline-block absolute" style={{
-            left: '-450px', top: '500px', // 左下に大きく散らばらせる
+            left: 'clamp(-220px, -30vw, -450px)', top: 'clamp(250px, 32vh, 500px)',
             opacity: 0.7,
             transform: 'rotate(12deg) scale(0.8)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#8ff3e5' // Step 5
+            color: '#8ff3e5'
           }}>r</span>
           <span className="scattered-letter inline-block absolute" style={{
-            left: '500px', top: '600px', // 右下に大きく散らばらせる
+            left: 'clamp(250px, 32vw, 500px)', top: 'clamp(300px, 38vh, 600px)',
             opacity: 0.5,
             transform: 'rotate(-18deg) scale(1.1)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#93f5e6' // Step 6
+            color: '#93f5e6'
           }}>v</span>
           <span className="scattered-letter inline-block absolute" style={{
-            left: '-100px', top: '-250px', // 中央上部に配置
+            left: 'clamp(-50px, -7vw, -100px)', top: 'clamp(-130px, -16vh, -250px)',
             opacity: 0.8,
             transform: 'rotate(8deg) scale(0.6)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#97f7e6' // Step 7
+            color: '#97f7e6'
           }}>i</span>
           <span className="scattered-letter inline-block absolute" style={{
-            left: '-200px', top: '100px', // 中央左に配置
+            left: 'clamp(-100px, -13vw, -200px)', top: 'clamp(50px, 6vh, 100px)',
             opacity: 0.6,
             transform: 'rotate(-12deg) scale(1.0)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#9af9e6' // Step 8
+            color: '#9af9e6'
           }}>c</span>
           <span className="scattered-letter inline-block absolute" style={{
-            left: '200px', top: '400px', // 中央下に配置
+            left: 'clamp(100px, 13vw, 200px)', top: 'clamp(200px, 26vh, 400px)',
             opacity: 0.7,
             transform: 'rotate(20deg) scale(0.9)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#9dfbe6' // Step 9
+            color: '#9dfbe6'
           }}>e</span>
           <span className="scattered-letter inline-block absolute" style={{
-            left: '600px', top: '450px', // 右下に散らばらせる（vから離す）
+            left: 'clamp(300px, 38vw, 600px)', top: 'clamp(220px, 28vh, 450px)',
             opacity: 0.5,
             transform: 'rotate(-10deg) scale(1.1)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#9face6' // Gradient end
+            color: '#9face6'
           }}>s</span>
         </>
       </div>
@@ -988,56 +982,6 @@ export default function Home() {
                   Cool & Scalable<br />products
                 </div>
               </h1>
-            </div>
-            <div ref={contactButtonRef} className="absolute reveal-on-scroll" style={{ willChange: 'transform', pointerEvents: 'auto', zIndex: 999, top: 'calc(16rem + 22vh)', right: '2rem' }}>
-              <style>{`
-                @media (min-width: 640px) {
-                  [data-contact-button] {
-                    top: calc(18rem + 24vh) !important;
-                    right: 6rem !important;
-                  }
-                }
-                @media (min-width: 1024px) {
-                  [data-contact-button] {
-                    top: calc(19rem + 26vh) !important;
-                    right: 10rem !important;
-                  }
-                }
-              `}</style>
-              <div data-contact-button style={{ position: 'relative' }}>
-              <Button
-                size="lg"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  navigate("/contact");
-                }}
-                className="relative overflow-hidden text-white w-fit cursor-pointer"
-                style={{
-                  background: 'rgba(16, 200, 118, 0.9)',
-                  backdropFilter: 'blur(10px)',
-                  WebkitBackdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(255, 255, 255, 0.3)',
-                  boxShadow: '0 4px 15px rgba(16, 200, 118, 0.4)',
-                  pointerEvents: 'auto',
-                  position: 'relative',
-                  zIndex: 999
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'rgba(16, 200, 118, 1)';
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 8px 25px rgba(16, 200, 118, 0.5)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'rgba(16, 200, 118, 0.9)';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(16, 200, 118, 0.4)';
-                }}
-              >
-                Contact Us
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-              </div>
             </div>
 
             {/* Tagline within hero section - split into 3 lines - centered */}
