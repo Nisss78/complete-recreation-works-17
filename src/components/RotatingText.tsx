@@ -21,10 +21,10 @@ export default function RotatingText() {
 
     const initialRotationOffset = 0;
     const letterCount = 9;
-    // 文字を集めて配置（90度の範囲に収める）
-    const letterPos = Array.from({ length: letterCount }, (_, i) => (90 / (letterCount - 1)) * i);
+    // 文字を集めて配置（120度の範囲に広げる）
+    const letterPos = Array.from({ length: letterCount }, (_, i) => (120 / (letterCount - 1)) * i);
     const progressWrap = gsap.utils.wrap(0, 1);
-    const wrapRotation = gsap.utils.wrap(-90, 90);
+    const wrapRotation = gsap.utils.wrap(-120, 120);
 
     let screenRange = gsap.utils.mapRange(0, 2000, 500, 4500);
     let dragDistancePerRotation = screenRange(window.innerWidth);
