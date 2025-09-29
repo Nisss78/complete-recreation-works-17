@@ -9,6 +9,8 @@ import { useNews } from "@/hooks/useNews";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useEffect, useLayoutEffect, useRef } from "react";
+import { Helmet } from "react-helmet-async";
+import { StructuredData } from "@/components/StructuredData";
 import FloatingParticles from "@/components/FloatingParticles";
 import FloatingLogos from "@/components/FloatingLogos";
 import { ProductCarousel } from "@/components/home/ProductCarousel";
@@ -814,6 +816,35 @@ export default function Home() {
 
   return (
     <div ref={mainRef} className="relative min-h-screen bg-white flex flex-col">
+      <Helmet>
+        <title>{isJapanese ? "ProtoductAI Studio - 未来の没入体験アプリを量産するスタジオ" : "ProtoductAI Studio - Studio for Mass-Producing Future Immersive Experience Apps"}</title>
+        <meta name="description" content={isJapanese
+          ? "ProtoductAI Studioは、未来の没入体験ができるアプリを量産するスタジオです。革新的なテクノロジーで次世代の体験を創造します。"
+          : "ProtoductAI Studio is a studio for mass-producing apps that enable future immersive experiences. We create next-generation experiences with innovative technology."} />
+        <meta name="keywords" content={isJapanese
+          ? "プロトダクト, ProtoductAI, 没入体験, アプリ開発, スタジオ, 量産, 未来技術, イノベーション, AI, 体験デザイン"
+          : "ProtoductAI, immersive experience, app development, studio, mass production, future technology, innovation, AI, experience design"} />
+        <meta property="og:title" content={isJapanese ? "ProtoductAI Studio - 未来の没入体験アプリを量産するスタジオ" : "ProtoductAI Studio - Studio for Mass-Producing Future Immersive Experience Apps"} />
+        <meta property="og:description" content={isJapanese
+          ? "未来の没入体験ができるアプリを量産するスタジオ。革新的なテクノロジーで次世代の体験を創造。"
+          : "A studio for mass-producing apps that enable future immersive experiences. Creating next-generation experiences with innovative technology."} />
+        <meta property="og:image" content={isJapanese ? "/og-image-ja.png" : "/og-image.png"} />
+        <meta property="og:url" content={isJapanese ? "https://protoduct.jp" : "https://protoduct.jp/en"} />
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:title" content={isJapanese ? "ProtoductAI Studio - 未来の没入体験アプリを量産するスタジオ" : "ProtoductAI Studio - Studio for Mass-Producing Future Immersive Experience Apps"} />
+        <meta property="twitter:description" content={isJapanese
+          ? "未来の没入体験ができるアプリを量産するスタジオ"
+          : "A studio for mass-producing apps that enable future immersive experiences"} />
+        <link rel="canonical" href={isJapanese ? "https://protoduct.jp" : "https://protoduct.jp/en"} />
+      </Helmet>
+      <StructuredData
+        type="website"
+        title={isJapanese ? "ProtoductAI Studio - 未来の没入体験アプリを量産するスタジオ" : "ProtoductAI Studio - Studio for Mass-Producing Future Immersive Experience Apps"}
+        description={isJapanese
+          ? "ProtoductAI Studioは、未来の没入体験ができるアプリを量産するスタジオです。革新的なテクノロジーで次世代の体験を創造します。"
+          : "ProtoductAI Studio is a studio for mass-producing apps that enable future immersive experiences. We create next-generation experiences with innovative technology."}
+        url={isJapanese ? "https://protoduct.jp" : "https://protoduct.jp/en"}
+      />
       {/* Rolling ball overlay across the whole page */}
       <div ref={ballRef} className="pointer-events-none absolute z-30 size-4 sm:size-5 rounded-full" style={{
         background: 'radial-gradient(circle at 35% 35%, #ffffff, rgba(255,255,255,0.15))',

@@ -1,0 +1,36 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://protoduct.jp/sitemap.xml
+
+# Important pages for indexing
+Allow: /articles
+Allow: /products
+Allow: /about
+Allow: /contact
+Allow: /pricing
+
+# Block private/admin areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+
+# Block auth-related pages from indexing
+Disallow: /login
+Disallow: /signup
+Disallow: /settings
+Disallow: /notifications
+
+# Block user-specific pages
+Disallow: /my-products
+Disallow: /my-articles
+Disallow: /bookmarks
+
+# Allow common crawl paths
+Allow: /favicon.ico
+Allow: /robots.txt
+Allow: /sitemap.xml
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1

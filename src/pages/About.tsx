@@ -5,6 +5,8 @@ import { XIcon } from "@/components/icons/XIcon";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Helmet } from "react-helmet-async";
+import { StructuredData } from "@/components/StructuredData";
 import unoImage from "@/assets/uno.jpg";
 import FloatingParticles from "@/components/FloatingParticles";
 import FloatingLogos from "@/components/FloatingLogos";
@@ -16,6 +18,31 @@ export default function About() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
+      <Helmet>
+        <title>{isJapanese ? "会社概要 | ProtoductAI Studio" : "About Us | ProtoductAI Studio"}</title>
+        <meta name="description" content={isJapanese
+          ? "ProtoductAI株式会社について。未来の没入体験ができるアプリを量産するスタジオとして、革新的なテクノロジーで次世代の体験を創造します。"
+          : "About ProtoductAI Inc. As a studio for mass-producing apps that enable future immersive experiences, we create next-generation experiences with innovative technology."} />
+        <meta property="og:title" content={isJapanese ? "会社概要 | ProtoductAI Studio" : "About Us | ProtoductAI Studio"} />
+        <meta property="og:description" content={isJapanese
+          ? "ProtoductAI株式会社について。未来の没入体験ができるアプリを量産するスタジオとして、革新的なテクノロジーで次世代の体験を創造します。"
+          : "About ProtoductAI Inc. As a studio for mass-producing apps that enable future immersive experiences, we create next-generation experiences with innovative technology."} />
+        <meta property="og:image" content={isJapanese ? "/og-image-ja.png" : "/og-image.png"} />
+        <meta property="og:url" content={isJapanese ? "https://protoduct.jp/about" : "https://protoduct.jp/about"} />
+        <meta property="twitter:title" content={isJapanese ? "会社概要 | ProtoductAI Studio" : "About Us | ProtoductAI Studio"} />
+        <meta property="twitter:description" content={isJapanese
+          ? "ProtoductAI株式会社について。未来の没入体験ができるアプリを量産するスタジオ。"
+          : "About ProtoductAI Inc. A studio for mass-producing apps that enable future immersive experiences."} />
+        <link rel="canonical" href="https://protoduct.jp/about" />
+      </Helmet>
+      <StructuredData
+        type="organization"
+        title={isJapanese ? "ProtoductAI株式会社 - 会社概要" : "ProtoductAI Inc. - About Us"}
+        description={isJapanese
+          ? "ProtoductAI株式会社について。未来の没入体験ができるアプリを量産するスタジオとして、革新的なテクノロジーで次世代の体験を創造します。"
+          : "About ProtoductAI Inc. As a studio for mass-producing apps that enable future immersive experiences, we create next-generation experiences with innovative technology."}
+        url="https://protoduct.jp/about"
+      />
       <Header />
       <main className="flex-1">
         {/* Hero Section */}
