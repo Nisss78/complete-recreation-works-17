@@ -1,7 +1,7 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Building2, Users, Globe, Award, Target, TrendingUp, Calendar, MapPin, ArrowRight, ExternalLink } from "lucide-react";
-import { X } from "lucide-react";
+import { XIcon } from "@/components/icons/XIcon";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -164,7 +164,7 @@ export default function About() {
                     rel="noopener noreferrer"
                     className="absolute top-[18%] right-6 w-12 h-12 rounded-xl border border-gray-300 bg-white shadow-md flex items-center justify-center hover:shadow-lg transition-shadow"
                   >
-                    <X className="w-6 h-6 text-gray-700" />
+                    <XIcon className="w-6 h-6 text-gray-700" />
                   </a>
                   <div className="absolute bottom-6 right-6 text-right">
                     <h3 className="text-gray-900 font-semibold text-base">宇野慎一郎</h3>
@@ -179,7 +179,7 @@ export default function About() {
                   {/* Proportional placeholder rectangle */}
                   <div className="absolute bottom-5 left-5 w-3/5 h-5/6 rounded-lg overflow-hidden bg-gray-200"></div>
                   <div className="absolute top-[18%] right-6 w-12 h-12 rounded-xl border border-gray-300 bg-white shadow-md flex items-center justify-center">
-                    <X className="w-6 h-6 text-gray-700" />
+                    <XIcon className="w-6 h-6 text-gray-700" />
                   </div>
                   <div className="absolute bottom-6 right-6 text-right">
                     <h3 className="text-gray-900 font-semibold text-base">イギョンウク</h3>
@@ -196,7 +196,7 @@ export default function About() {
                 <div className="relative rounded-2xl bg-white border border-gray-200 shadow-lg p-5 w-full aspect-square flex items-end">
                   <div className="absolute bottom-5 left-5 w-3/5 h-5/6 rounded-lg overflow-hidden bg-gray-200"></div>
                   <div className="absolute top-[18%] right-6 w-12 h-12 rounded-xl border border-gray-300 bg-white shadow-md flex items-center justify-center">
-                    <X className="w-6 h-6 text-gray-700" />
+                    <XIcon className="w-6 h-6 text-gray-700" />
                   </div>
                   <div className="absolute bottom-6 right-6 text-right">
                     <h3 className="text-gray-900 font-semibold text-base">山内泰嘉</h3>
@@ -210,7 +210,7 @@ export default function About() {
                 <div className="relative rounded-2xl bg-white border border-gray-200 shadow-lg p-5 w-full aspect-square flex items-end">
                   <div className="absolute bottom-5 left-5 w-3/5 h-5/6 rounded-lg overflow-hidden bg-gray-200"></div>
                   <div className="absolute top-[18%] right-6 w-12 h-12 rounded-xl border border-gray-300 bg-white shadow-md flex items-center justify-center">
-                    <X className="w-6 h-6 text-gray-700" />
+                    <XIcon className="w-6 h-6 text-gray-700" />
                   </div>
                   <div className="absolute bottom-6 right-6 text-right">
                     <h3 className="text-gray-900 font-semibold text-base">奥谷大地</h3>
@@ -224,7 +224,7 @@ export default function About() {
                 <div className="relative rounded-2xl bg-white border border-gray-200 shadow-lg p-5 w-full aspect-square flex items-end">
                   <div className="absolute bottom-5 left-5 w-3/5 h-5/6 rounded-lg overflow-hidden bg-gray-200"></div>
                   <div className="absolute top-[18%] right-6 w-12 h-12 rounded-xl border border-gray-300 bg-white shadow-md flex items-center justify-center">
-                    <X className="w-6 h-6 text-gray-700" />
+                    <XIcon className="w-6 h-6 text-gray-700" />
                   </div>
                   <div className="absolute bottom-6 right-6 text-right">
                     <h3 className="text-gray-900 font-semibold text-base">中塚一晃</h3>

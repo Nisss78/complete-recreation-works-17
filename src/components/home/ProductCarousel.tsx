@@ -183,7 +183,7 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
       >
         {/* Cards container */}
         <div ref={rowRef} className="relative flex items-center justify-center" style={{ opacity: 0, pointerEvents: 'auto', visibility: 'hidden', willChange: 'opacity, visibility' }}>
-          <div className={`relative flex items-center justify-center ${isMobile ? 'gap-4' : 'gap-12'}`} style={{ zIndex: 10 }}>
+          <div className={`relative flex items-center justify-center ${isMobile ? 'gap-2' : 'gap-12'}`} style={{ zIndex: 10 }}>
             {visibleItems.map((item, index) => {
               // モバイル: 3枚表示（0=左ピーク、1=メイン、2=右ピーク）, デスクトップ: 5枚表示
               const isMain = isMobile ? (index === 1) : (index >= 1 && index <= 3);
