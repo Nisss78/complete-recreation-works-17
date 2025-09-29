@@ -399,13 +399,13 @@ export default function Home() {
                 scrollTrigger: {
                   trigger: servicesTitleRef.current,
                   start: 'top center',
-                  end: '30% center', // 短縮して速く集まるように
-                  scrub: 0.1, // scrubも速く
+                  end: '8% center', // もっと短縮して瞬時に集まるように
+                  scrub: 0.02, // さらに速く
                 }
               });
 
               // Add staggered delay based on index for very gradual gathering
-              const staggerDelay = index * 0.1; // delayも短縮
+              const staggerDelay = index * 0.02; // delayももっと短縮
               
               letterTimeline
                 .to(letter, {
@@ -425,9 +425,9 @@ export default function Home() {
             const finalTimeline = gsap.timeline({
               scrollTrigger: {
                 trigger: servicesTitleRef.current,
-                start: '30% center', // Start after gathering is complete (matches STAGE 1 end)
-                end: '60% center', // 短縮してテンポよく
-                scrub: 0.05, // Extremely slow scrub for ultra-smooth movement
+                start: '8% center', // Start after gathering is complete (matches STAGE 1 end)
+                end: '25% center', // もっと短縮してテンポよく
+                scrub: 0.03, // Extremely slow scrub for ultra-smooth movement
                 onComplete: () => {
                   // Add underline effect after positioning
                   const underline = document.createElement('div');
@@ -633,9 +633,9 @@ export default function Home() {
               const cardsTimeline = (gsap as any).timeline({
                 scrollTrigger: {
                   trigger: servicesTitleRef.current,
-                  start: '60% center',
-                  end: '95% center',
-                  scrub: 0.3,
+                  start: '25% center',  // 早めのタイミングに調整
+                  end: '50% center',    // より短い範囲で完了
+                  scrub: 0.2,           // よりレスポンシブに
                 }
               });
 
@@ -736,9 +736,9 @@ export default function Home() {
               const fadeOutTimeline = (gsap as any).timeline({
                 scrollTrigger: {
                   trigger: servicesTitleRef.current,
-                  start: 'bottom bottom',
-                  end: '+=900vh',
-                  scrub: 1,
+                  start: 'bottom+=100vh bottom',  // 少しだけ滞在
+                  end: '+=300vh',  // フェードアウトはゆっくり
+                  scrub: 1,  // 元のスピードに戻す
                 }
               });
 
@@ -1044,7 +1044,7 @@ export default function Home() {
         </section>
 
         {/* Transition Section - for scroll-based text gathering and future product animations */}
-        <section ref={servicesTitleRef} className="relative bg-gray-50" style={{ minHeight: '1500vh' }}>
+        <section ref={servicesTitleRef} className="relative bg-gray-50" style={{ minHeight: '400vh' }}>
           <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
             <FloatingParticles />
           </div>
