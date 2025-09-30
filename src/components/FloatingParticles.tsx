@@ -113,11 +113,10 @@ const FloatingParticles = () => {
   }, []);
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className="absolute inset-0 overflow-hidden pointer-events-none"
       style={{ height: '100%', width: '100%', zIndex: 0 }}
-      style={{ height: '100%', width: '100%' }}
     />
   );
 };
