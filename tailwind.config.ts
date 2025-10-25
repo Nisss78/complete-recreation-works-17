@@ -19,6 +19,11 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['"Noto Sans JP"', '"Montserrat"', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif'],
+        ja: ['"Noto Sans JP"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        en: ['"Montserrat"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+      },
       colors: {
         upvote: "#FF4F6F", // より鮮やかなピンク系に変更
         border: "hsl(var(--border))",

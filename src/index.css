@@ -74,6 +74,17 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: "Noto Sans JP", "Montserrat", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  /* Japanese text優先でNoto Sans JP */
+  :lang(ja) {
+    font-family: "Noto Sans JP", ui-sans-serif, system-ui, sans-serif;
+  }
+
+  /* English text優先でMontserrat */
+  :lang(en) {
+    font-family: "Montserrat", ui-sans-serif, system-ui, sans-serif;
   }
 }
 
