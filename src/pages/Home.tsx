@@ -1093,7 +1093,7 @@ export default function Home() {
             <FloatingParticles />
           </div>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative" style={{ zIndex: 10 }}>
-            <h2 className="text-7xl font-bold mb-8" style={{
+            <h2 className="text-5xl md:text-6xl font-bold mb-8" style={{
               background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
@@ -1101,7 +1101,7 @@ export default function Home() {
             }}>
               Our Support
             </h2>
-            <p className="text-gray-600 mb-12 max-w-2xl">
+            <p className="text-base text-gray-600 mb-12 max-w-2xl">
               {isJapanese
                 ? "企業のニーズに合わせた最適なAIソリューションを提供します"
                 : "We provide optimal AI solutions tailored to your business needs"}
@@ -1112,7 +1112,7 @@ export default function Home() {
                   <CardTitle>{isJapanese ? "AI研修・コンサルティング" : "AI Training & Consulting"}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 mb-4">
+                  <p className="text-sm text-gray-600 mb-4">
                     {isJapanese
                       ? "企業向けのAI人材育成プログラムと、AI導入に関する戦略的コンサルティングを提供。実践的なワークショップも実施。"
                       : "Providing AI talent development programs and strategic consulting for AI implementation. Including practical workshops."}
@@ -1168,7 +1168,7 @@ export default function Home() {
                 }}>
                   {isJapanese ? "最新ニュース" : "Recent News"}
                 </h2>
-                <p className="text-gray-600 mt-2">
+                <p className="text-base text-gray-600 mt-2">
                   {isJapanese ? "最新の情報をお届けします" : "Stay updated with our latest news"}
                 </p>
               </div>
@@ -1245,10 +1245,10 @@ export default function Home() {
                 }}>
                   COMPANY
                 </h2>
-                <h3 className="text-2xl font-semibold text-gray-800 mb-4">
+                <h3 className="text-xl md:text-2xl font-semibold text-gray-800 mb-4">
                   {isJapanese ? "会社概要" : "About Us"}
                 </h3>
-                <p className="text-gray-600 mb-6">
+                <p className="text-base text-gray-600 mb-6">
                   {isJapanese
                     ? "ProtoductAI株式会社は、2025年3月に設立された最先端のAI技術企業です。私たちは、AIソフトウェア開発、AI研修・コンサルティング、受託開発の3つの事業を軸に、お客様のデジタルトランスフォーメーションを支援しています。"
                     : "ProtoductAI Inc. is a cutting-edge AI technology company established in March 2025. We support our customers' digital transformation through three main businesses: AI software development, AI training & consulting, and contract development."}
@@ -1257,22 +1257,22 @@ export default function Home() {
                   <div className="flex items-start">
                     <Building2 className="h-5 w-5 mr-3 mt-1" style={{ color: '#5a9c11' }} />
                     <div>
-                      <p className="font-semibold">{isJapanese ? "会社名" : "Company Name"}</p>
-                      <p className="text-gray-600">ProtoductAI株式会社</p>
+                      <p className="text-sm font-semibold">{isJapanese ? "会社名" : "Company Name"}</p>
+                      <p className="text-sm text-gray-600">ProtoductAI株式会社</p>
                     </div>
                   </div>
                   <div className="flex items-start">
                     <TrendingUp className="h-5 w-5 mr-3 mt-1" style={{ color: '#0b925b' }} />
                     <div>
-                      <p className="font-semibold">{isJapanese ? "設立" : "Founded"}</p>
-                      <p className="text-gray-600">{isJapanese ? "2025年3月7日" : "March 7, 2025"}</p>
+                      <p className="text-sm font-semibold">{isJapanese ? "設立" : "Founded"}</p>
+                      <p className="text-sm text-gray-600">{isJapanese ? "2025年3月7日" : "March 7, 2025"}</p>
                     </div>
                   </div>
                   <div className="flex items-start">
                     <Users className="h-5 w-5 mr-3 mt-1" style={{ color: '#0c87a7' }} />
                     <div>
-                      <p className="font-semibold">{isJapanese ? "従業員数" : "Employees"}</p>
-                      <p className="text-gray-600">{isJapanese ? "6人（業務委託含む）" : "6 (including contractors)"}</p>
+                      <p className="text-sm font-semibold">{isJapanese ? "従業員数" : "Employees"}</p>
+                      <p className="text-sm text-gray-600">{isJapanese ? "6人（業務委託含む）" : "6 (including contractors)"}</p>
                     </div>
                   </div>
                 </div>

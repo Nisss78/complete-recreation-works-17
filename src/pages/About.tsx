@@ -68,7 +68,7 @@ export default function About() {
         <section className="py-16 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-16">
-              <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-8 text-left" style={{
+              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-8 text-left" style={{
                 background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
@@ -87,12 +87,12 @@ export default function About() {
                 }}>
                   {isJapanese ? "私たちの存在意義" : "Our Purpose"}
                 </h3>
-                <p className="text-lg md:text-xl text-gray-700 leading-8 mb-5">
+                <p className="text-base md:text-lg text-gray-700 leading-8 mb-5">
                   {isJapanese
                     ? <>ProtoductAI株式会社は、<strong className="text-gray-900 whitespace-nowrap">「AIで可能性を拡張し、想像力を爆発させる未来体験を創造する」</strong>ことを使命に、京都で誕生しました。</>
                     : <>ProtoductAI Inc. was born in Kyoto with the mission to <strong className="text-gray-900 whitespace-nowrap">"expand possibilities with AI and create future experiences that ignite imagination."</strong></>}
                 </p>
-                <p className="text-lg md:text-xl text-gray-700 leading-8">
+                <p className="text-base md:text-lg text-gray-700 leading-8">
                   {isJapanese 
                     ? '生成AIと最先端のノーコード／AIcodingツールを駆使し、アイデアからローンチまでを「最速」で駆け抜ける。それが私たちのスタイルであり、カルチャーです。'
                     : "We leverage generative AI and cutting-edge no-code/AI coding tools to sprint from idea to launch at 'maximum speed.' This is our style and our culture."}
@@ -119,11 +119,11 @@ export default function About() {
           <div className="absolute inset-0 bg-black/30" />
           <div className="relative z-10 py-16 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto text-white text-left">
-              <h3 className="text-3xl font-bold mb-4">Vision</h3>
+              <h3 className="text-2xl md:text-3xl font-bold mb-4">Vision</h3>
               <p className="text-2xl md:text-3xl font-semibold leading-snug mb-6">
                 {isJapanese ? "Speed & Quality を武器に、クールな未来体験を世界へ最速で届ける。" : "Deliver cool future experiences to the world with Speed & Quality."}
               </p>
-              <p className="text-lg md:text-xl text-blue-100 max-w-3xl">
+              <p className="text-base md:text-lg text-blue-100 max-w-3xl">
                 {isJapanese ? "私たちは究極のスピードと妥協なき品質を両立させ、AIと人が共創するカルチャーを世界中に広げていきます。" : "We pair ultimate speed with uncompromising quality to expand a culture where AI and people co-create across the globe."}
               </p>
             </div>
@@ -164,7 +164,7 @@ export default function About() {
         {/* Team Members */}
         <section className="py-20 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-8 text-left" style={{
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-8 text-left" style={{
               background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
@@ -269,7 +269,7 @@ export default function About() {
             <div className="py-8">
               <div className="max-w-4xl md:max-w-5xl mx-auto">
                 <div className="mb-8 text-left">
-                  <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight" style={{
+                  <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight" style={{
                     background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
@@ -277,7 +277,7 @@ export default function About() {
                   }}>
                     COMPANY
                   </h2>
-                  <p className="text-2xl font-medium text-gray-600 mt-2">会社概要</p>
+                  <p className="text-xl md:text-2xl font-medium text-gray-600 mt-2">会社概要</p>
                 </div>
 
                 <div className="bg-white rounded-lg p-6 sm:p-8 border border-gray-200">
@@ -334,10 +334,10 @@ export default function About() {
             <div className="grid md:grid-cols-2 gap-8 text-white">
               {/* Contact Section */}
               <div>
-                <h2 className="text-3xl font-bold mb-4">
+                <h2 className="text-2xl md:text-3xl font-bold mb-4">
                   {isJapanese ? "お問い合わせ" : "Contact Us"}
                 </h2>
-                <p className="text-blue-100 mb-8 leading-relaxed">
+                <p className="text-base text-blue-100 mb-8 leading-relaxed">
                   {isJapanese 
                     ? "サービスに関するご質問や、取材・パートナーシップのご相談などはこちらからお気軽にご連絡ください。"
                     : "Feel free to contact us for any questions about our services, media inquiries, or partnership opportunities."}
@@ -354,10 +354,10 @@ export default function About() {
 
               {/* Recruitment Section */}
               <div className="md:border-l md:border-white/30 md:pl-8">
-                <h2 className="text-3xl font-bold mb-4">
+                <h2 className="text-2xl md:text-3xl font-bold mb-4">
                   {isJapanese ? "採用について" : "Careers"}
                 </h2>
-                <p className="text-blue-100 mb-8 leading-relaxed">
+                <p className="text-base text-blue-100 mb-8 leading-relaxed">
                   {isJapanese 
                     ? "チームのビジョンに共感し、共に前進できる仲間を探しています。一緒に働いてみませんか？"
                     : "We're looking for talented individuals who share our vision and can help us move forward. Would you like to work with us?"}

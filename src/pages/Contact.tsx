@@ -113,7 +113,7 @@ export default function Contact() {
             >
               CONTACT
             </h1>
-            <p className="text-xl text-gray-700 text-left">
+            <p className="text-base md:text-lg text-gray-700 text-left">
               {isJapanese ? "お問い合わせ" : "Contact Us"}
             </p>
           </div>
@@ -131,17 +131,17 @@ export default function Contact() {
                   <div className="flex items-start gap-3">
                     <Mail className="h-5 w-5 text-gray-500 mt-0.5" />
                     <div>
-                      <p className="font-medium">{isJapanese ? "メール" : "Email"}</p>
-                      <p className="text-gray-600">protoduct3@gmail.com</p>
+                      <p className="text-sm font-medium">{isJapanese ? "メール" : "Email"}</p>
+                      <p className="text-sm text-gray-600">protoduct3@gmail.com</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <MapPin className="h-5 w-5 text-gray-500 mt-0.5" />
                     <div>
-                      <p className="font-medium">{isJapanese ? "住所" : "Address"}</p>
-                      <p className="text-gray-600">
-                        {isJapanese 
-                          ? "〒605-0074\n京都市東山区祇園町南側582" 
+                      <p className="text-sm font-medium">{isJapanese ? "住所" : "Address"}</p>
+                      <p className="text-sm text-gray-600">
+                        {isJapanese
+                          ? "〒605-0074\n京都市東山区祇園町南側582"
                           : "582 Gion-machi Minamigawa\nHigashiyama-ku, Kyoto 605-0074, Japan"}
                       </p>
                     </div>
@@ -149,10 +149,10 @@ export default function Contact() {
                   <div className="flex items-start gap-3">
                     <Clock className="h-5 w-5 text-gray-500 mt-0.5" />
                     <div>
-                      <p className="font-medium">{isJapanese ? "営業時間" : "Business Hours"}</p>
-                      <p className="text-gray-600">
-                        {isJapanese 
-                          ? "平日 9:00 - 18:00 (JST)" 
+                      <p className="text-sm font-medium">{isJapanese ? "営業時間" : "Business Hours"}</p>
+                      <p className="text-sm text-gray-600">
+                        {isJapanese
+                          ? "平日 9:00 - 18:00 (JST)"
                           : "Mon-Fri 9:00 AM - 6:00 PM (JST)"}
                       </p>
                     </div>

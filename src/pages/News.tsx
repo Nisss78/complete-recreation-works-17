@@ -69,7 +69,7 @@ export default function News() {
             }}>
               NEWS
             </h1>
-            <p className="text-xl text-gray-700 text-left">
+            <p className="text-base md:text-lg text-gray-700 text-left">
               {isJapanese ? "お知らせ" : "Announcements"}
             </p>
           </div>
@@ -114,7 +114,7 @@ export default function News() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           {isLoading ? (
             <div className="text-center py-12">
-              <p className="text-gray-500">Loading...</p>
+              <p className="text-base text-gray-500">Loading...</p>
             </div>
           ) : newsItems && newsItems.length > 0 ? (
             <div className="space-y-6">
@@ -157,7 +157,7 @@ export default function News() {
                                 {format(new Date(item.date), 'yyyy.M.d')}
                               </span>
                             </div>
-                            <h3 className="text-xl font-medium text-gray-900 line-clamp-2 text-left">
+                            <h3 className="text-xl md:text-2xl font-medium text-gray-900 line-clamp-2 text-left">
                               {isJapanese ? item.title_ja : (item.title_en || item.title_ja)}
                             </h3>
                           </div>
@@ -170,7 +170,7 @@ export default function News() {
             </div>
           ) : (
             <div className="text-center py-12">
-              <p className="text-gray-500 text-lg">
+              <p className="text-base text-gray-500">
                 {isJapanese ? "ニュースはまだありません" : "No news available yet"}
               </p>
             </div>

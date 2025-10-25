@@ -49,7 +49,7 @@ export const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-8">
           <div className="lg:col-span-1">
-            <h3 className="font-bold mb-3 sm:mb-4 text-gray-900">About Protoduct</h3>
+            <h3 className="text-base font-bold mb-3 sm:mb-4 text-gray-900">About Protoduct</h3>
             <p className="text-sm text-gray-600 mb-4">
               A tech company mainly focused on building, acquiring and managing cool projects.
             </p>
@@ -71,7 +71,7 @@ export const Footer = () => {
           </div>
 
           <div>
-            <h3 className="font-bold mb-3 sm:mb-4 text-gray-900">Navigation</h3>
+            <h3 className="text-base font-bold mb-3 sm:mb-4 text-gray-900">Navigation</h3>
             <ul className="space-y-2">
               <li>
                 <Link to="/home" className="text-sm text-gray-600 hover:text-[#10c876] transition-colors">
@@ -107,7 +107,7 @@ export const Footer = () => {
           </div>
 
           <div>
-            <h3 className="font-bold mb-3 sm:mb-4 text-gray-900">Links</h3>
+            <h3 className="text-base font-bold mb-3 sm:mb-4 text-gray-900">Links</h3>
             <ul className="space-y-2">
               <li>
                 <Link to="/terms" className="text-sm text-gray-600 hover:text-[#10c876] transition-colors">
@@ -123,7 +123,7 @@ export const Footer = () => {
           </div>
 
           <div>
-            <h3 className="font-bold mb-3 sm:mb-4 text-gray-900">Social</h3>
+            <h3 className="text-base font-bold mb-3 sm:mb-4 text-gray-900">Social</h3>
             <div className="flex flex-wrap gap-3">
               <a
                 href="#"
@@ -164,7 +164,7 @@ export const Footer = () => {
           </div>
         </div>
         
-        <div className="text-center text-sm text-gray-600 pt-6 sm:pt-8 border-t">
+        <div className="text-center text-xs text-gray-600 pt-6 sm:pt-8 border-t">
           © 2025 Protoduct. All rights reserved.
         </div>
       </div>

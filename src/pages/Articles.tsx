@@ -80,7 +80,7 @@ export default function Articles() {
             }}>
               ARTICLES
             </h1>
-            <p className="text-xl text-gray-700 text-left">
+            <p className="text-base md:text-lg text-gray-700 text-left">
               {t('articles.title')}
             </p>
           </div>

@@ -78,10 +78,10 @@ export const Header = () => {
   };
 
   const NavItem = ({ path, icon, label }: { path: string; icon: React.ReactNode; label: string }) => (
-    <Link 
-      to={path} 
+    <Link
+      to={path}
       className={cn(
-        "inline-flex items-center gap-2 px-2 sm:px-3 py-2 text-[13px] md:text-sm lg:text-[15px] font-medium rounded-xl transition-colors whitespace-nowrap",
+        "inline-flex items-center gap-2 px-2 sm:px-3 py-2 text-sm md:text-base font-medium rounded-xl transition-colors whitespace-nowrap",
         isActive(path)
           ? "bg-white/40 text-[#10c876] shadow-sm"
           : "text-gray-800 hover:bg-white/20 hover:text-[#10c876]"
