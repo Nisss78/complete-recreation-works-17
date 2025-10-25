@@ -971,9 +971,12 @@ export default function Home() {
       </div>
       <main className="flex-1 flex flex-col md:block">
         {/* Hero Section */}
-        <section ref={heroRef} className="relative overflow-hidden min-h-[100svh] flex items-center" style={{
-          background: 'linear-gradient(-225deg, #D4FFEC 0%, #57F2CC 48%, #4596FB 100%)'
-        }}>
+        <section ref={heroRef} className="relative overflow-hidden min-h-[100svh] flex items-center">
+          {/* Blurred gradient background */}
+          <div className="absolute inset-0" style={{
+            background: 'linear-gradient(-225deg, #D4FFEC 0%, #57F2CC 48%, #4596FB 100%)',
+            filter: 'blur(10px)'
+          }} />
           <FloatingParticles />
           <FloatingLogos />
           <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:60px_60px]" />
