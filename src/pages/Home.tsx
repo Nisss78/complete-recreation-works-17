@@ -972,10 +972,13 @@ export default function Home() {
       <main className="flex-1 flex flex-col md:block">
         {/* Hero Section */}
         <section ref={heroRef} className="relative overflow-hidden min-h-[100svh] flex items-center">
-          {/* Blurred gradient background */}
+          {/* Background image with blur and brightness */}
           <div className="absolute inset-0" style={{
-            background: 'linear-gradient(-225deg, #D4FFEC 0%, #57F2CC 48%, #4596FB 100%)',
-            filter: 'blur(10px)'
+            backgroundImage: 'url(/images/hero-bg.jpg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            filter: 'blur(8px) brightness(1.3)'
           }} />
           <FloatingParticles />
           <FloatingLogos />
@@ -988,9 +991,10 @@ export default function Home() {
                   ref={weBuildRef}
                   className="text-9xl sm:text-[10rem] lg:text-[13rem] font-bold mb-8 intro-from-right"
                   style={{
-                    color: 'transparent',
-                    WebkitTextStroke: '2px white',
-                    textStroke: '2px white',
+                    backgroundImage: 'linear-gradient(to right, #92fe9d 0%, #00c9ff 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
                     fontWeight: '900',
                     letterSpacing: '-0.02em',
                     willChange: 'transform'
@@ -1000,8 +1004,9 @@ export default function Home() {
                 </div>
                 <div
                   ref={coolProductsRef}
-                  className="text-5xl sm:text-7xl lg:text-8xl font-bold text-white intro-from-left -mt-4"
+                  className="text-5xl sm:text-7xl lg:text-8xl font-bold intro-from-left -mt-4"
                   style={{
+                    color: '#272b61',
                     willChange: 'transform',
                     fontWeight: '900',
                     letterSpacing: '-0.02em',
@@ -1016,7 +1021,9 @@ export default function Home() {
 
             {/* Tagline within hero section - split into 3 lines - centered */}
             <div ref={taglineRef} className="text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full" style={{ pointerEvents: 'none', zIndex: 100 }}>
-              <div className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white max-w-4xl mx-auto leading-tight px-4 space-y-1 sm:space-y-2">
+              <div className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold max-w-4xl mx-auto leading-tight px-4 space-y-1 sm:space-y-2" style={{
+                color: '#272b61'
+              }}>
                 <div
                   ref={taglineLine1Ref}
                   className="opacity-0"
@@ -1063,7 +1070,10 @@ export default function Home() {
               className="text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full opacity-0"
               style={{ willChange: 'transform' }}
             >
-              <div className="font-bold text-white mx-auto leading-tight px-2 whitespace-nowrap" style={{ fontSize: 'clamp(1.2rem, 5.5vw, 5rem)' }}>
+              <div className="font-bold mx-auto leading-tight px-2 whitespace-nowrap" style={{
+                fontSize: 'clamp(1.2rem, 5.5vw, 5rem)',
+                color: '#272b61'
+              }}>
                 Let's enjoy immersing ourselves!!
               </div>
             </div>
