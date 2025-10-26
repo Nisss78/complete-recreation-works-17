@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { Toaster } from "./components/ui/toaster";
 import { BrowserRouter } from "react-router-dom";
-import LoadingScreen from "./components/LoadingScreen";
+import GeneratingLoader from "./components/GeneratingLoader";
 import { supabase } from "./integrations/supabase/client";
 import "./App.css";
 
@@ -32,15 +32,15 @@ function App() {
 
   useEffect(() => {
     const initializeApp = async () => {
-      // Start preloading data
-      const dataPromise = preloadData();
-      
+      // Temporarily skip preloading due to Supabase connection timeout
+      // const dataPromise = preloadData();
+
       // Ensure minimum loading time for smooth UX
       const minLoadingTime = new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Wait for both data and minimum time
-      await Promise.all([dataPromise, minLoadingTime]);
-      
+
+      // Wait for minimum time only
+      await minLoadingTime;
+
       setIsLoading(false);
     };
 
@@ -48,7 +48,7 @@ function App() {
   }, []);
 
   if (isLoading) {
-    return <LoadingScreen fullScreen />;
+    return <GeneratingLoader fullScreen />;
   }
 
   return (

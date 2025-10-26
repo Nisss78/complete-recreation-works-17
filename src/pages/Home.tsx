@@ -874,7 +874,7 @@ export default function Home() {
             transform: 'rotate(-15deg) scale(0.8)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#74ebd5'
+            color: '#7bc61e'
           }}>O</span>
           <span className="scattered-letter inline-block absolute" style={{
             left: 'clamp(-200px, -25vw, -400px)', top: 'clamp(-280px, -35vh, -560px)',
@@ -882,7 +882,7 @@ export default function Home() {
             transform: 'rotate(22deg) scale(1.1)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#7aecd9'
+            color: '#6fc92e'
           }}>u</span>
           <span className="scattered-letter inline-block absolute" style={{
             left: 'clamp(-280px, -35vw, -560px)', top: 'clamp(100px, 12vh, 200px)',
@@ -890,7 +890,7 @@ export default function Home() {
             transform: 'rotate(-8deg) scale(0.7)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#80eddd'
+            color: '#5bcc40'
           }}>r</span>
           <span className="scattered-letter inline-block absolute" style={{
             left: '0px', top: '0px',
@@ -905,7 +905,7 @@ export default function Home() {
             transform: 'rotate(18deg) scale(1.2)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#86eee1'
+            color: '#42cf5b'
           }}>S</span>
           <span className="scattered-letter inline-block absolute" style={{
             left: 'clamp(-150px, -18vw, -300px)', top: 'clamp(-150px, -19vh, -300px)',
@@ -913,7 +913,7 @@ export default function Home() {
             transform: 'rotate(-25deg) scale(0.9)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#8bf1e3'
+            color: '#28d276'
           }}>e</span>
           <span className="scattered-letter inline-block absolute" style={{
             left: 'clamp(-400px, -50vw, -800px)', top: 'clamp(280px, 35vh, 560px)',
@@ -921,7 +921,7 @@ export default function Home() {
             transform: 'rotate(12deg) scale(0.8)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#8ff3e5'
+            color: '#10c876'
           }}>r</span>
           <span className="scattered-letter inline-block absolute" style={{
             left: 'clamp(-80px, -10vw, -160px)', top: 'clamp(320px, 40vh, 640px)',
@@ -929,7 +929,7 @@ export default function Home() {
             transform: 'rotate(-18deg) scale(1.1)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#93f5e6'
+            color: '#13c488'
           }}>v</span>
           <span className="scattered-letter inline-block absolute" style={{
             left: 'clamp(120px, 15vw, 240px)', top: 'clamp(-100px, -12vh, -200px)',
@@ -937,7 +937,7 @@ export default function Home() {
             transform: 'rotate(8deg) scale(0.6)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#97f7e6'
+            color: '#15c09a'
           }}>i</span>
           <span className="scattered-letter inline-block absolute" style={{
             left: 'clamp(-320px, -40vw, -640px)', top: 'clamp(180px, 22vh, 360px)',
@@ -945,7 +945,7 @@ export default function Home() {
             transform: 'rotate(-12deg) scale(1.0)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#9af9e6'
+            color: '#15bcb0'
           }}>c</span>
           <span className="scattered-letter inline-block absolute" style={{
             left: 'clamp(80px, 10vw, 160px)', top: 'clamp(250px, 31vh, 500px)',
@@ -953,7 +953,7 @@ export default function Home() {
             transform: 'rotate(20deg) scale(0.9)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#9dfbe6'
+            color: '#15b8c8'
           }}>e</span>
           <span className="scattered-letter inline-block absolute" style={{
             left: 'clamp(280px, 35vw, 560px)', top: 'clamp(-200px, -25vh, -400px)',
@@ -961,7 +961,7 @@ export default function Home() {
             transform: 'rotate(-10deg) scale(1.1)',
             filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
             transition: 'all 0.3s ease',
-            color: '#9face6'
+            color: '#15b8e5'
           }}>s</span>
         </>
       </div>

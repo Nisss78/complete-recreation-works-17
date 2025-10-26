@@ -10,63 +10,82 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { ProductsList } from "@/components/home/ProductsList";
 import { RecentArticles } from "@/components/home/RecentArticles";
 import { ArrowDownAZ, ArrowUpAZ } from "lucide-react";
-import LoadingScreen from "@/components/LoadingScreen";
+import { ProductsListSkeleton } from "@/components/ProductCardSkeleton";
 import FloatingParticles from "@/components/FloatingParticles";
 import FloatingLogos from "@/components/FloatingLogos";
 
-// 製品データと画像を同時に取得する関数
+// 製品データと画像を同時に取得する関数（最適化版）
 const fetchProductsWithImages = async () => {
   console.log('Fetching products and images...');
-  
-  // 製品データを取得
-  const { data: products, error: productsError } = await supabase
-    .from('products')
-    .select(`
-      *,
-      product_tags (
-        tag
-      ),
-      product_images (
-        image_url
-      )
-    `)
-    .order('created_at', { ascending: false });
 
-  if (productsError) throw productsError;
+  try {
+    // 全製品データを一度に取得
+    const [productsResponse, likesResponse, commentsResponse] = await Promise.all([
+      // 製品データ
+      supabase
+        .from('products')
+        .select(`
+          *,
+          product_tags (
+            tag
+          ),
+          product_images (
+            image_url
+          )
+        `)
+        .order('created_at', { ascending: false }),
 
-  // いいね数とコメント数を取得して製品データと結合
-  const productsWithData = await Promise.all(
-    products.map(async (product) => {
-      // いいね数を取得
-      const { count: likesCount } = await supabase
+      // 全いいねデータ
+      supabase
         .from('product_likes')
-        .select('*', { count: 'exact' })
-        .eq('product_id', product.id);
-      
-      // コメント数を取得
-      const { count: commentsCount } = await supabase
+        .select('product_id'),
+
+      // 全コメントデータ
+      supabase
         .from('product_comments')
-        .select('*', { count: 'exact' })
-        .eq('product_id', product.id);
+        .select('product_id')
+    ]);
 
-      return {
-        id: product.id,
-        name: product.name,
-        tagline: product.tagline,
-        description: product.description,
-        icon: product.icon_url,
-        URL: product.URL,
-        tags: product.product_tags?.map(t => t.tag) || [],
-        upvotes: likesCount || 0,
-        comments: commentsCount || 0,
-        launchDate: product.created_at ? new Date(product.created_at) : new Date(),
-        images: product.product_images?.map(img => img.image_url) || []
-      };
-    })
-  );
+    if (productsResponse.error) throw productsResponse.error;
+    if (likesResponse.error) throw likesResponse.error;
+    if (commentsResponse.error) throw commentsResponse.error;
 
-  console.log('Fetched products with data:', productsWithData);
-  return productsWithData;
+    const products = productsResponse.data || [];
+    const likes = likesResponse.data || [];
+    const comments = commentsResponse.data || [];
+
+    // クライアント側でカウント集計
+    const likesCountMap = likes.reduce((acc: Record<string, number>, like) => {
+      acc[like.product_id] = (acc[like.product_id] || 0) + 1;
+      return acc;
+    }, {});
+
+    const commentsCountMap = comments.reduce((acc: Record<string, number>, comment) => {
+      acc[comment.product_id] = (acc[comment.product_id] || 0) + 1;
+      return acc;
+    }, {});
+
+    // データを結合
+    const productsWithData = products.map((product) => ({
+      id: product.id,
+      name: product.name,
+      tagline: product.tagline,
+      description: product.description,
+      icon: product.icon_url,
+      URL: product.URL,
+      tags: product.product_tags?.map(t => t.tag) || [],
+      upvotes: likesCountMap[product.id] || 0,
+      comments: commentsCountMap[product.id] || 0,
+      launchDate: product.created_at ? new Date(product.created_at) : new Date(),
+      images: product.product_images?.map(img => img.image_url) || []
+    }));
+
+    console.log('Fetched products with data:', productsWithData);
+    return productsWithData;
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    throw error;
+  }
 };
 
 const Index = () => {
@@ -111,37 +130,11 @@ const Index = () => {
     }
   }, [location.search, allProducts]);
 
-  // ローディング状態の表示
-  if (isLoading) {
-    return (
-      <div className="min-h-screen w-full flex flex-col bg-white">
-        <Header />
-        <main className="flex-1 flex items-center justify-center">
-          <LoadingScreen fullScreen={false} />
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen w-full flex flex-col bg-white">
-        <Header />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="text-red-500">
-            {t('error.loading')}
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
-  const groupedProducts = allProducts.reduce((groups: any, product) => {
+  // グループ化とソート（データがある場合のみ）
+  const groupedProducts = !isLoading && !error ? allProducts.reduce((groups: any, product) => {
     // Check if launchDate is valid
-    const dateToUse = product.launchDate && !isNaN(product.launchDate.getTime()) 
-      ? product.launchDate 
+    const dateToUse = product.launchDate && !isNaN(product.launchDate.getTime())
+      ? product.launchDate
       : new Date();
     const date = format(dateToUse, 'yyyy-MM-dd');
     if (!groups[date]) {
@@ -149,9 +142,9 @@ const Index = () => {
     }
     groups[date].push(product);
     return groups;
-  }, {});
+  }, {}) : {};
 
-  if (sortByLikes) {
+  if (sortByLikes && !isLoading) {
     Object.keys(groupedProducts).forEach(date => {
       groupedProducts[date].sort((a: any, b: any) => b.upvotes - a.upvotes);
     });
@@ -188,6 +181,7 @@ const Index = () => {
                   <button
                     onClick={() => setSortByLikes(!sortByLikes)}
                     className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm gap-2"
+                    disabled={isLoading}
                   >
                     {sortByLikes ? (
                       <>
@@ -203,11 +197,19 @@ const Index = () => {
                   </button>
                 </div>
 
-                <ProductsList
-                  groupedProducts={groupedProducts}
-                  onProductClick={handleProductClick}
-                  sortByLikes={sortByLikes}
-                />
+                {isLoading ? (
+                  <ProductsListSkeleton />
+                ) : error ? (
+                  <div className="text-center py-12">
+                    <p className="text-red-500 text-lg">{t('error.loading')}</p>
+                  </div>
+                ) : (
+                  <ProductsList
+                    groupedProducts={groupedProducts}
+                    onProductClick={handleProductClick}
+                    sortByLikes={sortByLikes}
+                  />
+                )}
               </div>
 
               <div className="lg:col-span-1 order-last mb-6 lg:mb-0">
