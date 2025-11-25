@@ -20,6 +20,15 @@ import NewsDetail from "@/pages/NewsDetail";
 import Contact from "@/pages/Contact";
 import About from "@/pages/About";
 
+// Admin pages
+import AdminLogin from "@/pages/admin/AdminLogin";
+import AdminLayout from "@/pages/admin/AdminLayout";
+import AdminDashboard from "@/pages/admin/AdminDashboard";
+import NewsManagement from "@/pages/admin/sections/NewsManagement";
+import ArticlesManagement from "@/pages/admin/sections/ArticlesManagement";
+import ProductsManagement from "@/pages/admin/sections/ProductsManagement";
+import { AdminProtectedRoute } from "@/components/admin/AdminProtectedRoute";
+
 export const Routes = () => {
   const location = useLocation();
 
@@ -38,7 +47,20 @@ export const Routes = () => {
       <Route path="/articles/:id" element={<ArticleDetail />} />
       <Route path="/articles/new" element={<ArticleNew />} />
       <Route path="/auth" element={<Auth />} />
-      <Route path="/admin" element={<Auth />} />
+      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route
+        path="/admin"
+        element={
+          <AdminProtectedRoute>
+            <AdminLayout />
+          </AdminProtectedRoute>
+        }
+      >
+        <Route path="dashboard" element={<AdminDashboard />} />
+        <Route path="news" element={<NewsManagement />} />
+        <Route path="articles" element={<ArticlesManagement />} />
+        <Route path="products" element={<ProductsManagement />} />
+      </Route>
       <Route path="/profile" element={<Profile />} />
       <Route path="/profile/:id" element={<Profile />} />
       <Route path="/settings" element={<Settings />} />

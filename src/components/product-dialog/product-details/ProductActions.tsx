@@ -41,7 +41,11 @@ export const ProductActions = ({
   
   const handleVisit = () => {
     if (productUrl) {
-      window.open(productUrl, '_blank');
+      // URLにプロトコルがない場合はhttps://を追加
+      const url = productUrl.startsWith('http://') || productUrl.startsWith('https://')
+        ? productUrl
+        : `https://${productUrl}`;
+      window.open(url, '_blank');
     }
   };
 
