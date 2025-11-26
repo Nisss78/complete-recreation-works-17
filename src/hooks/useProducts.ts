@@ -16,11 +16,14 @@ export const useProducts = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("products")
-        .select("*")
-        .order("created_at", { ascending: false });
+        .select(`
+          *,
+          product_links (id, link_type, url, label, display_order)
+        `)
+        .order("created_at", { ascending: true });
 
       if (error) throw error;
-      return data as Product[];
+      return data as (Product & { product_links?: { id: number; link_type: string; url: string; label?: string | null; display_order?: number }[] })[];
     },
   });
 };

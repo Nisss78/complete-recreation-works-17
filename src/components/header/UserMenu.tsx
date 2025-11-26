@@ -12,7 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Bookmark, CreditCard, LogOut, MessageSquare, Settings, User } from "lucide-react";
+import { Bookmark, Package, LogOut, LayoutDashboard, Settings, User } from "lucide-react";
 import { Profile } from "@/types/database";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
@@ -39,10 +39,6 @@ export const UserMenu = ({ userId }: { userId: string }) => {
 
   return (
     <div className="flex items-center gap-4">
-      <div className="hidden sm:flex items-center gap-2">
-        <CreditCard className="h-5 w-5 text-indigo-500" />
-        <span className="font-semibold">{profile?.credits || 0}</span>
-      </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-8 w-8 rounded-full hover:bg-transparent focus:ring-0 focus:ring-offset-0">
@@ -59,14 +55,10 @@ export const UserMenu = ({ userId }: { userId: string }) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56 bg-white rounded-lg shadow-lg p-1 border border-gray-100" align="end" forceMount>
-          <DropdownMenuLabel className="flex flex-col space-y-1 px-3 py-2">
+          <DropdownMenuLabel className="px-3 py-2">
             <p className="text-sm font-medium leading-none text-gray-900">
               {profile?.username || t('profile.noUsername')}
             </p>
-            <div className="flex items-center pt-2">
-              <CreditCard className="h-4 w-4 text-indigo-500 mr-1.5" />
-              <span className="text-xs text-gray-500">{profile?.credits || 0} クレジット</span>
-            </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator className="bg-gray-100" />
           <DropdownMenuItem asChild className="cursor-pointer px-3 py-2 mx-1 my-0.5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-md">
@@ -89,15 +81,15 @@ export const UserMenu = ({ userId }: { userId: string }) => {
           </DropdownMenuItem>
           {profile?.is_admin && (
             <DropdownMenuItem asChild className="cursor-pointer px-3 py-2 mx-1 my-0.5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-md">
-              <Link to="/chat" className="flex items-center">
-                <MessageSquare className="mr-2 h-4 w-4" />
-                <span>AIチャット</span>
+              <Link to="/admin" className="flex items-center">
+                <LayoutDashboard className="mr-2 h-4 w-4" />
+                <span>ダッシュボード</span>
               </Link>
             </DropdownMenuItem>
           )}
           <DropdownMenuItem asChild className="cursor-pointer px-3 py-2 mx-1 my-0.5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-md">
             <Link to="/my-app" className="flex items-center">
-              <CreditCard className="mr-2 h-4 w-4" />
+              <Package className="mr-2 h-4 w-4" />
               <span>{t('nav.myApp')}</span>
             </Link>
           </DropdownMenuItem>

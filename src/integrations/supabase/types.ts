@@ -326,6 +326,44 @@ export type Database = {
           },
         ]
       }
+      product_links: {
+        Row: {
+          id: number
+          product_id: number | null
+          link_type: string
+          url: string
+          label: string | null
+          display_order: number
+          created_at: string
+        }
+        Insert: {
+          id?: number
+          product_id?: number | null
+          link_type?: string
+          url: string
+          label?: string | null
+          display_order?: number
+          created_at?: string
+        }
+        Update: {
+          id?: number
+          product_id?: number | null
+          link_type?: string
+          url?: string
+          label?: string | null
+          display_order?: number
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_links_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       products: {
         Row: {
           created_at: string

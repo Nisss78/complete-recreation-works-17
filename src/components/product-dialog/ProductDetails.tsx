@@ -9,6 +9,14 @@ import { ProductHeader } from "./product-details/ProductHeader";
 import { ProductActions } from "./product-details/ProductActions";
 import { useProductLikes } from "@/hooks/useProductLikes";
 
+interface ProductLink {
+  id?: number;
+  link_type: string;
+  url: string;
+  label?: string | null;
+  display_order?: number;
+}
+
 interface ProductDetailsProps {
   product: {
     id: number;
@@ -21,6 +29,7 @@ interface ProductDetailsProps {
     comments: number;
     URL?: string | null;
     images: string[];
+    links?: ProductLink[];
   };
   isLoadingImages: boolean;
 }
@@ -80,10 +89,11 @@ export const ProductDetails = ({ product, isLoadingImages }: ProductDetailsProps
         tags={product.tags}
       />
 
-      <ProductActions 
+      <ProductActions
         productId={product.id}
         productName={product.name}
         productUrl={product.URL}
+        productLinks={product.links}
         totalLikes={totalLikes}
         hasLiked={hasLiked}
         commentCount={commentCount}

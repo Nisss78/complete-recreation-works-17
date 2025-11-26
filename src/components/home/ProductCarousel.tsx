@@ -237,7 +237,7 @@ export const ProductCarousel = forwardRef<HTMLDivElement>((props, ref) => {
                     description={product.description}
                     icon_url={product.icon_url}
                     year={year}
-                    url={product.URL}
+                    url={product.product_links?.[0]?.url || product.URL}
                     isBackground={!isMain}
                     colorIndex={product.colorIndex}
                     cardNumber={index === 1 ? 1 : ((index + 4) % 5) + 1}

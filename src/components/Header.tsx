@@ -1,12 +1,8 @@
 
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Plus, FileText, MessageSquare, Menu, Home, PenLine, Package, Newspaper, Briefcase, Mail, Building2 } from "lucide-react";
+import { FileText, Menu, Home, Package, Newspaper, Mail, Building2 } from "lucide-react";
 import logoImage from "@/assets/logo.png";
-import { useState, useEffect } from "react";
-import { ProductSubmissionDialog } from "./ProductSubmissionDialog";
-import { supabase } from "@/integrations/supabase/client";
-import { UserMenu } from "./header/UserMenu";
 import { LanguageToggle } from "./header/LanguageToggle";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -21,55 +17,9 @@ import {
 import { cn } from "@/lib/utils";
 
 export const Header = () => {
-  const [showSubmissionDialog, setShowSubmissionDialog] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [userId, setUserId] = useState<string | null>(null);
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
   const { t } = useLanguage();
   const location = useLocation();
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setIsAuthenticated(!!session);
-      setUserId(session?.user?.id || null);
-
-      if (session?.user?.id) {
-        const { data: profileData } = await supabase
-          .from('profiles')
-          .select('is_admin')
-          .eq('id', session.user.id)
-          .single();
-        
-        setIsAdmin(profileData?.is_admin || false);
-      }
-    };
-
-    checkAuth();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setIsAuthenticated(!!session);
-      setUserId(session?.user?.id || null);
-      if (session?.user?.id) {
-        supabase
-          .from('profiles')
-          .select('is_admin')
-          .eq('id', session.user.id)
-          .single()
-          .then(({ data: profileData }) => {
-            setIsAdmin(profileData?.is_admin || false);
-          });
-      } else {
-        setIsAdmin(false);
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
 
   const isActive = (path: string) => {
     if (path === '/' && location.pathname === '/') return true;
@@ -199,51 +149,6 @@ export const Header = () => {
                 <span>{t('contact')}</span>
               </Link>
             </SheetClose>
-            
-            {isAuthenticated && (
-              <>
-                <SheetClose asChild>
-                  <Link
-                    to="/articles/new"
-                    className={cn(
-                      "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
-                      isActive("/articles/new") ? "bg-green-50 text-[#10c876]" : "hover:bg-gray-100"
-                    )}
-                  >
-                    <PenLine className="h-5 w-5" />
-                    <span>{t('writeArticle')}</span>
-                  </Link>
-                </SheetClose>
-                
-                {isAdmin && (
-                  <SheetClose asChild>
-                    <Link
-                      to="/chat"
-                      className={cn(
-                        "flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium",
-                        isActive("/chat") ? "bg-green-50 text-[#10c876]" : "hover:bg-gray-100"
-                      )}
-                    >
-                      <MessageSquare className="h-5 w-5" />
-                      <span>{t('chat')}</span>
-                    </Link>
-                  </SheetClose>
-                )}
-                
-                {isAdmin && (
-                  <SheetClose asChild>
-                    <button
-                      onClick={() => setShowSubmissionDialog(true)}
-                      className="flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium hover:bg-gray-100 text-left w-full"
-                    >
-                      <Plus className="h-5 w-5" />
-                      <span>{t('post')}</span>
-                    </button>
-                  </SheetClose>
-                )}
-              </>
-            )}
-            
           </div>
         </SheetContent>
       </Sheet>
@@ -277,9 +182,6 @@ export const Header = () => {
                 <NavItem path="/articles" icon={<FileText className="h-4 w-4" />} label={t("articles")} />
                 <NavItem path="/news" icon={<Newspaper className="h-4 w-4" />} label={t("news")} />
                 <NavItem path="/about" icon={<Building2 className="h-4 w-4" />} label={t("about")} />
-                {isAuthenticated && isAdmin && (
-                  <NavItem path="/chat" icon={<MessageSquare className="h-4 w-4" />} label={t("chat")} />
-                )}
               </nav>
               <Button
                 onClick={() => navigate('/contact')}
@@ -300,7 +202,6 @@ export const Header = () => {
                 <Mail className="h-4 w-4" />
                 <span>{t("contact")}</span>
               </Button>
-              {userId && <UserMenu userId={userId} />}
             </div>
 
             {/* Right group: mobile menu */}
@@ -312,13 +213,6 @@ export const Header = () => {
           </div>
         </div>
       </div>
-
-      {showSubmissionDialog && isAuthenticated && (
-        <ProductSubmissionDialog 
-          open={showSubmissionDialog} 
-          onOpenChange={setShowSubmissionDialog} 
-        />
-      )}
     </header>
   );
 };

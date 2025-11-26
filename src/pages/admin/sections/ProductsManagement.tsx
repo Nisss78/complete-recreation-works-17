@@ -97,16 +97,11 @@ const ProductsManagement = () => {
                           <span className="font-medium line-clamp-1">
                             {product.name}
                           </span>
-                          {product.URL && (
-                            <a
-                              href={product.URL.startsWith('http://') || product.URL.startsWith('https://') ? product.URL : `https://${product.URL}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-xs text-blue-600 hover:underline flex items-center gap-1"
-                            >
+                          {product.product_links && product.product_links.length > 0 && (
+                            <span className="text-xs text-gray-500 flex items-center gap-1">
                               <ExternalLink className="h-3 w-3" />
-                              リンク
-                            </a>
+                              {product.product_links.length}件のリンク
+                            </span>
                           )}
                         </div>
                       </div>

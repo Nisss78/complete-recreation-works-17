@@ -7,6 +7,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 
+interface ProductLink {
+  id?: number;
+  link_type: string;
+  url: string;
+  label?: string | null;
+  display_order?: number;
+}
+
 interface ProductDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -21,6 +29,7 @@ interface ProductDialogProps {
     comments: number;
     images: string[];
     URL?: string;
+    links?: ProductLink[];
   } | null;
 }
 

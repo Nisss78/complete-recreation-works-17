@@ -75,7 +75,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
       >
         {/* Large transparent card number in background - positioned absolutely from card root */}
         {cardNumber && (
-          <div className="absolute inset-0 flex items-center justify-center" style={{ zIndex: 1 }}>
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={{ zIndex: 1 }}>
             <span
               className="text-gray-800 font-black select-none pointer-events-none"
               style={{
@@ -148,7 +148,7 @@ export const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(
 
           {/* Bottom section with description */}
           <div className="px-8 pb-8">
-            <p className="text-gray-800 text-base mb-6 line-clamp-3">
+            <p className="text-gray-800 text-xs mb-6 line-clamp-5">
               {displayDescription}
             </p>
 

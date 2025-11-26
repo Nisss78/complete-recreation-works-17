@@ -31,6 +31,13 @@ const fetchProductsWithImages = async () => {
           ),
           product_images (
             image_url
+          ),
+          product_links (
+            id,
+            link_type,
+            url,
+            label,
+            display_order
           )
         `)
         .order('created_at', { ascending: false }),
@@ -77,7 +84,8 @@ const fetchProductsWithImages = async () => {
       upvotes: likesCountMap[product.id] || 0,
       comments: commentsCountMap[product.id] || 0,
       launchDate: product.created_at ? new Date(product.created_at) : new Date(),
-      images: product.product_images?.map(img => img.image_url) || []
+      images: product.product_images?.map(img => img.image_url) || [],
+      links: product.product_links?.sort((a, b) => (a.display_order || 0) - (b.display_order || 0)) || []
     }));
 
     console.log('Fetched products with data:', productsWithData);

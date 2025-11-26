@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useCreateProduct, useUpdateProduct, AdminProduct } from "@/hooks/useAdminProducts";
+import { useCreateProduct, useUpdateProduct, AdminProduct, ProductLink } from "@/hooks/useAdminProducts";
 import {
   Dialog,
   DialogContent,
@@ -11,8 +11,26 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, X, Plus, ImageIcon } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Loader2, X, Plus, ImageIcon, Link as LinkIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+
+const LINK_TYPES = [
+  { value: "website", label: "公式サイト" },
+  { value: "app_store", label: "App Store" },
+  { value: "play_store", label: "Play Store" },
+  { value: "waitlist", label: "Waitlist" },
+  { value: "github", label: "GitHub" },
+  { value: "twitter", label: "X (Twitter)" },
+  { value: "discord", label: "Discord" },
+  { value: "other", label: "その他" },
+];
 
 interface ProductFormDialogProps {
   open: boolean;
@@ -34,11 +52,12 @@ export const ProductFormDialog = ({
     tagline: "",
     description: "",
     icon_url: "",
-    URL: "",
   });
   const [images, setImages] = useState<string[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
+  const [links, setLinks] = useState<ProductLink[]>([]);
+  const [newLink, setNewLink] = useState<ProductLink>({ link_type: "website", url: "" });
   const [isUploading, setIsUploading] = useState(false);
   const [uploadingType, setUploadingType] = useState<"icon" | "image" | null>(null);
 
@@ -49,22 +68,29 @@ export const ProductFormDialog = ({
         tagline: editingProduct.tagline,
         description: editingProduct.description,
         icon_url: editingProduct.icon_url,
-        URL: editingProduct.URL || "",
       });
       setImages(editingProduct.product_images?.map((img) => img.image_url) || []);
       setTags(editingProduct.product_tags?.map((t) => t.tag) || []);
+      setLinks(editingProduct.product_links?.map((l) => ({
+        id: l.id,
+        link_type: l.link_type,
+        url: l.url,
+        label: l.label,
+        display_order: l.display_order,
+      })) || []);
     } else {
       setFormData({
         name: "",
         tagline: "",
         description: "",
         icon_url: "",
-        URL: "",
       });
       setImages([]);
       setTags([]);
+      setLinks([]);
     }
     setNewTag("");
+    setNewLink({ link_type: "website", url: "" });
   }, [editingProduct, open]);
 
   const handleImageUpload = async (
@@ -127,6 +153,17 @@ export const ProductFormDialog = ({
     setTags((prev) => prev.filter((t) => t !== tagToRemove));
   };
 
+  const addLink = () => {
+    if (newLink.url.trim()) {
+      setLinks((prev) => [...prev, { ...newLink, display_order: prev.length }]);
+      setNewLink({ link_type: "website", url: "" });
+    }
+  };
+
+  const removeLink = (index: number) => {
+    setLinks((prev) => prev.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -140,9 +177,9 @@ export const ProductFormDialog = ({
       tagline: formData.tagline,
       description: formData.description,
       icon_url: formData.icon_url,
-      URL: formData.URL || null,
       images,
       tags,
+      links,
     };
 
     try {
@@ -206,19 +243,6 @@ export const ProductFormDialog = ({
               placeholder="プロダクトの詳細説明"
               rows={4}
               required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="url">URL</Label>
-            <Input
-              id="url"
-              type="url"
-              value={formData.URL}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, URL: e.target.value }))
-              }
-              placeholder="https://example.com"
             />
           </div>
 
@@ -319,6 +343,70 @@ export const ProductFormDialog = ({
                   }}
                 />
                 <Button type="button" variant="outline" onClick={addTag}>
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2">
+              <LinkIcon className="h-4 w-4" />
+              リンク
+            </Label>
+            <div className="space-y-3">
+              {links.length > 0 && (
+                <div className="space-y-2">
+                  {links.map((link, index) => (
+                    <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
+                      <Badge variant="outline" className="shrink-0">
+                        {LINK_TYPES.find((t) => t.value === link.link_type)?.label || link.link_type}
+                      </Badge>
+                      <span className="text-sm truncate flex-1">{link.url}</span>
+                      <button
+                        type="button"
+                        onClick={() => removeLink(index)}
+                        className="text-gray-500 hover:text-red-600"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div className="flex gap-2">
+                <Select
+                  value={newLink.link_type}
+                  onValueChange={(value) =>
+                    setNewLink((prev) => ({ ...prev, link_type: value }))
+                  }
+                >
+                  <SelectTrigger className="w-[140px]">
+                    <SelectValue placeholder="種類" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {LINK_TYPES.map((type) => (
+                      <SelectItem key={type.value} value={type.value}>
+                        {type.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Input
+                  value={newLink.url}
+                  onChange={(e) =>
+                    setNewLink((prev) => ({ ...prev, url: e.target.value }))
+                  }
+                  placeholder="https://example.com"
+                  className="flex-1"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      addLink();
+                    }
+                  }}
+                />
+                <Button type="button" variant="outline" onClick={addLink}>
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>

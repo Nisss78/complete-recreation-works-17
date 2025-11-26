@@ -2,6 +2,14 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
+export interface ProductLink {
+  id?: number;
+  link_type: string;
+  url: string;
+  label?: string | null;
+  display_order?: number;
+}
+
 export interface AdminProduct {
   id: number;
   name: string;
@@ -12,6 +20,7 @@ export interface AdminProduct {
   created_at: string;
   product_images?: { id: number; image_url: string }[];
   product_tags?: { id: number; tag: string }[];
+  product_links?: ProductLink[];
 }
 
 export const useAdminProducts = () => {
@@ -23,7 +32,8 @@ export const useAdminProducts = () => {
         .select(`
           *,
           product_images (id, image_url),
-          product_tags (id, tag)
+          product_tags (id, tag),
+          product_links (id, link_type, url, label, display_order)
         `)
         .order("created_at", { ascending: false });
 
@@ -42,7 +52,8 @@ export const useAdminProductById = (id: number) => {
         .select(`
           *,
           product_images (id, image_url),
-          product_tags (id, tag)
+          product_tags (id, tag),
+          product_links (id, link_type, url, label, display_order)
         `)
         .eq("id", id)
         .single();
@@ -59,9 +70,9 @@ interface CreateProductData {
   tagline: string;
   description: string;
   icon_url: string;
-  URL?: string | null;
   images?: string[];
   tags?: string[];
+  links?: ProductLink[];
 }
 
 export const useCreateProduct = () => {
@@ -69,7 +80,7 @@ export const useCreateProduct = () => {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async ({ images, tags, ...productData }: CreateProductData) => {
+    mutationFn: async ({ images, tags, links, ...productData }: CreateProductData) => {
       // Create product
       const { data: product, error: productError } = await supabase
         .from("products")
@@ -105,6 +116,22 @@ export const useCreateProduct = () => {
         if (tagsError) throw tagsError;
       }
 
+      // Insert links if provided
+      if (links && links.length > 0) {
+        const { error: linksError } = await supabase
+          .from("product_links")
+          .insert(
+            links.map((link, index) => ({
+              product_id: product.id,
+              link_type: link.link_type,
+              url: link.url,
+              label: link.label || null,
+              display_order: link.display_order ?? index,
+            }))
+          );
+        if (linksError) throw linksError;
+      }
+
       return product;
     },
     onSuccess: () => {
@@ -131,9 +158,9 @@ interface UpdateProductData {
   tagline: string;
   description: string;
   icon_url: string;
-  URL?: string | null;
   images?: string[];
   tags?: string[];
+  links?: ProductLink[];
 }
 
 export const useUpdateProduct = () => {
@@ -141,16 +168,19 @@ export const useUpdateProduct = () => {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async ({ id, images, tags, ...updates }: UpdateProductData) => {
+    mutationFn: async ({ id, images, tags, links, ...updates }: UpdateProductData) => {
       // Update product
       const { data, error } = await supabase
         .from("products")
         .update(updates)
         .eq("id", id)
-        .select()
-        .single();
+        .select();
 
       if (error) throw error;
+      if (!data || data.length === 0) {
+        throw new Error("プロダクトが見つかりません");
+      }
+      const product = data[0];
 
       // Update images: delete existing and insert new ones
       if (images !== undefined) {
@@ -184,7 +214,26 @@ export const useUpdateProduct = () => {
         }
       }
 
-      return data;
+      // Update links: delete existing and insert new ones
+      if (links !== undefined) {
+        await supabase.from("product_links").delete().eq("product_id", id);
+        if (links.length > 0) {
+          const { error: linksError } = await supabase
+            .from("product_links")
+            .insert(
+              links.map((link, index) => ({
+                product_id: id,
+                link_type: link.link_type,
+                url: link.url,
+                label: link.label || null,
+                display_order: link.display_order ?? index,
+              }))
+            );
+          if (linksError) throw linksError;
+        }
+      }
+
+      return product;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-products"] });
@@ -214,6 +263,7 @@ export const useDeleteProduct = () => {
       // Delete related data first
       await supabase.from("product_images").delete().eq("product_id", id);
       await supabase.from("product_tags").delete().eq("product_id", id);
+      await supabase.from("product_links").delete().eq("product_id", id);
       await supabase.from("product_likes").delete().eq("product_id", id);
       await supabase.from("product_bookmarks").delete().eq("product_id", id);
       await supabase.from("product_comments").delete().eq("product_id", id);
