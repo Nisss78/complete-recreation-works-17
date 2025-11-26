@@ -10,6 +10,7 @@ import { StructuredData } from "@/components/StructuredData";
 import unoImage from "@/assets/uno.jpg";
 import okutaniImage from "@/assets/member-okutani.jpg";
 import nakatsukaImage from "@/assets/member-nakatsuka.jpg";
+import leeImage from "@/assets/member-lee.jpg";
 import FloatingParticles from "@/components/FloatingParticles";
 import FloatingLogos from "@/components/FloatingLogos";
 
@@ -205,8 +206,13 @@ export default function About() {
               {/* イギョンウク */}
               <div className="relative group">
                 <div className="relative rounded-2xl bg-white border border-gray-200 shadow-lg p-5 w-full aspect-square flex items-end">
-                  {/* Proportional placeholder rectangle */}
-                  <div className="absolute bottom-5 left-5 w-3/5 h-5/6 rounded-lg overflow-hidden bg-gray-200"></div>
+                  <div className="absolute bottom-5 left-5 w-3/5 h-5/6 rounded-lg overflow-hidden">
+                    <img
+                      src={leeImage}
+                      alt="イギョンウク"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                   <div className="absolute top-[18%] right-6 w-12 h-12 rounded-xl border border-gray-300 bg-white shadow-md flex items-center justify-center">
                     <XIcon className="w-6 h-6 text-gray-700" />
                   </div>
