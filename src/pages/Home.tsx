@@ -144,17 +144,19 @@ export default function Home() {
           // Since tagline is now centered, no Y movement needed for initial positioning
           const taglineY = { from: 0, to: 0 };
 
-          // Disable scroll acceleration during animation
-          ScrollTrigger.normalizeScroll(true);
-          
+          // Disable scroll acceleration during animation (only on desktop for performance)
+          if (!isMobile) {
+            ScrollTrigger.normalizeScroll(true);
+          }
+
           // Set CSS to disable smooth scrolling during animation
           document.documentElement.style.scrollBehavior = 'auto';
           document.body.style.scrollBehavior = 'auto';
 
-          // Pin hero section and animate text within it (extended for all animations)
-          // Adjust animation duration based on screen size - increased for mobile to allow full animation display
-          const scrollDuration = isMobile ? '+=4000vh' : '+=2400vh';
-          const scrubSpeed = isMobile ? 3 : 6;
+          // Pin hero section and animate text within it
+          // Mobile: shorter duration and faster scrub for smoother performance
+          const scrollDuration = isMobile ? '+=1500vh' : '+=2400vh';
+          const scrubSpeed = isMobile ? 1 : 6;
 
           const heroTimeline = gsap.timeline({
             scrollTrigger: {
@@ -167,12 +169,17 @@ export default function Home() {
               invalidateOnRefresh: true,
               anticipatePin: 1,
               onStart: () => {
-                ScrollTrigger.normalizeScroll(true);
+                // Only normalize scroll on desktop for performance
+                if (!isMobile) {
+                  ScrollTrigger.normalizeScroll(true);
+                }
                 document.documentElement.style.scrollBehavior = 'auto';
                 document.body.style.scrollBehavior = 'auto';
               },
               onComplete: () => {
-                ScrollTrigger.normalizeScroll(false);
+                if (!isMobile) {
+                  ScrollTrigger.normalizeScroll(false);
+                }
                 document.documentElement.style.scrollBehavior = 'smooth';
                 document.body.style.scrollBehavior = 'smooth';
               },
@@ -1089,9 +1096,6 @@ export default function Home() {
 
         {/* Transition Section - for scroll-based text gathering and future product animations */}
         <section ref={servicesTitleRef} className="relative bg-gray-50" style={{ minHeight: '400vh' }}>
-          <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
-            <FloatingParticles />
-          </div>
         </section>
 
         {/* Product Carousel - fixed position below "Our Product" */}
@@ -1102,9 +1106,6 @@ export default function Home() {
 
         {/* Services Section */}
         <section className="py-20 bg-gray-50 relative">
-          <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
-            <FloatingParticles />
-          </div>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative" style={{ zIndex: 10 }}>
             <h2 className="text-5xl md:text-6xl font-bold mb-8" style={{
               background: 'linear-gradient(135deg, #7bc61e, #10c876, #15b8e5)',
@@ -1167,9 +1168,6 @@ export default function Home() {
 
         {/* Recent News Section */}
         <section className="py-20 bg-gray-50 relative">
-          <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
-            <FloatingParticles />
-          </div>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative" style={{ zIndex: 10 }}>
             <div className="flex justify-between items-center mb-12">
               <div>
@@ -1244,9 +1242,6 @@ export default function Home() {
 
         {/* Company Section */}
         <section className="pt-20 bg-gray-50 relative">
-          <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
-            <FloatingParticles />
-          </div>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative" style={{ zIndex: 10 }}>
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div className="reveal-on-scroll">

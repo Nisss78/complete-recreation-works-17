@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 
 interface Logo {
@@ -16,9 +16,17 @@ const FloatingLogos = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const logosRef = useRef<Logo[]>([]);
   const animationsRef = useRef<gsap.core.Tween[]>([]);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if mobile on mount
+  useEffect(() => {
+    const checkMobile = () => window.innerWidth < 768;
+    setIsMobile(checkMobile());
+  }, []);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    // Skip logos entirely on mobile for performance
+    if (isMobile || !containerRef.current) return;
 
     const container = containerRef.current;
     const containerWidth = container.offsetWidth;
@@ -110,7 +118,7 @@ const FloatingLogos = () => {
       const logoElements = container.querySelectorAll('.floating-logo');
       logoElements.forEach(el => el.remove());
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <div 

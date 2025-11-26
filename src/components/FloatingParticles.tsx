@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 
 interface Particle {
@@ -15,17 +15,25 @@ const FloatingParticles = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const animationsRef = useRef<gsap.core.Tween[]>([]);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if mobile on mount
+  useEffect(() => {
+    const checkMobile = () => window.innerWidth < 768;
+    setIsMobile(checkMobile());
+  }, []);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    // Skip particles entirely on mobile for performance
+    if (isMobile || !containerRef.current) return;
 
     const container = containerRef.current;
     const containerWidth = container.offsetWidth;
     const containerHeight = container.offsetHeight;
 
-    // Create particles data
+    // Create particles data - reduced count for better performance
     const particles: Particle[] = [];
-    const particleCount = 80; // Increased for more visible effect
+    const particleCount = 30; // Reduced from 80 to 30
 
     for (let i = 0; i < particleCount; i++) {
       const x = Math.random() * containerWidth; // Spread across entire width
