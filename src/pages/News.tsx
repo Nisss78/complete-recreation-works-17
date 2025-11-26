@@ -2,12 +2,8 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useNews } from "@/hooks/useNews";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { NewsForm } from "@/components/news/NewsForm";
-import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import FloatingParticles from "@/components/FloatingParticles";
@@ -17,26 +13,8 @@ export default function News() {
   const { language } = useLanguage();
   const isJapanese = language === 'ja';
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [showNewsForm, setShowNewsForm] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-  
-  const { data: newsItems, isLoading } = useNews(selectedCategory);
 
-  useEffect(() => {
-    const checkAdmin = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user?.id) {
-        const { data: profileData } = await supabase
-          .from('profiles')
-          .select('is_admin')
-          .eq('id', session.user.id)
-          .single();
-        
-        setIsAdmin(profileData?.is_admin || false);
-      }
-    };
-    checkAdmin();
-  }, []);
+  const { data: newsItems, isLoading } = useNews(selectedCategory);
 
   const categories = [
     { value: "all", labelJa: "すべての記事", labelEn: "All Articles" },
@@ -74,19 +52,6 @@ export default function News() {
             </p>
           </div>
         </div>
-
-        {/* Admin Add Button */}
-        {isAdmin && (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <Button 
-              onClick={() => setShowNewsForm(true)}
-              className="bg-gradient-to-r from-[#10c876] to-[#15b8e5] hover:from-[#0fb368] hover:to-[#13a5d0] text-white"
-            >
-              <Plus className="h-5 w-5 mr-2" />
-              {isJapanese ? "ニュース追加" : "Add News"}
-            </Button>
-          </div>
-        )}
 
         {/* Category Tabs */}
         <div className="bg-white border-b overflow-x-auto">
@@ -178,14 +143,6 @@ export default function News() {
         </div>
       </main>
       <Footer />
-      
-      {/* News Form Dialog */}
-      {showNewsForm && (
-        <NewsForm 
-          open={showNewsForm} 
-          onOpenChange={setShowNewsForm}
-        />
-      )}
     </div>
   );
 }
